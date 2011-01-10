@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: BPMN2 Editor Core
+Bundle-SymbolicName: org.jboss.bpmn2.editor.core;singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Bundle-Activator: org.jboss.bpmn2.editor.core.Activator
+Bundle-Vendor: JBOSS
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.emf.transaction,
+ org.eclipse.graphiti.ui,
+ org.eclipse.graphiti,
+ org.eclipse.bpmn2,
+ org.eclipse.bpmn2.edit
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: org.jboss.bpmn2.editor.core,
+ org.jboss.bpmn2.editor.core.diagram

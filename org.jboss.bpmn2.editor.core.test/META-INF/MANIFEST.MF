@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: BPMN2 Core Test Fragment
+Bundle-SymbolicName: org.jboss.bpmn2.editor.core.test
+Bundle-Version: 0.0.1.qualifier
+Bundle-Vendor: JBOSS
+Fragment-Host: org.jboss.bpmn2.editor.core;bundle-version="0.0.1"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

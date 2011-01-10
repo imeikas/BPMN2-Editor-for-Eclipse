@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+ <extension
+         point="org.eclipse.ui.newWizards">
+      <primaryWizard
+            id="org.jboss.bpmn2.editor.core.projectWizard">
+      </primaryWizard>
+      <wizard
+            category="org.jboss.bpmn2.editor.core.mainCategory"
+            class="org.jboss.bpmn2.editor.core.wizards.ui.BPMN2ProjectWizard"
+            finalPerspective="org.eclipse.graphiti.examples.common.perspective.GFPerspective"
+            id="org.jboss.bpmn2.editor.core.projectWizard"
+            name="BPMN2 Project">
+      </wizard>
+      <category
+            id="org.jboss.bpmn2.editor.core.mainCategory"
+            name="BPMN2">
+      </category>
+      <wizard
+            category="org.jboss.bpmn2.editor.core.mainCategory"
+            class="org.jboss.bpmn2.editor.core.wizards.BPMN2DiagramWizard"
+            finalPerspective="org.eclipse.graphiti.examples.common.perspective.GFPerspective"
+            icon="icons/sample.gif"
+            id="org.jboss.bpmn2.editor.core.diagramWizard"
+            name="BPMN2 Diagram Wizard">
+      </wizard>
+   </extension>
+</plugin>
