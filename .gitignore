@@ -4,3 +4,4 @@
 *.swp
 .scala_dependencies
 
+/lib/specs_2.8.1-1.6.6.jar

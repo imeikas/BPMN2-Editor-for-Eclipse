@@ -4,26 +4,28 @@
  <extension
          point="org.eclipse.ui.newWizards">
       <primaryWizard
-            id="org.jboss.bpmn2.editor.core.projectWizard">
+            id="org.jboss.bpmn2.editor.core.diagramWizard">
       </primaryWizard>
-      <wizard
-            category="org.jboss.bpmn2.editor.core.mainCategory"
-            class="org.jboss.bpmn2.editor.core.wizards.ui.BPMN2ProjectWizard"
-            finalPerspective="org.eclipse.graphiti.examples.common.perspective.GFPerspective"
-            id="org.jboss.bpmn2.editor.core.projectWizard"
-            name="BPMN2 Project">
-      </wizard>
       <category
             id="org.jboss.bpmn2.editor.core.mainCategory"
             name="BPMN2">
       </category>
       <wizard
             category="org.jboss.bpmn2.editor.core.mainCategory"
-            class="org.jboss.bpmn2.editor.core.wizards.BPMN2DiagramWizard"
-            finalPerspective="org.eclipse.graphiti.examples.common.perspective.GFPerspective"
+            class="org.jboss.bpmn2.editor.core.ui.wizards.BPMN2DiagramWizard"
             icon="icons/sample.gif"
             id="org.jboss.bpmn2.editor.core.diagramWizard"
             name="BPMN2 Diagram Wizard">
       </wizard>
    </extension>
+ <extension
+       point="org.eclipse.ui.editors">
+    <editor
+          class="org.jboss.bpmn2.editor.core.ui.editor.BPMN2Editor"
+          default="true"
+          extensions="bpmn2d"
+          id="org.jboss.bpmn2.editor.core.ui.bpmn2editor"
+          name="BPMN2 Editor">
+    </editor>
+ </extension>
 </plugin>

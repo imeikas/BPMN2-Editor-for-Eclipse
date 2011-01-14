@@ -1,5 +1,6 @@
 package org.jboss.bpmn2.editor.core.diagram
 
+import NiceObject._
 import org.jboss.bpmn2.editor.core.Activator
 import org.jboss.bpmn2.editor.core.temp._
 import org.eclipse.core.runtime.Status
@@ -11,8 +12,10 @@ import org.specs._
 import org.specs.matcher._
 import org.specs.runner.{ JUnitSuiteRunner, JUnit }
 
+
 @RunWith(classOf[JUnitSuiteRunner])
 class MainProviderTests extends Specification with JUnit { /*with ScalaCheck*/
+
   val provider = new MainBPMNDiagramTypeProvider
 
   "MainDiagramTypeProvider" should {
@@ -24,7 +27,7 @@ class MainProviderTests extends Specification with JUnit { /*with ScalaCheck*/
   "BPMNFeatureProvider" should {
     val fProvider = provider.getFeatureProvider
     "have required creators" in {
-    	fProvider.getCreateFeatures.toList.exists(_.getClass == classOf[CreateActivityFeature]) must beTrue
+      fProvider.getCreateFeatures.toList.exists(_.niceClass == classOf[CreateActivityFeature]) must beTrue
     }
   }
 }
