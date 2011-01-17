@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: BPMN2 Editor UI Test Fragment
+Bundle-SymbolicName: org.jboss.bpmn2.editor.ui.test
+Bundle-Version: 0.0.1.qualifier
+Bundle-Vendor: JBOSS
+Fragment-Host: org.jboss.bpmn2.editor.ui;bundle-version="0.0.1.qualifier"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

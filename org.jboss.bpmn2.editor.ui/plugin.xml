@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+ <extension
+         point="org.eclipse.ui.newWizards">
+      <primaryWizard
+            id="org.jboss.bpmn2.editor.core.diagramWizard">
+      </primaryWizard>
+      <category
+            id="org.jboss.bpmn2.editor.core.mainCategory"
+            name="BPMN2">
+      </category>
+      <wizard
+            category="org.jboss.bpmn2.editor.core.mainCategory"
+            class="org.jboss.bpmn2.editor.ui.wizards.BPMN2DiagramWizard"
+            icon="icons/sample.gif"
+            id="org.jboss.bpmn2.editor.core.diagramWizard"
+            name="BPMN2 Diagram Wizard">
+      </wizard>
+   </extension>
+ <extension
+       point="org.eclipse.ui.editors">
+    <editor
+          class="org.jboss.bpmn2.editor.ui.editor.BPMN2Editor"
+          default="true"
+          extensions="bpmn2d"
+          id="org.jboss.bpmn2.editor.ui.bpmn2editor"
+          name="BPMN2 Editor">
+    </editor>
+ </extension>
+</plugin>

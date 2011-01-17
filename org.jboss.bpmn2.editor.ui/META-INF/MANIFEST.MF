@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: BPMN2 Editor UI
+Bundle-SymbolicName: org.jboss.bpmn2.editor.ui;singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Bundle-Activator: org.jboss.bpmn2.editor.ui.Activator
+Bundle-Vendor: JBOSS
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.ui.ide,
+ org.eclipse.core.runtime,
+ org.eclipse.graphiti,
+ org.eclipse.graphiti.ui,
+ org.jboss.bpmn2.editor.core,
+ org.eclipse.emf.transaction;bundle-version="1.4.0",
+ org.eclipse.ui.views.properties.tabbed;bundle-version="3.5.100",
+ org.eclipse.gef;bundle-version="3.6.1",
+ org.eclipse.bpmn2;bundle-version="0.7.0",
+ org.eclipse.bpmn2.edit;bundle-version="0.7.0",
+ org.eclipse.graphiti.examples.common;bundle-version="0.7.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
