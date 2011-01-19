@@ -2,7 +2,7 @@ package org.jboss.bpmn2.editor.core.diagram
 
 import NiceObject._
 import org.jboss.bpmn2.editor.core.Activator
-import org.jboss.bpmn2.editor.core.temp._
+import org.jboss.bpmn2.editor.core.features._
 import org.eclipse.core.runtime.Status
 import org.eclipse.core.runtime.IStatus
 import org.eclipse.core.runtime.CoreException
@@ -27,7 +27,7 @@ class MainProviderTests extends Specification with JUnit { /*with ScalaCheck*/
   "BPMNFeatureProvider" should {
     val fProvider = provider.getFeatureProvider
     "have required creators" in {
-      fProvider.getCreateFeatures.toList.exists(_.niceClass == classOf[CreateActivityFeature]) must beTrue
+      fProvider.getCreateFeatures.toList.exists(_.niceClass == classOf[CreateTaskFeature]) must beTrue
     }
   }
 }

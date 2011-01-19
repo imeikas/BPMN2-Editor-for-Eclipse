@@ -1,6 +1,5 @@
 package org.jboss.bpmn2.editor.core.features;
 
-
 import org.eclipse.bpmn2.Task;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
@@ -32,12 +31,9 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 
 	@Override
 	public boolean canAdd(IAddContext context) {
-		  if (context.getNewObject() instanceof Task) {
-	            if (context.getTargetContainer() instanceof Diagram) {
-	                return true;
-	            }
-	        }
-	        return false;
+		boolean isTask = context.getNewObject() instanceof Task;
+		boolean intoDiagram = context.getTargetContainer() instanceof Diagram;
+		return isTask && intoDiagram;
 	}
 
 	@Override
@@ -60,7 +56,7 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 			roundedRectangle.setBackground(manageColor(CLASS_BACKGROUND));
 
 			AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
-			
+
 			gaService.setRenderingStyle(roundedRectangle, gradient);
 			roundedRectangle.setLineWidth(1);
 			gaService.setLocationAndSize(roundedRectangle, context.getX(), context.getY(), width, height);
@@ -72,6 +68,7 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 			}
 			// create link and wire it
 			link(containerShape, addedTask);
+
 		}
 		// SHAPE WITH TEXT
 		{
@@ -88,7 +85,7 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 			// create link and wire it
 			link(shape, addedTask);
 		}
-
+		peCreateService.createChopboxAnchor(containerShape);
 		return containerShape;
 	}
 

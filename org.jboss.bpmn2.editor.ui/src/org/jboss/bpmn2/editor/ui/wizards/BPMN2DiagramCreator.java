@@ -18,6 +18,8 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.jboss.bpmn2.editor.core.Activator;
+import org.jboss.bpmn2.editor.ui.editor.BPMN2Editor;
+import org.jboss.bpmn2.editor.ui.util.ErrorUtils;
 /**
  * 
  */
@@ -28,7 +30,7 @@ public class BPMN2DiagramCreator {
 	private IFile diagramFile;
 
 	public void createExample() throws CoreException {
-		if (!diagramFolder.exists())
+		if (diagramFolder != null && !diagramFolder.exists())
 			diagramFolder.create(false, true, null);
 
 		Diagram diagram = Graphiti.getPeCreateService().createDiagram("BPMN2", diagramFile.getName(), true);
@@ -43,12 +45,12 @@ public class BPMN2DiagramCreator {
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 			public void run() {
 				try {
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editorInput, "org.jboss.bpmn2.editor.ui.bpmn2editor");
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editorInput, BPMN2Editor.EDITOR_ID);
 
 				} catch (PartInitException e) {
 					String error = "Error while opening diagram editor";
 					IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, error, e);
-					ErrorDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "An error occured", null, status);
+					ErrorUtils.showErrorWithLogging(status);
 				}
 			}
 		});

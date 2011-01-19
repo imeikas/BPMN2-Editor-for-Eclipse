@@ -4,17 +4,17 @@
  <extension
          point="org.eclipse.ui.newWizards">
       <primaryWizard
-            id="org.jboss.bpmn2.editor.core.diagramWizard">
+            id="org.jboss.bpmn2.editor.ui.diagramWizard">
       </primaryWizard>
       <category
-            id="org.jboss.bpmn2.editor.core.mainCategory"
+            id="org.jboss.bpmn2.editor.ui.mainCategory"
             name="BPMN2">
       </category>
       <wizard
-            category="org.jboss.bpmn2.editor.core.mainCategory"
+            category="org.jboss.bpmn2.editor.ui.mainCategory"
             class="org.jboss.bpmn2.editor.ui.wizards.BPMN2DiagramWizard"
             icon="icons/sample.gif"
-            id="org.jboss.bpmn2.editor.core.diagramWizard"
+            id="org.jboss.bpmn2.editor.ui.diagramWizard"
             name="BPMN2 Diagram Wizard">
       </wizard>
    </extension>

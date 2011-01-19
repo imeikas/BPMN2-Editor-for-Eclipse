@@ -6,6 +6,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -17,14 +18,10 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 
 /**
- * This is a sample new wizard. Its role is to create a new file 
- * resource in the provided container. If the container resource
- * (a folder or a project) is selected in the workspace 
- * when the wizard is opened, it will accept it as the target
- * container. The wizard creates one file with the extension
- * "bpmn2d". If a sample multi-page editor (also available
- * as a template) is registered for the same extension, it will
- * be able to open it.
+ * This is a sample new wizard. Its role is to create a new file resource in the provided container. If the container
+ * resource (a folder or a project) is selected in the workspace when the wizard is opened, it will accept it as the
+ * target container. The wizard creates one file with the extension "bpmn2d". If a sample multi-page editor (also
+ * available as a template) is registered for the same extension, it will be able to open it.
  */
 
 public class BPMN2DiagramWizard extends Wizard implements INewWizard {
@@ -38,7 +35,7 @@ public class BPMN2DiagramWizard extends Wizard implements INewWizard {
 		super();
 		setNeedsProgressMonitor(true);
 	}
-	
+
 	/**
 	 * Adding the page to the wizard.
 	 */
@@ -49,28 +46,33 @@ public class BPMN2DiagramWizard extends Wizard implements INewWizard {
 	}
 
 	/**
-	 * This method is called when 'Finish' button is pressed in
-	 * the wizard. We will create an operation and run it
-	 * using wizard as execution context.
+	 * This method is called when 'Finish' button is pressed in the wizard. We will create an operation and run it using
+	 * wizard as execution context.
 	 */
 	public boolean performFinish() {
 		final String fileName = page.getFileName();
 		final IResource container = page.getDiagramContainer();
-		
+
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
 					IProject project = container.getProject();
-					IFolder folder = project.getFolder(container.getProjectRelativePath());
-					
+					IPath path = container.getProjectRelativePath();
+					IFolder folder = null;
 					BPMN2DiagramCreator factory = new BPMN2DiagramCreator();
+					if (!path.isEmpty()){
+						folder = project.getFolder(path);
+						factory.setDiagramFile(folder.getFile(fileName));
+					}else
+					{
+						factory.setDiagramFile(project.getFile(fileName));
+					}
 
 					factory.setProject(project);
 					factory.setDiagramFolder(folder);
-					factory.setDiagramFile(folder.getFile(fileName));
-					
+
 					factory.createExample();
-					
+
 				} catch (CoreException e) {
 					throw new InvocationTargetException(e);
 				} finally {
@@ -89,10 +91,10 @@ public class BPMN2DiagramWizard extends Wizard implements INewWizard {
 		}
 		return true;
 	}
-	
+
 	/**
-	 * We will accept the selection in the workbench to see if
-	 * we can initialize from it.
+	 * We will accept the selection in the workbench to see if we can initialize from it.
+	 * 
 	 * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
 	 */
 	public void init(IWorkbench workbench, IStructuredSelection selection) {

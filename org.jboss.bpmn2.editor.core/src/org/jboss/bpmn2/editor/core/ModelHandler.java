@@ -7,14 +7,18 @@ import java.util.List;
 import org.eclipse.bpmn2.Bpmn2Factory;
 import org.eclipse.bpmn2.Definitions;
 import org.eclipse.bpmn2.DocumentRoot;
+import org.eclipse.bpmn2.ExclusiveGateway;
+import org.eclipse.bpmn2.Gateway;
 import org.eclipse.bpmn2.Process;
 import org.eclipse.bpmn2.RootElement;
+import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.Task;
 import org.eclipse.bpmn2.util.Bpmn2ResourceFactoryImpl;
 import org.eclipse.bpmn2.util.Bpmn2ResourceImpl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -83,19 +87,36 @@ public class ModelHandler {
 	}
 
 	public Task createTask() {
-		if (definitions == null)
-			return null;
-
-		Process process = getFirstProcess();
-		if (process == null) {
-			process = factory.createProcess();
-			definitions.getRootElements().add(process);
-		}
+		Process process = getOrCreateFirstProcess();
 		Task task = factory.createTask();
 		process.getFlowElements().add(task);
 		return task;
 	}
 
+	public SequenceFlow createSequenceFlow(){
+		Process process = getOrCreateFirstProcess();
+		SequenceFlow flow = factory.createSequenceFlow();
+		process.getFlowElements().add(flow);
+		return flow;
+	}
+
+	public ExclusiveGateway createGateway() {
+		Process process = getOrCreateFirstProcess();
+		ExclusiveGateway flow = factory.createExclusiveGateway();
+		process.getFlowElements().add(flow);
+	    return flow;
+    }
+	
+	private Process getOrCreateFirstProcess() {
+	    Process process = getFirstProcess();
+		if (process == null) {
+			process = factory.createProcess();
+			definitions.getRootElements().add(process);
+		}
+	    return process;
+    }
+
+	
 	public Process getFirstProcess() {
 		List<RootElement> rootElements = definitions.getRootElements();
 		for (RootElement element : rootElements) {
@@ -133,5 +154,14 @@ public class ModelHandler {
 	        e.printStackTrace();
 	    }
     }
+
+	public static ModelHandler getModelHandler(Resource eResource) throws IOException {
+		URI uri = eResource.getURI();
+		uri = uri.trimFragment();
+		uri = uri.trimFileExtension();
+		uri = uri.appendFileExtension("bpmn2"); //FIXME: move into some Util
+		return getModelHandler(uri);
+    }
+
 
 }
