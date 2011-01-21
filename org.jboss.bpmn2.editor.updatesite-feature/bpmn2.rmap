@@ -8,6 +8,7 @@
   <rm:locator pattern="^org\.jboss\.bpmn2\.editor(\..+)?" searchPathRef="bpmn2.plugins" />
 
   <rm:locator pattern="^org\.eclipse\.bpmn2" searchPathRef="bpmn2.plugins" failOnError="false"/>
+  <rm:locator pattern="^org\.eclipse\.bpmn2\.feature" searchPathRef="bpmn2.feature"/>
   <rm:locator pattern="^org\.eclipse\.bpmn2(\..+)?" searchPathRef="bpmn2.plugins"/>
 
   <rm:locator pattern="^org\.eclipse\.graphiti(\..+)?" searchPathRef="graphiti" />
