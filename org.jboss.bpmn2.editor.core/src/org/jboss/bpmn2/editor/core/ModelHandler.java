@@ -67,7 +67,7 @@ public class ModelHandler {
 		SequenceFlow flow = createSequenceFlow();
 		flow.setSourceRef(source);
 		flow.setTargetRef(target);
-		return null;
+		return flow;
 	}
 
 	public ExclusiveGateway createExclusiveGateway() {
