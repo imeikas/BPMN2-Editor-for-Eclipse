@@ -21,4 +21,8 @@
          id="org.jboss.bpmn2.editor"
          version="0.0.0"/>
 
+   <includes
+         id="org.eclipse.bpmn2.feature"
+         version="0.0.0"/>
+
 </feature>
