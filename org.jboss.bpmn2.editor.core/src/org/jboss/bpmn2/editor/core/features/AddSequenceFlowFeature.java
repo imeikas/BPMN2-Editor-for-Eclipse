@@ -46,9 +46,7 @@ public class AddSequenceFlowFeature extends AbstractAddFeature {
 		Polyline polyline = gaService.createPolyline(connection);
 		polyline.setLineWidth(1);
 		polyline.setForeground(manageColor(CLASS_FOREGROUND));
-		// if added Class has no resource we add it to the resource
-		// of the diagram
-		// in a real scenario the business model would have its own resource
+
 		if (flow.eResource() == null) {
 			getDiagram().eResource().getContents().add(flow);
 		}

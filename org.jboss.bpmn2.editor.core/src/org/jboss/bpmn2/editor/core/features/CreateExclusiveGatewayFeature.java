@@ -3,12 +3,13 @@ package org.jboss.bpmn2.editor.core.features;
 import java.io.IOException;
 
 import org.eclipse.bpmn2.ExclusiveGateway;
-import org.eclipse.bpmn2.Gateway;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.features.impl.AbstractCreateFeature;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
+import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
+import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
 
 public class CreateExclusiveGatewayFeature extends AbstractCreateFeature {
 
@@ -23,19 +24,16 @@ public class CreateExclusiveGatewayFeature extends AbstractCreateFeature {
 
 	@Override
 	public Object[] create(ICreateContext context) {
-		ExclusiveGateway x = null;;
-		
 		try {
-			ModelHandler mh = ModelHandler.getModelHandler(getDiagram().eResource());
-			x = mh.createGateway();
+			ModelHandler mh = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
+			ExclusiveGateway x = mh.createExclusiveGateway();
+			addGraphicalRepresentation(context, x);
+
+			return new Object[] { x };
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Activator.logError(e);
 		}
-
-		addGraphicalRepresentation(context, x);
-
-		return new Object[] { x };
+		return null;
 	}
 
 }

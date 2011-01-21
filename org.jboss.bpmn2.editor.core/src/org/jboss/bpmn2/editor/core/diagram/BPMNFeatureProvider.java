@@ -19,8 +19,8 @@ import org.jboss.bpmn2.editor.core.features.AddExclusiveGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.AddSequenceFlowFeature;
 import org.jboss.bpmn2.editor.core.features.AddTaskFeature;
 import org.jboss.bpmn2.editor.core.features.CreateExclusiveGatewayFeature;
-import org.jboss.bpmn2.editor.core.features.CreateTaskFeature;
 import org.jboss.bpmn2.editor.core.features.CreateSequenceFlowFeature;
+import org.jboss.bpmn2.editor.core.features.CreateTaskFeature;
 import org.jboss.bpmn2.editor.core.features.DirectEditTaskFeature;
 import org.jboss.bpmn2.editor.core.features.UpdateTaskFeature;
 
@@ -39,12 +39,13 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 	@Override
 	public IAddFeature getAddFeature(IAddContext context) {
 		Object newObject = context.getNewObject();
-		if (newObject instanceof Task)
+		if (newObject instanceof Task) {
 			return new AddTaskFeature(this);
-		if (newObject instanceof SequenceFlow)
+		} else if (newObject instanceof SequenceFlow) {
 			return new AddSequenceFlowFeature(this);
-		if (newObject instanceof ExclusiveGateway)
+		} else if (newObject instanceof ExclusiveGateway) {
 			return new AddExclusiveGatewayFeature(this);
+		}
 		return super.getAddFeature(context);
 	}
 

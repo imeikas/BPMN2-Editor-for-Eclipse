@@ -1,127 +1,93 @@
 package org.jboss.bpmn2.editor.core;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
 
 import org.eclipse.bpmn2.Bpmn2Factory;
 import org.eclipse.bpmn2.Definitions;
 import org.eclipse.bpmn2.DocumentRoot;
 import org.eclipse.bpmn2.ExclusiveGateway;
-import org.eclipse.bpmn2.Gateway;
+import org.eclipse.bpmn2.FlowElement;
+import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.Process;
 import org.eclipse.bpmn2.RootElement;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.Task;
-import org.eclipse.bpmn2.util.Bpmn2ResourceFactoryImpl;
 import org.eclipse.bpmn2.util.Bpmn2ResourceImpl;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 
 public class ModelHandler {
-	private final URI path;
-	private static final Bpmn2Factory factory = Bpmn2Factory.eINSTANCE;
+	private static final Bpmn2Factory FACTORY = Bpmn2Factory.eINSTANCE;
 
-	private Bpmn2ResourceImpl resource;
+	Bpmn2ResourceImpl resource;
 	private Definitions definitions;
 
-	private static HashMap<URI, ModelHandler> map = new HashMap<URI, ModelHandler>();
-
-	private ModelHandler(URI path) {
-		this.path = path;
+	ModelHandler() {
 	}
 
-	public static ModelHandler createModelHandler(URI path, final Bpmn2ResourceImpl resource) {
-		if (map.containsKey(path))
-			return map.get(path);
-
-		ModelHandler handler = new ModelHandler(path);
-		map.put(path, handler);
-		handler.resource = resource;
+	void updateOrCreateDefinitions(final Bpmn2ResourceImpl resource) {
 		EList<EObject> contents = resource.getContents();
-		
+
 		if (contents.isEmpty() || !(contents.get(0) instanceof RootElement)) {
 			TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(resource);
-		
+
 			if (domain != null) {
+				final DocumentRoot docRoot = FACTORY.createDocumentRoot();
+				definitions = FACTORY.createDefinitions();
+
 				domain.getCommandStack().execute(new RecordingCommand(domain) {
-			
 					protected void doExecute() {
-					
-						DocumentRoot docRoot = factory.createDocumentRoot();
-						Definitions def = factory.createDefinitions();
-						
-						docRoot.setDefinitions(def);
+						docRoot.setDefinitions(definitions);
 						resource.getContents().add(docRoot);
 					}
 				});
+				return;
 			}
 		}
-		handler.definitions = (Definitions) contents.get(0).eContents().get(0);
-		return handler;
+		definitions = (Definitions) contents.get(0).eContents().get(0);
 	}
 
-	public static ModelHandler getModelHandler(URI path) throws IOException {
-		return map.get(path);
-	}
-
-	public static void releaseModel(URI path) {
-		map.remove(path);
-	}
-
-	private void loadResource() {
-		Bpmn2ResourceFactoryImpl rFactory = new Bpmn2ResourceFactoryImpl();
-
-		resource = (Bpmn2ResourceImpl) rFactory.createResource(path);
-		try {
-			resource.load(null);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+	public <T extends FlowElement> T addFlowElement(T elem) {
+		Process process = getOrCreateFirstProcess();
+		process.getFlowElements().add(elem);
+		return elem;
 	}
 
 	public Task createTask() {
-		Process process = getOrCreateFirstProcess();
-		Task task = factory.createTask();
-		process.getFlowElements().add(task);
-		return task;
+		return addFlowElement(FACTORY.createTask());
 	}
 
-	public SequenceFlow createSequenceFlow(){
-		Process process = getOrCreateFirstProcess();
-		SequenceFlow flow = factory.createSequenceFlow();
-		process.getFlowElements().add(flow);
-		return flow;
+	public SequenceFlow createSequenceFlow() {
+		return addFlowElement(FACTORY.createSequenceFlow());
+	}
+	public SequenceFlow createSequenceFlow(FlowNode source, FlowNode target) {
+		SequenceFlow flow = createSequenceFlow();
+		flow.setSourceRef(source);
+		flow.setTargetRef(target);
+		return null;
 	}
 
-	public ExclusiveGateway createGateway() {
-		Process process = getOrCreateFirstProcess();
-		ExclusiveGateway flow = factory.createExclusiveGateway();
-		process.getFlowElements().add(flow);
-	    return flow;
-    }
-	
+	public ExclusiveGateway createExclusiveGateway() {
+		return addFlowElement(FACTORY.createExclusiveGateway());
+	}
+
 	private Process getOrCreateFirstProcess() {
-	    Process process = getFirstProcess();
+		Process process = getFirstProcess();
 		if (process == null) {
-			process = factory.createProcess();
+			process = FACTORY.createProcess();
 			definitions.getRootElements().add(process);
 		}
-	    return process;
-    }
+		return process;
+	}
 
-	
 	public Process getFirstProcess() {
-		List<RootElement> rootElements = definitions.getRootElements();
-		for (RootElement element : rootElements) {
-			if (element instanceof Process)
+		for (RootElement element : definitions.getRootElements()) {
+			if (element instanceof Process) {
 				return (Process) element;
+			}
 		}
 		return null;
 	}
@@ -134,34 +100,35 @@ public class ModelHandler {
 		return definitions;
 	}
 
-	public void save()  {
+	public void save() {
 		TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(resource);
 		if (domain != null) {
 			domain.getCommandStack().execute(new RecordingCommand(domain) {
 				protected void doExecute() {
-					saveWithoudTransaction();
+					saveResource();
 				}
 			});
 		} else {
-			saveWithoudTransaction();
+			saveResource();
 		}
 	}
 
-	private void saveWithoudTransaction() {
-	    try {
-	        resource.save(null);
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
-    }
+	private void saveResource() {
+		try {
+			resource.save(null);
+		} catch (IOException e) {
+			Activator.logError(e);
+		}
+	}
 
-	public static ModelHandler getModelHandler(Resource eResource) throws IOException {
-		URI uri = eResource.getURI();
-		uri = uri.trimFragment();
-		uri = uri.trimFileExtension();
-		uri = uri.appendFileExtension("bpmn2"); //FIXME: move into some Util
-		return getModelHandler(uri);
-    }
+	void loadResource() {
+		try {
+			resource.load(null);
+		} catch (IOException e) {
+			Activator.logError(e);
+		}
+
+	}
 
 
 }

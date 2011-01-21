@@ -13,6 +13,7 @@ import org.eclipse.graphiti.ui.editor.DiagramEditor;
 import org.eclipse.graphiti.ui.editor.DiagramEditorInput;
 import org.eclipse.ui.IEditorInput;
 import org.jboss.bpmn2.editor.core.ModelHandler;
+import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
 import org.jboss.bpmn2.editor.ui.Activator;
 import org.jboss.bpmn2.editor.ui.util.ErrorUtils;
 
@@ -53,13 +54,13 @@ public class BPMN2Editor extends DiagramEditor {
             	Status status = new Status(IStatus.ERROR,Activator.PLUGIN_ID,e.getMessage(),e);
 				ErrorUtils.showErrorWithLogging(status);
             }
-			modelHandler = ModelHandler.createModelHandler(modelPath, resource);
+			modelHandler = ModelHandlerLocator.createModelHandler(modelPath, resource);
 		}
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-		ModelHandler.releaseModel(modelPath);
+		ModelHandlerLocator.releaseModel(modelPath);
 	}
 }

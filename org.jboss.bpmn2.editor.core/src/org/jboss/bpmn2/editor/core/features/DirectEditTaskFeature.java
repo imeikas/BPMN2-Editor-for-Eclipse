@@ -29,20 +29,22 @@ public class DirectEditTaskFeature extends AbstractDirectEditingFeature {
 
 	@Override
 	public void setValue(String value, IDirectEditingContext context) {
-        PictogramElement pe = context.getPictogramElement();
-        
-        Task task = (Task) getBusinessObjectForPictogramElement(pe);
-        task.setName(value);
-        
-        updatePictogramElement(((Shape) pe).getContainer());
+		PictogramElement pe = context.getPictogramElement();
+
+		Task task = (Task) getBusinessObjectForPictogramElement(pe);
+		task.setName(value);
+
+		updatePictogramElement(((Shape) pe).getContainer());
 	}
 
 	@Override
 	public String checkValueValid(String value, IDirectEditingContext context) {
-		if (value.length() < 1)
+		if (value.length() < 1) {
 			return "Please enter any text as Task name.";
-		if (value.contains("\n"))
+		} else if (value.contains("\n")) {
 			return "Line breakes are not allowed in Task names.";
+		}
+		
 		// null means, that the value is valid
 		return null;
 

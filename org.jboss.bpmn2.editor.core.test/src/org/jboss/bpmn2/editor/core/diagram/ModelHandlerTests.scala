@@ -26,14 +26,14 @@ class ModelHandlerTests extends Specification with JUnit {
   def initHandler(): ModelHandler = {
     new java.io.File("/tmp/test.bpmn2").delete
 
-    ModelHandler.releaseModel(path);
+    ModelHandlerLocator.releaseModel(path);
 
-    val r:Bpmn2ResourceImpl = new Bpmn2ResourceFactoryImpl().createAndInitResource(path).eResource().asInstanceOf[Bpmn2ResourceImpl]
-    ModelHandler.createModelHandler(path, r) 
+    val r: Bpmn2ResourceImpl = new Bpmn2ResourceFactoryImpl().createAndInitResource(path).eResource().asInstanceOf[Bpmn2ResourceImpl]
+    ModelHandlerLocator.createModelHandler(path, r)
   }
 
   "ModelHandler" should {
-	  
+
     "be a factory" in {
       val handler = initHandler
       handler must notBeNull
@@ -59,7 +59,6 @@ class ModelHandlerTests extends Specification with JUnit {
         val definitions = handler.getDefinitions
         classOf[DefinitionsImpl] must_== definitions.niceClass
       }
-
     }
 
     "be able to create Task" in {
@@ -107,6 +106,54 @@ class ModelHandlerTests extends Specification with JUnit {
 
           "secondly created task must be second" in {
             elements.get(1) must_== task2
+          }
+        }
+      }
+    }
+
+    "be able to create SequenceFlow and Exclusice Gateway" in {
+      val handler = initHandler
+      handler.save
+
+      val defXml = XML.loadFile(new File(path.toFileString))
+      defXml.child must_== Nil
+
+      val task = handler.createTask
+      val gateway = handler.createExclusiveGateway
+      val flow = handler.createSequenceFlow(task, gateway)
+
+      task must notBeNull
+      gateway must notBeNull
+      flow must notBeNull
+
+      "when saved model must contain " in {
+        handler.save
+        val savedXml = XML.loadFile(new File(path.toFileString))
+
+        val process = savedXml \\ "process"
+        process must notBeNull
+
+        "a task and a gateway" in {
+          val tasks = process \ "task"
+          tasks.size must_== 1
+
+          val gateway = process \ "exclusiveGateway"
+          gateway.size must_== 1
+
+          "task and gateway must be connected with Sequence Flow" in {
+            val outgoing = (tasks \ "outgoing")(0).text
+            outgoing must notBeNull
+
+            val incoming= (gateway \ "incoming")(0).text
+            incoming must notBeNull
+
+            incoming must_== outgoing
+            
+            val sequence = process \ "sequenceFlow"
+            (sequence \ "@id")(0).text must_== incoming
+            
+            (sequence \ "@sourceRef")(0).text must_== (tasks \ "@id")(0).text
+            (sequence \ "@targetRef")(0).text must_== (gateway \ "@id")(0).text
           }
         }
       }

@@ -26,7 +26,6 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 
 	public AddTaskFeature(IFeatureProvider fp) {
 		super(fp);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -60,9 +59,7 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 			gaService.setRenderingStyle(roundedRectangle, gradient);
 			roundedRectangle.setLineWidth(1);
 			gaService.setLocationAndSize(roundedRectangle, context.getX(), context.getY(), width, height);
-			// if added Class has no resource we add it to the resource
-			// of the diagram
-			// in a real scenario the business model would have its own resource
+
 			if (addedTask.eResource() == null) {
 				getDiagram().eResource().getContents().add(addedTask);
 			}
@@ -73,7 +70,7 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 		// SHAPE WITH TEXT
 		{
 			// create shape for text
-			Shape shape = (Shape) peCreateService.createShape(containerShape, false);
+			Shape shape = peCreateService.createShape(containerShape, false);
 			// create and set text graphics algorithm
 			Text text = gaService.createDefaultText(shape, addedTask.getName());
 			text.setForeground(manageColor(CLASS_TEXT_FOREGROUND));

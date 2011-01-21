@@ -12,8 +12,6 @@ import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeCreateService;
-import org.eclipse.graphiti.util.ColorConstant;
-import org.eclipse.graphiti.util.IColorConstant;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
 
 public class AddExclusiveGatewayFeature extends AbstractAddFeature {
@@ -41,13 +39,17 @@ public class AddExclusiveGatewayFeature extends AbstractAddFeature {
 		ContainerShape containerShape = peCreateService.createContainerShape(targetDiagram, true);
 
 		IGaService gaService = Graphiti.getGaService();
-		Polygon diamond = gaService.createPolygon(containerShape, new int[] { 0, RADIUS, RADIUS, 0, 0, -RADIUS,
-		        -RADIUS, 0 });
+		int[] shape = new int[] { 0, RADIUS, RADIUS, 0, 0, -RADIUS, -RADIUS, 0 };
+		Polygon diamond = gaService.createPolygon(containerShape, shape);
 		gaService.setLocationAndSize(diamond, context.getX(), context.getY(), 2 * RADIUS, 2 * RADIUS);
 
 		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
 
 		gaService.setRenderingStyle(diamond, gradient);
+
+		if (addedGateway.eResource() == null) {
+			getDiagram().eResource().getContents().add(addedGateway);
+		}
 
 		link(containerShape, addedGateway);
 
