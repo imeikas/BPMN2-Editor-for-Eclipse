@@ -7,8 +7,8 @@
   <rm:locator pattern="^org\.jboss\.bpmn2\.editor\.core(\..+)?" searchPathRef="bpmn2.plugins" failOnError="false" />
   <rm:locator pattern="^org\.jboss\.bpmn2\.editor(\..+)?" searchPathRef="bpmn2.plugins" />
 
-  <rm:locator pattern="^org\.eclipse\.bpmn2" searchPathRef="bpmn2model.plugins" failOnError="false"/>
-  <rm:locator pattern="^org\.eclipse\.bpmn2(\..+)?" searchPathRef="bpmn2model.plugins"/>
+  <rm:locator pattern="^org\.eclipse\.bpmn2" searchPathRef="bpmn2.plugins" failOnError="false"/>
+  <rm:locator pattern="^org\.eclipse\.bpmn2(\..+)?" searchPathRef="bpmn2.plugins"/>
 
   <rm:locator pattern="^org\.eclipse\.graphiti(\..+)?" searchPathRef="graphiti" />
   <rm:locator searchPathRef="target.platform" />
@@ -36,18 +36,7 @@
       <rm:uri format="http://download.eclipse.org/graphiti/updates/0.7.0/" />
     </rm:provider>
   </rm:searchPath>
-
-  <rm:searchPath name="bpmn2model.plugins">
-    <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="git">
-      <rm:uri format="{0}/{1}">
-        <bc:propertyRef key="workspace.root" />
-        <bc:propertyRef key="buckminster.component" />
-      </rm:uri>
-      <rm:property key="git.remote.uri" value="git://git.eclipse.org/gitroot/bpmn2" />
-      <rm:property key="git.auto.fetch" value="true" />
-    </rm:provider>
-  </rm:searchPath>
-  
+ 
   <rm:searchPath name="graphiti">
     <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="true" mutable="false" resolutionFilter="(build.type=N)">
       <rm:uri format="http://download.eclipse.org/graphiti/updates/0.7.0/" />
