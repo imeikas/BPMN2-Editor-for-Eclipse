@@ -51,6 +51,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 	@Override
 	public ICreateFeature[] getCreateFeatures() {
+		// if you change this part significantly, check that you won't break Bpmn2Preferences
 		return new ICreateFeature[] { new CreateTaskFeature(this), new CreateExclusiveGatewayFeature(this) };
 	}
 
@@ -68,6 +69,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 	@Override
 	public ICreateConnectionFeature[] getCreateConnectionFeatures() {
+		// if you change this part significantly, check that you won't break Bpmn2Preferences
 		return new ICreateConnectionFeature[] { new CreateSequenceFlowFeature(this) };
 	}
 

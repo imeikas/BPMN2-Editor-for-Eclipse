@@ -59,7 +59,7 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 			gaService.setRenderingStyle(roundedRectangle, gradient);
 			roundedRectangle.setLineWidth(1);
 			gaService.setLocationAndSize(roundedRectangle, context.getX(), context.getY(), width, height);
-
+			
 			if (addedTask.eResource() == null) {
 				getDiagram().eResource().getContents().add(addedTask);
 			}

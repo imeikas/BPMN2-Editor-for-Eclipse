@@ -6,3 +6,4 @@ Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: JBOSS
 Fragment-Host: org.jboss.bpmn2.editor.ui;bundle-version="0.0.1.qualifier"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.jboss.bpmn2.editor.testutil;bundle-version="0.0.1"

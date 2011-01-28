@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.diagram
+package org.jboss.bpmn2.editor.core
 
 class NiceObject[T <: AnyRef](x: T) {
   def niceClass: Class[_ <: T] = x.getClass.asInstanceOf[Class[T]]

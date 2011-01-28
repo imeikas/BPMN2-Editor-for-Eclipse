@@ -7,8 +7,10 @@ import org.eclipse.bpmn2.util.Bpmn2ResourceImpl;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.graphiti.ui.editor.DiagramEditor;
 import org.eclipse.graphiti.ui.editor.DiagramEditorInput;
 import org.eclipse.ui.IEditorInput;
@@ -55,6 +57,7 @@ public class BPMN2Editor extends DiagramEditor {
 				ErrorUtils.showErrorWithLogging(status);
             }
 			modelHandler = ModelHandlerLocator.createModelHandler(modelPath, resource);
+			((BasicCommandStack)getEditingDomain().getCommandStack()).saveIsDone();
 		}
 	}
 

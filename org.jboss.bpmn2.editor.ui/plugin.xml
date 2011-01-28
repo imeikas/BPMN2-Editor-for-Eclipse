@@ -28,4 +28,13 @@
           name="BPMN2 Editor">
     </editor>
  </extension>
+ <extension
+       point="org.eclipse.ui.propertyPages">
+    <page
+          class="org.jboss.bpmn2.editor.ui.preferences.ToolEnablementPropertyPage"
+          id="org.jboss.bpmn2.editor.ui.toolEnablement"
+          name="BPMN2"
+          objectClass="org.eclipse.core.resources.IProject">
+    </page>
+ </extension>
 </plugin>

@@ -16,6 +16,13 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.gef;bundle-version="3.6.1",
  org.eclipse.bpmn2,
  org.eclipse.bpmn2.edit,
- org.eclipse.graphiti.examples.common
+ org.eclipse.graphiti.examples.common,
+ org.eclipse.core.databinding,
+ org.eclipse.core.databinding.beans,
+ org.eclipse.core.databinding.observable,
+ org.eclipse.core.databinding.property,
+ org.eclipse.jface.databinding,
+ com.ibm.icu,
+ org.eclipse.emf.databinding
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy

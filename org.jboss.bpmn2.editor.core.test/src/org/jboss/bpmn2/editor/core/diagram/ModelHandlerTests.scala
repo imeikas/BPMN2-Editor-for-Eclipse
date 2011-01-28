@@ -1,7 +1,7 @@
 package org.jboss.bpmn2.editor.core.diagram
 
-import NiceObject._
 import org.jboss.bpmn2.editor.core._
+import NiceObject._
 import org.eclipse.bpmn2.util._
 
 import org.eclipse.core.runtime.Status
