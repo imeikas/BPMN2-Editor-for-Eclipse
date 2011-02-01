@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import org.eclipse.bpmn2.util.Bpmn2ResourceImpl;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 
@@ -42,11 +44,12 @@ public class ModelHandlerLocator {
 		map.put(path, handler);
 		handler.resource = resource;
 
-		if (!resource.isLoaded()) {
+		URI uri = resource.getURI();
+		if (ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(uri.toPlatformString(true))).exists() && !resource.isLoaded()) {
 			handler.loadResource();
 		}
 
-		handler.updateOrCreateDefinitions(resource);
+		handler.createDefinitionsIfMissing();
 		return handler;
 	}
 

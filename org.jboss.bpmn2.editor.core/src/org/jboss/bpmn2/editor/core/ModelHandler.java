@@ -23,20 +23,19 @@ public class ModelHandler {
 	private static final Bpmn2Factory FACTORY = Bpmn2Factory.eINSTANCE;
 
 	Bpmn2ResourceImpl resource;
-	private Definitions definitions;
 
 	ModelHandler() {
 	}
 
-	void updateOrCreateDefinitions(final Bpmn2ResourceImpl resource) {
+	void createDefinitionsIfMissing() {
 		EList<EObject> contents = resource.getContents();
 
-		if (contents.isEmpty() || !(contents.get(0) instanceof RootElement)) {
+		if (contents.isEmpty() || !(contents.get(0) instanceof DocumentRoot)) {
 			TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(resource);
 
 			if (domain != null) {
 				final DocumentRoot docRoot = FACTORY.createDocumentRoot();
-				definitions = FACTORY.createDefinitions();
+				final Definitions definitions = FACTORY.createDefinitions();
 
 				domain.getCommandStack().execute(new RecordingCommand(domain) {
 					protected void doExecute() {
@@ -47,7 +46,6 @@ public class ModelHandler {
 				return;
 			}
 		}
-		definitions = (Definitions) contents.get(0).eContents().get(0);
 	}
 
 	public <T extends FlowElement> T addFlowElement(T elem) {
@@ -78,13 +76,13 @@ public class ModelHandler {
 		Process process = getFirstProcess();
 		if (process == null) {
 			process = FACTORY.createProcess();
-			definitions.getRootElements().add(process);
+			getDefinitions().getRootElements().add(process);
 		}
 		return process;
 	}
 
 	public Process getFirstProcess() {
-		for (RootElement element : definitions.getRootElements()) {
+		for (RootElement element : getDefinitions().getRootElements()) {
 			if (element instanceof Process) {
 				return (Process) element;
 			}
@@ -97,7 +95,7 @@ public class ModelHandler {
 	}
 
 	public Definitions getDefinitions() {
-		return definitions;
+		return (Definitions) resource.getContents().get(0).eContents().get(0);
 	}
 
 	public void save() {
