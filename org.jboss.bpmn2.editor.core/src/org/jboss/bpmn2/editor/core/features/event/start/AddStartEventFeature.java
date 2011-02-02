@@ -4,7 +4,7 @@ import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
-import org.jboss.bpmn2.editor.core.features.AbstractAddEventFeature;
+import org.jboss.bpmn2.editor.core.features.event.AbstractAddEventFeature;
 
 public class AddStartEventFeature extends AbstractAddEventFeature {
 	

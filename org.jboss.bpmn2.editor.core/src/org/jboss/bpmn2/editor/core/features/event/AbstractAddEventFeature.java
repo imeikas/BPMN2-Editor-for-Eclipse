@@ -1,5 +1,6 @@
-package org.jboss.bpmn2.editor.core.features;
+package org.jboss.bpmn2.editor.core.features.event;
 
+import static org.jboss.bpmn2.editor.core.features.event.SizeConstants.*;
 import org.eclipse.bpmn2.Event;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
@@ -16,10 +17,12 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeCreateService;
+import org.eclipse.graphiti.util.IColorConstant;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
+import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
 public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
-	
+
 	public AbstractAddEventFeature(IFeatureProvider fp) {
 		super(fp);
 	}
@@ -28,46 +31,48 @@ public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
 	public PictogramElement add(IAddContext context) {
 		Event e = (Event) context.getNewObject();
 		Diagram targetDiagram = (Diagram) context.getTargetContainer();
-		
+
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
 		ContainerShape containerShape = peCreateService.createContainerShape(targetDiagram, true);
-		
+
 		IGaService gaService = Graphiti.getGaService();
-		
-		int width = 35;
-		int height = 35;
-		int extraSpaceBottom = 15;
-		
+
 		Rectangle invisibleRect = gaService.createInvisibleRectangle(containerShape);
-		gaService.setLocationAndSize(invisibleRect, context.getX(), context.getY(), width, height + extraSpaceBottom);
+		gaService.setLocationAndSize(invisibleRect, context.getX(), context.getY(), WIDTH, HEIGHT + TEXT_AREA_HEIGHT);
 		
-		Ellipse ellipse = gaService.createEllipse(invisibleRect);
+		Shape ellipseShape = peCreateService.createShape(containerShape, false);
+		Ellipse ellipse = gaService.createEllipse(ellipseShape);
 		ellipse.setStyle(StyleUtil.getStyleForClass(getDiagram()));
 		enhanceEllipse(ellipse);
 		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
 		gaService.setRenderingStyle(ellipse, gradient);
-		gaService.setLocationAndSize(ellipse, 0, 0, width, height);
-		
-		Shape shape = peCreateService.createShape(containerShape, false);
-		Text text = gaService.createDefaultText(shape, e.getName());
+		gaService.setLocationAndSize(ellipse, 0, 0, WIDTH, HEIGHT);
+
+		Shape textShape = peCreateService.createShape(containerShape, false);
+		Text text = gaService.createDefaultText(textShape, e.getName());
 		text.setStyle(StyleUtil.getStyleForText(getDiagram()));
 		text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		text.setVerticalAlignment(Orientation.ALIGNMENT_BOTTOM);
+		text.setBackground(manageColor(IColorConstant.RED));
 		enhanceText(text);
-		gaService.setLocationAndSize(text, 0, height, width, extraSpaceBottom);
-		
+		gaService.setLocationAndSize(text, 0, HEIGHT, WIDTH, TEXT_AREA_HEIGHT);
+
 		if (e.eResource() == null) {
 			getDiagram().eResource().getContents().add(e);
 		}
 		
-		link(shape, e);
+		link(ellipseShape, e);
+		link(textShape, e);
 		link(containerShape, e);
-		
+
 		peCreateService.createChopboxAnchor(containerShape);
+		layoutPictogramElement(containerShape);
 		return containerShape;
 	}
-	
-	protected void enhanceEllipse(Ellipse e) {}
-	
-	protected void enhanceText(Text t) {}
+
+	protected void enhanceEllipse(Ellipse e) {
+	}
+
+	protected void enhanceText(Text t) {
+	}
 }

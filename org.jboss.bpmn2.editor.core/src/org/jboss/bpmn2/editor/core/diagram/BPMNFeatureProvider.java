@@ -22,10 +22,12 @@ import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
 import org.jboss.bpmn2.editor.core.features.event.end.AddEndEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.end.CreateEndEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.end.DirectEditEndEventFeature;
+import org.jboss.bpmn2.editor.core.features.event.end.LayoutEndEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.end.UpdateEndEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.start.AddStartEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.start.CreateStartEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.start.DirectEditStartEventFeature;
+import org.jboss.bpmn2.editor.core.features.event.start.LayoutStartEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.start.UpdateStartEventFeature;
 import org.jboss.bpmn2.editor.core.features.exclusivegateway.AddExclusiveGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.exclusivegateway.CreateExclusiveGatewayFeature;
@@ -123,6 +125,10 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		Object bo = getBusinessObjectForPictogramElement(pictogramElement);
 		if (bo instanceof Task) {
 			return new LayoutTaskFeature(this);
+		} else if (bo instanceof StartEvent) {
+			return new LayoutStartEventFeature(this);
+		} else if (bo instanceof EndEvent) {
+			return new LayoutEndEventFeature(this);
 		} else {
 			return super.getLayoutFeature(context);
 		}
