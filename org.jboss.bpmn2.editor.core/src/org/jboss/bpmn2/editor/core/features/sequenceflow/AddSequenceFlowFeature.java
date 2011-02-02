@@ -4,7 +4,7 @@ import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddConnectionContext;
 import org.eclipse.graphiti.features.context.IAddContext;
-import org.eclipse.graphiti.features.impl.AbstractAddFeature;
+import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
 import org.eclipse.graphiti.mm.GraphicsAlgorithmContainer;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.eclipse.graphiti.mm.pictograms.Connection;
@@ -16,7 +16,7 @@ import org.eclipse.graphiti.services.IPeCreateService;
 import org.eclipse.graphiti.util.ColorConstant;
 import org.eclipse.graphiti.util.IColorConstant;
 
-public class AddSequenceFlowFeature extends AbstractAddFeature {
+public class AddSequenceFlowFeature extends AbstractAddShapeFeature {
 	private static final int WIDTH = 5;
 	private static final int LENGTH = 15;
 	private static final IColorConstant CLASS_FOREGROUND = new ColorConstant(146, 146, 208);
@@ -70,4 +70,5 @@ public class AddSequenceFlowFeature extends AbstractAddFeature {
 		return polyline;
 
 	}
+	
 }

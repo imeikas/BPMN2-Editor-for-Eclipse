@@ -23,6 +23,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.databinding.property,
  org.eclipse.jface.databinding,
  com.ibm.icu,
- org.eclipse.emf.databinding
+ org.eclipse.emf.databinding,
+ org.eclipse.graphiti.examples.tutorial;bundle-version="0.7.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy

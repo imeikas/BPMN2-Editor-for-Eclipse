@@ -33,6 +33,7 @@ class ModelHandlerTests extends Specification with JUnit {
   }
 
   "ModelHandler" should {
+    setSequential()
 
     "be a factory" in {
       val handler = initHandler
@@ -63,7 +64,7 @@ class ModelHandlerTests extends Specification with JUnit {
 
     "be able to create Task" in {
       val handler = initHandler
-      val task = handler.createTask
+      val task = handler.addFlowElement(ModelHandler.FACTORY.createTask())
       task.isInstanceOf[TaskImpl] must beTrue
 
       "that is placed to model Resources" in {
@@ -92,7 +93,7 @@ class ModelHandlerTests extends Specification with JUnit {
         }
       }
       "creating another task must be also in the same process" in {
-        val task2 = handler.createTask
+        val task2 = handler.addFlowElement(ModelHandler.FACTORY.createTask())
         task2 must_!= task
 
         val process = handler.getFirstProcess
@@ -118,8 +119,8 @@ class ModelHandlerTests extends Specification with JUnit {
       val defXml = XML.loadFile(new File(path.toFileString))
       defXml.child must_== Nil
 
-      val task = handler.createTask
-      val gateway = handler.createExclusiveGateway
+      val task = handler.addFlowElement(ModelHandler.FACTORY.createTask())
+      val gateway = handler.addFlowElement(ModelHandler.FACTORY.createExclusiveGateway())
       val flow = handler.createSequenceFlow(task, gateway)
 
       task must notBeNull
@@ -144,14 +145,14 @@ class ModelHandlerTests extends Specification with JUnit {
             val outgoing = (tasks \ "outgoing")(0).text
             outgoing must notBeNull
 
-            val incoming= (gateway \ "incoming")(0).text
+            val incoming = (gateway \ "incoming")(0).text
             incoming must notBeNull
 
             incoming must_== outgoing
-            
+
             val sequence = process \ "sequenceFlow"
             (sequence \ "@id")(0).text must_== incoming
-            
+
             (sequence \ "@sourceRef")(0).text must_== (tasks \ "@id")(0).text
             (sequence \ "@targetRef")(0).text must_== (gateway \ "@id")(0).text
           }
@@ -168,7 +169,7 @@ class ModelHandlerTests extends Specification with JUnit {
         defXml.child must_== Nil
 
         "have process and task when task is created" in {
-          handler.createTask
+          handler.addFlowElement(ModelHandler.FACTORY.createTask())
           handler save
 
           val taskXml = XML.loadFile(new File(path.toFileString))
@@ -180,7 +181,7 @@ class ModelHandlerTests extends Specification with JUnit {
           task must notBeNull
 
           "have two tasks when second task is created" in {
-            handler.createTask
+            handler.addFlowElement(ModelHandler.FACTORY.createTask())
             handler save
 
             val twoTaskXml = XML.loadFile(new File(path.toFileString))

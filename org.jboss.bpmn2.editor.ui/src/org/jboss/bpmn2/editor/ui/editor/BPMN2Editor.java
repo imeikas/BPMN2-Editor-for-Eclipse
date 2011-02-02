@@ -10,7 +10,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.graphiti.ui.editor.DiagramEditor;
 import org.eclipse.graphiti.ui.editor.DiagramEditorInput;
 import org.eclipse.ui.IEditorInput;
@@ -50,14 +49,14 @@ public class BPMN2Editor extends DiagramEditor {
 			        "org.eclipse.bpmn2.content-type.xml");
 			try {
 				File file = new File(modelsPath);
-				if(file.exists())
-	            resource.load(null);
-            } catch (IOException e) {
-            	Status status = new Status(IStatus.ERROR,Activator.PLUGIN_ID,e.getMessage(),e);
+				if (file.exists())
+					resource.load(null);
+			} catch (IOException e) {
+				Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e);
 				ErrorUtils.showErrorWithLogging(status);
-            }
+			}
 			modelHandler = ModelHandlerLocator.createModelHandler(modelPath, resource);
-			((BasicCommandStack)getEditingDomain().getCommandStack()).saveIsDone();
+			((BasicCommandStack) getEditingDomain().getCommandStack()).saveIsDone();
 		}
 	}
 

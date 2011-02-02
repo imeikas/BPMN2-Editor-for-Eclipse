@@ -3,7 +3,7 @@ package org.jboss.bpmn2.editor.core.features.exclusivegateway;
 import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
-import org.eclipse.graphiti.features.impl.AbstractAddFeature;
+import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
 import org.eclipse.graphiti.mm.algorithms.Polygon;
 import org.eclipse.graphiti.mm.algorithms.styles.AdaptedGradientColoredAreas;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
@@ -15,7 +15,7 @@ import org.eclipse.graphiti.services.IPeCreateService;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
-public class AddExclusiveGatewayFeature extends AbstractAddFeature {
+public class AddExclusiveGatewayFeature extends AbstractAddShapeFeature {
 
 	private static final int RADIUS = 25;
 
