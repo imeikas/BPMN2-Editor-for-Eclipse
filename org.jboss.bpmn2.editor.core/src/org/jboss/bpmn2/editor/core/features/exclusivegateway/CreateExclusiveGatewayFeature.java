@@ -27,7 +27,7 @@ public class CreateExclusiveGatewayFeature extends AbstractCreateFeature {
 	public Object[] create(ICreateContext context) {
 		try {
 			ModelHandler mh = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
-			ExclusiveGateway x = mh.createExclusiveGateway();
+			ExclusiveGateway x = mh.addFlowElement(ModelHandler.FACTORY.createExclusiveGateway());
 			addGraphicalRepresentation(context, x);
 			return new Object[] { x };
 		} catch (IOException e) {

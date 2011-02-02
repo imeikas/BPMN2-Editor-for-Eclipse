@@ -80,6 +80,7 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 		}
 
 		peCreateService.createChopboxAnchor(containerShape);
+		layoutPictogramElement(containerShape);
 		return containerShape;
 	}
 

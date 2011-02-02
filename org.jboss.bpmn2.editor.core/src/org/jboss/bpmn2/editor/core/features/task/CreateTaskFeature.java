@@ -30,7 +30,7 @@ public class CreateTaskFeature extends AbstractCreateFeature {
 		Task x = null;
 		try {
 			ModelHandler mh = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
-			x = mh.createTask();
+			x = mh.addFlowElement(ModelHandler.FACTORY.createTask());
 			x.setName(name);
 		} catch (IOException e) {
 			Activator.logError(e);

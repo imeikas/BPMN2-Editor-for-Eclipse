@@ -54,20 +54,23 @@ public class ModelHandler {
 		return elem;
 	}
 
+	@Deprecated
 	public Task createTask() {
 		return addFlowElement(FACTORY.createTask());
 	}
 
+	@Deprecated
 	public SequenceFlow createSequenceFlow() {
 		return addFlowElement(FACTORY.createSequenceFlow());
 	}
 	public SequenceFlow createSequenceFlow(FlowNode source, FlowNode target) {
-		SequenceFlow flow = createSequenceFlow();
+		SequenceFlow flow = addFlowElement(FACTORY.createSequenceFlow());
 		flow.setSourceRef(source);
 		flow.setTargetRef(target);
 		return flow;
 	}
-
+	
+	@Deprecated
 	public ExclusiveGateway createExclusiveGateway() {
 		return addFlowElement(FACTORY.createExclusiveGateway());
 	}
