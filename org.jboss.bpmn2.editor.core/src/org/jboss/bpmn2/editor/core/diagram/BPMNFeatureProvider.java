@@ -1,7 +1,9 @@
 package org.jboss.bpmn2.editor.core.diagram;
 
+import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.SequenceFlow;
+import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.bpmn2.Task;
 import org.eclipse.graphiti.dt.IDiagramTypeProvider;
 import org.eclipse.graphiti.features.IAddFeature;
@@ -15,14 +17,24 @@ import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
-import org.jboss.bpmn2.editor.core.features.AddExclusiveGatewayFeature;
-import org.jboss.bpmn2.editor.core.features.AddSequenceFlowFeature;
-import org.jboss.bpmn2.editor.core.features.AddTaskFeature;
-import org.jboss.bpmn2.editor.core.features.CreateExclusiveGatewayFeature;
-import org.jboss.bpmn2.editor.core.features.CreateSequenceFlowFeature;
-import org.jboss.bpmn2.editor.core.features.CreateTaskFeature;
-import org.jboss.bpmn2.editor.core.features.DirectEditTaskFeature;
-import org.jboss.bpmn2.editor.core.features.UpdateTaskFeature;
+import org.jboss.bpmn2.editor.core.features.endevent.AddEndEventFeature;
+import org.jboss.bpmn2.editor.core.features.endevent.CreateEndEventFeature;
+import org.jboss.bpmn2.editor.core.features.endevent.DirectEditEndEventFeature;
+import org.jboss.bpmn2.editor.core.features.endevent.UpdateEndEventFeature;
+import org.jboss.bpmn2.editor.core.features.exclusivegateway.AddExclusiveGatewayFeature;
+import org.jboss.bpmn2.editor.core.features.exclusivegateway.CreateExclusiveGatewayFeature;
+import org.jboss.bpmn2.editor.core.features.exclusivegateway.DirectEditExclusiveGatewayFeature;
+import org.jboss.bpmn2.editor.core.features.exclusivegateway.UpdateExclusiveGatewayFeature;
+import org.jboss.bpmn2.editor.core.features.sequenceflow.AddSequenceFlowFeature;
+import org.jboss.bpmn2.editor.core.features.sequenceflow.CreateSequenceFlowFeature;
+import org.jboss.bpmn2.editor.core.features.startevent.AddStartEventFeature;
+import org.jboss.bpmn2.editor.core.features.startevent.CreateStartEventFeature;
+import org.jboss.bpmn2.editor.core.features.startevent.DirectEditStartEventFeature;
+import org.jboss.bpmn2.editor.core.features.startevent.UpdateStartEventFeature;
+import org.jboss.bpmn2.editor.core.features.task.AddTaskFeature;
+import org.jboss.bpmn2.editor.core.features.task.CreateTaskFeature;
+import org.jboss.bpmn2.editor.core.features.task.DirectEditTaskFeature;
+import org.jboss.bpmn2.editor.core.features.task.UpdateTaskFeature;
 
 /**
  * Determines what kinds of business objects can be added to a diagram.
@@ -45,6 +57,10 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			return new AddSequenceFlowFeature(this);
 		} else if (newObject instanceof ExclusiveGateway) {
 			return new AddExclusiveGatewayFeature(this);
+		} else if (newObject instanceof StartEvent) {
+			return new AddStartEventFeature(this);
+		} else if (newObject instanceof EndEvent) {
+			return new AddEndEventFeature(this);
 		}
 		return super.getAddFeature(context);
 	}
@@ -52,7 +68,8 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 	@Override
 	public ICreateFeature[] getCreateFeatures() {
 		// if you change this part significantly, check that you won't break Bpmn2Preferences
-		return new ICreateFeature[] { new CreateTaskFeature(this), new CreateExclusiveGatewayFeature(this) };
+		return new ICreateFeature[] { new CreateStartEventFeature(this), new CreateEndEventFeature(this), 
+																	new CreateTaskFeature(this), new CreateExclusiveGatewayFeature(this) };
 	}
 
 	@Override
@@ -62,6 +79,12 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			Object bo = getBusinessObjectForPictogramElement(pictogramElement);
 			if (bo instanceof Task) {
 				return new UpdateTaskFeature(this);
+			} else if (bo instanceof StartEvent) {
+				return new UpdateStartEventFeature(this);
+			} else if (bo instanceof EndEvent) {
+				return new UpdateEndEventFeature(this);
+			} else if (bo instanceof ExclusiveGateway) {
+				return new UpdateExclusiveGatewayFeature(this);
 			}
 		}
 		return super.getUpdateFeature(context);
@@ -79,7 +102,14 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		Object bo = getBusinessObjectForPictogramElement(pe);
 		if (bo instanceof Task) {
 			return new DirectEditTaskFeature(this);
+		} else if (bo instanceof StartEvent) {
+			return new DirectEditStartEventFeature(this);
+		} else if (bo instanceof EndEvent) {
+			return new DirectEditEndEventFeature(this);
+		} else if (bo instanceof ExclusiveGateway) {
+			return new DirectEditExclusiveGatewayFeature(this);
+		} else {
+			return super.getDirectEditingFeature(context);
 		}
-		return super.getDirectEditingFeature(context);
 	}
 }

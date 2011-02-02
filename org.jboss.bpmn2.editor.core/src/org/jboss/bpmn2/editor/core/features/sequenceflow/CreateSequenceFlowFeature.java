@@ -1,10 +1,9 @@
-package org.jboss.bpmn2.editor.core.features;
+package org.jboss.bpmn2.editor.core.features.sequenceflow;
 
 import java.io.IOException;
 
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.SequenceFlow;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateConnectionContext;
 import org.eclipse.graphiti.features.context.impl.AddConnectionContext;
@@ -12,6 +11,7 @@ import org.eclipse.graphiti.features.impl.AbstractCreateConnectionFeature;
 import org.eclipse.graphiti.mm.pictograms.Anchor;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.jboss.bpmn2.editor.core.Activator;
+import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
 
@@ -66,5 +66,14 @@ public class CreateSequenceFlowFeature extends AbstractCreateConnectionFeature {
 	public boolean canStartConnection(ICreateConnectionContext context) {
 		return getFlowNode(context.getSourceAnchor()) != null;
 	}
-
+	
+	@Override
+	public String getCreateImageId() {
+		return ImageProvider.IMG_16_SEQUENCE_FLOW;
+	}
+	
+	@Override
+	public String getCreateLargeImageId() {
+		return getCreateImageId(); //FIXME
+	}
 }

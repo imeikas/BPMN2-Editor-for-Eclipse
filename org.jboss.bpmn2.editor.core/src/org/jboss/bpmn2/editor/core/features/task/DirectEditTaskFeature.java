@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features;
+package org.jboss.bpmn2.editor.core.features.task;
 
 import org.eclipse.bpmn2.Task;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -44,7 +44,7 @@ public class DirectEditTaskFeature extends AbstractDirectEditingFeature {
 		} else if (value.contains("\n")) {
 			return "Line breakes are not allowed in Task names.";
 		}
-		
+
 		// null means, that the value is valid
 		return null;
 

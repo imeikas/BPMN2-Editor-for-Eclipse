@@ -21,6 +21,16 @@
          <diagramType
                id="org.jboss.bpmn2.editor.core.diagram.MainBPMNDiagramType">
          </diagramType>
+         <imageProvider
+               id="org.jboss.bpmn2.editor.core.ImageProvider">
+         </imageProvider>
       </diagramTypeProvider>
+   </extension>
+   <extension
+         point="org.eclipse.graphiti.ui.imageProviders">
+      <imageProvider
+            class="org.jboss.bpmn2.editor.core.ImageProvider"
+            id="org.jboss.bpmn2.editor.core.ImageProvider">
+      </imageProvider>
    </extension>
 </plugin>

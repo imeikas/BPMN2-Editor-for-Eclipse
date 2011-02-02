@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features;
+package org.jboss.bpmn2.editor.core.features.task;
 
 import org.eclipse.bpmn2.Task;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -15,14 +15,10 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeCreateService;
-import org.eclipse.graphiti.util.ColorConstant;
-import org.eclipse.graphiti.util.IColorConstant;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
+import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
 public class AddTaskFeature extends AbstractAddShapeFeature {
-	private static final IColorConstant CLASS_TEXT_FOREGROUND = IColorConstant.BLACK;
-	private static final IColorConstant CLASS_FOREGROUND = new ColorConstant(146, 146, 208);
-	private static final IColorConstant CLASS_BACKGROUND = new ColorConstant(220, 220, 255);
 
 	public AddTaskFeature(IFeatureProvider fp) {
 		super(fp);
@@ -48,18 +44,17 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 		int width = 100;
 		int height = 50;
 		IGaService gaService = Graphiti.getGaService();
+
 		{
 			// create and set graphics algorithm
 			RoundedRectangle roundedRectangle = gaService.createRoundedRectangle(containerShape, 5, 5);
-			roundedRectangle.setForeground(manageColor(CLASS_FOREGROUND));
-			roundedRectangle.setBackground(manageColor(CLASS_BACKGROUND));
+			roundedRectangle.setStyle(StyleUtil.getStyleForClass(getDiagram()));
 
 			AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
-
 			gaService.setRenderingStyle(roundedRectangle, gradient);
-			roundedRectangle.setLineWidth(1);
+
 			gaService.setLocationAndSize(roundedRectangle, context.getX(), context.getY(), width, height);
-			
+
 			if (addedTask.eResource() == null) {
 				getDiagram().eResource().getContents().add(addedTask);
 			}
@@ -67,13 +62,14 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 			link(containerShape, addedTask);
 
 		}
+
 		// SHAPE WITH TEXT
 		{
 			// create shape for text
 			Shape shape = peCreateService.createShape(containerShape, false);
 			// create and set text graphics algorithm
 			Text text = gaService.createDefaultText(shape, addedTask.getName());
-			text.setForeground(manageColor(CLASS_TEXT_FOREGROUND));
+			text.setStyle(StyleUtil.getStyleForText(getDiagram()));
 			text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 			text.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 			text.getFont().setBold(true);
@@ -82,6 +78,7 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 			// create link and wire it
 			link(shape, addedTask);
 		}
+
 		peCreateService.createChopboxAnchor(containerShape);
 		return containerShape;
 	}

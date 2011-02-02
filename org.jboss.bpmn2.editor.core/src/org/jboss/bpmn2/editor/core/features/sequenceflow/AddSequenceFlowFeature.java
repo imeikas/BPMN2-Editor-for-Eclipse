@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features;
+package org.jboss.bpmn2.editor.core.features.sequenceflow;
 
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.graphiti.features.IFeatureProvider;

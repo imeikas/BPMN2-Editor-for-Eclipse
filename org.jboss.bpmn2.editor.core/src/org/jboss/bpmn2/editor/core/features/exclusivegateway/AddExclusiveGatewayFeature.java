@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features;
+package org.jboss.bpmn2.editor.core.features.exclusivegateway;
 
 import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -13,6 +13,7 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeCreateService;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
+import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
 public class AddExclusiveGatewayFeature extends AbstractAddFeature {
 
@@ -39,13 +40,14 @@ public class AddExclusiveGatewayFeature extends AbstractAddFeature {
 		ContainerShape containerShape = peCreateService.createContainerShape(targetDiagram, true);
 
 		IGaService gaService = Graphiti.getGaService();
-		int[] shape = new int[] { 0, RADIUS, RADIUS, 0, 0, -RADIUS, -RADIUS, 0 };
-		Polygon diamond = gaService.createPolygon(containerShape, shape);
-		gaService.setLocationAndSize(diamond, context.getX(), context.getY(), 2 * RADIUS, 2 * RADIUS);
+		int[] xy = new int[] { 0, RADIUS, RADIUS, 0, 0, -RADIUS, -RADIUS, 0 };
+		Polygon diamond = gaService.createPolygon(containerShape, xy);
+		diamond.setStyle(StyleUtil.getStyleForClass(getDiagram()));
 
 		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
-
 		gaService.setRenderingStyle(diamond, gradient);
+
+		gaService.setLocationAndSize(diamond, context.getX(), context.getY(), 2 * RADIUS, 2 * RADIUS);
 
 		if (addedGateway.eResource() == null) {
 			getDiagram().eResource().getContents().add(addedGateway);

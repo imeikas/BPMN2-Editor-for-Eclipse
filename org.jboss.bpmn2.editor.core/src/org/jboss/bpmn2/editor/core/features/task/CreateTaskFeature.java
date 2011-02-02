@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features;
+package org.jboss.bpmn2.editor.core.features.task;
 
 import java.io.IOException;
 
@@ -8,6 +8,7 @@ import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.features.impl.AbstractCreateFeature;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.jboss.bpmn2.editor.core.Activator;
+import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
 
@@ -25,19 +26,28 @@ public class CreateTaskFeature extends AbstractCreateFeature {
 	@Override
 	public Object[] create(ICreateContext context) {
 		final String name = "Task Name";
-		
+
 		Task x = null;
-        try {
-        	ModelHandler mh = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
-	        x = mh.createTask();
-	        x.setName(name);
-        } catch (IOException e) {
+		try {
+			ModelHandler mh = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
+			x = mh.createTask();
+			x.setName(name);
+		} catch (IOException e) {
 			Activator.logError(e);
-        }
-		
+		}
+
 		addGraphicalRepresentation(context, x);
 
 		return new Object[] { x };
 	}
 
+	@Override
+	public String getCreateImageId() {
+		return ImageProvider.IMG_16_TASK;
+	}
+
+	@Override
+	public String getCreateLargeImageId() {
+		return getCreateImageId(); // FIXME
+	}
 }

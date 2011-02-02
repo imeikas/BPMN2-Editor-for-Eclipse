@@ -20,7 +20,7 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 
 public class ModelHandler {
-	private static final Bpmn2Factory FACTORY = Bpmn2Factory.eINSTANCE;
+	public static final Bpmn2Factory FACTORY = Bpmn2Factory.eINSTANCE;
 
 	Bpmn2ResourceImpl resource;
 
