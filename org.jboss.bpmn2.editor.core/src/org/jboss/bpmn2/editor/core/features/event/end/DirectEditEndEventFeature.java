@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.endevent;
+package org.jboss.bpmn2.editor.core.features.event.end;
 
 import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.graphiti.features.IFeatureProvider;

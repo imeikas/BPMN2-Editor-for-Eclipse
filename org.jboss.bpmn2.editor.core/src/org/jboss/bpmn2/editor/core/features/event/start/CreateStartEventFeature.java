@@ -1,8 +1,8 @@
-package org.jboss.bpmn2.editor.core.features.endevent;
+package org.jboss.bpmn2.editor.core.features.event.start;
 
 import java.io.IOException;
 
-import org.eclipse.bpmn2.EndEvent;
+import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.features.impl.AbstractCreateFeature;
@@ -12,10 +12,14 @@ import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
 
-public class CreateEndEventFeature extends AbstractCreateFeature {
+public class CreateStartEventFeature extends AbstractCreateFeature {
 
-	public CreateEndEventFeature(IFeatureProvider fp) {
-		super(fp, "End Event", "Indicates the end of a process or choreography");
+	private static final String FEATURE_NAME = "Start Event";
+	private static final String FEATURE_DESCRIPTION = "Indicates the start of a process or choreography";
+	private static final String NAME_ON_DIAGRAM = "Start";
+
+	public CreateStartEventFeature(IFeatureProvider fp) {
+		super(fp, FEATURE_NAME, FEATURE_DESCRIPTION);
 	}
 
 	@Override
@@ -25,27 +29,27 @@ public class CreateEndEventFeature extends AbstractCreateFeature {
 
 	@Override
 	public Object[] create(ICreateContext context) {
-		EndEvent end = null;
+		StartEvent start = null;
 		try {
 			ModelHandler mh = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
-			end = mh.addFlowElement(ModelHandler.FACTORY.createEndEvent());
-			end.setName("End");
+			start = mh.addFlowElement(ModelHandler.FACTORY.createStartEvent());
+			start.setName(NAME_ON_DIAGRAM);
 		} catch (IOException e) {
 			Activator.logError(e);
 		}
-
-		addGraphicalRepresentation(context, end);
-
-		return new Object[] { end };
+		
+		addGraphicalRepresentation(context, start);
+		
+		return new Object[] { start };
 	}
-
+	
 	@Override
 	public String getCreateImageId() {
-		return ImageProvider.IMG_16_END_EVENT;
-	}
-
+		return ImageProvider.IMG_16_START_EVENT;
+	};
+	
 	@Override
 	public String getCreateLargeImageId() {
-		return getCreateImageId(); // FIXME
+		return getCreateImageId(); //FIXME
 	}
 }

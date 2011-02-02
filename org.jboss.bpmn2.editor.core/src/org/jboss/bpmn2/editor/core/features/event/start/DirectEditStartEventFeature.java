@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.startevent;
+package org.jboss.bpmn2.editor.core.features.event.start;
 
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.graphiti.features.IFeatureProvider;
