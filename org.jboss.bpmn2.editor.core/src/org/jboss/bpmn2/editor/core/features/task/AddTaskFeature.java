@@ -1,5 +1,6 @@
 package org.jboss.bpmn2.editor.core.features.task;
 
+import static org.jboss.bpmn2.editor.core.features.task.SizeConstants.*;
 import org.eclipse.bpmn2.Task;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
@@ -36,13 +37,9 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 		Task addedTask = (Task) context.getNewObject();
 		Diagram targetDiagram = (Diagram) context.getTargetContainer();
 
-		// CONTAINER SHAPE WITH ROUNDED RECTANGLE
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
 		ContainerShape containerShape = peCreateService.createContainerShape(targetDiagram, true);
 
-		// define a default size for the shape
-		int width = 100;
-		int height = 50;
 		IGaService gaService = Graphiti.getGaService();
 
 		{
@@ -53,7 +50,7 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 			AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
 			gaService.setRenderingStyle(roundedRectangle, gradient);
 
-			gaService.setLocationAndSize(roundedRectangle, context.getX(), context.getY(), width, height);
+			gaService.setLocationAndSize(roundedRectangle, context.getX(), context.getY(), WIDTH, HEIGHT);
 
 			if (addedTask.eResource() == null) {
 				getDiagram().eResource().getContents().add(addedTask);
@@ -73,7 +70,7 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 			text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 			text.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 			text.getFont().setBold(true);
-			gaService.setLocationAndSize(text, 0, 0, width, 20);
+			gaService.setLocationAndSize(text, 0, 0, WIDTH, 20);
 
 			// create link and wire it
 			link(shape, addedTask);

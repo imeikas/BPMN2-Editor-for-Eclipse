@@ -3,15 +3,15 @@ package org.jboss.bpmn2.editor.core;
 import java.io.IOException;
 
 import org.eclipse.bpmn2.Bpmn2Factory;
+import org.eclipse.bpmn2.Collaboration;
 import org.eclipse.bpmn2.Definitions;
 import org.eclipse.bpmn2.DocumentRoot;
-import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.bpmn2.FlowNode;
+import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.Process;
 import org.eclipse.bpmn2.RootElement;
 import org.eclipse.bpmn2.SequenceFlow;
-import org.eclipse.bpmn2.Task;
 import org.eclipse.bpmn2.util.Bpmn2ResourceImpl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -53,16 +53,15 @@ public class ModelHandler {
 		process.getFlowElements().add(elem);
 		return elem;
 	}
-
-	@Deprecated
-	public Task createTask() {
-		return addFlowElement(FACTORY.createTask());
+	
+	public Participant addCollaborator() {
+		Collaboration collaboration = getOrCreateFirstCollaboration();
+		Participant participant = FACTORY.createParticipant();
+		collaboration.getParticipants().add(participant);
+		participant.setProcessRef(getOrCreateFirstProcess());
+		return participant;
 	}
-
-	@Deprecated
-	public SequenceFlow createSequenceFlow() {
-		return addFlowElement(FACTORY.createSequenceFlow());
-	}
+	
 	public SequenceFlow createSequenceFlow(FlowNode source, FlowNode target) {
 		SequenceFlow flow = addFlowElement(FACTORY.createSequenceFlow());
 		flow.setSourceRef(source);
@@ -70,11 +69,6 @@ public class ModelHandler {
 		return flow;
 	}
 	
-	@Deprecated
-	public ExclusiveGateway createExclusiveGateway() {
-		return addFlowElement(FACTORY.createExclusiveGateway());
-	}
-
 	private Process getOrCreateFirstProcess() {
 		Process process = getFirstProcess();
 		if (process == null) {
@@ -83,11 +77,29 @@ public class ModelHandler {
 		}
 		return process;
 	}
+	
+	private Collaboration getOrCreateFirstCollaboration() {
+		Collaboration collaboration = getFirstCollaboration();
+		if(collaboration == null) {
+			collaboration = FACTORY.createCollaboration();
+			getDefinitions().getRootElements().add(collaboration);
+		}
+		return collaboration;
+	}
 
 	public Process getFirstProcess() {
 		for (RootElement element : getDefinitions().getRootElements()) {
 			if (element instanceof Process) {
 				return (Process) element;
+			}
+		}
+		return null;
+	}
+	
+	public Collaboration getFirstCollaboration() {
+		for (RootElement element : getDefinitions().getRootElements()) {
+			if(element instanceof Collaboration) {
+				return (Collaboration) element;
 			}
 		}
 		return null;
@@ -130,6 +142,4 @@ public class ModelHandler {
 		}
 
 	}
-
-
 }

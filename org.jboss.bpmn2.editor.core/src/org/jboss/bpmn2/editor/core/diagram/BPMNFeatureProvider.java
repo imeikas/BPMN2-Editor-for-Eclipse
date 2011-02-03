@@ -2,6 +2,7 @@ package org.jboss.bpmn2.editor.core.diagram;
 
 import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.ExclusiveGateway;
+import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.bpmn2.Task;
@@ -33,6 +34,9 @@ import org.jboss.bpmn2.editor.core.features.exclusivegateway.AddExclusiveGateway
 import org.jboss.bpmn2.editor.core.features.exclusivegateway.CreateExclusiveGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.exclusivegateway.DirectEditExclusiveGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.exclusivegateway.UpdateExclusiveGatewayFeature;
+import org.jboss.bpmn2.editor.core.features.pool.AddPoolFeature;
+import org.jboss.bpmn2.editor.core.features.pool.CreatePoolFeature;
+import org.jboss.bpmn2.editor.core.features.pool.LayoutPoolFeature;
 import org.jboss.bpmn2.editor.core.features.sequenceflow.AddSequenceFlowFeature;
 import org.jboss.bpmn2.editor.core.features.sequenceflow.CreateSequenceFlowFeature;
 import org.jboss.bpmn2.editor.core.features.task.AddTaskFeature;
@@ -66,6 +70,8 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			return new AddStartEventFeature(this);
 		} else if (newObject instanceof EndEvent) {
 			return new AddEndEventFeature(this);
+		} else if (newObject instanceof Participant) {
+			return new AddPoolFeature(this);
 		}
 		return super.getAddFeature(context);
 	}
@@ -75,7 +81,8 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		// if you change this part significantly, check that you won't break Bpmn2Preferences
 		return new ICreateFeature[] { 
 				new CreateStartEventFeature(this), new CreateEndEventFeature(this),
-		        new CreateTaskFeature(this), new CreateExclusiveGatewayFeature(this) };
+		        new CreateTaskFeature(this), new CreateExclusiveGatewayFeature(this),
+		        new CreatePoolFeature(this) };
 	}
 
 	@Override
@@ -129,6 +136,8 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			return new LayoutStartEventFeature(this);
 		} else if (bo instanceof EndEvent) {
 			return new LayoutEndEventFeature(this);
+		} else if (bo instanceof Participant) {
+			return new LayoutPoolFeature(this);
 		} else {
 			return super.getLayoutFeature(context);
 		}

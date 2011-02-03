@@ -13,6 +13,7 @@ public class ImageProvider extends AbstractImageProvider {
 	public static final String IMG_16_TASK = PREFIX + "Task.png"; 
 	public static final String IMG_16_EXCLUSIVE_GATEWAY = PREFIX + "exclusivegateway.16";
 	public static final String IMG_16_SEQUENCE_FLOW = PREFIX + "sequenceflow.16";
+	public static final String IMG_16_PARTICIPANT = PREFIX + "participant.16";
 	
 	@Override
 	protected void addAvailableImages() {
@@ -21,5 +22,6 @@ public class ImageProvider extends AbstractImageProvider {
 		addImageFilePath(IMG_16_TASK, ICONS_16 + "Task.png");
 		addImageFilePath(IMG_16_EXCLUSIVE_GATEWAY, ICONS_16 + "ExclusiveGateway.png");
 		addImageFilePath(IMG_16_SEQUENCE_FLOW, ICONS_16 + "SequenceFlow.png");
+		addImageFilePath(IMG_16_PARTICIPANT, ICONS_16 + "Participant.gif");
 	}
 }
