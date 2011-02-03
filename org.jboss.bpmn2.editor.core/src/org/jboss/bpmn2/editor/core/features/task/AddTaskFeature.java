@@ -28,7 +28,8 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 	@Override
 	public boolean canAdd(IAddContext context) {
 		boolean isTask = context.getNewObject() instanceof Task;
-		boolean intoDiagram = context.getTargetContainer() instanceof Diagram;
+		ContainerShape container = context.getTargetContainer();
+		boolean intoDiagram = container instanceof Diagram;
 		return isTask && intoDiagram;
 	}
 
