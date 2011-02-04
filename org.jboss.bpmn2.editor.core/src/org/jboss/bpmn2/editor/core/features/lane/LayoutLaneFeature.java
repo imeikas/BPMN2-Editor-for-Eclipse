@@ -2,7 +2,7 @@ package org.jboss.bpmn2.editor.core.features.lane;
 
 import java.util.Iterator;
 
-import org.eclipse.bpmn2.Participant;
+import org.eclipse.bpmn2.Lane;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.datatypes.IDimension;
@@ -10,6 +10,7 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ILayoutContext;
 import org.eclipse.graphiti.features.impl.AbstractLayoutFeature;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
+import org.eclipse.graphiti.mm.algorithms.Text;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
@@ -29,7 +30,7 @@ public class LayoutLaneFeature extends AbstractLayoutFeature {
 			return false;
 		}
 		EList<EObject> businessObjs = pictoElem.getLink().getBusinessObjects();
-		return businessObjs.size() == 1 && businessObjs.get(0) instanceof Participant;
+		return businessObjs.size() == 1 && businessObjs.get(0) instanceof Lane;
 	}
 
 	@Override
@@ -46,12 +47,13 @@ public class LayoutLaneFeature extends AbstractLayoutFeature {
 			Shape shape = (Shape) iterator.next();
 			GraphicsAlgorithm ga = shape.getGraphicsAlgorithm();
 			IDimension size = gaService.calculateSize(ga);
-			if (containerHeight != size.getHeight()) {
+			boolean doLayout = (ga instanceof Text || getBusinessObjectForPictogramElement(shape) instanceof Lane) 
+				&& containerHeight != size.getHeight(); 
+			if (doLayout) {
 				gaService.setHeight(ga, containerHeight);
 				changed = true;
 			}
 		}
-
 		return changed;
 	}
 

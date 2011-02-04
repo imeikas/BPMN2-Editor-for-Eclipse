@@ -7,6 +7,7 @@ import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.bpmn2.Task;
+import org.eclipse.bpmn2.TextAnnotation;
 import org.eclipse.graphiti.dt.IDiagramTypeProvider;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateConnectionFeature;
@@ -24,6 +25,11 @@ import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
 import org.jboss.bpmn2.editor.core.features.MoveFlowNodeFeature;
+import org.jboss.bpmn2.editor.core.features.comment.AddTextAnnotationFeature;
+import org.jboss.bpmn2.editor.core.features.comment.CreateTextAnnotationFeature;
+import org.jboss.bpmn2.editor.core.features.comment.DirectEditTextAnnotationFeature;
+import org.jboss.bpmn2.editor.core.features.comment.LayoutTextAnnotationFeature;
+import org.jboss.bpmn2.editor.core.features.comment.UpdateTextAnnotationFeature;
 import org.jboss.bpmn2.editor.core.features.event.end.AddEndEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.end.CreateEndEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.end.DirectEditEndEventFeature;
@@ -77,6 +83,8 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			return new AddEndEventFeature(this);
 		} else if (newObject instanceof Lane) {
 			return new AddLaneFeature(this);
+		} else if (newObject instanceof TextAnnotation) {
+			return new AddTextAnnotationFeature(this);
 		}
 		return super.getAddFeature(context);
 	}
@@ -85,7 +93,8 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 	public ICreateFeature[] getCreateFeatures() {
 		// if you change this part significantly, check that you won't break Bpmn2Preferences
 		return new ICreateFeature[] { new CreateStartEventFeature(this), new CreateEndEventFeature(this),
-		        new CreateTaskFeature(this), new CreateExclusiveGatewayFeature(this), new CreateLaneFeature(this) };
+		        new CreateTaskFeature(this), new CreateExclusiveGatewayFeature(this), new CreateLaneFeature(this),
+		        new CreateTextAnnotationFeature(this) };
 	}
 
 	@Override
@@ -101,6 +110,8 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 				return new UpdateEndEventFeature(this);
 			} else if (bo instanceof ExclusiveGateway) {
 				return new UpdateExclusiveGatewayFeature(this);
+			} else if (bo instanceof TextAnnotation) {
+				return new UpdateTextAnnotationFeature(this);
 			}
 		}
 		return super.getUpdateFeature(context);
@@ -124,6 +135,8 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			return new DirectEditEndEventFeature(this);
 		} else if (bo instanceof ExclusiveGateway) {
 			return new DirectEditExclusiveGatewayFeature(this);
+		} else if (bo instanceof TextAnnotation) {
+			return new DirectEditTextAnnotationFeature(this);
 		} else {
 			return super.getDirectEditingFeature(context);
 		}
@@ -141,6 +154,8 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			return new LayoutEndEventFeature(this);
 		} else if (bo instanceof Lane) {
 			return new LayoutLaneFeature(this);
+		} else if (bo instanceof TextAnnotation) {
+			return new LayoutTextAnnotationFeature(this);
 		} else {
 			return super.getLayoutFeature(context);
 		}

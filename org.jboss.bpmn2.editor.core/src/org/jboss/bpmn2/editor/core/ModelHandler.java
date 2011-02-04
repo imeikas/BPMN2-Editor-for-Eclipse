@@ -1,8 +1,8 @@
 package org.jboss.bpmn2.editor.core;
 
 import java.io.IOException;
-import java.util.List;
 
+import org.eclipse.bpmn2.Artifact;
 import org.eclipse.bpmn2.Bpmn2Factory;
 import org.eclipse.bpmn2.Collaboration;
 import org.eclipse.bpmn2.Definitions;
@@ -65,6 +65,12 @@ public class ModelHandler {
 		return participant;
 	}
 	
+	public <A extends Artifact> A addArtifact(A artifact) {
+		Process process = getOrCreateFirstProcess();
+		process.getArtifacts().add(artifact);
+		return artifact;
+	}
+	
 	public Lane addLane() {
 		LaneSet laneSet = FACTORY.createLaneSet();
 		Lane lane = FACTORY.createLane();
@@ -73,34 +79,6 @@ public class ModelHandler {
 		process.getLaneSets().add(laneSet);
 		return lane;
 	}
-	
-	
-//	public void stackLanes(Lane parent, Lane child) {
-//		parent.getChildLaneSet().getLanes().add(child);
-//	}
-//	
-//	public void removeLaneSet(Lane lane) {
-//		Process process = getOrCreateFirstProcess();
-//		for(LaneSet set : process.getLaneSets()) {
-//			
-//		}
-//	}
-//	
-//	private boolean findAndRemoveLaneSet(Lane parent, LaneSet set, Lane lane) {
-//		if(!set.getLanes().contains(lane)) {
-//			return false;
-//		}
-//		if(parent == null) {
-//			//&& set.getLanes().size() > 1)
-//			set.getLanes().remove(lane);
-//		} 
-//		return false;
-//	}
-//	private LaneSet removeLaneSet(LaneSet set, Lane lane) {
-//		if (set.getLanes().contains(lane)) {
-//			return set;
-//		}
-//	}
 	
 	public SequenceFlow createSequenceFlow(FlowNode source, FlowNode target) {
 		SequenceFlow flow = addFlowElement(FACTORY.createSequenceFlow());
