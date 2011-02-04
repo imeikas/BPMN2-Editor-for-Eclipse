@@ -3,6 +3,8 @@ package org.jboss.bpmn2.editor.core;
 import java.io.IOException;
 
 import org.eclipse.bpmn2.Artifact;
+import org.eclipse.bpmn2.Association;
+import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Bpmn2Factory;
 import org.eclipse.bpmn2.Collaboration;
 import org.eclipse.bpmn2.Definitions;
@@ -15,6 +17,7 @@ import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.Process;
 import org.eclipse.bpmn2.RootElement;
 import org.eclipse.bpmn2.SequenceFlow;
+import org.eclipse.bpmn2.TextAnnotation;
 import org.eclipse.bpmn2.util.Bpmn2ResourceImpl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -85,6 +88,13 @@ public class ModelHandler {
 		flow.setSourceRef(source);
 		flow.setTargetRef(target);
 		return flow;
+	}
+	
+	public Association createAssociation(TextAnnotation annotation, BaseElement element) {
+		Association association = addArtifact(FACTORY.createAssociation());
+		association.setSourceRef(element);
+		association.setTargetRef(annotation);
+		return association;
 	}
 	
 	private Process getOrCreateFirstProcess() {

@@ -68,7 +68,5 @@ public class AddSequenceFlowFeature extends AbstractAddShapeFeature {
 		polyline.setLineWidth(2);
 
 		return polyline;
-
 	}
-	
 }

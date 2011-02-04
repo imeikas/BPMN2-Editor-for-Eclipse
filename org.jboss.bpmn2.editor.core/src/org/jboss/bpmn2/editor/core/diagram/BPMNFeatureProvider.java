@@ -1,5 +1,6 @@
 package org.jboss.bpmn2.editor.core.diagram;
 
+import org.eclipse.bpmn2.Association;
 import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.FlowNode;
@@ -25,11 +26,13 @@ import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
 import org.jboss.bpmn2.editor.core.features.MoveFlowNodeFeature;
-import org.jboss.bpmn2.editor.core.features.comment.AddTextAnnotationFeature;
-import org.jboss.bpmn2.editor.core.features.comment.CreateTextAnnotationFeature;
-import org.jboss.bpmn2.editor.core.features.comment.DirectEditTextAnnotationFeature;
-import org.jboss.bpmn2.editor.core.features.comment.LayoutTextAnnotationFeature;
-import org.jboss.bpmn2.editor.core.features.comment.UpdateTextAnnotationFeature;
+import org.jboss.bpmn2.editor.core.features.annotation.AddTextAnnotationFeature;
+import org.jboss.bpmn2.editor.core.features.annotation.CreateTextAnnotationFeature;
+import org.jboss.bpmn2.editor.core.features.annotation.DirectEditTextAnnotationFeature;
+import org.jboss.bpmn2.editor.core.features.annotation.LayoutTextAnnotationFeature;
+import org.jboss.bpmn2.editor.core.features.annotation.UpdateTextAnnotationFeature;
+import org.jboss.bpmn2.editor.core.features.association.AddAssociationFeature;
+import org.jboss.bpmn2.editor.core.features.association.CreateAssociationFeature;
 import org.jboss.bpmn2.editor.core.features.event.end.AddEndEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.end.CreateEndEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.end.DirectEditEndEventFeature;
@@ -85,6 +88,8 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			return new AddLaneFeature(this);
 		} else if (newObject instanceof TextAnnotation) {
 			return new AddTextAnnotationFeature(this);
+		} else if (newObject instanceof Association) {
+			return new AddAssociationFeature(this);
 		}
 		return super.getAddFeature(context);
 	}
@@ -120,7 +125,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 	@Override
 	public ICreateConnectionFeature[] getCreateConnectionFeatures() {
 		// if you change this part significantly, check that you won't break Bpmn2Preferences
-		return new ICreateConnectionFeature[] { new CreateSequenceFlowFeature(this) };
+		return new ICreateConnectionFeature[] { new CreateSequenceFlowFeature(this), new CreateAssociationFeature(this) };
 	}
 
 	@Override

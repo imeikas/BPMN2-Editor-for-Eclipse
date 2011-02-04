@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.comment;
+package org.jboss.bpmn2.editor.core.features.annotation;
 
 import java.io.IOException;
 
@@ -15,7 +15,7 @@ import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
 public class CreateTextAnnotationFeature extends AbstractCreateFeature  {
 
 	public CreateTextAnnotationFeature(IFeatureProvider fp) {
-	    super(fp, "Comment", "Comment");
+	    super(fp, "Annotation", "Provide additional information");
     }
 
 	@Override

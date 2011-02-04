@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.comment;
+package org.jboss.bpmn2.editor.core.features.annotation;
 
 import java.util.Iterator;
 
