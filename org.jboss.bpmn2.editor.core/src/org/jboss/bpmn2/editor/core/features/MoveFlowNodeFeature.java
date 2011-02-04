@@ -1,11 +1,12 @@
 package org.jboss.bpmn2.editor.core.features;
 
+import java.util.List;
+
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.eclipse.graphiti.features.impl.DefaultMoveShapeFeature;
-import org.eclipse.graphiti.mm.pictograms.PictogramLink;
 
 public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 
@@ -27,26 +28,30 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 	@Override
 	protected void postMoveShape(IMoveShapeContext context) {
 		super.postMoveShape(context);
+		List<Lane> lanes = getFlowNode(context).getLanes();
+		
 		if(isTargetLane(context)) {
-			Lane lane = (Lane) getTargetBusinessObj(context);
-			getSourceBusinessObj(context).getLanes().add(lane);
+			Lane targetLane = (Lane) getBusinessObjectForPictogramElement(context.getTargetContainer());
+			lanes.add(targetLane);
+		}
+		
+		if(isSourceLane(context)) {
+			Lane sourceLane = (Lane) getBusinessObjectForPictogramElement(context.getSourceContainer());
+			lanes.remove(sourceLane);
 		}
 	}
 	
 	private boolean isTargetLane(IMoveShapeContext context) {
-		Object targetBusinessObj = getTargetBusinessObj(context);
-		return targetBusinessObj != null && targetBusinessObj instanceof Lane;
+		Object bo = getBusinessObjectForPictogramElement(context.getTargetContainer());
+		return bo != null && bo instanceof Lane;
 	}
 	
-	private Object getTargetBusinessObj(IMoveShapeContext context) {
-		PictogramLink link = context.getTargetContainer().getLink();
-		if(link == null) {
-			return null;
-		}
-		return link.getBusinessObjects().get(0);
+	private boolean isSourceLane(IMoveShapeContext context) {
+		Object bo = getBusinessObjectForPictogramElement(context.getSourceContainer());
+		return bo != null && bo instanceof Lane;
 	}
 	
-	private FlowNode getSourceBusinessObj(IMoveShapeContext context) {
+	private FlowNode getFlowNode(IMoveShapeContext context) {
 		return (FlowNode) getBusinessObjectForPictogramElement(context.getShape());
 	}
 }
