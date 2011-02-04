@@ -3,7 +3,9 @@ package org.jboss.bpmn2.editor.core;
 import org.eclipse.bpmn2.Association;
 import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.ExclusiveGateway;
+import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.bpmn2.Lane;
+import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.StartEvent;
@@ -27,6 +29,8 @@ public class ImageProvider extends AbstractImageProvider {
 	public static final String IMG_16_LANE = PREFIX + Lane.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_TEXT_ANNOTATION = PREFIX + TextAnnotation.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_ASSOCIATION = PREFIX + Association.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_INCLUSIVE_GATEWAY = PREFIX + InclusiveGateway.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_PARALLEL_GATEWAY = PREFIX + ParallelGateway.class.getSimpleName().toLowerCase() + dot16;
 	
 	@Override
 	protected void addAvailableImages() {
@@ -39,5 +43,7 @@ public class ImageProvider extends AbstractImageProvider {
 		addImageFilePath(IMG_16_LANE, ICONS_16 + "Lane.gif");
 		addImageFilePath(IMG_16_TEXT_ANNOTATION, ICONS_16 + "TextAnnotation.png");
 		addImageFilePath(IMG_16_ASSOCIATION, ICONS_16 + "Association.png");
+		addImageFilePath(IMG_16_INCLUSIVE_GATEWAY, ICONS_16 + "InclusiveGateway.png");
+		addImageFilePath(IMG_16_PARALLEL_GATEWAY, ICONS_16 + "InclusiveGateway.png");
 	}
 }

@@ -1,9 +1,10 @@
-package org.jboss.bpmn2.editor.core.features.exclusivegateway;
+package org.jboss.bpmn2.editor.core.features.gateway.inclusive;
 
-import org.eclipse.bpmn2.ExclusiveGateway;
+import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
+import org.eclipse.graphiti.mm.algorithms.Ellipse;
 import org.eclipse.graphiti.mm.algorithms.Polygon;
 import org.eclipse.graphiti.mm.algorithms.styles.AdaptedGradientColoredAreas;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
@@ -15,25 +16,24 @@ import org.eclipse.graphiti.services.IPeCreateService;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
-public class AddExclusiveGatewayFeature extends AbstractAddShapeFeature {
-
+public class AddInclusiveGatewayFeature extends AbstractAddShapeFeature {
+	
 	private static final int RADIUS = 25;
-
-	public AddExclusiveGatewayFeature(IFeatureProvider fp) {
-		super(fp);
-	}
+	
+	public AddInclusiveGatewayFeature(IFeatureProvider fp) {
+	    super(fp);
+    }
 
 	@Override
-	public boolean canAdd(IAddContext context) {
-		boolean isExclusiveGateway = context.getNewObject() instanceof ExclusiveGateway;
+    public boolean canAdd(IAddContext context) {
+		boolean isInclusiveGateway = context.getNewObject() instanceof InclusiveGateway;
 		boolean intoDiagram = context.getTargetContainer() instanceof Diagram;
-
-		return isExclusiveGateway && intoDiagram;
+		return isInclusiveGateway && intoDiagram;
 	}
 
 	@Override
-	public PictogramElement add(IAddContext context) {
-		ExclusiveGateway addedGateway = (ExclusiveGateway) context.getNewObject();
+    public PictogramElement add(IAddContext context) {
+		InclusiveGateway addedGateway = (InclusiveGateway) context.getNewObject();
 		Diagram targetDiagram = (Diagram) context.getTargetContainer();
 
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
@@ -48,7 +48,14 @@ public class AddExclusiveGatewayFeature extends AbstractAddShapeFeature {
 		gaService.setRenderingStyle(diamond, gradient);
 
 		gaService.setLocationAndSize(diamond, context.getX(), context.getY(), 2 * RADIUS, 2 * RADIUS);
-
+		
+		Ellipse ellipse = gaService.createEllipse(diamond);
+		ellipse.setFilled(false);
+		ellipse.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
+		ellipse.setLineWidth(2);
+		
+		gaService.setLocationAndSize(ellipse, 12, 12, 27, 27);
+		
 		if (addedGateway.eResource() == null) {
 			getDiagram().eResource().getContents().add(addedGateway);
 		}
@@ -57,6 +64,6 @@ public class AddExclusiveGatewayFeature extends AbstractAddShapeFeature {
 
 		peCreateService.createChopboxAnchor(containerShape);
 		return containerShape;
-	}
+    }
 
 }

@@ -4,7 +4,9 @@ import org.eclipse.bpmn2.Association;
 import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.FlowNode;
+import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.bpmn2.Lane;
+import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.bpmn2.Task;
@@ -43,10 +45,12 @@ import org.jboss.bpmn2.editor.core.features.event.start.CreateStartEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.start.DirectEditStartEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.start.LayoutStartEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.start.UpdateStartEventFeature;
-import org.jboss.bpmn2.editor.core.features.exclusivegateway.AddExclusiveGatewayFeature;
-import org.jboss.bpmn2.editor.core.features.exclusivegateway.CreateExclusiveGatewayFeature;
-import org.jboss.bpmn2.editor.core.features.exclusivegateway.DirectEditExclusiveGatewayFeature;
-import org.jboss.bpmn2.editor.core.features.exclusivegateway.UpdateExclusiveGatewayFeature;
+import org.jboss.bpmn2.editor.core.features.gateway.exclusive.AddExclusiveGatewayFeature;
+import org.jboss.bpmn2.editor.core.features.gateway.exclusive.CreateExclusiveGatewayFeature;
+import org.jboss.bpmn2.editor.core.features.gateway.inclusive.AddInclusiveGatewayFeature;
+import org.jboss.bpmn2.editor.core.features.gateway.inclusive.CreateInclusiveGatewayFeature;
+import org.jboss.bpmn2.editor.core.features.gateway.parallel.AddParallelGatewayFeature;
+import org.jboss.bpmn2.editor.core.features.gateway.parallel.CreateParallelGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.lane.AddLaneFeature;
 import org.jboss.bpmn2.editor.core.features.lane.CreateLaneFeature;
 import org.jboss.bpmn2.editor.core.features.lane.LayoutLaneFeature;
@@ -90,6 +94,10 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			return new AddTextAnnotationFeature(this);
 		} else if (newObject instanceof Association) {
 			return new AddAssociationFeature(this);
+		} else if (newObject instanceof InclusiveGateway) {
+			return new AddInclusiveGatewayFeature(this);
+		} else if (newObject instanceof ParallelGateway) {
+			return new AddParallelGatewayFeature(this);
 		}
 		return super.getAddFeature(context);
 	}
@@ -98,8 +106,9 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 	public ICreateFeature[] getCreateFeatures() {
 		// if you change this part significantly, check that you won't break Bpmn2Preferences
 		return new ICreateFeature[] { new CreateStartEventFeature(this), new CreateEndEventFeature(this),
-		        new CreateTaskFeature(this), new CreateExclusiveGatewayFeature(this), new CreateLaneFeature(this),
-		        new CreateTextAnnotationFeature(this) };
+		        new CreateTaskFeature(this), new CreateExclusiveGatewayFeature(this),
+		        new CreateInclusiveGatewayFeature(this), new CreateParallelGatewayFeature(this),
+		        new CreateLaneFeature(this), new CreateTextAnnotationFeature(this) };
 	}
 
 	@Override
@@ -113,8 +122,6 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 				return new UpdateStartEventFeature(this);
 			} else if (bo instanceof EndEvent) {
 				return new UpdateEndEventFeature(this);
-			} else if (bo instanceof ExclusiveGateway) {
-				return new UpdateExclusiveGatewayFeature(this);
 			} else if (bo instanceof TextAnnotation) {
 				return new UpdateTextAnnotationFeature(this);
 			}
@@ -138,8 +145,6 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			return new DirectEditStartEventFeature(this);
 		} else if (bo instanceof EndEvent) {
 			return new DirectEditEndEventFeature(this);
-		} else if (bo instanceof ExclusiveGateway) {
-			return new DirectEditExclusiveGatewayFeature(this);
 		} else if (bo instanceof TextAnnotation) {
 			return new DirectEditTextAnnotationFeature(this);
 		} else {

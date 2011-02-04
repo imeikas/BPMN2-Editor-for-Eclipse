@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.eclipse.bpmn2.Association;
 import org.eclipse.bpmn2.BaseElement;
-import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.bpmn2.TextAnnotation;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateConnectionContext;
@@ -28,10 +27,7 @@ public class CreateAssociationFeature extends AbstractCreateConnectionFeature {
 		BaseElement source = getBaseElement(context.getSourceAnchor());
 		BaseElement target = getBaseElement(context.getTargetAnchor());
 		if(source == null || target == null) return false;
-		System.out.println("source:" + source);
-		System.out.println("target:" + target);
 		boolean can = source instanceof TextAnnotation ^ target instanceof TextAnnotation;
-		System.out.println("can=" + can);
 		return can;
 	}
 
