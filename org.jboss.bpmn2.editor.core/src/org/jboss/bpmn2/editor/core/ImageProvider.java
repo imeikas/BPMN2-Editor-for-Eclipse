@@ -1,19 +1,28 @@
 package org.jboss.bpmn2.editor.core;
 
+import org.eclipse.bpmn2.EndEvent;
+import org.eclipse.bpmn2.ExclusiveGateway;
+import org.eclipse.bpmn2.Lane;
+import org.eclipse.bpmn2.Participant;
+import org.eclipse.bpmn2.SequenceFlow;
+import org.eclipse.bpmn2.StartEvent;
+import org.eclipse.bpmn2.Task;
 import org.eclipse.graphiti.ui.platform.AbstractImageProvider;
 
 public class ImageProvider extends AbstractImageProvider {
 	
+	private static final String dot16 = ".16";
 	private static final String ICONS_16 = "icons/16/";
 	
-	private static final String PREFIX = "org.jboss.bpmn2.editor.core.";
+	public static final String PREFIX = ImageProvider.class.getPackage().getName() + ".";
 	
-	public static final String IMG_16_START_EVENT = PREFIX + "startevent.16"; 
-	public static final String IMG_16_END_EVENT = PREFIX + "endevent.16";
-	public static final String IMG_16_TASK = PREFIX + "Task.png"; 
-	public static final String IMG_16_EXCLUSIVE_GATEWAY = PREFIX + "exclusivegateway.16";
-	public static final String IMG_16_SEQUENCE_FLOW = PREFIX + "sequenceflow.16";
-	public static final String IMG_16_PARTICIPANT = PREFIX + "participant.16";
+	public static final String IMG_16_START_EVENT = PREFIX + StartEvent.class.getSimpleName().toLowerCase() + dot16;  
+	public static final String IMG_16_END_EVENT = PREFIX + EndEvent.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_TASK = PREFIX + Task.class.getSimpleName().toLowerCase() + dot16; 
+	public static final String IMG_16_EXCLUSIVE_GATEWAY = PREFIX + ExclusiveGateway.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_SEQUENCE_FLOW = PREFIX + SequenceFlow.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_PARTICIPANT = PREFIX + Participant.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_LANE = PREFIX + Lane.class.getSimpleName().toLowerCase() + dot16;
 	
 	@Override
 	protected void addAvailableImages() {
@@ -23,5 +32,6 @@ public class ImageProvider extends AbstractImageProvider {
 		addImageFilePath(IMG_16_EXCLUSIVE_GATEWAY, ICONS_16 + "ExclusiveGateway.png");
 		addImageFilePath(IMG_16_SEQUENCE_FLOW, ICONS_16 + "SequenceFlow.png");
 		addImageFilePath(IMG_16_PARTICIPANT, ICONS_16 + "Participant.gif");
+		addImageFilePath(IMG_16_LANE, ICONS_16 + "Lane.gif");
 	}
 }
