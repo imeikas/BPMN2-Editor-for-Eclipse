@@ -83,6 +83,14 @@ public class ModelHandler {
 		return lane;
 	}
 	
+	public Lane addLane(Lane lane) {
+		LaneSet laneSet = FACTORY.createLaneSet();
+		laneSet.getLanes().add(lane);
+		Process process = getOrCreateFirstProcess();
+		process.getLaneSets().add(laneSet);
+		return lane;
+	}
+	
 	public SequenceFlow createSequenceFlow(FlowNode source, FlowNode target) {
 		SequenceFlow flow = addFlowElement(FACTORY.createSequenceFlow());
 		flow.setSourceRef(source);
