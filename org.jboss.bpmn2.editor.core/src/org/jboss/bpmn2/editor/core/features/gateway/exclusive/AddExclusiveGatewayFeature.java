@@ -39,7 +39,7 @@ public class AddExclusiveGatewayFeature extends AbstractAddShapeFeature {
 		ContainerShape containerShape = peCreateService.createContainerShape(targetDiagram, true);
 
 		IGaService gaService = Graphiti.getGaService();
-		int[] xy = new int[] { 0, RADIUS, RADIUS, 0, 0, -RADIUS, -RADIUS, 0 };
+		int[] xy = new int[] { 0, RADIUS, RADIUS, 0, 2 * RADIUS, RADIUS, RADIUS, 2 * RADIUS };
 		Polygon diamond = gaService.createPolygon(containerShape, xy);
 		diamond.setStyle(StyleUtil.getStyleForClass(getDiagram()));
 
