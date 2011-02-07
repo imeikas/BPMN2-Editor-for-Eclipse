@@ -5,16 +5,24 @@ import org.eclipse.bpmn2.Lane;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.eclipse.graphiti.features.impl.DefaultMoveShapeFeature;
+import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 
-public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
+public class AbstractMoveFlowNodeFeature extends DefaultMoveShapeFeature {
 
 	private enum MoveMode {
 		DIAGRAM_TO_LANE, LANE_TO_DIAGRAM, LANE_TO_LANE, OTHER
 	}
 
 	private MoveMode moveMode;
-
-	public MoveFlowNodeFeature(IFeatureProvider fp) {
+	
+	protected FeatureSupport support = new FeatureSupport() {
+		@Override
+		protected Object getBusinessObject(PictogramElement element) {
+			return getBusinessObjectForPictogramElement(element);
+		}
+	};
+	
+	public AbstractMoveFlowNodeFeature(IFeatureProvider fp) {
 		super(fp);
 	}
 
@@ -24,13 +32,13 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 		boolean fromDiagram = context.getSourceContainer().equals(getDiagram());
 		boolean toDiagram = context.getTargetContainer().equals(getDiagram());
 		boolean fromLane = isSourceLane(context);
-		boolean toLane = isTargetLane(context);
+		boolean toLane = support.isTargetLane(context);
 
-		if (fromDiagram && toLane && isTargetLaneOnTop(context)) {
+		if (fromDiagram && toLane && support.isTargetLaneOnTop(context)) {
 			moveMode = MoveMode.DIAGRAM_TO_LANE;
 		} else if (fromLane && toDiagram) {
 			moveMode = MoveMode.LANE_TO_DIAGRAM;
-		} else if (fromLane && toLane && isTargetLaneOnTop(context)) {
+		} else if (fromLane && toLane && support.isTargetLaneOnTop(context)) {
 			moveMode = MoveMode.LANE_TO_LANE;
 		}
 
@@ -59,19 +67,9 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 		}
 	}
 
-	private boolean isTargetLane(IMoveShapeContext context) {
-		Object bo = getBusinessObjectForPictogramElement(context.getTargetContainer());
-		return bo != null && bo instanceof Lane;
-	}
-
 	private boolean isSourceLane(IMoveShapeContext context) {
 		Object bo = getBusinessObjectForPictogramElement(context.getSourceContainer());
 		return bo != null && bo instanceof Lane;
-	}
-	
-	private boolean isTargetLaneOnTop(IMoveShapeContext context) {
-		Lane lane = (Lane) getBusinessObjectForPictogramElement(context.getTargetContainer());
-		return lane.getChildLaneSet() == null || lane.getChildLaneSet().getLanes().isEmpty();
 	}
 	
 	private void moveFromDiagramToLane(IMoveShapeContext context) {

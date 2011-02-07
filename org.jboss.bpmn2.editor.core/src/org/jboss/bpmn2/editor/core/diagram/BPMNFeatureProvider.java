@@ -27,11 +27,12 @@ import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
-import org.jboss.bpmn2.editor.core.features.MoveFlowNodeFeature;
+import org.jboss.bpmn2.editor.core.features.AbstractMoveFlowNodeFeature;
 import org.jboss.bpmn2.editor.core.features.annotation.AddTextAnnotationFeature;
 import org.jboss.bpmn2.editor.core.features.annotation.CreateTextAnnotationFeature;
 import org.jboss.bpmn2.editor.core.features.annotation.DirectEditTextAnnotationFeature;
 import org.jboss.bpmn2.editor.core.features.annotation.LayoutTextAnnotationFeature;
+import org.jboss.bpmn2.editor.core.features.annotation.MoveTextAnnotationFeature;
 import org.jboss.bpmn2.editor.core.features.annotation.UpdateTextAnnotationFeature;
 import org.jboss.bpmn2.editor.core.features.association.AddAssociationFeature;
 import org.jboss.bpmn2.editor.core.features.association.CreateAssociationFeature;
@@ -175,9 +176,11 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 	public IMoveShapeFeature getMoveShapeFeature(IMoveShapeContext context) {
 		Object bo = getBusinessObjectForPictogramElement(context.getShape());
 		if (bo instanceof FlowNode) {
-			return new MoveFlowNodeFeature(this);
+			return new AbstractMoveFlowNodeFeature(this);
 		} else if (bo instanceof Lane) {
 			return new MoveLaneFeature(this);
+		} else if (bo instanceof TextAnnotation) {
+			return new MoveTextAnnotationFeature(this);
 		} else {
 			return super.getMoveShapeFeature(context);
 		}

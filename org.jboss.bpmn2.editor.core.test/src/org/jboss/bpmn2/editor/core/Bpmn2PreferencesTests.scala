@@ -2,7 +2,7 @@ package org.jboss.bpmn2.editor.core;
 
 import org.jboss.bpmn2.editor.core.features.sequenceflow.CreateSequenceFlowFeature
 import org.jboss.bpmn2.editor.core.features.task.CreateTaskFeature
-import org.jboss.bpmn2.editor.core.features.exclusivegateway.CreateExclusiveGatewayFeature
+import org.jboss.bpmn2.editor.core.features.gateway.exclusive.CreateExclusiveGatewayFeature
 import NiceObject._
 import org.junit.runner.RunWith
 import org.specs._

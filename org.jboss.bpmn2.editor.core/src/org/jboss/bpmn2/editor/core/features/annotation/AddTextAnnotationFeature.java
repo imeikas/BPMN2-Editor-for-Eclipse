@@ -15,10 +15,18 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeCreateService;
+import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
 public class AddTextAnnotationFeature extends AbstractAddShapeFeature {
-
+	
+	private FeatureSupport support = new FeatureSupport() {
+		@Override
+		protected Object getBusinessObject(PictogramElement element) {
+			return getBusinessObjectForPictogramElement(element);
+		}
+	};
+	
 	public AddTextAnnotationFeature(IFeatureProvider fp) {
 	    super(fp);
     }
@@ -26,18 +34,17 @@ public class AddTextAnnotationFeature extends AbstractAddShapeFeature {
 	@Override
     public boolean canAdd(IAddContext context) {
 		boolean isAnnotation = context.getNewObject() instanceof TextAnnotation;
-		ContainerShape container = context.getTargetContainer();
-		boolean intoDiagram = container instanceof Diagram;
-		return isAnnotation && intoDiagram;
+		boolean intoDiagram = context.getTargetContainer() instanceof Diagram;
+		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context);
+		return isAnnotation && (intoDiagram || intoLane);
 	}
 
 	@Override
     public PictogramElement add(IAddContext context) {
 		TextAnnotation annotation = (TextAnnotation) context.getNewObject();
-		Diagram targetDiagram = (Diagram) context.getTargetContainer();
 
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
-		ContainerShape containerShape = peCreateService.createContainerShape(targetDiagram, true);
+		ContainerShape containerShape = peCreateService.createContainerShape(context.getTargetContainer(), true);
 
 		IGaService gaService = Graphiti.getGaService();
 		

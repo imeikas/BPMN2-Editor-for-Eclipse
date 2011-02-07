@@ -40,7 +40,7 @@ public class MoveFromLaneFeature extends MoveLaneFeature {
 		parentLane.getChildLaneSet().getLanes().remove(movedLane);
         try {
         	ModelHandler mh = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
-	        mh.addLane(movedLane);
+	        mh.laneToTop(movedLane);
         } catch (IOException e) {
         	Activator.logError(e);
         }

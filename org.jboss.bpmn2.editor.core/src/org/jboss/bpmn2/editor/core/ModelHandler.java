@@ -83,12 +83,27 @@ public class ModelHandler {
 		return lane;
 	}
 	
-	public Lane addLane(Lane lane) {
+	public Lane addLaneTo(Lane targetLane) {
+		Lane lane = FACTORY.createLane();
+		
+		if(targetLane.getChildLaneSet() == null) {
+    		targetLane.setChildLaneSet(ModelHandler.FACTORY.createLaneSet());
+    	}
+		
+    	LaneSet targetLaneSet = targetLane.getChildLaneSet();
+    	targetLaneSet.getLanes().add(lane);
+
+    	lane.getFlowNodeRefs().addAll(targetLane.getFlowNodeRefs());
+    	targetLane.getFlowNodeRefs().clear();
+    	
+    	return lane;
+	}
+	
+	public void laneToTop(Lane lane) {
 		LaneSet laneSet = FACTORY.createLaneSet();
 		laneSet.getLanes().add(lane);
 		Process process = getOrCreateFirstProcess();
 		process.getLaneSets().add(laneSet);
-		return lane;
 	}
 	
 	public SequenceFlow createSequenceFlow(FlowNode source, FlowNode target) {

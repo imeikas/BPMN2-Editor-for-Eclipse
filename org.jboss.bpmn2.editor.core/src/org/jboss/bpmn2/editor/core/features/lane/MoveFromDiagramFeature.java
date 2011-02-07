@@ -59,7 +59,7 @@ public class MoveFromDiagramFeature extends MoveLaneFeature {
 				s.setContainer((ContainerShape) context.getShape());
 			}
 		} else {
-			gaService.setSize(targetGa, width, height + ga.getHeight());
+			resizeRecursively(targetContainer, ga.getHeight());
 			gaService.setLocationAndSize(ga, 15, height - 1, width - 15, ga.getHeight() + 1);
 		}
 	}
@@ -92,8 +92,8 @@ public class MoveFromDiagramFeature extends MoveLaneFeature {
 		}
 	}
 
-	private List<Shape> getFlowNodeShapes(IMoveShapeContext context, Lane targetLane) {
-		List<FlowNode> nodes = targetLane.getFlowNodeRefs();
+	private List<Shape> getFlowNodeShapes(IMoveShapeContext context, Lane lane) {
+		List<FlowNode> nodes = lane.getFlowNodeRefs();
 		List<Shape> shapes = new ArrayList<Shape>();
 		for (Shape s : context.getTargetContainer().getChildren()) {
 			Object bo = getBusinessObjectForPictogramElement(s);
@@ -107,5 +107,23 @@ public class MoveFromDiagramFeature extends MoveLaneFeature {
 	private boolean isTargetLane(IMoveShapeContext context) {
 		Object targetBusinessObj = getBusinessObjectForPictogramElement(context.getTargetContainer());
 		return targetBusinessObj != null && targetBusinessObj instanceof Lane;
+	}
+	
+	private void resizeRecursively(ContainerShape container, int height) {
+		if(container == null) {
+			return;
+		}
+		
+		Object bo = getBusinessObjectForPictogramElement(container);
+		if(bo == null || !(bo instanceof Lane)) {
+			return;
+		}
+		
+		IGaService gaService = Graphiti.getGaService();
+		GraphicsAlgorithm ga =  container.getGraphicsAlgorithm();
+		
+		gaService.setSize(ga, ga.getWidth(), ga.getHeight() + height);
+		
+		resizeRecursively(container.getContainer(), height);
 	}
 }

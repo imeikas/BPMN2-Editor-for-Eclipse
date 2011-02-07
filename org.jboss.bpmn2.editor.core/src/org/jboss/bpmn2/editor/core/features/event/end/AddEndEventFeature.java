@@ -1,10 +1,9 @@
 package org.jboss.bpmn2.editor.core.features.event.end;
 
+import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.graphiti.features.IFeatureProvider;
-import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.mm.algorithms.Ellipse;
-import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.jboss.bpmn2.editor.core.features.event.AbstractAddEventFeature;
 
 public class AddEndEventFeature extends AbstractAddEventFeature {
@@ -14,14 +13,12 @@ public class AddEndEventFeature extends AbstractAddEventFeature {
 	}
 
 	@Override
-	public boolean canAdd(IAddContext context) {
-		boolean isEndEvent = context.getNewObject() instanceof EndEvent;
-		boolean intoDiagram = context.getTargetContainer() instanceof Diagram;
-		return isEndEvent && intoDiagram;
-	}
-
-	@Override
 	protected void enhanceEllipse(Ellipse e) {
 		e.setLineWidth(3);
 	}
+
+	@Override
+    protected Class<? extends BaseElement> getBPMNClass() {
+	    return EndEvent.class;
+    }
 }

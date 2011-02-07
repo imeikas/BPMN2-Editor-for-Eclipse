@@ -1,9 +1,8 @@
 package org.jboss.bpmn2.editor.core.features.event.start;
 
+import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.graphiti.features.IFeatureProvider;
-import org.eclipse.graphiti.features.context.IAddContext;
-import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.jboss.bpmn2.editor.core.features.event.AbstractAddEventFeature;
 
 public class AddStartEventFeature extends AbstractAddEventFeature {
@@ -13,9 +12,7 @@ public class AddStartEventFeature extends AbstractAddEventFeature {
 	}
 
 	@Override
-	public boolean canAdd(IAddContext context) {
-		boolean isStartEvent = context.getNewObject() instanceof StartEvent;
-		boolean intoDiagram = context.getTargetContainer() instanceof Diagram;
-		return isStartEvent && intoDiagram;
-	}
+    protected Class<? extends BaseElement> getBPMNClass() {
+	    return StartEvent.class;
+    }
 }
