@@ -15,4 +15,16 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.jboss.bpmn2.editor.core,
  org.jboss.bpmn2.editor.core.diagram,
- org.jboss.bpmn2.editor.core.features
+ org.jboss.bpmn2.editor.core.features,
+ org.jboss.bpmn2.editor.core.features.annotation,
+ org.jboss.bpmn2.editor.core.features.association,
+ org.jboss.bpmn2.editor.core.features.event,
+ org.jboss.bpmn2.editor.core.features.event.end,
+ org.jboss.bpmn2.editor.core.features.event.start,
+ org.jboss.bpmn2.editor.core.features.gateway.exclusive,
+ org.jboss.bpmn2.editor.core.features.gateway.inclusive,
+ org.jboss.bpmn2.editor.core.features.gateway.parallel,
+ org.jboss.bpmn2.editor.core.features.lane,
+ org.jboss.bpmn2.editor.core.features.pool,
+ org.jboss.bpmn2.editor.core.features.sequenceflow,
+ org.jboss.bpmn2.editor.core.features.task

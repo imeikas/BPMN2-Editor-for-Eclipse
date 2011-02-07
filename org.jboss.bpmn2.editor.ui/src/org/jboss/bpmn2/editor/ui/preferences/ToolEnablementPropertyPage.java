@@ -1,50 +1,49 @@
 package org.jboss.bpmn2.editor.ui.preferences;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.list.WritableList;
-import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
-import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
-import org.eclipse.jface.viewers.CheckboxTableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
+import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.IElementComparer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.jboss.bpmn2.editor.core.Bpmn2Preferences;
 import org.jboss.bpmn2.editor.core.ToolEnablement;
 import org.jboss.bpmn2.editor.ui.Activator;
 import org.osgi.service.prefs.BackingStoreException;
-import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.CheckboxCellEditor;
-import org.eclipse.core.databinding.property.value.IValueProperty;
-import org.eclipse.core.databinding.beans.BeanProperties;
-import org.eclipse.core.databinding.beans.IBeanValueProperty;
-import org.eclipse.jface.databinding.viewers.ObservableValueEditingSupport;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.swt.graphics.Image;
+
+import com.instantiations.designer.databinding.BeansListObservableFactory;
+import com.instantiations.designer.databinding.TreeBeanAdvisor;
+import com.instantiations.designer.databinding.TreeObservableLabelProvider;
 
 public class ToolEnablementPropertyPage extends PropertyPage {
 	private DataBindingContext m_bindingContext;
 
 	private Bpmn2Preferences preferences;
-	private List<ToolEnablement> tools;
+	private final List<ToolEnablement> tools = new ArrayList<ToolEnablement>();
 	private Object[] toolsEnabled;
-	private List<ToolEnablement> connectors;
-	private Object[] connectorsEnabled;
-	private CheckboxTableViewer toolsTableViewer;
-	private CheckboxTableViewer connectorsTableViewer;
+	private CheckboxTreeViewer checkboxTreeViewer;
+
+	private WritableList writableList;
 
 	/**
 	 * Create the property page.
@@ -63,21 +62,77 @@ public class ToolEnablementPropertyPage extends PropertyPage {
 		initData();
 
 		Composite container = new Composite(parent, SWT.NULL);
-		container.setLayout(new GridLayout(1, false));
+		container.setLayout(new GridLayout(3, false));
 
-		Label label = new Label(container, SWT.NONE);
-		label.setText("Tools");
+		Label lblEnabledToolsAnd = new Label(container, SWT.NONE);
+		lblEnabledToolsAnd.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
+		lblEnabledToolsAnd.setText("Enabled tools and attributes");
+		new Label(container, SWT.NONE);
+		new Label(container, SWT.NONE);
 
-		toolsTableViewer = CheckboxTableViewer.newCheckList(container, SWT.BORDER | SWT.FULL_SELECTION);
-		Table toolTable = toolsTableViewer.getTable();
-		toolTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		ScrolledComposite scrolledComposite = new ScrolledComposite(container, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
+		scrolledComposite.setExpandHorizontal(true);
+		scrolledComposite.setExpandVertical(true);
 
-		Label label_1 = new Label(container, SWT.NONE);
-		label_1.setText("Connectors");
+		checkboxTreeViewer = new CheckboxTreeViewer(scrolledComposite, SWT.BORDER);
+		Tree tree = checkboxTreeViewer.getTree();
+		scrolledComposite.setContent(tree);
+		scrolledComposite.setMinSize(tree.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		new Label(container, SWT.NONE);
 
-		connectorsTableViewer = CheckboxTableViewer.newCheckList(container, SWT.BORDER | SWT.FULL_SELECTION);
-		Table connectorTable = connectorsTableViewer.getTable();
-		connectorTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		Button btnImportProfile = new Button(container, SWT.NONE);
+		btnImportProfile.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				FileDialog dialog = new FileDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), SWT.NULL);
+				String path = dialog.open();
+				if (path != null) {
+					try {
+						tools.clear();
+						preferences.importPreferences(path);
+						reloadPreferences();
+						checkboxTreeViewer.refresh();
+						restoreDefaults();
+					} catch (Exception e1) {
+						Activator.showErrorWithLogging(e1);
+					}
+				}
+			}
+		});
+		btnImportProfile.setText("Import Profile ...");
+
+		Button btnExportProfile = new Button(container, SWT.NONE);
+		btnExportProfile.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				FileDialog dialog = new FileDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), SWT.SAVE);
+				String path = dialog.open();
+				if (path != null) {
+					try {
+						preferences.export(path);
+					} catch (Exception e1) {
+						Activator.showErrorWithLogging(e1);
+					}
+				}
+			}
+		});
+		btnExportProfile.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		btnExportProfile.setText("Export Profile ...");
+
+		checkboxTreeViewer.setComparer(new IElementComparer() {
+
+			@Override
+			public boolean equals(Object a, Object b) {
+				return a == b;
+			}
+
+			@Override
+			public int hashCode(Object element) {
+				return System.identityHashCode(element);
+			}
+		});
+		checkboxTreeViewer.setUseHashlookup(true);
 		m_bindingContext = initDataBindings();
 
 		restoreDefaults();
@@ -86,89 +141,77 @@ public class ToolEnablementPropertyPage extends PropertyPage {
 	}
 
 	private void restoreDefaults() {
-	    toolsTableViewer.setCheckedElements(toolsEnabled);
-		connectorsTableViewer.setCheckedElements(connectorsEnabled);
-    }
+		checkboxTreeViewer.setCheckedElements(toolsEnabled);
+	}
 
 	@Override
 	protected void performDefaults() {
-	    super.performDefaults();
+		super.performDefaults();
 		restoreDefaults();
 	}
-	
-	
+
 	private void initData() {
 		preferences = Bpmn2Preferences.getPreferences((IProject) getElement());
 
-		tools = preferences.getListOfTools();
+		reloadPreferences();
+	}
+
+	private void reloadPreferences() {
+		tools.clear();
+		tools.addAll(preferences.getAllElements());
 		ArrayList<ToolEnablement> tEnabled = new ArrayList<ToolEnablement>();
 		for (ToolEnablement tool : tools) {
 			if (tool.getEnabled()) {
 				tEnabled.add(tool);
 			}
-		}
-
-		toolsEnabled = tEnabled.toArray();
-		connectors = preferences.getListOfConnectors();
-		ArrayList<ToolEnablement> cEnabled = new ArrayList<ToolEnablement>();
-		for (ToolEnablement tool : connectors) {
-			if (tool.getEnabled()) {
-				cEnabled.add(tool);
+			ArrayList<ToolEnablement> children = tool.getChildren();
+			for (ToolEnablement t : children) {
+				if (t.getEnabled()) {
+					tEnabled.add(t);
+				}
 			}
 		}
-		connectorsEnabled = cEnabled.toArray();
+		toolsEnabled = tEnabled.toArray();
 	}
 
-	
-	
 	@Override
 	public boolean performOk() {
 		setErrorMessage(null);
-		List<Object> enabledTools = Arrays.asList(toolsTableViewer.getCheckedElements());
-		List<Object> enabledConnectors = Arrays.asList(connectorsTableViewer.getCheckedElements());
-
 		try {
-			updateToolEnablement(tools, enabledTools);
-			updateToolEnablement(connectors, enabledConnectors);
+			updateToolEnablement(tools, Arrays.asList(checkboxTreeViewer.getCheckedElements()));
 		} catch (BackingStoreException e) {
 			Activator.logError(e);
-			setErrorMessage("There was a problem saving your settings, more details in log!");
-			return false;
 		}
-
 		return true;
 	}
 
 	private void updateToolEnablement(List<ToolEnablement> saveables, List<Object> enabled)
-	        throws BackingStoreException {
+			throws BackingStoreException {
 		for (ToolEnablement t : saveables) {
-			preferences.setEnabled(t.getFeature(), enabled.contains(t));
+			preferences.setEnabled(t, enabled.contains(t));
+			for (ToolEnablement c : t.getChildren()) {
+				preferences.setEnabled(c, enabled.contains(c));
+			}
 		}
+		preferences.flush();
 	}
 
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
-		ObservableListContentProvider listContentProvider = new ObservableListContentProvider();
-		toolsTableViewer.setContentProvider(listContentProvider);
+		BeansListObservableFactory treeObservableFactory = new BeansListObservableFactory(ToolEnablement.class,
+				"children");
+		TreeBeanAdvisor treeAdvisor = new TreeBeanAdvisor(ToolEnablement.class, "parent", "children", "anyChildren");
+		ObservableListTreeContentProvider treeContentProvider = new ObservableListTreeContentProvider(
+				treeObservableFactory, treeAdvisor);
+		checkboxTreeViewer.setContentProvider(treeContentProvider);
 		//
-		IObservableMap observeMap = BeansObservables.observeMap(listContentProvider.getKnownElements(),
-		        ToolEnablement.class, "name");
-		toolsTableViewer.setLabelProvider(new ObservableMapLabelProvider(observeMap));
-		//
-		WritableList writableList = new WritableList(tools, ToolEnablement.class);
-		toolsTableViewer.setInput(writableList);
-		//
-		ObservableListContentProvider listContentProvider_1 = new ObservableListContentProvider();
-		connectorsTableViewer.setContentProvider(listContentProvider_1);
-		//
-		IObservableMap observeMap_1 = BeansObservables.observeMap(listContentProvider_1.getKnownElements(),
-		        ToolEnablement.class, "name");
-		connectorsTableViewer.setLabelProvider(new ObservableMapLabelProvider(observeMap_1));
-		//
-		WritableList writableList_1 = new WritableList(connectors, ToolEnablement.class);
-		connectorsTableViewer.setInput(writableList_1);
+		checkboxTreeViewer.setLabelProvider(new TreeObservableLabelProvider(treeContentProvider.getKnownElements(),
+				ToolEnablement.class, "name", null));
+		writableList = new WritableList(tools, ToolEnablement.class);
+		checkboxTreeViewer.setInput(writableList);
 		//
 		return bindingContext;
 	}
+
 }

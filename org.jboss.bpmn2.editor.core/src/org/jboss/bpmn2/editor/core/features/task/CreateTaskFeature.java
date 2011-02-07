@@ -4,6 +4,9 @@ import java.io.IOException;
 
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.Task;
+import org.eclipse.bpmn2.util.Bpmn2Resource;
+import org.eclipse.bpmn2.util.Bpmn2ResourceImpl;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.features.impl.AbstractCreateFeature;
@@ -63,4 +66,5 @@ public class CreateTaskFeature extends AbstractCreateFeature {
 	public String getCreateLargeImageId() {
 		return getCreateImageId(); // FIXME
 	}
+
 }

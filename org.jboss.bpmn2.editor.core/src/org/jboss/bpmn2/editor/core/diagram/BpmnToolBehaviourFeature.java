@@ -15,6 +15,7 @@ import org.eclipse.graphiti.palette.impl.ObjectCreationToolEntry;
 import org.eclipse.graphiti.palette.impl.PaletteCompartmentEntry;
 import org.eclipse.graphiti.tb.DefaultToolBehaviorProvider;
 import org.jboss.bpmn2.editor.core.Bpmn2Preferences;
+import org.jboss.bpmn2.editor.core.FeatureMap;
 
 public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider {
 
@@ -42,9 +43,9 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider {
 		IFeatureProvider featureProvider = getFeatureProvider();
 		ICreateFeature[] createFeatures = featureProvider.getCreateFeatures();
 		for (ICreateFeature cf : createFeatures) {
-			if (pref.isEnabled(cf)) {
+			if (pref.isEnabled(FeatureMap.getElement(cf))) {
 				ObjectCreationToolEntry objectCreationToolEntry = new ObjectCreationToolEntry(cf.getCreateName(),
-				        cf.getCreateDescription(), cf.getCreateImageId(), cf.getCreateLargeImageId(), cf);
+						cf.getCreateDescription(), cf.getCreateImageId(), cf.getCreateLargeImageId(), cf);
 				compartmentEntry.addToolEntry(objectCreationToolEntry);
 			}
 		}
@@ -54,10 +55,10 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider {
 		// add all create-connection-features to the new stack-entry
 		ICreateConnectionFeature[] createConnectionFeatures = featureProvider.getCreateConnectionFeatures();
 		for (ICreateConnectionFeature cf : createConnectionFeatures) {
-			if (pref.isEnabled(cf)) {
+			if (pref.isEnabled(FeatureMap.getElement(cf))) {
 				ConnectionCreationToolEntry connectionCreationToolEntry = new ConnectionCreationToolEntry(
-				        cf.getCreateName(), cf.getCreateDescription(), cf.getCreateImageId(),
-				        cf.getCreateLargeImageId());
+						cf.getCreateName(), cf.getCreateDescription(), cf.getCreateImageId(),
+						cf.getCreateLargeImageId());
 				connectionCreationToolEntry.addCreateConnectionFeature(cf);
 				compartmentEntry.addToolEntry(connectionCreationToolEntry);
 			}

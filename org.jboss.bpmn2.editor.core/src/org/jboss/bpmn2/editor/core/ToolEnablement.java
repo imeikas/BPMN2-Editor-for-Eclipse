@@ -1,58 +1,90 @@
 package org.jboss.bpmn2.editor.core;
 
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 
-import org.eclipse.graphiti.features.ICreateConnectionFeature;
-import org.eclipse.graphiti.features.IFeature;
+import org.eclipse.emf.ecore.ENamedElement;
 
 public class ToolEnablement {
-	
-	
-	@Override
-    public String toString() {
-	    return "ToolEnablement [feature=" + feature + ", enabled=" + getEnabled() + "]";
-    }
 
-	IFeature feature;
+	private ENamedElement tool;
 	private Boolean enabled;
 
-	public void setFeature(IFeature feature) {
-		this.feature = feature;
+	private ArrayList<ToolEnablement> children = new ArrayList<ToolEnablement>();
+	private ToolEnablement parent;
+
+	public ToolEnablement() {
 	}
 
-	public IFeature getFeature() {
-		return feature;
+	public ToolEnablement(ENamedElement tool, ToolEnablement parent) {
+		this.tool = tool;
+		this.parent = parent;
+	}
+
+	public String getName() {
+		return tool.getName();
+	}
+
+	public String getPreferenceName() {
+		if (parent == null) {
+			return tool.getName();
+		} else {
+			return parent.getPreferenceName() + "." + getName();
+		}
+	}
+
+	public Boolean getEnabled() {
+		return enabled;
 	}
 
 	public void setEnabled(Boolean enabled) {
-	    this.enabled = enabled;
-    }
-
-	public String getName(){
-		if(feature instanceof ICreateConnectionFeature){
-			return ((ICreateConnectionFeature) feature).getCreateName();
-		}
-		return feature.getName();
-	}
-	
-	public String getCanonicalName(){
-		return feature.getClass().getCanonicalName();
-	}
-	
-	public Boolean getEnabled() {
-	    return enabled;
-    }
-	
-	public void removePropertyChangeListener(PropertyChangeListener pcl){
+		this.enabled = enabled;
 	}
 
-	public void removePropertyChangeListener(String s, PropertyChangeListener pcl){
+	public void setTool(ENamedElement tool) {
+		this.tool = tool;
 	}
 
-	public void addPropertyChangeListener(PropertyChangeListener pcl){
+	public ENamedElement getTool() {
+		return tool;
 	}
-	
-	public void addPropertyChangeListener(String s,PropertyChangeListener pcl){
+
+	public void removePropertyChangeListener(PropertyChangeListener pcl) {
 	}
-	
+
+	public void removePropertyChangeListener(String s, PropertyChangeListener pcl) {
+	}
+
+	public void addPropertyChangeListener(PropertyChangeListener pcl) {
+	}
+
+	public void addPropertyChangeListener(String s, PropertyChangeListener pcl) {
+	}
+
+	public void setChildren(ArrayList<ToolEnablement> children) {
+		this.children = children;
+	}
+
+	public ArrayList<ToolEnablement> getChildren() {
+		return children;
+	}
+
+	public void setParent(ToolEnablement parent) {
+		this.parent = parent;
+	}
+
+	public ToolEnablement getParent() {
+		return parent;
+	}
+
+	@Override
+	public String toString() {
+		return "ToolEnablement [tool=" + getName() + ", enabled=" + enabled + ", children=" + children + ", parent="
+				+ (parent == null ? "null" : parent.getName()) + "]";
+	}
+
+	public boolean isAnyChildren() {
+		return children != null && children.size() > 0;
+
+	}
 }
