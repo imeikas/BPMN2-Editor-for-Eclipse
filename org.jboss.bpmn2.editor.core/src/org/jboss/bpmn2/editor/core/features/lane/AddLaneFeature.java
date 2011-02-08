@@ -19,7 +19,6 @@ import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
-import org.eclipse.graphiti.services.ILayoutService;
 import org.eclipse.graphiti.services.IPeCreateService;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
@@ -77,9 +76,9 @@ public class AddLaneFeature extends AbstractAddShapeFeature {
 					Graphiti.getPeService().sendToFront(s);
 				}
 			} else {
-				gaService.setLocationAndSize(rect, 15, h - 1, w - 15, height + 1);
+				gaService.setLocationAndSize(rect, 15, h - 1, w - 15, height);
 				ILocation location = Graphiti.getLayoutService().getLocationRelativeToDiagram(containerShape);
-				resizeRecursively(targetContainer, height, location.getX(), location.getY());
+				support.resizeLanesRecursively(targetContainer, height - 1, location.getX(), location.getY());
 			}
 			
 		} else {
@@ -113,32 +112,5 @@ public class AddLaneFeature extends AbstractAddShapeFeature {
 			}
 		}
 		return shapes;
-	}
-	
-	private void resizeRecursively(ContainerShape container, int height, int x, int y) {
-		if(container == null) {
-			return;
-		}
-		
-		Object bo = getBusinessObjectForPictogramElement(container);
-		if(bo == null || !(bo instanceof Lane)) {
-			return;
-		}
-		
-		IGaService gaService = Graphiti.getGaService();
-		ILayoutService layoutService = Graphiti.getLayoutService();
-		GraphicsAlgorithm ga =  container.getGraphicsAlgorithm();
-		
-		gaService.setSize(ga, ga.getWidth(), ga.getHeight() + height);
-		
-		for(Shape s : container.getChildren()) {
-			ILocation location = layoutService.getLocationRelativeToDiagram(s);
-			if(location.getY() >= y && location.getX() != x) {
-				GraphicsAlgorithm childGa = s.getGraphicsAlgorithm();
-				gaService.setLocation(childGa, childGa.getX(), childGa.getY() + height);
-			}
-		}
-		
-		resizeRecursively(container.getContainer(), height, x, y);
 	}
 }

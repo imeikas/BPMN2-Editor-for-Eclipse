@@ -8,6 +8,7 @@ import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.LaneSet;
 import org.eclipse.bpmn2.Process;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.graphiti.datatypes.ILocation;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
@@ -18,7 +19,7 @@ import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 
 public class MoveFromDiagramFeature extends MoveLaneFeature {
-
+	
 	public MoveFromDiagramFeature(IFeatureProvider fp) {
 		super(fp);
 	}
@@ -28,7 +29,7 @@ public class MoveFromDiagramFeature extends MoveLaneFeature {
 		if (context.getSourceContainer().equals(context.getTargetContainer()))
 			return true;
 
-		if (isTargetLane(context))
+		if (support.isTargetLane(context))
 			return true;
 
 		return false;
@@ -59,8 +60,9 @@ public class MoveFromDiagramFeature extends MoveLaneFeature {
 				s.setContainer((ContainerShape) context.getShape());
 			}
 		} else {
-			resizeRecursively(targetContainer, ga.getHeight());
 			gaService.setLocationAndSize(ga, 15, height - 1, width - 15, ga.getHeight() + 1);
+			ILocation location = Graphiti.getLayoutService().getLocationRelativeToDiagram(context.getShape());
+			support.resizeLanesRecursively(targetContainer, ga.getHeight() - 1, location.getX(), location.getY());
 		}
 	}
 
@@ -102,28 +104,5 @@ public class MoveFromDiagramFeature extends MoveLaneFeature {
 			}
 		}
 		return shapes;
-	}
-
-	private boolean isTargetLane(IMoveShapeContext context) {
-		Object targetBusinessObj = getBusinessObjectForPictogramElement(context.getTargetContainer());
-		return targetBusinessObj != null && targetBusinessObj instanceof Lane;
-	}
-	
-	private void resizeRecursively(ContainerShape container, int height) {
-		if(container == null) {
-			return;
-		}
-		
-		Object bo = getBusinessObjectForPictogramElement(container);
-		if(bo == null || !(bo instanceof Lane)) {
-			return;
-		}
-		
-		IGaService gaService = Graphiti.getGaService();
-		GraphicsAlgorithm ga =  container.getGraphicsAlgorithm();
-		
-		gaService.setSize(ga, ga.getWidth(), ga.getHeight() + height);
-		
-		resizeRecursively(container.getContainer(), height);
 	}
 }

@@ -14,7 +14,9 @@ import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 
 public class CreateLaneFeature extends AbstractCreateFeature {
-
+	
+	private static int index = 1;
+	
 	private FeatureSupport support = new FeatureSupport() {
 		@Override
 		protected Object getBusinessObject(PictogramElement element) {
@@ -44,7 +46,7 @@ public class CreateLaneFeature extends AbstractCreateFeature {
 			} else {
 				lane = mh.addLane();
 			}
-			lane.setName("Lane");
+			lane.setName("Lane nr " + index++);
 		} catch (IOException e) {
 			Activator.logError(e);
 		}
