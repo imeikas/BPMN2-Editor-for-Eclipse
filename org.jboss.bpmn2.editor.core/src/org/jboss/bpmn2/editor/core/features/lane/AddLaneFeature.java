@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.Lane;
+import org.eclipse.graphiti.datatypes.ILocation;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
@@ -18,6 +19,7 @@ import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
+import org.eclipse.graphiti.services.ILayoutService;
 import org.eclipse.graphiti.services.IPeCreateService;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
@@ -75,8 +77,9 @@ public class AddLaneFeature extends AbstractAddShapeFeature {
 					Graphiti.getPeService().sendToFront(s);
 				}
 			} else {
-				resizeRecursively(targetContainer, height);
 				gaService.setLocationAndSize(rect, 15, h - 1, w - 15, height + 1);
+				ILocation location = Graphiti.getLayoutService().getLocationRelativeToDiagram(containerShape);
+				resizeRecursively(targetContainer, height, location.getX(), location.getY());
 			}
 			
 		} else {
@@ -112,7 +115,7 @@ public class AddLaneFeature extends AbstractAddShapeFeature {
 		return shapes;
 	}
 	
-	private void resizeRecursively(ContainerShape container, int height) {
+	private void resizeRecursively(ContainerShape container, int height, int x, int y) {
 		if(container == null) {
 			return;
 		}
@@ -123,10 +126,19 @@ public class AddLaneFeature extends AbstractAddShapeFeature {
 		}
 		
 		IGaService gaService = Graphiti.getGaService();
+		ILayoutService layoutService = Graphiti.getLayoutService();
 		GraphicsAlgorithm ga =  container.getGraphicsAlgorithm();
 		
 		gaService.setSize(ga, ga.getWidth(), ga.getHeight() + height);
 		
-		resizeRecursively(container.getContainer(), height);
+		for(Shape s : container.getChildren()) {
+			ILocation location = layoutService.getLocationRelativeToDiagram(s);
+			if(location.getY() >= y && location.getX() != x) {
+				GraphicsAlgorithm childGa = s.getGraphicsAlgorithm();
+				gaService.setLocation(childGa, childGa.getX(), childGa.getY() + height);
+			}
+		}
+		
+		resizeRecursively(container.getContainer(), height, x, y);
 	}
 }

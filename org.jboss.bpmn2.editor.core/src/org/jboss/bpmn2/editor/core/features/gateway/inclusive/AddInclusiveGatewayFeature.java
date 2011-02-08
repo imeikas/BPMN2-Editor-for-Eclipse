@@ -10,7 +10,7 @@ import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 import org.jboss.bpmn2.editor.core.features.gateway.AbstractAddGatewayFeature;
 
-public class AddInclusiveGatewayFeature extends AbstractAddGatewayFeature {
+public class AddInclusiveGatewayFeature extends AbstractAddGatewayFeature<InclusiveGateway> {
 	
 	public AddInclusiveGatewayFeature(IFeatureProvider fp) {
 	    super(fp);

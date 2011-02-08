@@ -10,7 +10,7 @@ import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 import org.jboss.bpmn2.editor.core.features.gateway.AbstractAddGatewayFeature;
 
-public class AddParallelGatewayFeature extends AbstractAddGatewayFeature {
+public class AddParallelGatewayFeature extends AbstractAddGatewayFeature<ParallelGateway> {
 
 	public AddParallelGatewayFeature(IFeatureProvider fp) {
 	    super(fp);

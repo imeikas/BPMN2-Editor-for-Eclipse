@@ -1,6 +1,5 @@
 package org.jboss.bpmn2.editor.core.features.gateway;
 
-import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.Gateway;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
@@ -16,7 +15,7 @@ import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
-public abstract class AbstractAddGatewayFeature extends AbstractAddShapeFeature {
+public abstract class AbstractAddGatewayFeature<T extends Gateway> extends AbstractAddShapeFeature {
 	
 	public static final int RADIUS = 25;
 	
@@ -39,9 +38,10 @@ public abstract class AbstractAddGatewayFeature extends AbstractAddShapeFeature 
 		return assignable && (intoDiagram || intoLane);
     }
 
-	@Override
+	@SuppressWarnings("unchecked")
+    @Override
     public PictogramElement add(IAddContext context) {
-		ExclusiveGateway addedGateway = (ExclusiveGateway) context.getNewObject();
+		T addedGateway = (T) context.getNewObject();
 
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
 		ContainerShape containerShape = peCreateService.createContainerShape(context.getTargetContainer(), true);
@@ -56,6 +56,7 @@ public abstract class AbstractAddGatewayFeature extends AbstractAddShapeFeature 
 
 		gaService.setLocationAndSize(diamond, context.getX(), context.getY(), 2 * RADIUS, 2 * RADIUS);
 		
+		decorateGateway(diamond);
 		
 		if (addedGateway.eResource() == null) {
 			getDiagram().eResource().getContents().add(addedGateway);
