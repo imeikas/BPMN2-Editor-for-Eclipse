@@ -16,9 +16,7 @@ public class MoveFromLaneFeature extends MoveLaneFeature {
 
 	@Override
 	public boolean canMoveShape(IMoveShapeContext context) {
-		if (context.getTargetContainer().equals(getDiagram()))
-			return true;
-		return false;
+		return true;
 	}
 
 	@Override

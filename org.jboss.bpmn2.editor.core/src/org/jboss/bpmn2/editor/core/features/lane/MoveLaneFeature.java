@@ -41,7 +41,7 @@ public class MoveLaneFeature extends DefaultMoveShapeFeature {
 			moveStrategy = new MoveFromLaneFeature(getFeatureProvider());
 			break;
 		case LANE_TO_LANE:
-			// TODO
+			moveStrategy = new MoveFromLaneToLaneFeature(getFeatureProvider());
 			break;
 		default:
 			break;
@@ -51,7 +51,7 @@ public class MoveLaneFeature extends DefaultMoveShapeFeature {
 			return super.canMoveShape(context);
 		}
 
-		return true;
+		return moveStrategy.canMoveShape(context);
 	}
 
 	@Override
