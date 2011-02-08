@@ -4,7 +4,6 @@ import static org.jboss.bpmn2.editor.core.features.event.SizeConstants.HEIGHT;
 import static org.jboss.bpmn2.editor.core.features.event.SizeConstants.TEXT_AREA_HEIGHT;
 import static org.jboss.bpmn2.editor.core.features.event.SizeConstants.WIDTH;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Event;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
@@ -40,7 +39,7 @@ public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
 	
 	@Override
 	public boolean canAdd(IAddContext context) {
-		boolean assignable = getBPMNClass().isAssignableFrom(context.getNewObject().getClass());
+		boolean assignable = getEventClass().isAssignableFrom(context.getNewObject().getClass());
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
 		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context);
 	    return assignable && (intoDiagram || intoLane);
@@ -94,5 +93,5 @@ public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
 	protected void enhanceText(Text t) {
 	}
 	
-    protected abstract Class<? extends BaseElement> getBPMNClass();
+    protected abstract Class<? extends Event> getEventClass();
 }

@@ -18,7 +18,7 @@ public class AddEndEventFeature extends AbstractAddEventFeature {
 	}
 
 	@Override
-    protected Class<? extends BaseElement> getBPMNClass() {
+    protected Class<? extends BaseElement> getEventClass() {
 	    return EndEvent.class;
     }
 }

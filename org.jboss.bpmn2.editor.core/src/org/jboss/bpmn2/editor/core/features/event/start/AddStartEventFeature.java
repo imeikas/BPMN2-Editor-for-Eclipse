@@ -12,7 +12,7 @@ public class AddStartEventFeature extends AbstractAddEventFeature {
 	}
 
 	@Override
-    protected Class<? extends BaseElement> getBPMNClass() {
+    protected Class<? extends BaseElement> getEventClass() {
 	    return StartEvent.class;
     }
 }
