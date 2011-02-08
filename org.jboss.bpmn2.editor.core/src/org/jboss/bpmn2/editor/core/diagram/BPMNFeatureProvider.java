@@ -2,6 +2,7 @@ package org.jboss.bpmn2.editor.core.diagram;
 
 import org.eclipse.bpmn2.Association;
 import org.eclipse.bpmn2.EndEvent;
+import org.eclipse.bpmn2.EventBasedGateway;
 import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.InclusiveGateway;
@@ -46,6 +47,8 @@ import org.jboss.bpmn2.editor.core.features.event.start.CreateStartEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.start.DirectEditStartEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.start.LayoutStartEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.start.UpdateStartEventFeature;
+import org.jboss.bpmn2.editor.core.features.gateway.eventbased.AddEventBasedGatewayFeature;
+import org.jboss.bpmn2.editor.core.features.gateway.eventbased.CreateEventBasedGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.gateway.exclusive.AddExclusiveGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.gateway.exclusive.CreateExclusiveGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.gateway.inclusive.AddInclusiveGatewayFeature;
@@ -99,6 +102,8 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			return new AddInclusiveGatewayFeature(this);
 		} else if (newObject instanceof ParallelGateway) {
 			return new AddParallelGatewayFeature(this);
+		} else if (newObject instanceof EventBasedGateway) {
+			return new AddEventBasedGatewayFeature(this);
 		}
 		return super.getAddFeature(context);
 	}
@@ -109,7 +114,8 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		return new ICreateFeature[] { new CreateStartEventFeature(this), new CreateEndEventFeature(this),
 		        new CreateTaskFeature(this), new CreateExclusiveGatewayFeature(this),
 		        new CreateInclusiveGatewayFeature(this), new CreateParallelGatewayFeature(this),
-		        new CreateLaneFeature(this), new CreateTextAnnotationFeature(this) };
+		        new CreateEventBasedGatewayFeature(this), new CreateLaneFeature(this),
+		        new CreateTextAnnotationFeature(this) };
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import org.jboss.bpmn2.editor.core.features.annotation.CreateTextAnnotationFeatu
 import org.jboss.bpmn2.editor.core.features.association.CreateAssociationFeature;
 import org.jboss.bpmn2.editor.core.features.event.end.CreateEndEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.start.CreateStartEventFeature;
+import org.jboss.bpmn2.editor.core.features.gateway.eventbased.CreateEventBasedGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.gateway.exclusive.CreateExclusiveGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.gateway.inclusive.CreateInclusiveGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.gateway.parallel.CreateParallelGatewayFeature;
@@ -36,6 +37,7 @@ public class FeatureMap {
 		featureMap.put(i.getCollaboration(), CreatePoolFeature.class);
 		featureMap.put(i.getAssociation(), CreateAssociationFeature.class);
 		featureMap.put(i.getTextAnnotation(), CreateTextAnnotationFeature.class);
+		featureMap.put(i.getEventBasedGateway(), CreateEventBasedGatewayFeature.class);
 		FEATURE_MAP = Collections.unmodifiableMap(featureMap);
 	}
 
