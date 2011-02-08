@@ -50,7 +50,6 @@ public class Bpmn2Preferences {
 		elementSet.add(i.getAssignment());
 		elementSet.add(i.getAssociation());
 		elementSet.add(i.getTextAnnotation());
-
 	}
 
 	private Bpmn2Preferences(Preferences prefs) {
@@ -66,24 +65,25 @@ public class Bpmn2Preferences {
 
 	public List<ToolEnablement> getAllElements() {
 		ArrayList<ToolEnablement> ret = new ArrayList<ToolEnablement>();
+
 		for (EClass e : elementSet) {
 			ToolEnablement tool = new ToolEnablement();
 			tool.setTool(e);
-			tool.setEnabled(isEnabled(tool));
+			tool.setEnabled(isEnabled(e));
 			ret.add(tool);
 			ArrayList<ToolEnablement> children = new ArrayList<ToolEnablement>();
 
 			for (org.eclipse.emf.ecore.EAttribute a : e.getEAllAttributes()) {
 				if (!("id".equals(a.getName()) || "anyAttribute".equals(a.getName()))) {
 					ToolEnablement toolEnablement = new ToolEnablement(a, tool);
-					toolEnablement.setEnabled(isEnabled(toolEnablement));
+					toolEnablement.setEnabled(isEnabled(e));
 					children.add(toolEnablement);
 				}
 			}
 
 			for (org.eclipse.emf.ecore.EReference a : e.getEAllContainments()) {
 				ToolEnablement toolEnablement = new ToolEnablement(a, tool);
-				toolEnablement.setEnabled(isEnabled(toolEnablement));
+				toolEnablement.setEnabled(isEnabled(e));
 				children.add(toolEnablement);
 			}
 			tool.setChildren(children);
@@ -100,10 +100,6 @@ public class Bpmn2Preferences {
 		return ret;
 	}
 
-	public boolean isEnabled(ToolEnablement tool) {
-		return prefs.getBoolean(tool.getPreferenceName(), true);
-	}
-
 	public boolean isEnabled(EClass element) {
 		return prefs.getBoolean(element.getName(), true);
 	}
@@ -118,6 +114,10 @@ public class Bpmn2Preferences {
 
 	public void setEnabled(ToolEnablement tool, boolean enabled) {
 		prefs.putBoolean(tool.getPreferenceName(), enabled);
+	}
+
+	public boolean isEnabled(ToolEnablement tool) {
+		return prefs.getBoolean(tool.getPreferenceName(), true);
 	}
 
 	public void flush() throws BackingStoreException {

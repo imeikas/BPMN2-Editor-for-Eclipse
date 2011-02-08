@@ -34,43 +34,7 @@ class Bpmn2PreferencesTests extends Specification with JUnit {
 
       val pref = Bpmn2Preferences.getPreferences(project)
       pref must notBeNull
-      "and give a list of tools" in {
-        val tools = pref.getListOfTools.asScala
-        tools must notBeNull
-        "tools must contain Task" in {
-          tools.exists(classOf[CreateTaskFeature] == _.getFeature.niceClass) must beTrue
-        }
-        "tools must contain ExclusiveGateway" in {
-          tools.exists(classOf[CreateExclusiveGatewayFeature] == _.getFeature.niceClass) must beTrue
-        }
-
-        "and allow checking their enablement" in {
-          tools.forall(_.getEnabled().booleanValue) must beTrue
-        }
-
-        "and allow setting them as disabled" in {
-          tools.foreach(x => pref.setEnabled(x.getFeature, false))
-          val tools2 = pref.getListOfTools.asScala
-          tools2.forall(_.getEnabled().booleanValue != true) must beTrue
-        }
-
-      }
-      "and give a list of connectors" in {
-        val connectors = pref.getListOfConnectors.asScala
-        connectors must notBeNull
-        "connectors must contain SequenecFlow" in {
-          connectors.exists(classOf[CreateSequenceFlowFeature] == _.getFeature.niceClass) must beTrue
-        }
-        "and allow checking their enablement" in {
-          connectors.forall(_.getEnabled().booleanValue) must beTrue
-        }
-
-        "and allow setting them as disabled" in {
-          connectors.foreach(x => pref.setEnabled(x.getFeature, false))
-          val connectors2 = pref.getListOfConnectors.asScala
-          connectors2.forall(_.getEnabled().booleanValue != true) must beTrue
-        }
-      }
+      
     }
   }
 }
