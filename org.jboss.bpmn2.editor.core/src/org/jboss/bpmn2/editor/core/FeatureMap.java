@@ -16,6 +16,7 @@ import org.jboss.bpmn2.editor.core.features.gateway.exclusive.CreateExclusiveGat
 import org.jboss.bpmn2.editor.core.features.gateway.inclusive.CreateInclusiveGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.gateway.parallel.CreateParallelGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.lane.CreateLaneFeature;
+import org.jboss.bpmn2.editor.core.features.messageflow.CreateMessageFlowFeature;
 import org.jboss.bpmn2.editor.core.features.pool.CreatePoolFeature;
 import org.jboss.bpmn2.editor.core.features.sequenceflow.CreateSequenceFlowFeature;
 import org.jboss.bpmn2.editor.core.features.task.CreateTaskFeature;
@@ -38,6 +39,7 @@ public class FeatureMap {
 		featureMap.put(i.getAssociation(), CreateAssociationFeature.class);
 		featureMap.put(i.getTextAnnotation(), CreateTextAnnotationFeature.class);
 		featureMap.put(i.getEventBasedGateway(), CreateEventBasedGatewayFeature.class);
+		featureMap.put(i.getMessageFlow(), CreateMessageFlowFeature.class);
 		FEATURE_MAP = Collections.unmodifiableMap(featureMap);
 	}
 

@@ -11,8 +11,10 @@ import org.eclipse.bpmn2.Definitions;
 import org.eclipse.bpmn2.DocumentRoot;
 import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.bpmn2.FlowNode;
+import org.eclipse.bpmn2.InteractionNode;
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.LaneSet;
+import org.eclipse.bpmn2.MessageFlow;
 import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.Process;
 import org.eclipse.bpmn2.RootElement;
@@ -111,6 +113,13 @@ public class ModelHandler {
 		flow.setSourceRef(source);
 		flow.setTargetRef(target);
 		return flow;
+	}
+	
+	public MessageFlow createMessageFlow(InteractionNode source, InteractionNode target) {
+		MessageFlow messageFlow = FACTORY.createMessageFlow();
+		messageFlow.setSourceRef(source);
+		messageFlow.setTargetRef(target);
+		return messageFlow;
 	}
 	
 	public Association createAssociation(TextAnnotation annotation, BaseElement element) {

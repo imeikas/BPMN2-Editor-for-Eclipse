@@ -6,6 +6,7 @@ import org.eclipse.bpmn2.EventBasedGateway;
 import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.bpmn2.Lane;
+import org.eclipse.bpmn2.MessageFlow;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.SequenceFlow;
@@ -33,6 +34,7 @@ public class ImageProvider extends AbstractImageProvider {
 	public static final String IMG_16_INCLUSIVE_GATEWAY = PREFIX + InclusiveGateway.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_PARALLEL_GATEWAY = PREFIX + ParallelGateway.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_EVENT_BASED_GATEWAY = PREFIX + EventBasedGateway.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_MESSAGE_FLOW = PREFIX + MessageFlow.class.getSimpleName().toLowerCase() + dot16;
 	
 	@Override
 	protected void addAvailableImages() {
@@ -48,5 +50,6 @@ public class ImageProvider extends AbstractImageProvider {
 		addImageFilePath(IMG_16_INCLUSIVE_GATEWAY, ICONS_16 + "InclusiveGateway.png");
 		addImageFilePath(IMG_16_PARALLEL_GATEWAY, ICONS_16 + "InclusiveGateway.png");
 		addImageFilePath(IMG_16_EVENT_BASED_GATEWAY, ICONS_16 + "EventBasedGateway.png");
+		addImageFilePath(IMG_16_MESSAGE_FLOW, ICONS_16 + "MessageFlow.png");
 	}
 }

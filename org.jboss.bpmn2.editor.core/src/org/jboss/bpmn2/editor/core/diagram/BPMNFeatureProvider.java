@@ -7,6 +7,7 @@ import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.bpmn2.Lane;
+import org.eclipse.bpmn2.MessageFlow;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.StartEvent;
@@ -62,6 +63,8 @@ import org.jboss.bpmn2.editor.core.features.lane.CreateLaneFeature;
 import org.jboss.bpmn2.editor.core.features.lane.LayoutLaneFeature;
 import org.jboss.bpmn2.editor.core.features.lane.MoveLaneFeature;
 import org.jboss.bpmn2.editor.core.features.lane.ResizeLaneFeature;
+import org.jboss.bpmn2.editor.core.features.messageflow.AddMessageFlowFeature;
+import org.jboss.bpmn2.editor.core.features.messageflow.CreateMessageFlowFeature;
 import org.jboss.bpmn2.editor.core.features.sequenceflow.AddSequenceFlowFeature;
 import org.jboss.bpmn2.editor.core.features.sequenceflow.CreateSequenceFlowFeature;
 import org.jboss.bpmn2.editor.core.features.task.AddTaskFeature;
@@ -107,6 +110,8 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			return new AddParallelGatewayFeature(this);
 		} else if (newObject instanceof EventBasedGateway) {
 			return new AddEventBasedGatewayFeature(this);
+		} else if (newObject instanceof MessageFlow) {
+			return new AddMessageFlowFeature(this);
 		}
 		return super.getAddFeature(context);
 	}
@@ -142,7 +147,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 	@Override
 	public ICreateConnectionFeature[] getCreateConnectionFeatures() {
 		// if you change this part significantly, check that you won't break Bpmn2Preferences
-		return new ICreateConnectionFeature[] { new CreateSequenceFlowFeature(this), new CreateAssociationFeature(this) };
+		return new ICreateConnectionFeature[] { new CreateSequenceFlowFeature(this), new CreateAssociationFeature(this), new CreateMessageFlowFeature(this) };
 	}
 
 	@Override
