@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.Lane;
-import org.eclipse.graphiti.datatypes.ILocation;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
+import org.eclipse.graphiti.features.context.ITargetContext;
 import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Rectangle;
@@ -62,25 +62,18 @@ public class AddLaneFeature extends AbstractAddShapeFeature {
 		gaService.setRenderingStyle(rect, gradient);
 
 		if(support.isTargetLane(context)) {
-			ContainerShape targetContainer = context.getTargetContainer();
-			Lane targetLane = (Lane) getBusinessObjectForPictogramElement(targetContainer);
-			GraphicsAlgorithm targetGa = targetContainer.getGraphicsAlgorithm();
-			List<Shape> shapes = getFlowNodeShapes(context, lane);
-			int w = targetGa.getWidth();
-			int h = targetGa.getHeight();
-			int numberOfLanes = targetLane.getChildLaneSet().getLanes().size();
+			GraphicsAlgorithm ga = context.getTargetContainer().getGraphicsAlgorithm();
 			
-			if (numberOfLanes == 1) {
-				gaService.setLocationAndSize(rect, 15, 0, w - 15, h);
-				for (Shape s : shapes) {
+			if (getNumberOfLanes(context) == 1) {
+				gaService.setLocationAndSize(rect, 15, 0, ga.getWidth() - 15, ga.getHeight());
+				for (Shape s : getFlowNodeShapes(context, lane)) {
 					Graphiti.getPeService().sendToFront(s);
+					s.setContainer(containerShape);
 				}
 			} else {
-				gaService.setLocationAndSize(rect, 15, h - 1, w - 15, height);
-				ILocation location = Graphiti.getLayoutService().getLocationRelativeToDiagram(containerShape);
-				support.resizeLanesRecursively(targetContainer, height - 1, location.getX(), location.getY());
+				gaService.setLocationAndSize(rect, 15, ga.getWidth() - 1, ga.getHeight() - 15, height);
 			}
-			
+			containerShape.setContainer(context.getTargetContainer());
 		} else {
 			gaService.setLocationAndSize(rect, context.getX(), context.getY(), width, height);
 		}
@@ -99,6 +92,9 @@ public class AddLaneFeature extends AbstractAddShapeFeature {
 		peCreateService.createChopboxAnchor(containerShape);
 		layoutPictogramElement(containerShape);
 		
+		if(support.isTargetLane(context)) {
+			support.redraw(context.getTargetContainer());
+		}
 		return containerShape;
 	}
 	
@@ -112,5 +108,11 @@ public class AddLaneFeature extends AbstractAddShapeFeature {
 			}
 		}
 		return shapes;
+	}
+	
+	private int getNumberOfLanes(ITargetContext context) {
+		ContainerShape targetContainer = context.getTargetContainer();
+		Lane lane = (Lane) getBusinessObjectForPictogramElement(targetContainer);
+		return lane.getChildLaneSet().getLanes().size();
 	}
 }

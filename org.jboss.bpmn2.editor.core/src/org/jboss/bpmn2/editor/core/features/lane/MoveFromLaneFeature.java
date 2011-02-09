@@ -22,7 +22,7 @@ public class MoveFromLaneFeature extends MoveLaneFeature {
 	@Override
 	protected void internalMove(IMoveShapeContext context) {
 		modifyModelStructure(context);
-		support.packLanes(context.getSourceContainer());
+		support.redraw(context.getSourceContainer());
 	}
 
 	private void modifyModelStructure(IMoveShapeContext context) {
