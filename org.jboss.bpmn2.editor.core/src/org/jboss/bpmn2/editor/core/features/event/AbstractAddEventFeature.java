@@ -1,9 +1,5 @@
 package org.jboss.bpmn2.editor.core.features.event;
 
-import static org.jboss.bpmn2.editor.core.features.event.SizeConstants.HEIGHT;
-import static org.jboss.bpmn2.editor.core.features.event.SizeConstants.TEXT_AREA_HEIGHT;
-import static org.jboss.bpmn2.editor.core.features.event.SizeConstants.WIDTH;
-
 import org.eclipse.bpmn2.Event;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
@@ -22,6 +18,7 @@ import org.eclipse.graphiti.services.IPeCreateService;
 import org.eclipse.graphiti.util.IColorConstant;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
+import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
 public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
@@ -29,22 +26,22 @@ public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
 	public AbstractAddEventFeature(IFeatureProvider fp) {
 		super(fp);
 	}
-	
+
 	private FeatureSupport support = new FeatureSupport() {
 		@Override
 		public Object getBusinessObject(PictogramElement element) {
 			return getBusinessObjectForPictogramElement(element);
 		}
 	};
-	
+
 	@Override
 	public boolean canAdd(IAddContext context) {
 		boolean assignable = getEventClass().isAssignableFrom(context.getNewObject().getClass());
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
 		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context);
-	    return assignable && (intoDiagram || intoLane);
+		return assignable && (intoDiagram || intoLane);
 	}
-	
+
 	@Override
 	public PictogramElement add(IAddContext context) {
 		Event e = (Event) context.getNewObject();
@@ -55,15 +52,16 @@ public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
 		IGaService gaService = Graphiti.getGaService();
 
 		Rectangle invisibleRect = gaService.createInvisibleRectangle(containerShape);
-		gaService.setLocationAndSize(invisibleRect, context.getX(), context.getY(), WIDTH, HEIGHT + TEXT_AREA_HEIGHT);
-		
+		gaService.setLocationAndSize(invisibleRect, context.getX(), context.getY(), ShapeUtil.EVENT_SIZE,
+		        ShapeUtil.EVENT_SIZE + ShapeUtil.EVENT_TEXT_AREA);
+
 		Shape ellipseShape = peCreateService.createShape(containerShape, false);
-		Ellipse ellipse = gaService.createEllipse(ellipseShape);
+		Ellipse ellipse = ShapeUtil.createEventShape(ellipseShape);
 		ellipse.setStyle(StyleUtil.getStyleForClass(getDiagram()));
 		enhanceEllipse(ellipse);
 		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
 		gaService.setRenderingStyle(ellipse, gradient);
-		gaService.setLocationAndSize(ellipse, 0, 0, WIDTH, HEIGHT);
+		gaService.setLocation(ellipse, 0, 0);
 
 		Shape textShape = peCreateService.createShape(containerShape, false);
 		Text text = gaService.createDefaultText(textShape, e.getName());
@@ -72,12 +70,12 @@ public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
 		text.setVerticalAlignment(Orientation.ALIGNMENT_BOTTOM);
 		text.setBackground(manageColor(IColorConstant.RED));
 		enhanceText(text);
-		gaService.setLocationAndSize(text, 0, HEIGHT, WIDTH, TEXT_AREA_HEIGHT);
+		gaService.setLocationAndSize(text, 0, ShapeUtil.EVENT_SIZE, ShapeUtil.EVENT_SIZE, ShapeUtil.EVENT_TEXT_AREA);
 
 		if (e.eResource() == null) {
 			getDiagram().eResource().getContents().add(e);
 		}
-		
+
 		link(ellipseShape, e);
 		link(textShape, e);
 		link(containerShape, e);
@@ -92,6 +90,6 @@ public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
 
 	protected void enhanceText(Text t) {
 	}
-	
-    protected abstract Class<? extends Event> getEventClass();
+
+	protected abstract Class<? extends Event> getEventClass();
 }

@@ -1,7 +1,5 @@
 package org.jboss.bpmn2.editor.core.features.event;
 
-import static org.jboss.bpmn2.editor.core.features.event.SizeConstants.*;
-
 import java.util.Iterator;
 
 import org.eclipse.emf.common.util.EList;
@@ -18,6 +16,7 @@ import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
+import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 
 public abstract class AbstractLayoutEventFeature extends AbstractLayoutFeature {
 
@@ -45,13 +44,13 @@ public abstract class AbstractLayoutEventFeature extends AbstractLayoutFeature {
 		GraphicsAlgorithm containerGa = containerShape.getGraphicsAlgorithm();
 		IGaService gaService = Graphiti.getGaService();
 		
-		if(containerGa.getWidth() < WIDTH) {
-			containerGa.setWidth(WIDTH);
+		if(containerGa.getWidth() < ShapeUtil.EVENT_SIZE) {
+			containerGa.setWidth(ShapeUtil.EVENT_SIZE);
 			changed = true;
 		}
 		
-		if(containerGa.getHeight() < HEIGHT + TEXT_AREA_HEIGHT) {
-			containerGa.setHeight(HEIGHT + TEXT_AREA_HEIGHT);
+		if(containerGa.getHeight() < ShapeUtil.EVENT_SIZE + ShapeUtil.EVENT_TEXT_AREA) {
+			containerGa.setHeight(ShapeUtil.EVENT_SIZE + ShapeUtil.EVENT_TEXT_AREA);
 			changed = true;
 		}
 		
@@ -69,7 +68,7 @@ public abstract class AbstractLayoutEventFeature extends AbstractLayoutFeature {
 	        	changed = true;
 	        }
 	        
-	        int sizeForEllipse = containerHeight - TEXT_AREA_HEIGHT;
+	        int sizeForEllipse = containerHeight - ShapeUtil.EVENT_TEXT_AREA;
 	        if (ga instanceof Ellipse) {
 	        	if(sizeForEllipse != ga.getHeight()) {
 	        		gaService.setHeight(ga, sizeForEllipse);
