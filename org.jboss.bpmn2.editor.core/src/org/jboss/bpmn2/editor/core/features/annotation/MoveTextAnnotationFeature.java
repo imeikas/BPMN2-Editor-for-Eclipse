@@ -10,7 +10,7 @@ public class MoveTextAnnotationFeature extends DefaultMoveShapeFeature {
 	
 	private FeatureSupport support = new FeatureSupport() {
 		@Override
-		protected Object getBusinessObject(PictogramElement element) {
+		public Object getBusinessObject(PictogramElement element) {
 			return getBusinessObjectForPictogramElement(element);
 		}
 	};

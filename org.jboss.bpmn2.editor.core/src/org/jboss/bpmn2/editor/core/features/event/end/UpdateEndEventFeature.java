@@ -3,9 +3,9 @@ package org.jboss.bpmn2.editor.core.features.event.end;
 import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IUpdateContext;
-import org.jboss.bpmn2.editor.core.features.UpdateFeature;
+import org.jboss.bpmn2.editor.core.features.AbstractBaseElementUpdateFeature;
 
-public class UpdateEndEventFeature extends UpdateFeature {
+public class UpdateEndEventFeature extends AbstractBaseElementUpdateFeature {
 
 	public UpdateEndEventFeature(IFeatureProvider fp) {
 		super(fp);

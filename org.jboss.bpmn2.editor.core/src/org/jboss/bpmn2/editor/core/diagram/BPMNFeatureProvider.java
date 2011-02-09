@@ -19,11 +19,13 @@ import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
+import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.features.context.IDirectEditingContext;
 import org.eclipse.graphiti.features.context.ILayoutContext;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
+import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
@@ -59,6 +61,7 @@ import org.jboss.bpmn2.editor.core.features.lane.AddLaneFeature;
 import org.jboss.bpmn2.editor.core.features.lane.CreateLaneFeature;
 import org.jboss.bpmn2.editor.core.features.lane.LayoutLaneFeature;
 import org.jboss.bpmn2.editor.core.features.lane.MoveLaneFeature;
+import org.jboss.bpmn2.editor.core.features.lane.ResizeLaneFeature;
 import org.jboss.bpmn2.editor.core.features.sequenceflow.AddSequenceFlowFeature;
 import org.jboss.bpmn2.editor.core.features.sequenceflow.CreateSequenceFlowFeature;
 import org.jboss.bpmn2.editor.core.features.task.AddTaskFeature;
@@ -189,6 +192,16 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			return new MoveTextAnnotationFeature(this);
 		} else {
 			return super.getMoveShapeFeature(context);
+		}
+	}
+
+	@Override
+	public IResizeShapeFeature getResizeShapeFeature(IResizeShapeContext context) {
+		Object bo = getBusinessObjectForPictogramElement(context.getShape());
+		if (bo instanceof Lane) {
+			return new ResizeLaneFeature(this);
+		} else {
+			return super.getResizeShapeFeature(context);
 		}
 	}
 }

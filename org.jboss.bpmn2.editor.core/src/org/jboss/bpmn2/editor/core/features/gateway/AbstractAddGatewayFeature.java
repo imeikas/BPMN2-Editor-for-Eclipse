@@ -21,7 +21,7 @@ public abstract class AbstractAddGatewayFeature<T extends Gateway> extends Abstr
 	
 	protected FeatureSupport support = new FeatureSupport() {
 		@Override
-		protected Object getBusinessObject(PictogramElement element) {
+		public Object getBusinessObject(PictogramElement element) {
 			return getBusinessObjectForPictogramElement(element);
 		}
 	};

@@ -1,57 +1,27 @@
 package org.jboss.bpmn2.editor.core.features;
 
 import java.awt.Dimension;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.bpmn2.FlowElement;
+import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Lane;
-import org.eclipse.bpmn2.TextAnnotation;
-import org.eclipse.graphiti.features.context.IPictogramElementContext;
-import org.eclipse.graphiti.features.context.ITargetContext;
-import org.eclipse.graphiti.mm.algorithms.AbstractText;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Text;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
-import org.eclipse.graphiti.mm.pictograms.Diagram;
-import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
-import org.jboss.bpmn2.editor.core.ModelHandler;
-import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
 
-public abstract class FeatureSupport {
-
-	public abstract Object getBusinessObject(PictogramElement element);
-
-	public boolean isTargetLane(ITargetContext context) {
-		return isLane(context.getTargetContainer());
+// TODO extract common logic to abstract methods to use redraw with processes also
+public abstract class AbstractContainerRedraw<T extends BaseElement> {
+	
+	private FeatureSupport support;
+	
+	public AbstractContainerRedraw(FeatureSupport support) {
+		this.support = support;
 	}
-
-	public boolean isLane(PictogramElement element) {
-		Object bo = getBusinessObject(element);
-		return bo != null && bo instanceof Lane;
-	}
-
-	public boolean isLaneOnTop(Lane lane) {
-		return lane.getChildLaneSet() == null || lane.getChildLaneSet().getLanes().isEmpty();
-	}
-
-	public boolean isTargetLaneOnTop(ITargetContext context) {
-		Lane lane = (Lane) getBusinessObject(context.getTargetContainer());
-		return lane.getChildLaneSet() == null || lane.getChildLaneSet().getLanes().isEmpty();
-	}
-
-	public ModelHandler getModelHanderInstance(Diagram diagram) throws IOException {
-		return ModelHandlerLocator.getModelHandler(diagram.eResource());
-	}
-
-	public boolean isTopLane(Lane lane) {
-		return lane.getChildLaneSet() == null || lane.getChildLaneSet().getLanes().isEmpty();
-	}
-
+	
 	public void redraw(ContainerShape container) {
 		ContainerShape root = getRootContainer(container);
 		resizeRecursively(root);
@@ -60,7 +30,7 @@ public abstract class FeatureSupport {
 
 	private ContainerShape getRootContainer(ContainerShape container) {
 		ContainerShape parent = container.getContainer();
-		Object bo = getBusinessObject(parent);
+		Object bo = support.getBusinessObject(parent);
 		if (bo != null && bo instanceof Lane) {
 			return getRootContainer(parent);
 		}
@@ -68,14 +38,14 @@ public abstract class FeatureSupport {
 	}
 
 	private Dimension resize(ContainerShape container) {
-		Lane lane = (Lane) getBusinessObject(container);
+		Lane lane = (Lane) support.getBusinessObject(container);
 		IGaService service = Graphiti.getGaService();
 		int height = 0;
 		int width = container.getGraphicsAlgorithm().getWidth() - 15;
 		List<GraphicsAlgorithm> gaList = new ArrayList<GraphicsAlgorithm>();
 		
 		for (Shape s : container.getChildren()) {
-			Object bo = getBusinessObject(s);
+			Object bo = support.getBusinessObject(s);
 			if (bo != null && bo instanceof Lane && !bo.equals(lane)) {
 				GraphicsAlgorithm ga = s.getGraphicsAlgorithm();
 				service.setLocation(ga, 15, height);
@@ -109,12 +79,12 @@ public abstract class FeatureSupport {
 	}
 
 	private Dimension resizeRecursively(ContainerShape root) {
-		Lane lane = (Lane) getBusinessObject(root);
+		Lane lane = (Lane) support.getBusinessObject(root);
 		List<Dimension> dimensions = new ArrayList<Dimension>();
 		int foundLanes = 0;
 
 		for (Shape s : root.getChildren()) {
-			Object bo = getBusinessObject(s);
+			Object bo = support.getBusinessObject(s);
 			if (s instanceof ContainerShape && bo != null && bo instanceof Lane && !bo.equals(lane)) {
 				foundLanes += 1;
 				Dimension d = resizeRecursively((ContainerShape) s);
@@ -160,44 +130,16 @@ public abstract class FeatureSupport {
 	
 	private void postResizeFixLenghts(ContainerShape root) {
 		IGaService service = Graphiti.getGaService();
-		Lane lane = (Lane) getBusinessObject(root);
+		Lane lane = (Lane) support.getBusinessObject(root);
 		int width = root.getGraphicsAlgorithm().getWidth() - 15;
 		
 		for(Shape s : root.getChildren()) {
-			Object o = getBusinessObject(s);
+			Object o = support.getBusinessObject(s);
 			if(s instanceof ContainerShape && o != null && o instanceof Lane && !o.equals(lane)) {
 				GraphicsAlgorithm ga = s.getGraphicsAlgorithm();
 				service.setSize(ga, width, ga.getHeight());
 				postResizeFixLenghts((ContainerShape) s);
 			}
 		}
-	}
-	
-	public String getShapeValue(IPictogramElementContext context) {
-		String value = null;
-
-		PictogramElement pe = context.getPictogramElement();
-		if (pe instanceof ContainerShape) {
-			ContainerShape cs = (ContainerShape) pe;
-			for (Shape shape : cs.getChildren()) {
-				if (shape.getGraphicsAlgorithm() instanceof AbstractText) {
-					AbstractText text = (AbstractText) shape.getGraphicsAlgorithm();
-					value = text.getValue();
-				}
-			}
-		}
-		return value;
-	}
-
-	public String getBusinessValue(IPictogramElementContext context) {
-		Object o = getBusinessObject(context.getPictogramElement());
-		if (o instanceof FlowElement) {
-			FlowElement e = (FlowElement) o;
-			return e.getName();
-		} else if (o instanceof TextAnnotation) {
-			TextAnnotation a = (TextAnnotation) o;
-			return a.getText();
-		}
-		return null;
 	}
 }
