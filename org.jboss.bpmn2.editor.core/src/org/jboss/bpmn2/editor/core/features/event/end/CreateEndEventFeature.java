@@ -13,16 +13,16 @@ public class CreateEndEventFeature extends AbstractCreateFlowElementFeature<EndE
 	public CreateEndEventFeature(IFeatureProvider fp) {
 		super(fp, "End Event", "Indicates the end of a process or choreography");
 	}
-
+	
 	@Override
-	protected EndEvent create(ICreateContext context, ModelHandler handler) {
-		EndEvent end = handler.addFlowElement(ModelHandler.FACTORY.createEndEvent());
+    protected EndEvent createFlowElement(ICreateContext context) {
+		EndEvent end = ModelHandler.FACTORY.createEndEvent();
 		end.setName("End");
 		if(support.isTargetLane(context)) {
 			end.getLanes().add((Lane) getBusinessObjectForPictogramElement(context.getTargetContainer()));
 		}
 		return end;
-	}
+    }
 	
 	@Override
 	public String getCreateImageId() {

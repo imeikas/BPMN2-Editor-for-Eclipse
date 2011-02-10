@@ -15,14 +15,14 @@ public class CreateExclusiveGatewayFeature extends AbstractCreateFlowElementFeat
 	}
 
 	@Override
-	protected ExclusiveGateway create(ICreateContext context, ModelHandler handler) {
-		ExclusiveGateway gateway = handler.addFlowElement(ModelHandler.FACTORY.createExclusiveGateway());
+    protected ExclusiveGateway createFlowElement(ICreateContext context) {
+		ExclusiveGateway gateway = ModelHandler.FACTORY.createExclusiveGateway();
 		if(support.isTargetLane(context)) {
 			gateway.getLanes().add((Lane) getBusinessObjectForPictogramElement(context.getTargetContainer()));
 		}
 		return gateway;
-	}
-
+    }
+	
 	@Override
 	public String getCreateImageId() {
 		return ImageProvider.IMG_16_EXCLUSIVE_GATEWAY;
@@ -32,5 +32,4 @@ public class CreateExclusiveGatewayFeature extends AbstractCreateFlowElementFeat
 	public String getCreateLargeImageId() {
 		return getCreateImageId(); // FIXME
 	}
-
 }

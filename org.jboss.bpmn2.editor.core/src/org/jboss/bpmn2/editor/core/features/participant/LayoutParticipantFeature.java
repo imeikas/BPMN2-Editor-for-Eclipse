@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.pool;
+package org.jboss.bpmn2.editor.core.features.participant;
 
 import java.util.Iterator;
 
@@ -18,9 +18,9 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 
-public class LayoutPoolFeature extends AbstractLayoutFeature {
+public class LayoutParticipantFeature extends AbstractLayoutFeature {
 
-	public LayoutPoolFeature(IFeatureProvider fp) {
+	public LayoutParticipantFeature(IFeatureProvider fp) {
 	    super(fp);
     }
 

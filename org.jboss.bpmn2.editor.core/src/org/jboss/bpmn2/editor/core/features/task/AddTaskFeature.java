@@ -26,22 +26,23 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 	public AddTaskFeature(IFeatureProvider fp) {
 		super(fp);
 	}
-	
+
 	private FeatureSupport support = new FeatureSupport() {
 		@Override
 		public Object getBusinessObject(PictogramElement element) {
 			return getBusinessObjectForPictogramElement(element);
 		}
 	};
-	
+
 	@Override
-    public boolean canAdd(IAddContext context) {
+	public boolean canAdd(IAddContext context) {
 		boolean isTask = context.getNewObject() instanceof Task;
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
 		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context);
-		return isTask && (intoDiagram || intoLane);
-    }
-	
+		boolean intoParticipant = support.isTargetParticipant(context);
+		return isTask && (intoDiagram || intoLane || intoParticipant);
+	}
+
 	@Override
 	public PictogramElement add(IAddContext context) {
 		Task addedTask = (Task) context.getNewObject();
@@ -51,39 +52,29 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 
 		IGaService gaService = Graphiti.getGaService();
 
-		{
-			// create and set graphics algorithm
-			RoundedRectangle roundedRectangle = gaService.createRoundedRectangle(containerShape, 5, 5);
-			roundedRectangle.setStyle(StyleUtil.getStyleForClass(getDiagram()));
+		RoundedRectangle roundedRectangle = gaService.createRoundedRectangle(containerShape, 5, 5);
+		roundedRectangle.setStyle(StyleUtil.getStyleForClass(getDiagram()));
 
-			AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
-			gaService.setRenderingStyle(roundedRectangle, gradient);
+		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
+		gaService.setRenderingStyle(roundedRectangle, gradient);
 
-			gaService.setLocationAndSize(roundedRectangle, context.getX(), context.getY(), WIDTH, HEIGHT);
+		gaService.setLocationAndSize(roundedRectangle, context.getX(), context.getY(), WIDTH, HEIGHT);
 
-			if (addedTask.eResource() == null) {
-				getDiagram().eResource().getContents().add(addedTask);
-			}
-			// create link and wire it
-			link(containerShape, addedTask);
-
+		if (addedTask.eResource() == null) {
+			getDiagram().eResource().getContents().add(addedTask);
 		}
+		link(containerShape, addedTask);
 
-		// SHAPE WITH TEXT
-		{
-			// create shape for text
-			Shape shape = peCreateService.createShape(containerShape, false);
-			// create and set text graphics algorithm
-			Text text = gaService.createDefaultText(shape, addedTask.getName());
-			text.setStyle(StyleUtil.getStyleForText(getDiagram()));
-			text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
-			text.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
-			text.getFont().setBold(true);
-			gaService.setLocationAndSize(text, 0, 0, WIDTH, 20);
+		Shape shape = peCreateService.createShape(containerShape, false);
+		Text text = gaService.createDefaultText(shape, addedTask.getName());
+		text.setStyle(StyleUtil.getStyleForText(getDiagram()));
+		text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
+		text.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
+		text.getFont().setBold(true);
+		gaService.setLocationAndSize(text, 0, 0, WIDTH, 20);
 
-			// create link and wire it
-			link(shape, addedTask);
-		}
+		// create link and wire it
+		link(shape, addedTask);
 
 		peCreateService.createChopboxAnchor(containerShape);
 		layoutPictogramElement(containerShape);

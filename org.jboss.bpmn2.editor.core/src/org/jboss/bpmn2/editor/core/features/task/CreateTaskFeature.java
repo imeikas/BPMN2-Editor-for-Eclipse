@@ -15,8 +15,8 @@ public class CreateTaskFeature extends AbstractCreateFlowElementFeature<Task> {
 	}
 	
 	@Override
-    protected Task create(ICreateContext context, ModelHandler handler) {
-		Task task = handler.addFlowElement(ModelHandler.FACTORY.createTask());
+    protected Task createFlowElement(ICreateContext context) {
+		Task task = ModelHandler.FACTORY.createTask();
 		if(support.isTargetLane(context)) {
 			Lane lane = (Lane) getBusinessObjectForPictogramElement(context.getTargetContainer());
 			task.getLanes().add(lane);

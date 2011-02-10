@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.pool;
+package org.jboss.bpmn2.editor.core.features.participant;
 
 import org.eclipse.bpmn2.Participant;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -19,9 +19,9 @@ import org.eclipse.graphiti.services.IPeCreateService;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
-public class AddPoolFeature extends AbstractAddShapeFeature {
+public class AddParticipantFeature extends AbstractAddShapeFeature {
 
-	public AddPoolFeature(IFeatureProvider fp) {
+	public AddParticipantFeature(IFeatureProvider fp) {
 	    super(fp);
     }
 
@@ -69,5 +69,4 @@ public class AddPoolFeature extends AbstractAddShapeFeature {
 	    layoutPictogramElement(containerShape);
 		return containerShape;
     }
-
 }

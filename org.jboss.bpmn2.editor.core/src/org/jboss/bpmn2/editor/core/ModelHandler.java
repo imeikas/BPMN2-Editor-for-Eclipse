@@ -1,6 +1,7 @@
 package org.jboss.bpmn2.editor.core;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.eclipse.bpmn2.Artifact;
 import org.eclipse.bpmn2.Association;
@@ -44,7 +45,12 @@ public class ModelHandler {
 			if (domain != null) {
 				final DocumentRoot docRoot = FACTORY.createDocumentRoot();
 				final Definitions definitions = FACTORY.createDefinitions();
-
+				Collaboration collaboration = FACTORY.createCollaboration();
+				Participant participant = FACTORY.createParticipant();
+				participant.setName("Internal");
+				collaboration.getParticipants().add(participant);
+				definitions.getRootElements().add(collaboration);
+				
 				domain.getCommandStack().execute(new RecordingCommand(domain) {
 					protected void doExecute() {
 						docRoot.setDefinitions(definitions);
@@ -56,17 +62,25 @@ public class ModelHandler {
 		}
 	}
 
-	public <T extends FlowElement> T addFlowElement(T elem) {
-		Process process = getOrCreateFirstProcess();
-		process.getFlowElements().add(elem);
+	public <T extends FlowElement> T addFlowElement(Participant participant, T elem) {
+		if(participant.getProcessRef() == null) {
+			Process process = FACTORY.createProcess();
+			getDefinitions().getRootElements().add(process);
+			participant.setProcessRef(process);
+		}
+		List<FlowElement> elements = participant.getProcessRef().getFlowElements();
+		elements.add(elem);
 		return elem;
 	}
 	
-	public Participant addCollaborator() {
-		Collaboration collaboration = getOrCreateFirstCollaboration();
+	public <T extends FlowElement> T addFlowElement(T elem) {
+		return addFlowElement(getInternalParticipant(), elem);
+	}
+	
+	public Participant addParticipant() {
+		Collaboration collaboration = getCollaboration();
 		Participant participant = FACTORY.createParticipant();
 		collaboration.getParticipants().add(participant);
-		participant.setProcessRef(getOrCreateFirstProcess());
 		return participant;
 	}
 	
@@ -138,15 +152,6 @@ public class ModelHandler {
 		return process;
 	}
 	
-	private Collaboration getOrCreateFirstCollaboration() {
-		Collaboration collaboration = getFirstCollaboration();
-		if(collaboration == null) {
-			collaboration = FACTORY.createCollaboration();
-			getDefinitions().getRootElements().add(collaboration);
-		}
-		return collaboration;
-	}
-
 	public Process getFirstProcess() {
 		for (RootElement element : getDefinitions().getRootElements()) {
 			if (element instanceof Process) {
@@ -156,7 +161,7 @@ public class ModelHandler {
 		return null;
 	}
 	
-	public Collaboration getFirstCollaboration() {
+	public Collaboration getCollaboration() {
 		for (RootElement element : getDefinitions().getRootElements()) {
 			if(element instanceof Collaboration) {
 				return (Collaboration) element;
@@ -200,6 +205,21 @@ public class ModelHandler {
 		} catch (IOException e) {
 			Activator.logError(e);
 		}
-
+	}
+	
+	public Participant getInternalParticipant() {
+		return getCollaboration().getParticipants().get(0);
+	}
+	
+	public Participant getParticipant(Object bo) {
+		if(bo instanceof Participant) {
+			return (Participant) bo;
+		}
+		for(Participant p : getCollaboration().getParticipants()) {
+			if(p.getProcessRef().getFlowElements().contains(bo)) {
+				return p;
+			}
+		}
+		return null;
 	}
 }

@@ -13,10 +13,10 @@ public class CreateEventBasedGatewayFeature extends AbstractCreateFlowElementFea
 	public CreateEventBasedGatewayFeature(IFeatureProvider fp) {
 	    super(fp, "Event-Based Gateway", "Represents a branching point in the process");
     }
-
+	
 	@Override
-    protected EventBasedGateway create(ICreateContext context, ModelHandler handler) {
-		EventBasedGateway gateway = handler.addFlowElement(ModelHandler.FACTORY.createEventBasedGateway());
+    protected EventBasedGateway createFlowElement(ICreateContext context) {
+		EventBasedGateway gateway = ModelHandler.FACTORY.createEventBasedGateway();
 		if(support.isTargetLane(context)) {
 			gateway.getLanes().add((Lane) getBusinessObjectForPictogramElement(context.getTargetContainer()));
 		}

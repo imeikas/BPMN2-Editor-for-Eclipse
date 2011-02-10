@@ -9,6 +9,7 @@ import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.MessageFlow;
 import org.eclipse.bpmn2.ParallelGateway;
+import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.bpmn2.Task;
@@ -60,11 +61,18 @@ import org.jboss.bpmn2.editor.core.features.gateway.parallel.AddParallelGatewayF
 import org.jboss.bpmn2.editor.core.features.gateway.parallel.CreateParallelGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.lane.AddLaneFeature;
 import org.jboss.bpmn2.editor.core.features.lane.CreateLaneFeature;
+import org.jboss.bpmn2.editor.core.features.lane.DirectEditLaneFeature;
 import org.jboss.bpmn2.editor.core.features.lane.LayoutLaneFeature;
 import org.jboss.bpmn2.editor.core.features.lane.MoveLaneFeature;
 import org.jboss.bpmn2.editor.core.features.lane.ResizeLaneFeature;
+import org.jboss.bpmn2.editor.core.features.lane.UpdateLaneFeature;
 import org.jboss.bpmn2.editor.core.features.messageflow.AddMessageFlowFeature;
 import org.jboss.bpmn2.editor.core.features.messageflow.CreateMessageFlowFeature;
+import org.jboss.bpmn2.editor.core.features.participant.AddParticipantFeature;
+import org.jboss.bpmn2.editor.core.features.participant.CreateParticipantFeature;
+import org.jboss.bpmn2.editor.core.features.participant.DirectEditParticipantFeature;
+import org.jboss.bpmn2.editor.core.features.participant.LayoutParticipantFeature;
+import org.jboss.bpmn2.editor.core.features.participant.UpdateParticipantFeature;
 import org.jboss.bpmn2.editor.core.features.sequenceflow.AddSequenceFlowFeature;
 import org.jboss.bpmn2.editor.core.features.sequenceflow.CreateSequenceFlowFeature;
 import org.jboss.bpmn2.editor.core.features.task.AddTaskFeature;
@@ -112,6 +120,8 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			return new AddEventBasedGatewayFeature(this);
 		} else if (newObject instanceof MessageFlow) {
 			return new AddMessageFlowFeature(this);
+		} else if (newObject instanceof Participant) {
+			return new AddParticipantFeature(this);
 		}
 		return super.getAddFeature(context);
 	}
@@ -122,7 +132,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		return new ICreateFeature[] { new CreateStartEventFeature(this), new CreateEndEventFeature(this),
 		        new CreateTaskFeature(this), new CreateExclusiveGatewayFeature(this),
 		        new CreateInclusiveGatewayFeature(this), new CreateParallelGatewayFeature(this),
-		        new CreateEventBasedGatewayFeature(this), new CreateLaneFeature(this),
+		        new CreateEventBasedGatewayFeature(this), new CreateLaneFeature(this), new CreateParticipantFeature(this),
 		        new CreateTextAnnotationFeature(this) };
 	}
 
@@ -139,6 +149,10 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 				return new UpdateEndEventFeature(this);
 			} else if (bo instanceof TextAnnotation) {
 				return new UpdateTextAnnotationFeature(this);
+			} else if (bo instanceof Participant) {
+				return new UpdateParticipantFeature(this);
+			} else if (bo instanceof Lane) {
+				return new UpdateLaneFeature(this);
 			}
 		}
 		return super.getUpdateFeature(context);
@@ -147,7 +161,8 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 	@Override
 	public ICreateConnectionFeature[] getCreateConnectionFeatures() {
 		// if you change this part significantly, check that you won't break Bpmn2Preferences
-		return new ICreateConnectionFeature[] { new CreateSequenceFlowFeature(this), new CreateAssociationFeature(this), new CreateMessageFlowFeature(this) };
+		return new ICreateConnectionFeature[] { new CreateSequenceFlowFeature(this),
+		        new CreateAssociationFeature(this), new CreateMessageFlowFeature(this) };
 	}
 
 	@Override
@@ -162,6 +177,10 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			return new DirectEditEndEventFeature(this);
 		} else if (bo instanceof TextAnnotation) {
 			return new DirectEditTextAnnotationFeature(this);
+		} else if (bo instanceof Participant) {
+			return new DirectEditParticipantFeature(this);
+		} else if (bo instanceof Lane) {
+			return new DirectEditLaneFeature(this);
 		} else {
 			return super.getDirectEditingFeature(context);
 		}
@@ -181,6 +200,8 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			return new LayoutLaneFeature(this);
 		} else if (bo instanceof TextAnnotation) {
 			return new LayoutTextAnnotationFeature(this);
+		} else if (bo instanceof Participant) {
+			return new LayoutParticipantFeature(this);
 		} else {
 			return super.getLayoutFeature(context);
 		}

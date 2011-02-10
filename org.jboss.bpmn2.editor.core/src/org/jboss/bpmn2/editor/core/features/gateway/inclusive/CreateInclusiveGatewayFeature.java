@@ -15,13 +15,13 @@ public class CreateInclusiveGatewayFeature extends AbstractCreateFlowElementFeat
     }
 
 	@Override
-	protected InclusiveGateway create(ICreateContext context, ModelHandler handler) {
-		InclusiveGateway gateway = handler.addFlowElement(ModelHandler.FACTORY.createInclusiveGateway());
+    protected InclusiveGateway createFlowElement(ICreateContext context) {
+		InclusiveGateway gateway = ModelHandler.FACTORY.createInclusiveGateway();
 		if(support.isTargetLane(context)) {
 			gateway.getLanes().add((Lane) getBusinessObjectForPictogramElement(context.getTargetContainer()));
 		}
 		return gateway;
-	}
+    }
 	
 	@Override
 	public String getCreateImageId() {

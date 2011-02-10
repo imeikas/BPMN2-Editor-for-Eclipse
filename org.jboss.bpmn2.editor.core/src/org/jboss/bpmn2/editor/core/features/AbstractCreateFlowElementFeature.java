@@ -3,6 +3,7 @@ package org.jboss.bpmn2.editor.core.features;
 import java.io.IOException;
 
 import org.eclipse.bpmn2.FlowElement;
+import org.eclipse.bpmn2.Participant;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.features.impl.AbstractCreateFeature;
@@ -27,7 +28,8 @@ public abstract class AbstractCreateFlowElementFeature<T extends FlowElement> ex
     public boolean canCreate(ICreateContext context) {
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
 		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context); 
-		return intoDiagram || intoLane;
+		boolean intoParticipant = support.isTargetParticipant(context);
+		return intoDiagram || intoLane || intoParticipant;
     }
 
 	@Override
@@ -35,7 +37,8 @@ public abstract class AbstractCreateFlowElementFeature<T extends FlowElement> ex
 		T element = null;
 		try {
 			ModelHandler handler = support.getModelHanderInstance(getDiagram());
-			element = create(context, handler);
+			element = createFlowElement(context);
+			handler.addFlowElement(getParticipant(context, handler), element);
 		} catch (IOException e) {
 			Activator.logError(e);
 		}
@@ -43,5 +46,14 @@ public abstract class AbstractCreateFlowElementFeature<T extends FlowElement> ex
 		return new Object[] { element };
 	}
 	
-	protected abstract T create(ICreateContext context, ModelHandler handler);
+	protected abstract T createFlowElement(ICreateContext context);
+	
+	private Participant getParticipant(ICreateContext context, ModelHandler handler) {
+		if(context.getTargetContainer().equals(getDiagram())) {
+			return handler.getInternalParticipant();
+		} else {
+			Object bo = getBusinessObjectForPictogramElement(context.getTargetContainer());
+			return handler.getParticipant(bo);
+		}
+	}
 }

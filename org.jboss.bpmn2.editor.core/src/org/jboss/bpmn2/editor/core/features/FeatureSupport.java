@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.bpmn2.Lane;
+import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.TextAnnotation;
 import org.eclipse.graphiti.features.context.IPictogramElementContext;
 import org.eclipse.graphiti.features.context.ITargetContext;
@@ -34,7 +35,16 @@ public abstract class FeatureSupport {
 		Object bo = getBusinessObject(element);
 		return bo != null && bo instanceof Lane;
 	}
-
+	
+	public boolean isTargetParticipant(ITargetContext context) {
+		return isParticipant(context.getTargetContainer());
+	}
+	
+	public boolean isParticipant(PictogramElement element) {
+		Object bo = getBusinessObject(element);
+		return bo != null && bo instanceof Participant;
+	}
+	
 	public boolean isLaneOnTop(Lane lane) {
 		return lane.getChildLaneSet() == null || lane.getChildLaneSet().getLanes().isEmpty();
 	}
@@ -197,6 +207,12 @@ public abstract class FeatureSupport {
 		} else if (o instanceof TextAnnotation) {
 			TextAnnotation a = (TextAnnotation) o;
 			return a.getText();
+		} else if (o instanceof Participant) {
+			Participant p = (Participant) o;
+			return p.getName();
+		} else if (o instanceof Lane) {
+			Lane l = (Lane) o;
+			return l.getName();
 		}
 		return null;
 	}

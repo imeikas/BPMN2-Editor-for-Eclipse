@@ -1,6 +1,6 @@
-package org.jboss.bpmn2.editor.core.features.task;
+package org.jboss.bpmn2.editor.core.features.lane;
 
-import org.eclipse.bpmn2.Task;
+import org.eclipse.bpmn2.Lane;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IDirectEditingContext;
 import org.eclipse.graphiti.features.impl.AbstractDirectEditingFeature;
@@ -9,45 +9,40 @@ import org.eclipse.graphiti.mm.algorithms.Text;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 
-public class DirectEditTaskFeature extends AbstractDirectEditingFeature {
+public class DirectEditLaneFeature extends AbstractDirectEditingFeature {
 
-	public DirectEditTaskFeature(IFeatureProvider fp) {
-		super(fp);
-	}
+	public DirectEditLaneFeature(IFeatureProvider fp) {
+	    super(fp);
+    }
 
 	@Override
-	public int getEditingType() {
+    public int getEditingType() {
 		return TYPE_TEXT;
-	}
+    }
 
 	@Override
-	public String getInitialValue(IDirectEditingContext context) {
+    public String getInitialValue(IDirectEditingContext context) {
 		PictogramElement pe = context.getPictogramElement();
-		Task eClass = (Task) getBusinessObjectForPictogramElement(pe);
-		return eClass.getName();
-	}
+		Lane lane = (Lane) getBusinessObjectForPictogramElement(pe);
+		return lane.getName();
+    }
 
 	@Override
-	public void setValue(String value, IDirectEditingContext context) {
+    public void setValue(String value, IDirectEditingContext context) {
 		PictogramElement pe = context.getPictogramElement();
-
-		Task task = (Task) getBusinessObjectForPictogramElement(pe);
-		task.setName(value);
-
+		Lane lane = (Lane) getBusinessObjectForPictogramElement(pe);
+		lane.setName(value);
 		updatePictogramElement(((Shape) pe).getContainer());
-	}
-
+    }
+	
 	@Override
 	public String checkValueValid(String value, IDirectEditingContext context) {
 		if (value.length() < 1) {
-			return "Please enter any text as Task name.";
+			return "Please enter any text as Pool name.";
 		} else if (value.contains("\n")) {
-			return "Line breakes are not allowed in Task names.";
+			return "Line breakes are not allowed in Pool names.";
 		}
-
-		// null means, that the value is valid
 		return null;
-
 	}
 
 	@Override
@@ -55,7 +50,6 @@ public class DirectEditTaskFeature extends AbstractDirectEditingFeature {
 		PictogramElement pe = context.getPictogramElement();
 		Object bo = getBusinessObjectForPictogramElement(pe);
 		GraphicsAlgorithm ga = context.getGraphicsAlgorithm();
-
-		return bo instanceof Task && ga instanceof Text;
+		return bo instanceof Lane && ga instanceof Text;
 	}
 }

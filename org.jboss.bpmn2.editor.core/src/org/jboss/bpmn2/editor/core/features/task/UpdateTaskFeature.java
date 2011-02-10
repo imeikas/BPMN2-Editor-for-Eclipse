@@ -15,5 +15,4 @@ public class UpdateTaskFeature extends AbstractBaseElementUpdateFeature {
 	public boolean canUpdate(IUpdateContext context) {
 		return getBusinessObjectForPictogramElement(context.getPictogramElement()) instanceof Task;
 	}
-
 }

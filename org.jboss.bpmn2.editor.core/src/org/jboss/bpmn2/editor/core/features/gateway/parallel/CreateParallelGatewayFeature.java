@@ -15,13 +15,13 @@ public class CreateParallelGatewayFeature extends AbstractCreateFlowElementFeatu
     }
 	
 	@Override
-	protected ParallelGateway create(ICreateContext context, ModelHandler handler) {
-		ParallelGateway gateway = handler.addFlowElement(ModelHandler.FACTORY.createParallelGateway());
+    protected ParallelGateway createFlowElement(ICreateContext context) {
+		ParallelGateway gateway = ModelHandler.FACTORY.createParallelGateway();
 		if(support.isTargetLane(context)) {
 			gateway.getLanes().add((Lane) getBusinessObjectForPictogramElement(context.getTargetContainer()));
 		}
 		return gateway;
-	}
+    }
 	
 	@Override
 	public String getCreateImageId() {

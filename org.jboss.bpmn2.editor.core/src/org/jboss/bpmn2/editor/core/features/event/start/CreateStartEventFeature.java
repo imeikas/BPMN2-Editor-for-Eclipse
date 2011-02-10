@@ -13,16 +13,16 @@ public class CreateStartEventFeature extends AbstractCreateFlowElementFeature<St
 	public CreateStartEventFeature(IFeatureProvider fp) {
 		super(fp, "Start Event", "Indicates the start of a process or choreography");
 	}
-
+	
 	@Override
-	protected StartEvent create(ICreateContext context, ModelHandler handler) {
-		StartEvent start = handler.addFlowElement(ModelHandler.FACTORY.createStartEvent());
+    protected StartEvent createFlowElement(ICreateContext context) {
+		StartEvent start = ModelHandler.FACTORY.createStartEvent();
 		start.setName("Start");
 		if(support.isTargetLane(context)) {
 			start.getLanes().add((Lane) getBusinessObjectForPictogramElement(context.getTargetContainer()));
 		}
 		return start;
-	}
+    }
 	
 	@Override
 	public String getCreateImageId() {
