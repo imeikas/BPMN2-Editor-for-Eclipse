@@ -63,4 +63,35 @@
        </view>
     </perspectiveExtension>
  </extension> -->
+ 
+ <extension
+          point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
+          <propertyContributor contributorId="BPMN2.PropertyContributor">
+              <propertyCategory category="BPMN2">
+              </propertyCategory>
+          </propertyContributor>
+      </extension>
+       
+      <extension
+          point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
+          <propertyTabs contributorId="BPMN2.PropertyContributor">
+              <propertyTab
+                    category="BPMN2"
+                    id="bpmn2.advanced.tab"
+                    label="BPMN2">
+              </propertyTab>
+          </propertyTabs>
+      </extension>
+       
+      <extension
+          point="org.eclipse.ui.views.properties.tabbed.propertySections">
+          <propertySections contributorId="BPMN2.PropertyContributor">
+              <propertySection
+                    class="org.jboss.bpmn2.editor.ui.property.Bpmn2AdvancedPropertySection"
+                    filter="org.jboss.bpmn2.editor.ui.property.Bpmn2PropertyFilter"
+                    id="bpmn2.advanced.tab.id"
+                    tab="bpmn2.advanced.tab">
+              </propertySection>
+          </propertySections>
+      </extension>
 </plugin>
