@@ -32,7 +32,8 @@ public class CreateLaneFeature extends AbstractCreateFeature {
 	public boolean canCreate(ICreateContext context) {
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
 		boolean intoLane = support.isTargetLane(context);
-		return intoDiagram || intoLane;
+		boolean intoParticipant = support.isTargetParticipant(context);
+		return intoDiagram || intoLane || intoParticipant;
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class CreateLaneFeature extends AbstractCreateFeature {
 				Lane targetLane = (Lane) getBusinessObjectForPictogramElement(context.getTargetContainer());
 				lane = mh.addLaneTo(targetLane);
 			} else {
-				lane = mh.addLane();
+				lane = mh.addLane(mh.getInternalParticipant());
 			}
 			lane.setName("Lane nr " + index++);
 		} catch (IOException e) {

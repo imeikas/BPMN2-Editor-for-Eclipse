@@ -18,9 +18,9 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 
-public class MoveFromDiagramFeature extends MoveLaneFeature {
+public class MoveFromDiagramToLaneFeature extends MoveLaneFeature {
 
-	public MoveFromDiagramFeature(IFeatureProvider fp) {
+	public MoveFromDiagramToLaneFeature(IFeatureProvider fp) {
 		super(fp);
 	}
 
@@ -113,9 +113,5 @@ public class MoveFromDiagramFeature extends MoveLaneFeature {
 	private Lane getTargetLane(IMoveShapeContext context) {
 		ContainerShape targetContainer = context.getTargetContainer();
 		return (Lane) getBusinessObjectForPictogramElement(targetContainer);
-	}
-
-	private Lane getMovedLane(IMoveShapeContext context) {
-		return (Lane) getBusinessObjectForPictogramElement(context.getShape());
 	}
 }

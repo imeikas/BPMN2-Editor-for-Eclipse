@@ -52,10 +52,6 @@ public class MoveFromLaneToLaneFeature extends MoveLaneFeature {
 		return (Lane) getBusinessObjectForPictogramElement(targetContainer);
 	}
 	
-	private Lane getMovedLane(IMoveShapeContext context) {
-		return (Lane) getBusinessObjectForPictogramElement(context.getShape());
-	}
-	
 	private Lane getSourceLane(IMoveShapeContext context) {
 		ContainerShape sourceContainer = context.getSourceContainer();
 		return (Lane) getBusinessObjectForPictogramElement(sourceContainer);

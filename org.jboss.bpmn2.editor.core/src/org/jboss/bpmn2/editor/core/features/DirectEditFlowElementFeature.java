@@ -1,17 +1,16 @@
-package org.jboss.bpmn2.editor.core.features.event.end;
+package org.jboss.bpmn2.editor.core.features;
 
-import org.eclipse.bpmn2.EndEvent;
+import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IDirectEditingContext;
 import org.eclipse.graphiti.features.impl.AbstractDirectEditingFeature;
-import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Text;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 
-public class DirectEditEndEventFeature extends AbstractDirectEditingFeature {
+public class DirectEditFlowElementFeature extends AbstractDirectEditingFeature {
 
-	public DirectEditEndEventFeature(IFeatureProvider fp) {
+	public DirectEditFlowElementFeature(IFeatureProvider fp) {
 		super(fp);
 	}
 
@@ -22,27 +21,24 @@ public class DirectEditEndEventFeature extends AbstractDirectEditingFeature {
 
 	@Override
 	public String getInitialValue(IDirectEditingContext context) {
-		PictogramElement pe = context.getPictogramElement();
-		EndEvent eClass = (EndEvent) getBusinessObjectForPictogramElement(pe);
-		return eClass.getName();
+		return getBusinessObject(context).getName();
 	}
 
 	@Override
 	public void setValue(String value, IDirectEditingContext context) {
-		PictogramElement pe = context.getPictogramElement();
-
-		EndEvent start = (EndEvent) getBusinessObjectForPictogramElement(pe);
-		start.setName(value);
-
-		updatePictogramElement(((Shape) pe).getContainer());
+		getBusinessObject(context).setName(value);
+		PictogramElement e = context.getPictogramElement();
+		updatePictogramElement(((Shape) e).getContainer());
 	}
 
 	@Override
 	public boolean canDirectEdit(IDirectEditingContext context) {
 		PictogramElement pe = context.getPictogramElement();
 		Object bo = getBusinessObjectForPictogramElement(pe);
-		GraphicsAlgorithm ga = context.getGraphicsAlgorithm();
+		return bo != null && bo instanceof FlowElement && context.getGraphicsAlgorithm() instanceof Text;
+	}
 
-		return bo instanceof EndEvent && ga instanceof Text;
+	private FlowElement getBusinessObject(IDirectEditingContext context) {
+		return (FlowElement) getBusinessObjectForPictogramElement(context.getPictogramElement());
 	}
 }

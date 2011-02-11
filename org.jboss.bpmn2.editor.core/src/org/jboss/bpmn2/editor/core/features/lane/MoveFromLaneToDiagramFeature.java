@@ -8,9 +8,9 @@ import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 
-public class MoveFromLaneFeature extends MoveLaneFeature {
+public class MoveFromLaneToDiagramFeature extends MoveLaneFeature {
 	
-	public MoveFromLaneFeature(IFeatureProvider fp) {
+	public MoveFromLaneToDiagramFeature(IFeatureProvider fp) {
 		super(fp);
 	}
 

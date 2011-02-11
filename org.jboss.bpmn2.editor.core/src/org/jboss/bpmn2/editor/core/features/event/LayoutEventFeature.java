@@ -2,6 +2,7 @@ package org.jboss.bpmn2.editor.core.features.event;
 
 import java.util.Iterator;
 
+import org.eclipse.bpmn2.Event;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.datatypes.IDimension;
@@ -18,9 +19,9 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 
-public abstract class AbstractLayoutEventFeature extends AbstractLayoutFeature {
+public class LayoutEventFeature extends AbstractLayoutFeature {
 
-	public AbstractLayoutEventFeature(IFeatureProvider fp) {
+	public LayoutEventFeature(IFeatureProvider fp) {
 	    super(fp);
     }
 	
@@ -31,11 +32,9 @@ public abstract class AbstractLayoutEventFeature extends AbstractLayoutFeature {
 			return false;
 		}
 		EList<EObject> businessObjs = pictoElem.getLink().getBusinessObjects();
-	    return businessObjs.size() == 1 && isInstanceOf(businessObjs.get(0));
+	    return businessObjs.size() == 1 && businessObjs.get(0) instanceof Event;
     }
 	
-	protected abstract boolean isInstanceOf(Object businessObject);
-
 	@Override
     public boolean layout(ILayoutContext context) {
 		boolean changed = false;

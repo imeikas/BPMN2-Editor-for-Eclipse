@@ -35,16 +35,16 @@ public abstract class FeatureSupport {
 		Object bo = getBusinessObject(element);
 		return bo != null && bo instanceof Lane;
 	}
-	
+
 	public boolean isTargetParticipant(ITargetContext context) {
 		return isParticipant(context.getTargetContainer());
 	}
-	
+
 	public boolean isParticipant(PictogramElement element) {
 		Object bo = getBusinessObject(element);
 		return bo != null && bo instanceof Participant;
 	}
-	
+
 	public boolean isLaneOnTop(Lane lane) {
 		return lane.getChildLaneSet() == null || lane.getChildLaneSet().getLanes().isEmpty();
 	}
@@ -83,7 +83,7 @@ public abstract class FeatureSupport {
 		int height = 0;
 		int width = container.getGraphicsAlgorithm().getWidth() - 15;
 		List<GraphicsAlgorithm> gaList = new ArrayList<GraphicsAlgorithm>();
-		
+
 		for (Shape s : container.getChildren()) {
 			Object bo = getBusinessObject(s);
 			if (bo != null && bo instanceof Lane && !bo.equals(lane)) {
@@ -98,7 +98,7 @@ public abstract class FeatureSupport {
 				gaList.add(ga);
 			}
 		}
-		
+
 		GraphicsAlgorithm ga = container.getGraphicsAlgorithm();
 
 		if (height == 0) {
@@ -107,13 +107,13 @@ public abstract class FeatureSupport {
 			int newWidth = width + 15;
 			int newHeight = height + 1;
 			service.setSize(ga, newWidth, newHeight);
-			
+
 			for (Shape s : container.getChildren()) {
 				if (s.getGraphicsAlgorithm() instanceof Text) {
 					s.getGraphicsAlgorithm().setHeight(newHeight);
 				}
 			}
-			
+
 			return new Dimension(newWidth, newHeight);
 		}
 	}
@@ -133,8 +133,8 @@ public abstract class FeatureSupport {
 				}
 			}
 		}
-		
-		if(dimensions.isEmpty()) {
+
+		if (dimensions.isEmpty()) {
 			GraphicsAlgorithm ga = root.getGraphicsAlgorithm();
 			for (Shape s : root.getChildren()) {
 				if (s.getGraphicsAlgorithm() instanceof Text) {
@@ -143,7 +143,7 @@ public abstract class FeatureSupport {
 			}
 			return new Dimension(ga.getWidth(), ga.getHeight());
 		}
-		
+
 		if (foundLanes > 0) {
 			return resize(root);
 		}
@@ -167,22 +167,22 @@ public abstract class FeatureSupport {
 
 		return new Dimension(width, height);
 	}
-	
+
 	private void postResizeFixLenghts(ContainerShape root) {
 		IGaService service = Graphiti.getGaService();
 		Lane lane = (Lane) getBusinessObject(root);
 		int width = root.getGraphicsAlgorithm().getWidth() - 15;
-		
-		for(Shape s : root.getChildren()) {
+
+		for (Shape s : root.getChildren()) {
 			Object o = getBusinessObject(s);
-			if(s instanceof ContainerShape && o != null && o instanceof Lane && !o.equals(lane)) {
+			if (s instanceof ContainerShape && o != null && o instanceof Lane && !o.equals(lane)) {
 				GraphicsAlgorithm ga = s.getGraphicsAlgorithm();
 				service.setSize(ga, width, ga.getHeight());
 				postResizeFixLenghts((ContainerShape) s);
 			}
 		}
 	}
-	
+
 	public String getShapeValue(IPictogramElementContext context) {
 		String value = null;
 
@@ -215,5 +215,17 @@ public abstract class FeatureSupport {
 			return l.getName();
 		}
 		return null;
+	}
+
+	public Participant getTargetParticipant(ITargetContext context, ModelHandler handler) {
+		if (context.getTargetContainer() instanceof Diagram)
+			return handler.getInternalParticipant();
+
+		Object bo = getBusinessObject(context.getTargetContainer());
+
+		if (bo instanceof Participant)
+			return (Participant) bo;
+
+		return handler.getParticipant(bo);
 	}
 }

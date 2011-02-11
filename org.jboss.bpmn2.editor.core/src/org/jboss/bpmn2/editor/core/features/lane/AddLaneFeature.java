@@ -42,7 +42,8 @@ public class AddLaneFeature extends AbstractAddShapeFeature {
 		boolean isLane = context.getNewObject() instanceof Lane;
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
 		boolean intoLane = support.isTargetLane(context);
-		return isLane && (intoDiagram || intoLane);
+		boolean intoParticipant = support.isTargetParticipant(context);
+		return isLane && (intoDiagram || intoLane || intoParticipant);
 	}
 
 	@Override

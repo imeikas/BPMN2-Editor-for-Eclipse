@@ -52,4 +52,6 @@ public class DirectEditLaneFeature extends AbstractDirectEditingFeature {
 		GraphicsAlgorithm ga = context.getGraphicsAlgorithm();
 		return bo instanceof Lane && ga instanceof Text;
 	}
+	
+	
 }

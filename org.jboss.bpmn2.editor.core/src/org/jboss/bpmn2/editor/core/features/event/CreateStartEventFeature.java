@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.event.start;
+package org.jboss.bpmn2.editor.core.features.event;
 
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.StartEvent;

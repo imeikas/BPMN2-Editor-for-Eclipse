@@ -2,6 +2,7 @@ package org.jboss.bpmn2.editor.core.diagram;
 
 import org.eclipse.bpmn2.Association;
 import org.eclipse.bpmn2.EndEvent;
+import org.eclipse.bpmn2.Event;
 import org.eclipse.bpmn2.EventBasedGateway;
 import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.FlowNode;
@@ -33,6 +34,7 @@ import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
 import org.jboss.bpmn2.editor.core.features.AbstractMoveFlowNodeFeature;
+import org.jboss.bpmn2.editor.core.features.DirectEditFlowElementFeature;
 import org.jboss.bpmn2.editor.core.features.annotation.AddTextAnnotationFeature;
 import org.jboss.bpmn2.editor.core.features.annotation.CreateTextAnnotationFeature;
 import org.jboss.bpmn2.editor.core.features.annotation.DirectEditTextAnnotationFeature;
@@ -41,13 +43,13 @@ import org.jboss.bpmn2.editor.core.features.annotation.MoveTextAnnotationFeature
 import org.jboss.bpmn2.editor.core.features.annotation.UpdateTextAnnotationFeature;
 import org.jboss.bpmn2.editor.core.features.association.AddAssociationFeature;
 import org.jboss.bpmn2.editor.core.features.association.CreateAssociationFeature;
-import org.jboss.bpmn2.editor.core.features.event.end.AddEndEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.end.CreateEndEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.end.DirectEditEndEventFeature;
+import org.jboss.bpmn2.editor.core.features.event.AddEndEventFeature;
+import org.jboss.bpmn2.editor.core.features.event.AddStartEventFeature;
+import org.jboss.bpmn2.editor.core.features.event.CreateEndEventFeature;
+import org.jboss.bpmn2.editor.core.features.event.CreateStartEventFeature;
+import org.jboss.bpmn2.editor.core.features.event.EventFeatureResolver;
 import org.jboss.bpmn2.editor.core.features.event.end.LayoutEndEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.end.UpdateEndEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.start.AddStartEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.start.CreateStartEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.start.DirectEditStartEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.start.LayoutStartEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.start.UpdateStartEventFeature;
@@ -102,10 +104,6 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			return new AddSequenceFlowFeature(this);
 		} else if (newObject instanceof ExclusiveGateway) {
 			return new AddExclusiveGatewayFeature(this);
-		} else if (newObject instanceof StartEvent) {
-			return new AddStartEventFeature(this);
-		} else if (newObject instanceof EndEvent) {
-			return new AddEndEventFeature(this);
 		} else if (newObject instanceof Lane) {
 			return new AddLaneFeature(this);
 		} else if (newObject instanceof TextAnnotation) {
@@ -122,6 +120,8 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			return new AddMessageFlowFeature(this);
 		} else if (newObject instanceof Participant) {
 			return new AddParticipantFeature(this);
+		} else if (newObject instanceof Event) {
+			return EventFeatureResolver.getAddFeatureForEvent(this, (Event) newObject);
 		}
 		return super.getAddFeature(context);
 	}
@@ -174,7 +174,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		} else if (bo instanceof StartEvent) {
 			return new DirectEditStartEventFeature(this);
 		} else if (bo instanceof EndEvent) {
-			return new DirectEditEndEventFeature(this);
+			return new DirectEditFlowElementFeature(this);
 		} else if (bo instanceof TextAnnotation) {
 			return new DirectEditTextAnnotationFeature(this);
 		} else if (bo instanceof Participant) {

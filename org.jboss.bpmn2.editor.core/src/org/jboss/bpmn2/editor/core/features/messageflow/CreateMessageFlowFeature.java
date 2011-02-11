@@ -88,6 +88,9 @@ public class CreateMessageFlowFeature extends AbstractCreateConnectionFeature {
 	}
 	
 	private boolean isDifferentParticipants(InteractionNode source, InteractionNode target) {
+		if(source == null || target == null) {
+			return true;
+		}
 		boolean different = false;
 		try {
 	        ModelHandler handler = support.getModelHanderInstance(getDiagram());

@@ -1,7 +1,6 @@
 package org.jboss.bpmn2.editor.core;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.eclipse.bpmn2.Artifact;
 import org.eclipse.bpmn2.Association;
@@ -50,7 +49,7 @@ public class ModelHandler {
 				participant.setName("Internal");
 				collaboration.getParticipants().add(participant);
 				definitions.getRootElements().add(collaboration);
-				
+
 				domain.getCommandStack().execute(new RecordingCommand(domain) {
 					protected void doExecute() {
 						docRoot.setDefinitions(definitions);
@@ -63,107 +62,94 @@ public class ModelHandler {
 	}
 
 	public <T extends FlowElement> T addFlowElement(Participant participant, T elem) {
-		if(participant.getProcessRef() == null) {
-			Process process = FACTORY.createProcess();
-			getDefinitions().getRootElements().add(process);
-			participant.setProcessRef(process);
-		}
-		List<FlowElement> elements = participant.getProcessRef().getFlowElements();
-		elements.add(elem);
+		Process process = getOrCreateProcess(participant);
+		process.getFlowElements().add(elem);
 		return elem;
 	}
-	
+
 	public <T extends FlowElement> T addFlowElement(T elem) {
 		return addFlowElement(getInternalParticipant(), elem);
 	}
-	
+
 	public Participant addParticipant() {
 		Collaboration collaboration = getCollaboration();
 		Participant participant = FACTORY.createParticipant();
 		collaboration.getParticipants().add(participant);
 		return participant;
 	}
-	
-	public <A extends Artifact> A addArtifact(A artifact) {
-		Process process = getOrCreateFirstProcess();
+
+	public <A extends Artifact> A addArtifact(Participant participant, A artifact) {
+		Process process = getOrCreateProcess(participant);
 		process.getArtifacts().add(artifact);
 		return artifact;
 	}
-	
-	public Lane addLane() {
+
+	public Lane addLane(Participant participant) {
 		LaneSet laneSet = FACTORY.createLaneSet();
 		Lane lane = FACTORY.createLane();
 		laneSet.getLanes().add(lane);
-		Process process = getOrCreateFirstProcess();
+		Process process = getOrCreateProcess(participant);
 		process.getLaneSets().add(laneSet);
 		return lane;
 	}
-	
+
+	private Process getOrCreateProcess(Participant participant) {
+		if (participant.getProcessRef() == null) {
+			Process process = FACTORY.createProcess();
+			getDefinitions().getRootElements().add(process);
+			participant.setProcessRef(process);
+		}
+		return participant.getProcessRef();
+	}
+
 	public Lane addLaneTo(Lane targetLane) {
 		Lane lane = FACTORY.createLane();
-		
-		if(targetLane.getChildLaneSet() == null) {
-    		targetLane.setChildLaneSet(ModelHandler.FACTORY.createLaneSet());
-    	}
-		
-    	LaneSet targetLaneSet = targetLane.getChildLaneSet();
-    	targetLaneSet.getLanes().add(lane);
 
-    	lane.getFlowNodeRefs().addAll(targetLane.getFlowNodeRefs());
-    	targetLane.getFlowNodeRefs().clear();
-    	
-    	return lane;
+		if (targetLane.getChildLaneSet() == null) {
+			targetLane.setChildLaneSet(ModelHandler.FACTORY.createLaneSet());
+		}
+
+		LaneSet targetLaneSet = targetLane.getChildLaneSet();
+		targetLaneSet.getLanes().add(lane);
+
+		lane.getFlowNodeRefs().addAll(targetLane.getFlowNodeRefs());
+		targetLane.getFlowNodeRefs().clear();
+
+		return lane;
 	}
-	
+
 	public void laneToTop(Lane lane) {
 		LaneSet laneSet = FACTORY.createLaneSet();
 		laneSet.getLanes().add(lane);
-		Process process = getOrCreateFirstProcess();
+		Process process = getOrCreateProcess(getInternalParticipant());
 		process.getLaneSets().add(laneSet);
 	}
-	
+
 	public SequenceFlow createSequenceFlow(FlowNode source, FlowNode target) {
 		SequenceFlow flow = addFlowElement(FACTORY.createSequenceFlow());
 		flow.setSourceRef(source);
 		flow.setTargetRef(target);
 		return flow;
 	}
-	
+
 	public MessageFlow createMessageFlow(InteractionNode source, InteractionNode target) {
 		MessageFlow messageFlow = FACTORY.createMessageFlow();
 		messageFlow.setSourceRef(source);
 		messageFlow.setTargetRef(target);
+		getCollaboration().getMessageFlows().add(messageFlow);
 		return messageFlow;
 	}
-	
+
 	public Association createAssociation(TextAnnotation annotation, BaseElement element) {
-		Association association = addArtifact(FACTORY.createAssociation());
+		Association association = addArtifact(getParticipant(element), FACTORY.createAssociation());
 		association.setSourceRef(element);
 		association.setTargetRef(annotation);
 		return association;
 	}
-	
-	private Process getOrCreateFirstProcess() {
-		Process process = getFirstProcess();
-		if (process == null) {
-			process = FACTORY.createProcess();
-			getDefinitions().getRootElements().add(process);
-		}
-		return process;
-	}
-	
-	public Process getFirstProcess() {
-		for (RootElement element : getDefinitions().getRootElements()) {
-			if (element instanceof Process) {
-				return (Process) element;
-			}
-		}
-		return null;
-	}
-	
+
 	public Collaboration getCollaboration() {
 		for (RootElement element : getDefinitions().getRootElements()) {
-			if(element instanceof Collaboration) {
+			if (element instanceof Collaboration) {
 				return (Collaboration) element;
 			}
 		}
@@ -206,20 +192,57 @@ public class ModelHandler {
 			Activator.logError(e);
 		}
 	}
-	
+
 	public Participant getInternalParticipant() {
 		return getCollaboration().getParticipants().get(0);
 	}
-	
-	public Participant getParticipant(Object bo) {
-		if(bo instanceof Participant) {
-			return (Participant) bo;
-		}
-		for(Participant p : getCollaboration().getParticipants()) {
-			if(p.getProcessRef().getFlowElements().contains(bo)) {
+
+	public Participant getParticipant(Object o) {
+		for (Participant p : getCollaboration().getParticipants()) {
+
+			if (p.getProcessRef() == null)
+				continue;
+
+			Process process = p.getProcessRef();
+
+			if (o instanceof Lane && isSubLane(process, (Lane) o))
 				return p;
-			}
+			else if (process.getFlowElements().contains(o))
+				return p;
+			
 		}
 		return null;
+	}
+
+	private boolean isSubLane(Process p, Lane lane) {
+		if (p.getLaneSets().isEmpty())
+			return false;
+
+		boolean found = false;
+
+		for (LaneSet s : p.getLaneSets()) {
+			if (isSubLane(s, lane)) {
+				found = true;
+				break;
+			}
+		}
+
+		return found;
+	}
+
+	private boolean isSubLane(LaneSet set, Lane lane) {
+		if (set != null && set.getLanes().contains(lane))
+			return true;
+
+		boolean found = false;
+
+		for (Lane l : set.getLanes()) {
+			if (isSubLane(l.getChildLaneSet(), lane)) {
+				found = true;
+				break;
+			}
+		}
+
+		return found;
 	}
 }

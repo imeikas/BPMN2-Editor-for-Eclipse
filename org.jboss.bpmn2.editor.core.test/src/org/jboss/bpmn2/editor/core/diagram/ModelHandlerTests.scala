@@ -92,24 +92,25 @@ class ModelHandlerTests extends Specification with JUnit {
           }
         }
       }
-      "creating another task must be also in the same process" in {
-        val task2 = handler.addFlowElement(ModelHandler.FACTORY.createTask())
-        task2 must_!= task
 
-        val process = handler.getFirstProcess
-        "process must contain two tasks" in {
-          val elements = process.getFlowElements
-          elements.size must_== 2
-
-          "firtly created task must be first" in {
-            elements.get(0) must_== task
-          }
-
-          "secondly created task must be second" in {
-            elements.get(1) must_== task2
-          }
-        }
-      }
+      //      "creating another task must be also in the same process" in {
+      //        val task2 = handler.addFlowElement(ModelHandler.FACTORY.createTask())
+      //        task2 must_!= task
+      //
+      //        val process = handler.getFirstProcess
+      //        "process must contain two tasks" in {
+      //          val elements = process.getFlowElements
+      //          elements.size must_== 2
+      //
+      //          "firtly created task must be first" in {
+      //            elements.get(0) must_== task
+      //          }
+      //
+      //          "secondly created task must be second" in {
+      //            elements.get(1) must_== task2
+      //          }
+      //        }
+      //      }
     }
 
     "be able to create SequenceFlow and Exclusice Gateway" in {
