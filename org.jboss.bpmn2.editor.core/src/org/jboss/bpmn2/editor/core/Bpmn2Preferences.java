@@ -22,14 +22,25 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.BasicExtendedMetaData;
+import org.eclipse.emf.ecore.util.ExtendedMetaData;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
 public class Bpmn2Preferences {
 
+	private static final String DROOLS_NAMESPACE = "http://www.jboss.org/drools";
+
 	private final Preferences prefs;
 
 	private static HashSet<EClass> elementSet = new HashSet<EClass>();
+
+	private static final EStructuralFeature taskName;
+	private final static EStructuralFeature waitFor;
+	private static final EStructuralFeature independent;
+	private static final EStructuralFeature ruleFlowGroup;
+	private static final EStructuralFeature packageName;
 
 	static {
 		Bpmn2Package i = Bpmn2Package.eINSTANCE;
@@ -50,6 +61,13 @@ public class Bpmn2Preferences {
 		elementSet.add(i.getAssignment());
 		elementSet.add(i.getAssociation());
 		elementSet.add(i.getTextAnnotation());
+
+		ExtendedMetaData emd = new BasicExtendedMetaData();
+		taskName = emd.demandFeature(DROOLS_NAMESPACE, "taskName", false);
+		waitFor = emd.demandFeature(DROOLS_NAMESPACE, "waitForCompletion", false);
+		independent = emd.demandFeature(DROOLS_NAMESPACE, "independent", false);
+		ruleFlowGroup = emd.demandFeature(DROOLS_NAMESPACE, "ruleFlowGroup", false);
+		packageName = emd.demandFeature(DROOLS_NAMESPACE, "packageName", false);
 	}
 
 	private Bpmn2Preferences(Preferences prefs) {
@@ -64,6 +82,7 @@ public class Bpmn2Preferences {
 	}
 
 	public List<ToolEnablement> getAllElements() {
+		HashSet<EAttribute> attribs = new HashSet<EAttribute>();
 		ArrayList<ToolEnablement> ret = new ArrayList<ToolEnablement>();
 
 		for (EClass e : elementSet) {
@@ -73,7 +92,8 @@ public class Bpmn2Preferences {
 			ret.add(tool);
 			ArrayList<ToolEnablement> children = new ArrayList<ToolEnablement>();
 
-			for (org.eclipse.emf.ecore.EAttribute a : e.getEAllAttributes()) {
+			for (EAttribute a : e.getEAllAttributes()) {
+				attribs.add(a);
 				if (!("id".equals(a.getName()) || "anyAttribute".equals(a.getName()))) {
 					ToolEnablement toolEnablement = new ToolEnablement(a, tool);
 					toolEnablement.setEnabled(isEnabled(e));
@@ -81,7 +101,17 @@ public class Bpmn2Preferences {
 				}
 			}
 
-			for (org.eclipse.emf.ecore.EReference a : e.getEAllContainments()) {
+			ArrayList<EStructuralFeature> customAttributes = getAttributes(e);
+			for (EStructuralFeature a : customAttributes) {
+				attribs.add((EAttribute) a);
+				if (!("id".equals(a.getName()) || "anyAttribute".equals(a.getName()))) {
+					ToolEnablement toolEnablement = new ToolEnablement(a, tool);
+					toolEnablement.setEnabled(isEnabled(e));
+					children.add(toolEnablement);
+				}
+			}
+
+			for (EReference a : e.getEAllContainments()) {
 				ToolEnablement toolEnablement = new ToolEnablement(a, tool);
 				toolEnablement.setEnabled(isEnabled(e));
 				children.add(toolEnablement);
@@ -165,5 +195,22 @@ public class Bpmn2Preferences {
 		}
 		fw.flush();
 		fw.close();
+	}
+
+	public static ArrayList<EStructuralFeature> getAttributes(EClass eClass) {
+		ArrayList<EStructuralFeature> ret = new ArrayList<EStructuralFeature>();
+
+		if (Bpmn2Package.eINSTANCE.getTask().equals(eClass)) {
+			ret.add(taskName);
+		} else if (Bpmn2Package.eINSTANCE.getCallActivity().equals(eClass)) {
+			ret.add(waitFor);
+			ret.add(independent);
+		} else if (Bpmn2Package.eINSTANCE.getBusinessRuleTask().equals(eClass)) {
+			ret.add(ruleFlowGroup);
+		} else if (Bpmn2Package.eINSTANCE.getProcess().equals(eClass)) {
+			ret.add(packageName);
+		}
+
+		return ret;
 	}
 }

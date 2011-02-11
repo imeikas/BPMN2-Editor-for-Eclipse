@@ -11,15 +11,17 @@ import org.eclipse.ui.views.properties.tabbed.ITabbedPropertyConstants;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.jboss.bpmn2.editor.ui.editor.BPMN2Editor;
 
-public class Bpmn2AdvancedPropertySection extends GFPropertySection implements ITabbedPropertyConstants {
+public class JbpmPropertySection extends GFPropertySection implements ITabbedPropertyConstants {
+	public JbpmPropertySection() {
+	}
 
-	private AdvancedPropertiesComposite composite;
+	private JbpmPropertiesComposite composite;
 
 	@Override
 	public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		super.createControls(parent, aTabbedPropertySheetPage);
 		parent.setLayout(new FillLayout());
-		composite = new AdvancedPropertiesComposite(parent, SWT.None);
+		composite = new JbpmPropertiesComposite(parent, SWT.None);
 	}
 
 	@Override

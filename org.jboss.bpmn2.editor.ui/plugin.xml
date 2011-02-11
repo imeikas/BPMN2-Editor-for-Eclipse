@@ -77,8 +77,14 @@
           <propertyTabs contributorId="BPMN2.PropertyContributor">
               <propertyTab
                     category="BPMN2"
-                    id="bpmn2.advanced.tab"
+                    id="bpmn2.main.tab"
                     label="BPMN2">
+              </propertyTab>
+              <propertyTab
+                    afterTab="bpmn2.main.tab"
+                    category="BPMN2"
+                    id="bpmn2.jbpm.tab"
+                    label="jBPM">
               </propertyTab>
           </propertyTabs>
       </extension>
@@ -89,8 +95,14 @@
               <propertySection
                     class="org.jboss.bpmn2.editor.ui.property.Bpmn2AdvancedPropertySection"
                     filter="org.jboss.bpmn2.editor.ui.property.Bpmn2PropertyFilter"
-                    id="bpmn2.advanced.tab.id"
-                    tab="bpmn2.advanced.tab">
+                    id="bpmn2.main.tab.id"
+                    tab="bpmn2.main.tab">
+              </propertySection>
+              <propertySection
+                    class="org.jboss.bpmn2.editor.ui.property.JbpmPropertySection"
+                    filter="org.jboss.bpmn2.editor.ui.property.Bpmn2PropertyFilter"
+                    id="bpmn2.jbpm.tab."
+                    tab="bpmn2.jbpm.tab">
               </propertySection>
           </propertySections>
       </extension>
