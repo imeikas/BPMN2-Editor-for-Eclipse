@@ -5,26 +5,21 @@ Bundle-SymbolicName: org.jboss.bpmn2.editor.ui;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-Activator: org.jboss.bpmn2.editor.ui.Activator
 Bundle-Vendor: JBOSS
-Require-Bundle: org.eclipse.ui,
- org.eclipse.ui.ide,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.graphiti,
  org.eclipse.graphiti.ui,
  org.jboss.bpmn2.editor.core,
  org.eclipse.emf.transaction;bundle-version="1.4.0",
  org.eclipse.ui.views.properties.tabbed;bundle-version="3.5.100",
  org.eclipse.gef;bundle-version="3.6.1",
- org.eclipse.bpmn2,
  org.eclipse.bpmn2.edit,
  org.eclipse.graphiti.examples.common,
- org.eclipse.core.databinding,
  org.eclipse.core.databinding.beans,
- org.eclipse.core.databinding.observable,
- org.eclipse.core.databinding.property,
  org.eclipse.jface.databinding,
- com.ibm.icu,
  org.eclipse.emf.databinding,
- org.eclipse.graphiti.examples.tutorial;bundle-version="0.7.0"
+ org.eclipse.emf.edit.ui;bundle-version="2.6.0",
+ org.eclipse.core.databinding.property,
+ com.ibm.icu
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.jboss.bpmn2.editor.ui,

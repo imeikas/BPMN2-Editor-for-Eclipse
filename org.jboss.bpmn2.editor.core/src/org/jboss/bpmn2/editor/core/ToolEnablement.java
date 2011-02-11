@@ -1,11 +1,10 @@
 package org.jboss.bpmn2.editor.core;
 
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 import org.eclipse.emf.ecore.ENamedElement;
 
-public class ToolEnablement {
+public class ToolEnablement extends AbstractPropertyChangeListenerProvider {
 
 	private ENamedElement tool;
 	private Boolean enabled;
@@ -47,18 +46,6 @@ public class ToolEnablement {
 
 	public ENamedElement getTool() {
 		return tool;
-	}
-
-	public void removePropertyChangeListener(PropertyChangeListener pcl) {
-	}
-
-	public void removePropertyChangeListener(String s, PropertyChangeListener pcl) {
-	}
-
-	public void addPropertyChangeListener(PropertyChangeListener pcl) {
-	}
-
-	public void addPropertyChangeListener(String s, PropertyChangeListener pcl) {
 	}
 
 	public void setChildren(ArrayList<ToolEnablement> children) {
