@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.gateway.exclusive;
+package org.jboss.bpmn2.editor.core.features.gateway;
 
 import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.graphiti.features.IFeatureProvider;

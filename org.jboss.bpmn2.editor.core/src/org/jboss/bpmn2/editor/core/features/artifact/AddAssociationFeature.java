@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.association;
+package org.jboss.bpmn2.editor.core.features.artifact;
 
 import org.eclipse.bpmn2.Association;
 import org.eclipse.graphiti.features.IFeatureProvider;

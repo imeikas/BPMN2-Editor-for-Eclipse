@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.gateway.inclusive;
+package org.jboss.bpmn2.editor.core.features.gateway;
 
 import org.eclipse.bpmn2.Gateway;
 import org.eclipse.bpmn2.InclusiveGateway;
@@ -8,7 +8,6 @@ import org.eclipse.graphiti.mm.algorithms.Polygon;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
-import org.jboss.bpmn2.editor.core.features.gateway.AbstractAddGatewayFeature;
 
 public class AddInclusiveGatewayFeature extends AbstractAddGatewayFeature<InclusiveGateway> {
 	

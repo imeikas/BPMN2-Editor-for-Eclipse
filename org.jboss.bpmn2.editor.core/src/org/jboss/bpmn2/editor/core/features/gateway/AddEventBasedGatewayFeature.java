@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.gateway.eventbased;
+package org.jboss.bpmn2.editor.core.features.gateway;
 
 import org.eclipse.bpmn2.EventBasedGateway;
 import org.eclipse.bpmn2.Gateway;
@@ -7,7 +7,6 @@ import org.eclipse.graphiti.mm.algorithms.Ellipse;
 import org.eclipse.graphiti.mm.algorithms.Polygon;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
-import org.jboss.bpmn2.editor.core.features.gateway.AbstractAddGatewayFeature;
 
 public class AddEventBasedGatewayFeature extends AbstractAddGatewayFeature<EventBasedGateway> {
 

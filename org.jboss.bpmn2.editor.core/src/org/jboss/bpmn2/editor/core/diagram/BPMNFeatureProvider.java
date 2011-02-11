@@ -1,20 +1,9 @@
 package org.jboss.bpmn2.editor.core.diagram;
 
-import org.eclipse.bpmn2.Association;
-import org.eclipse.bpmn2.EndEvent;
-import org.eclipse.bpmn2.Event;
-import org.eclipse.bpmn2.EventBasedGateway;
-import org.eclipse.bpmn2.ExclusiveGateway;
-import org.eclipse.bpmn2.FlowNode;
-import org.eclipse.bpmn2.InclusiveGateway;
-import org.eclipse.bpmn2.Lane;
-import org.eclipse.bpmn2.MessageFlow;
-import org.eclipse.bpmn2.ParallelGateway;
-import org.eclipse.bpmn2.Participant;
-import org.eclipse.bpmn2.SequenceFlow;
-import org.eclipse.bpmn2.StartEvent;
-import org.eclipse.bpmn2.Task;
-import org.eclipse.bpmn2.TextAnnotation;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.graphiti.dt.IDiagramTypeProvider;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateConnectionFeature;
@@ -33,55 +22,14 @@ import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
-import org.jboss.bpmn2.editor.core.features.AbstractMoveFlowNodeFeature;
-import org.jboss.bpmn2.editor.core.features.DirectEditFlowElementFeature;
-import org.jboss.bpmn2.editor.core.features.annotation.AddTextAnnotationFeature;
-import org.jboss.bpmn2.editor.core.features.annotation.CreateTextAnnotationFeature;
-import org.jboss.bpmn2.editor.core.features.annotation.DirectEditTextAnnotationFeature;
-import org.jboss.bpmn2.editor.core.features.annotation.LayoutTextAnnotationFeature;
-import org.jboss.bpmn2.editor.core.features.annotation.MoveTextAnnotationFeature;
-import org.jboss.bpmn2.editor.core.features.annotation.UpdateTextAnnotationFeature;
-import org.jboss.bpmn2.editor.core.features.association.AddAssociationFeature;
-import org.jboss.bpmn2.editor.core.features.association.CreateAssociationFeature;
-import org.jboss.bpmn2.editor.core.features.event.AddEndEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.AddStartEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.CreateEndEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.CreateStartEventFeature;
+import org.jboss.bpmn2.editor.core.features.FeatureResolver;
+import org.jboss.bpmn2.editor.core.features.artifact.ArtifactFeatureResolver;
 import org.jboss.bpmn2.editor.core.features.event.EventFeatureResolver;
-import org.jboss.bpmn2.editor.core.features.event.end.LayoutEndEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.end.UpdateEndEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.start.DirectEditStartEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.start.LayoutStartEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.start.UpdateStartEventFeature;
-import org.jboss.bpmn2.editor.core.features.gateway.eventbased.AddEventBasedGatewayFeature;
-import org.jboss.bpmn2.editor.core.features.gateway.eventbased.CreateEventBasedGatewayFeature;
-import org.jboss.bpmn2.editor.core.features.gateway.exclusive.AddExclusiveGatewayFeature;
-import org.jboss.bpmn2.editor.core.features.gateway.exclusive.CreateExclusiveGatewayFeature;
-import org.jboss.bpmn2.editor.core.features.gateway.inclusive.AddInclusiveGatewayFeature;
-import org.jboss.bpmn2.editor.core.features.gateway.inclusive.CreateInclusiveGatewayFeature;
-import org.jboss.bpmn2.editor.core.features.gateway.parallel.AddParallelGatewayFeature;
-import org.jboss.bpmn2.editor.core.features.gateway.parallel.CreateParallelGatewayFeature;
-import org.jboss.bpmn2.editor.core.features.lane.AddLaneFeature;
-import org.jboss.bpmn2.editor.core.features.lane.CreateLaneFeature;
-import org.jboss.bpmn2.editor.core.features.lane.DirectEditLaneFeature;
-import org.jboss.bpmn2.editor.core.features.lane.LayoutLaneFeature;
-import org.jboss.bpmn2.editor.core.features.lane.MoveLaneFeature;
-import org.jboss.bpmn2.editor.core.features.lane.ResizeLaneFeature;
-import org.jboss.bpmn2.editor.core.features.lane.UpdateLaneFeature;
-import org.jboss.bpmn2.editor.core.features.messageflow.AddMessageFlowFeature;
-import org.jboss.bpmn2.editor.core.features.messageflow.CreateMessageFlowFeature;
-import org.jboss.bpmn2.editor.core.features.participant.AddParticipantFeature;
-import org.jboss.bpmn2.editor.core.features.participant.CreateParticipantFeature;
-import org.jboss.bpmn2.editor.core.features.participant.DirectEditParticipantFeature;
-import org.jboss.bpmn2.editor.core.features.participant.LayoutParticipantFeature;
-import org.jboss.bpmn2.editor.core.features.participant.UpdateParticipantFeature;
-import org.jboss.bpmn2.editor.core.features.sequenceflow.AddSequenceFlowFeature;
-import org.jboss.bpmn2.editor.core.features.sequenceflow.CreateSequenceFlowFeature;
-import org.jboss.bpmn2.editor.core.features.task.AddTaskFeature;
-import org.jboss.bpmn2.editor.core.features.task.CreateTaskFeature;
-import org.jboss.bpmn2.editor.core.features.task.DirectEditTaskFeature;
-import org.jboss.bpmn2.editor.core.features.task.LayoutTaskFeature;
-import org.jboss.bpmn2.editor.core.features.task.UpdateTaskFeature;
+import org.jboss.bpmn2.editor.core.features.flow.FlowFeatureResolver;
+import org.jboss.bpmn2.editor.core.features.gateway.GatewayFeatureResolver;
+import org.jboss.bpmn2.editor.core.features.lane.LaneFeatureResolver;
+import org.jboss.bpmn2.editor.core.features.participant.ParticipantFeatureResolver;
+import org.jboss.bpmn2.editor.core.features.task.TaskFeatureResolver;
 
 /**
  * Determines what kinds of business objects can be added to a diagram.
@@ -91,68 +39,69 @@ import org.jboss.bpmn2.editor.core.features.task.UpdateTaskFeature;
  */
 public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
+	private List<FeatureResolver> resolvers;
+
+	private ICreateFeature[] createFeatures;
+
+	private ICreateConnectionFeature[] createConnectionFeatures;
+
 	public BPMNFeatureProvider(IDiagramTypeProvider dtp) {
 		super(dtp);
+
+		resolvers = new ArrayList<FeatureResolver>();
+		resolvers.add(new TaskFeatureResolver());
+		resolvers.add(new EventFeatureResolver());
+		resolvers.add(new GatewayFeatureResolver());
+		resolvers.add(new FlowFeatureResolver());
+		resolvers.add(new LaneFeatureResolver());
+		resolvers.add(new ParticipantFeatureResolver());
+		resolvers.add(new ArtifactFeatureResolver());
+
+		List<ICreateFeature> createFeaturesList = new ArrayList<ICreateFeature>();
+		for (FeatureResolver r : resolvers) {
+			createFeaturesList.addAll(r.getCreateFeatures(this));
+		}
+		createFeatures = createFeaturesList.toArray(new ICreateFeature[createFeaturesList.size()]);
+
+		List<ICreateConnectionFeature> createConnectionFeatureList = new ArrayList<ICreateConnectionFeature>();
+		for (FeatureResolver r : resolvers) {
+			createConnectionFeatureList.addAll(r.getCreateConnectionFeatures(this));
+		}
+		createConnectionFeatures = createConnectionFeatureList
+		        .toArray(new ICreateConnectionFeature[createConnectionFeatureList.size()]);
 	}
 
 	@Override
 	public IAddFeature getAddFeature(IAddContext context) {
-		Object newObject = context.getNewObject();
-		if (newObject instanceof Task) {
-			return new AddTaskFeature(this);
-		} else if (newObject instanceof SequenceFlow) {
-			return new AddSequenceFlowFeature(this);
-		} else if (newObject instanceof ExclusiveGateway) {
-			return new AddExclusiveGatewayFeature(this);
-		} else if (newObject instanceof Lane) {
-			return new AddLaneFeature(this);
-		} else if (newObject instanceof TextAnnotation) {
-			return new AddTextAnnotationFeature(this);
-		} else if (newObject instanceof Association) {
-			return new AddAssociationFeature(this);
-		} else if (newObject instanceof InclusiveGateway) {
-			return new AddInclusiveGatewayFeature(this);
-		} else if (newObject instanceof ParallelGateway) {
-			return new AddParallelGatewayFeature(this);
-		} else if (newObject instanceof EventBasedGateway) {
-			return new AddEventBasedGatewayFeature(this);
-		} else if (newObject instanceof MessageFlow) {
-			return new AddMessageFlowFeature(this);
-		} else if (newObject instanceof Participant) {
-			return new AddParticipantFeature(this);
-		} else if (newObject instanceof Event) {
-			return EventFeatureResolver.getAddFeatureForEvent(this, (Event) newObject);
+		Object o = context.getNewObject();
+		if (o instanceof BaseElement) {
+			for (FeatureResolver r : resolvers) {
+				IAddFeature f = r.getAddFeature(this, (BaseElement) o);
+				if (f != null) {
+					return f;
+				}
+			}
 		}
 		return super.getAddFeature(context);
 	}
 
 	@Override
 	public ICreateFeature[] getCreateFeatures() {
-		// if you change this part significantly, check that you won't break Bpmn2Preferences
-		return new ICreateFeature[] { new CreateStartEventFeature(this), new CreateEndEventFeature(this),
-		        new CreateTaskFeature(this), new CreateExclusiveGatewayFeature(this),
-		        new CreateInclusiveGatewayFeature(this), new CreateParallelGatewayFeature(this),
-		        new CreateEventBasedGatewayFeature(this), new CreateLaneFeature(this), new CreateParticipantFeature(this),
-		        new CreateTextAnnotationFeature(this) };
+		return createFeatures;
 	}
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IUpdateContext context) {
 		PictogramElement pictogramElement = context.getPictogramElement();
 		if (pictogramElement instanceof ContainerShape) {
-			Object bo = getBusinessObjectForPictogramElement(pictogramElement);
-			if (bo instanceof Task) {
-				return new UpdateTaskFeature(this);
-			} else if (bo instanceof StartEvent) {
-				return new UpdateStartEventFeature(this);
-			} else if (bo instanceof EndEvent) {
-				return new UpdateEndEventFeature(this);
-			} else if (bo instanceof TextAnnotation) {
-				return new UpdateTextAnnotationFeature(this);
-			} else if (bo instanceof Participant) {
-				return new UpdateParticipantFeature(this);
-			} else if (bo instanceof Lane) {
-				return new UpdateLaneFeature(this);
+			Object o = getBusinessObjectForPictogramElement(pictogramElement);
+			if (o instanceof BaseElement) {
+				for (FeatureResolver r : resolvers) {
+					IUpdateFeature f = r.getUpdateFeature(this, (BaseElement) o);
+					if (f != null) {
+						return f;
+					}
+				}
 			}
 		}
 		return super.getUpdateFeature(context);
@@ -160,74 +109,64 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 	@Override
 	public ICreateConnectionFeature[] getCreateConnectionFeatures() {
-		// if you change this part significantly, check that you won't break Bpmn2Preferences
-		return new ICreateConnectionFeature[] { new CreateSequenceFlowFeature(this),
-		        new CreateAssociationFeature(this), new CreateMessageFlowFeature(this) };
+		return createConnectionFeatures;
 	}
 
 	@Override
 	public IDirectEditingFeature getDirectEditingFeature(IDirectEditingContext context) {
 		PictogramElement pe = context.getPictogramElement();
-		Object bo = getBusinessObjectForPictogramElement(pe);
-		if (bo instanceof Task) {
-			return new DirectEditTaskFeature(this);
-		} else if (bo instanceof StartEvent) {
-			return new DirectEditStartEventFeature(this);
-		} else if (bo instanceof EndEvent) {
-			return new DirectEditFlowElementFeature(this);
-		} else if (bo instanceof TextAnnotation) {
-			return new DirectEditTextAnnotationFeature(this);
-		} else if (bo instanceof Participant) {
-			return new DirectEditParticipantFeature(this);
-		} else if (bo instanceof Lane) {
-			return new DirectEditLaneFeature(this);
-		} else {
-			return super.getDirectEditingFeature(context);
+		Object o = getBusinessObjectForPictogramElement(pe);
+		if (o instanceof BaseElement) {
+			for (FeatureResolver r : resolvers) {
+				IDirectEditingFeature f = r.getDirectEditingFeature(this, (BaseElement) o);
+				if (f != null) {
+					return f;
+				}
+			}
 		}
+		return super.getDirectEditingFeature(context);
 	}
 
 	@Override
 	public ILayoutFeature getLayoutFeature(ILayoutContext context) {
 		PictogramElement pictogramElement = context.getPictogramElement();
-		Object bo = getBusinessObjectForPictogramElement(pictogramElement);
-		if (bo instanceof Task) {
-			return new LayoutTaskFeature(this);
-		} else if (bo instanceof StartEvent) {
-			return new LayoutStartEventFeature(this);
-		} else if (bo instanceof EndEvent) {
-			return new LayoutEndEventFeature(this);
-		} else if (bo instanceof Lane) {
-			return new LayoutLaneFeature(this);
-		} else if (bo instanceof TextAnnotation) {
-			return new LayoutTextAnnotationFeature(this);
-		} else if (bo instanceof Participant) {
-			return new LayoutParticipantFeature(this);
-		} else {
-			return super.getLayoutFeature(context);
+		Object o = getBusinessObjectForPictogramElement(pictogramElement);
+		if (o instanceof BaseElement) {
+			for (FeatureResolver r : resolvers) {
+				ILayoutFeature f = r.getLayoutFeature(this, (BaseElement) o);
+				if (f != null) {
+					return f;
+				}
+			}
 		}
+		return super.getLayoutFeature(context);
 	}
 
 	@Override
 	public IMoveShapeFeature getMoveShapeFeature(IMoveShapeContext context) {
-		Object bo = getBusinessObjectForPictogramElement(context.getShape());
-		if (bo instanceof FlowNode) {
-			return new AbstractMoveFlowNodeFeature(this);
-		} else if (bo instanceof Lane) {
-			return new MoveLaneFeature(this);
-		} else if (bo instanceof TextAnnotation) {
-			return new MoveTextAnnotationFeature(this);
-		} else {
-			return super.getMoveShapeFeature(context);
+		Object o = getBusinessObjectForPictogramElement(context.getShape());
+		if (o instanceof BaseElement) {
+			for (FeatureResolver r : resolvers) {
+				IMoveShapeFeature f = r.getMoveFeature(this, (BaseElement) o);
+				if (f != null) {
+					return f;
+				}
+			}
 		}
+		return super.getMoveShapeFeature(context);
 	}
 
 	@Override
 	public IResizeShapeFeature getResizeShapeFeature(IResizeShapeContext context) {
-		Object bo = getBusinessObjectForPictogramElement(context.getShape());
-		if (bo instanceof Lane) {
-			return new ResizeLaneFeature(this);
-		} else {
-			return super.getResizeShapeFeature(context);
+		Object o = getBusinessObjectForPictogramElement(context.getShape());
+		if (o instanceof BaseElement) {
+			for (FeatureResolver r : resolvers) {
+				IResizeShapeFeature f = r.getResizeFeature(this, (BaseElement) o);
+				if (f != null) {
+					return f;
+				}
+			}
 		}
+		return super.getResizeShapeFeature(context);
 	}
 }

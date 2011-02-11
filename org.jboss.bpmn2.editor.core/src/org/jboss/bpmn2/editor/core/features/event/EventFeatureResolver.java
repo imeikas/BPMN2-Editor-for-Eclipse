@@ -1,22 +1,28 @@
 package org.jboss.bpmn2.editor.core.features.event;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.Event;
 import org.eclipse.bpmn2.StartEvent;
+import org.eclipse.graphiti.features.IAddFeature;
+import org.eclipse.graphiti.features.ICreateConnectionFeature;
+import org.eclipse.graphiti.features.ICreateFeature;
+import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
-import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
-import org.eclipse.graphiti.features.impl.AbstractCreateFeature;
-import org.eclipse.graphiti.features.impl.AbstractDirectEditingFeature;
-import org.eclipse.graphiti.features.impl.AbstractLayoutFeature;
-import org.eclipse.graphiti.features.impl.AbstractUpdateFeature;
+import org.eclipse.graphiti.features.ILayoutFeature;
+import org.eclipse.graphiti.features.IMoveShapeFeature;
+import org.eclipse.graphiti.features.IResizeShapeFeature;
+import org.eclipse.graphiti.features.IUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.DirectEditFlowElementFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureResolver;
 
 public class EventFeatureResolver implements FeatureResolver {
-
+	
 	@Override
-	public AbstractAddShapeFeature getAddFeature(IFeatureProvider fp, BaseElement e) {
+	public IAddFeature getAddFeature(IFeatureProvider fp, BaseElement e) {
 		if (e instanceof StartEvent) {
 			return new AddStartEventFeature(fp);
 		} else if (e instanceof EndEvent) {
@@ -27,18 +33,7 @@ public class EventFeatureResolver implements FeatureResolver {
 	}
 
 	@Override
-	public AbstractCreateFeature getCreateFeature(IFeatureProvider fp, BaseElement e) {
-		if (e instanceof StartEvent) {
-			return new CreateStartEventFeature(fp);
-		} else if (e instanceof EndEvent) {
-			return new CreateEndEventFeature(fp);
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public AbstractDirectEditingFeature getDirectEditingFeature(IFeatureProvider fp, BaseElement e) {
+	public IDirectEditingFeature getDirectEditingFeature(IFeatureProvider fp, BaseElement e) {
 		if (e instanceof Event)
 			return new DirectEditFlowElementFeature(fp);
 		else
@@ -46,7 +41,7 @@ public class EventFeatureResolver implements FeatureResolver {
 	}
 
 	@Override
-	public AbstractLayoutFeature getLayoutFeature(IFeatureProvider fp, BaseElement e) {
+	public ILayoutFeature getLayoutFeature(IFeatureProvider fp, BaseElement e) {
 		if (e instanceof Event)
 			return new LayoutEventFeature(fp);
 		else
@@ -54,10 +49,33 @@ public class EventFeatureResolver implements FeatureResolver {
 	}
 
 	@Override
-	public AbstractUpdateFeature getUpdateFeature(IFeatureProvider fp, BaseElement e) {
+	public IUpdateFeature getUpdateFeature(IFeatureProvider fp, BaseElement e) {
 		if (e instanceof Event)
 			return new UpdateEventFeature(fp);
 		else
 			return null;
+	}
+
+	@Override
+	public List<ICreateConnectionFeature> getCreateConnectionFeatures(IFeatureProvider fp) {
+		return new ArrayList<ICreateConnectionFeature>();
+	}
+
+	@Override
+	public List<ICreateFeature> getCreateFeatures(IFeatureProvider fp) {
+		List<ICreateFeature> list = new ArrayList<ICreateFeature>();
+		list.add(new CreateStartEventFeature(fp));
+		list.add(new CreateEndEventFeature(fp));
+		return list;
+	}
+
+	@Override
+	public IMoveShapeFeature getMoveFeature(IFeatureProvider fp, BaseElement e) {
+		return null; // NOT SUPPORTED YET
+	}
+
+	@Override
+	public IResizeShapeFeature getResizeFeature(IFeatureProvider fp, BaseElement e) {
+		return null; // NOT SUPPORTED YET
 	}
 }

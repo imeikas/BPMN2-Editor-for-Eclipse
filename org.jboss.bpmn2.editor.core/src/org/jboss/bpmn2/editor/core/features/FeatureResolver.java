@@ -1,22 +1,33 @@
 package org.jboss.bpmn2.editor.core.features;
 
+import java.util.List;
+
 import org.eclipse.bpmn2.BaseElement;
+import org.eclipse.graphiti.features.IAddFeature;
+import org.eclipse.graphiti.features.ICreateConnectionFeature;
+import org.eclipse.graphiti.features.ICreateFeature;
+import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
-import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
-import org.eclipse.graphiti.features.impl.AbstractCreateFeature;
-import org.eclipse.graphiti.features.impl.AbstractDirectEditingFeature;
-import org.eclipse.graphiti.features.impl.AbstractLayoutFeature;
-import org.eclipse.graphiti.features.impl.AbstractUpdateFeature;
+import org.eclipse.graphiti.features.ILayoutFeature;
+import org.eclipse.graphiti.features.IMoveShapeFeature;
+import org.eclipse.graphiti.features.IResizeShapeFeature;
+import org.eclipse.graphiti.features.IUpdateFeature;
 
 public interface FeatureResolver {
 	
-	AbstractCreateFeature getCreateFeature(IFeatureProvider fp, BaseElement e);
+	List<ICreateConnectionFeature> getCreateConnectionFeatures(IFeatureProvider fp);
 	
-	AbstractAddShapeFeature getAddFeature(IFeatureProvider fp, BaseElement e);
+	List<ICreateFeature> getCreateFeatures(IFeatureProvider fp);
 	
-	AbstractDirectEditingFeature getDirectEditingFeature(IFeatureProvider fp, BaseElement e);
+	IAddFeature getAddFeature(IFeatureProvider fp, BaseElement e);
 	
-	AbstractLayoutFeature getLayoutFeature(IFeatureProvider fp, BaseElement e);
+	IDirectEditingFeature getDirectEditingFeature(IFeatureProvider fp, BaseElement e);
 	
-	AbstractUpdateFeature getUpdateFeature(IFeatureProvider fp, BaseElement e);
+	ILayoutFeature getLayoutFeature(IFeatureProvider fp, BaseElement e);
+	
+	IUpdateFeature getUpdateFeature(IFeatureProvider fp, BaseElement e);
+	
+	IMoveShapeFeature getMoveFeature(IFeatureProvider fp, BaseElement e);
+	
+	IResizeShapeFeature getResizeFeature(IFeatureProvider fp, BaseElement e);
 }

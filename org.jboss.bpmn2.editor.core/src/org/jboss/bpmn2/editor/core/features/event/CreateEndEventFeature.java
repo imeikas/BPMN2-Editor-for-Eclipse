@@ -1,7 +1,6 @@
 package org.jboss.bpmn2.editor.core.features.event;
 
 import org.eclipse.bpmn2.EndEvent;
-import org.eclipse.bpmn2.Lane;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.jboss.bpmn2.editor.core.ImageProvider;
@@ -18,9 +17,6 @@ public class CreateEndEventFeature extends AbstractCreateFlowElementFeature<EndE
     protected EndEvent createFlowElement(ICreateContext context) {
 		EndEvent end = ModelHandler.FACTORY.createEndEvent();
 		end.setName("End");
-		if(support.isTargetLane(context)) {
-			end.getLanes().add((Lane) getBusinessObjectForPictogramElement(context.getTargetContainer()));
-		}
 		return end;
     }
 	

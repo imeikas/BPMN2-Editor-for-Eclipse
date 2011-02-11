@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.annotation;
+package org.jboss.bpmn2.editor.core.features.artifact;
 
 import org.eclipse.bpmn2.TextAnnotation;
 import org.eclipse.graphiti.features.IFeatureProvider;

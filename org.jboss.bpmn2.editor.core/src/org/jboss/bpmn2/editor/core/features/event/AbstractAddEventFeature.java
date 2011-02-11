@@ -39,7 +39,8 @@ public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
 		boolean assignable = getEventClass().isAssignableFrom(context.getNewObject().getClass());
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
 		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context);
-		return assignable && (intoDiagram || intoLane);
+		boolean intoParticipant = support.isTargetParticipant(context);
+		return assignable && (intoDiagram || intoLane || intoParticipant);
 	}
 
 	@Override

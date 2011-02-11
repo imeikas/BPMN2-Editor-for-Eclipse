@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.messageflow;
+package org.jboss.bpmn2.editor.core.features.flow;
 
 import java.io.IOException;
 

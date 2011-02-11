@@ -1,6 +1,5 @@
 package org.jboss.bpmn2.editor.core.features.event;
 
-import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
@@ -18,9 +17,6 @@ public class CreateStartEventFeature extends AbstractCreateFlowElementFeature<St
     protected StartEvent createFlowElement(ICreateContext context) {
 		StartEvent start = ModelHandler.FACTORY.createStartEvent();
 		start.setName("Start");
-		if(support.isTargetLane(context)) {
-			start.getLanes().add((Lane) getBusinessObjectForPictogramElement(context.getTargetContainer()));
-		}
 		return start;
     }
 	
