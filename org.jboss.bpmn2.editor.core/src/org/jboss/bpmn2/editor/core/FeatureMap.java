@@ -10,6 +10,8 @@ import org.eclipse.graphiti.features.IFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.CreateAssociationFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.CreateTextAnnotationFeature;
 import org.jboss.bpmn2.editor.core.features.event.CreateEndEventFeature;
+import org.jboss.bpmn2.editor.core.features.event.CreateIntermediateCatchEventFeature;
+import org.jboss.bpmn2.editor.core.features.event.CreateIntermediateThrowEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.CreateStartEventFeature;
 import org.jboss.bpmn2.editor.core.features.flow.CreateMessageFlowFeature;
 import org.jboss.bpmn2.editor.core.features.flow.CreateSequenceFlowFeature;
@@ -40,6 +42,8 @@ public class FeatureMap {
 		featureMap.put(i.getTextAnnotation(), CreateTextAnnotationFeature.class);
 		featureMap.put(i.getEventBasedGateway(), CreateEventBasedGatewayFeature.class);
 		featureMap.put(i.getMessageFlow(), CreateMessageFlowFeature.class);
+		featureMap.put(i.getIntermediateThrowEvent(), CreateIntermediateThrowEventFeature.class);
+		featureMap.put(i.getIntermediateCatchEvent(), CreateIntermediateCatchEventFeature.class);
 		FEATURE_MAP = Collections.unmodifiableMap(featureMap);
 	}
 

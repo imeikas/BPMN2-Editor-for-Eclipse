@@ -6,6 +6,8 @@ import java.util.List;
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.Event;
+import org.eclipse.bpmn2.IntermediateCatchEvent;
+import org.eclipse.bpmn2.IntermediateThrowEvent;
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateConnectionFeature;
@@ -20,16 +22,18 @@ import org.jboss.bpmn2.editor.core.features.DirectEditFlowElementFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureResolver;
 
 public class EventFeatureResolver implements FeatureResolver {
-	
+
 	@Override
 	public IAddFeature getAddFeature(IFeatureProvider fp, BaseElement e) {
-		if (e instanceof StartEvent) {
+		if (e instanceof StartEvent)
 			return new AddStartEventFeature(fp);
-		} else if (e instanceof EndEvent) {
+		if (e instanceof EndEvent)
 			return new AddEndEventFeature(fp);
-		} else {
-			return null;
-		}
+		if (e instanceof IntermediateThrowEvent)
+			return new AddIntermediateThrowEventFeature(fp);
+		if (e instanceof IntermediateCatchEvent)
+			return new AddIntermediateCatchEventFeature(fp);
+		return null;
 	}
 
 	@Override
@@ -66,6 +70,8 @@ public class EventFeatureResolver implements FeatureResolver {
 		List<ICreateFeature> list = new ArrayList<ICreateFeature>();
 		list.add(new CreateStartEventFeature(fp));
 		list.add(new CreateEndEventFeature(fp));
+		list.add(new CreateIntermediateThrowEventFeature(fp));
+		list.add(new CreateIntermediateCatchEventFeature(fp));
 		return list;
 	}
 

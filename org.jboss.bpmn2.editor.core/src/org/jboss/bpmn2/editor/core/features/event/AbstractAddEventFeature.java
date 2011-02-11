@@ -59,7 +59,7 @@ public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
 		Shape ellipseShape = peCreateService.createShape(containerShape, false);
 		Ellipse ellipse = ShapeUtil.createEventShape(ellipseShape);
 		ellipse.setStyle(StyleUtil.getStyleForClass(getDiagram()));
-		enhanceEllipse(ellipse);
+		decorateEllipse(ellipse);
 		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
 		gaService.setRenderingStyle(ellipse, gradient);
 		gaService.setLocation(ellipse, 0, 0);
@@ -70,7 +70,7 @@ public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
 		text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		text.setVerticalAlignment(Orientation.ALIGNMENT_BOTTOM);
 		text.setBackground(manageColor(IColorConstant.RED));
-		enhanceText(text);
+		decorateText(text);
 		gaService.setLocationAndSize(text, 0, ShapeUtil.EVENT_SIZE, ShapeUtil.EVENT_SIZE, ShapeUtil.EVENT_TEXT_AREA);
 
 		if (e.eResource() == null) {
@@ -86,10 +86,10 @@ public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
 		return containerShape;
 	}
 
-	protected void enhanceEllipse(Ellipse e) {
+	protected void decorateEllipse(Ellipse e) {
 	}
 
-	protected void enhanceText(Text t) {
+	protected void decorateText(Text t) {
 	}
 
 	protected abstract Class<? extends Event> getEventClass();

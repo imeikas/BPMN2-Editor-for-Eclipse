@@ -12,7 +12,7 @@ public class AddEndEventFeature extends AbstractAddEventFeature {
 	}
 
 	@Override
-	protected void enhanceEllipse(Ellipse e) {
+	protected void decorateEllipse(Ellipse e) {
 		e.setLineWidth(3);
 	}
 
