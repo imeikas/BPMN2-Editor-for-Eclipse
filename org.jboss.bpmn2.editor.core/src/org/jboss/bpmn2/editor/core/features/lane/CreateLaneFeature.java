@@ -44,6 +44,8 @@ public class CreateLaneFeature extends AbstractCreateFeature {
 			if (support.isTargetLane(context)) {
 				Lane targetLane = (Lane) getBusinessObjectForPictogramElement(context.getTargetContainer());
 				lane = mh.addLaneTo(targetLane);
+			} else if (support.isTargetParticipant(context)) {
+				lane = mh.addLane(support.getTargetParticipant(context, mh));
 			} else {
 				lane = mh.addLane(mh.getInternalParticipant());
 			}

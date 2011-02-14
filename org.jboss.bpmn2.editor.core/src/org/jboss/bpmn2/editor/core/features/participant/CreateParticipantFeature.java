@@ -13,7 +13,9 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
 
 public class CreateParticipantFeature extends AbstractCreateFeature {
-
+	
+	private static int index = 1;
+	
 	public CreateParticipantFeature(IFeatureProvider fp) {
 	    super(fp, "Pool", "Container for partitioning a set of activities");
     }
@@ -30,7 +32,7 @@ public class CreateParticipantFeature extends AbstractCreateFeature {
 		try {
 	        ModelHandler mh = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
 	        p = mh.addParticipant();
-	        p.setName("Pool");
+	        p.setName("Pool nr " + index++);
         } catch (IOException e) {
         	Activator.logError(e);
         }

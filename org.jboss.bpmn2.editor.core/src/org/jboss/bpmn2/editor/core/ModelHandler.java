@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.graphiti.mm.pictograms.Diagram;
 
 public class ModelHandler {
 	public static final Bpmn2Factory FACTORY = Bpmn2Factory.eINSTANCE;
@@ -85,17 +86,34 @@ public class ModelHandler {
 	}
 
 	public Lane addLane(Participant participant) {
-		LaneSet laneSet = FACTORY.createLaneSet();
 		Lane lane = FACTORY.createLane();
-		laneSet.getLanes().add(lane);
 		Process process = getOrCreateProcess(participant);
-		process.getLaneSets().add(laneSet);
+		if(process.getLaneSets().isEmpty()) {
+			process.getLaneSets().add(FACTORY.createLaneSet());
+		}
+		process.getLaneSets().get(0).getLanes().add(lane);
 		return lane;
+	}
+
+	public void moveLane(Lane movedLane, Participant p) {
+		Participant fromParticipant = getParticipant(movedLane);
+		Process fromProcess = getOrCreateProcess(fromParticipant);
+		Process process = getOrCreateProcess(p);
+		for (FlowNode node : movedLane.getFlowNodeRefs()) {
+			process.getFlowElements().add(node);
+			fromProcess.getFlowElements().remove(node);
+			if (movedLane.getChildLaneSet() != null && !movedLane.getChildLaneSet().getLanes().isEmpty()) {
+				for (Lane lane : movedLane.getChildLaneSet().getLanes()) {
+					moveLane(lane, p);
+				}
+			}
+		}
 	}
 
 	private Process getOrCreateProcess(Participant participant) {
 		if (participant.getProcessRef() == null) {
 			Process process = FACTORY.createProcess();
+			process.setName("Process for " + participant.getName());
 			getDefinitions().getRootElements().add(process);
 			participant.setProcessRef(process);
 		}
@@ -198,6 +216,9 @@ public class ModelHandler {
 	}
 
 	public Participant getParticipant(Object o) {
+		if (o instanceof Diagram)
+			return getInternalParticipant();
+
 		for (Participant p : getCollaboration().getParticipants()) {
 
 			if (p.getProcessRef() == null)
@@ -209,7 +230,7 @@ public class ModelHandler {
 				return p;
 			else if (process.getFlowElements().contains(o))
 				return p;
-			
+
 		}
 		return null;
 	}
@@ -231,7 +252,10 @@ public class ModelHandler {
 	}
 
 	private boolean isSubLane(LaneSet set, Lane lane) {
-		if (set != null && set.getLanes().contains(lane))
+		if (set == null)
+			return false;
+
+		if (set.getLanes().contains(lane))
 			return true;
 
 		boolean found = false;
