@@ -75,6 +75,6 @@ public class MoveFromParticipantToLaneFeature extends MoveLaneFeature {
 		if(toLane.getChildLaneSet() == null) {
 			toLane.setChildLaneSet(ModelHandler.FACTORY.createLaneSet());
 		}
-		toLane.getChildLaneSet().getLanes().addAll(laneSet.getLanes());
+		toLane.getChildLaneSet().getLanes().add(movedLane);
 	}
 }

@@ -94,21 +94,26 @@ public class ModelHandler {
 		process.getLaneSets().get(0).getLanes().add(lane);
 		return lane;
 	}
-
-	public void moveLane(Lane movedLane, Participant p) {
-		Participant fromParticipant = getParticipant(movedLane);
-		Process fromProcess = getOrCreateProcess(fromParticipant);
-		Process process = getOrCreateProcess(p);
+	
+	@Deprecated
+	public void moveLane(Lane movedLane, Participant targetParticipant) {
+		Participant sourceParticipant = getParticipant(movedLane);
+		moveLane(movedLane, sourceParticipant, targetParticipant);
+	}
+	
+	public void moveLane(Lane movedLane, Participant sourceParticipant, Participant targetParticipant) {
+		Process sourceProcess = getOrCreateProcess(sourceParticipant);
+		Process targetProcess = getOrCreateProcess(targetParticipant);
 		for (FlowNode node : movedLane.getFlowNodeRefs()) {
-			process.getFlowElements().add(node);
-			fromProcess.getFlowElements().remove(node);
+			targetProcess.getFlowElements().add(node);
+			sourceProcess.getFlowElements().remove(node);
 			if (movedLane.getChildLaneSet() != null && !movedLane.getChildLaneSet().getLanes().isEmpty()) {
 				for (Lane lane : movedLane.getChildLaneSet().getLanes()) {
-					moveLane(lane, p);
+					moveLane(lane, sourceParticipant, targetParticipant);
 				}
 			}
 		}
-	}
+    }
 
 	private Process getOrCreateProcess(Participant participant) {
 		if (participant.getProcessRef() == null) {

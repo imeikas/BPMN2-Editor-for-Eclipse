@@ -55,7 +55,7 @@ public class MoveFromLaneToLaneFeature extends MoveLaneFeature {
 	        Participant sourceParticipant = handler.getParticipant(sourceLane);
 	        Participant targetParticipant = handler.getParticipant(targetLane);
 	        if(!sourceParticipant.equals(targetParticipant)) {
-	        	handler.moveLane(movedLane, targetParticipant);
+	        	handler.moveLane(movedLane, sourceParticipant, targetParticipant);
 	        }
         } catch (IOException e) {
         	Activator.logError(e);
