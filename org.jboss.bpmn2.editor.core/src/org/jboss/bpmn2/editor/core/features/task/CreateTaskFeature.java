@@ -1,6 +1,5 @@
 package org.jboss.bpmn2.editor.core.features.task;
 
-import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.Task;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
@@ -17,10 +16,6 @@ public class CreateTaskFeature extends AbstractCreateFlowElementFeature<Task> {
 	@Override
     protected Task createFlowElement(ICreateContext context) {
 		Task task = ModelHandler.FACTORY.createTask();
-		if(support.isTargetLane(context)) {
-			Lane lane = (Lane) getBusinessObjectForPictogramElement(context.getTargetContainer());
-			task.getLanes().add(lane);
-		}
 		task.setName("Task Name");
 		return task;
     }
