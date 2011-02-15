@@ -40,6 +40,8 @@ public abstract class AbstractBaseElementUpdateFeature extends AbstractUpdateFea
 
 	@Override
 	public boolean update(IUpdateContext context) {
+		// TODO here it should get an updated picture from the element controller
+		
 		PictogramElement pe = context.getPictogramElement();
 		if (pe instanceof ContainerShape) {
 			ContainerShape cs = (ContainerShape) pe;

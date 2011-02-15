@@ -6,8 +6,11 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.graphiti.dt.IDiagramTypeProvider;
+import org.eclipse.graphiti.features.FeatureCheckerAdapter;
 import org.eclipse.graphiti.features.ICreateConnectionFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
+import org.eclipse.graphiti.features.IFeatureChecker;
+import org.eclipse.graphiti.features.IFeatureCheckerHolder;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.palette.IPaletteCompartmentEntry;
 import org.eclipse.graphiti.palette.impl.ConnectionCreationToolEntry;
@@ -17,7 +20,7 @@ import org.eclipse.graphiti.tb.DefaultToolBehaviorProvider;
 import org.jboss.bpmn2.editor.core.Bpmn2Preferences;
 import org.jboss.bpmn2.editor.core.FeatureMap;
 
-public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider {
+public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implements IFeatureCheckerHolder {
 
 	public BpmnToolBehaviourFeature(IDiagramTypeProvider diagramTypeProvider) {
 		super(diagramTypeProvider);
@@ -64,5 +67,12 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider {
 			}
 		}
 		return ret.toArray(new IPaletteCompartmentEntry[ret.size()]);
+	}
+
+	@Override
+	public IFeatureChecker getFeatureChecker() {
+		return new FeatureCheckerAdapter(false) {
+			// TODO add dynamic behavior depending on context - find controller for the element and ask allowXXX from controller 
+		};
 	}
 }

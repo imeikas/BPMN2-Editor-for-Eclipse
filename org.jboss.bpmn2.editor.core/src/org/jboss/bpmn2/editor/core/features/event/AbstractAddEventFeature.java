@@ -47,6 +47,9 @@ public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
 	public PictogramElement add(IAddContext context) {
 		Event e = (Event) context.getNewObject();
 
+		// TODO here it should get the picture from controller for the element in the given context,
+		// not create it here right away, and use the same controller in AbstractBaseElementUpdateFeature
+		
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
 		ContainerShape containerShape = peCreateService.createContainerShape(context.getTargetContainer(), true);
 
