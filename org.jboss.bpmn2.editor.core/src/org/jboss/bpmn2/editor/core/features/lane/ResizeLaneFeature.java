@@ -48,7 +48,7 @@ public class ResizeLaneFeature extends DefaultResizeShapeFeature {
 		if (i > 0)
 			return true;
 
-		return false;
+		return true;
 	}
 
 	private int compare(int heightBefore, int widthBefore, int heightAfter, int widthAfter) {

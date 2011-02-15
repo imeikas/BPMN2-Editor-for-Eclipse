@@ -107,10 +107,14 @@ public class ModelHandler {
 		for (FlowNode node : movedLane.getFlowNodeRefs()) {
 			targetProcess.getFlowElements().add(node);
 			sourceProcess.getFlowElements().remove(node);
-			if (movedLane.getChildLaneSet() != null && !movedLane.getChildLaneSet().getLanes().isEmpty()) {
-				for (Lane lane : movedLane.getChildLaneSet().getLanes()) {
-					moveLane(lane, sourceParticipant, targetParticipant);
-				}
+			for(SequenceFlow flow : node.getOutgoing()) {
+				targetProcess.getFlowElements().add(flow);
+				sourceProcess.getFlowElements().remove(flow);
+			}
+		}
+		if (movedLane.getChildLaneSet() != null && !movedLane.getChildLaneSet().getLanes().isEmpty()) {
+			for (Lane lane : movedLane.getChildLaneSet().getLanes()) {
+				moveLane(lane, sourceParticipant, targetParticipant);
 			}
 		}
     }
