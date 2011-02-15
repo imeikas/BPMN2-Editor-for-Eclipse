@@ -1,6 +1,7 @@
 package org.jboss.bpmn2.editor.core;
 
 import org.eclipse.bpmn2.Association;
+import org.eclipse.bpmn2.BusinessRuleTask;
 import org.eclipse.bpmn2.ComplexGateway;
 import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.EventBasedGateway;
@@ -13,7 +14,11 @@ import org.eclipse.bpmn2.ManualTask;
 import org.eclipse.bpmn2.MessageFlow;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.Participant;
+import org.eclipse.bpmn2.ReceiveTask;
+import org.eclipse.bpmn2.ScriptTask;
+import org.eclipse.bpmn2.SendTask;
 import org.eclipse.bpmn2.SequenceFlow;
+import org.eclipse.bpmn2.ServiceTask;
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.bpmn2.Task;
 import org.eclipse.bpmn2.TextAnnotation;
@@ -45,6 +50,11 @@ public class ImageProvider extends AbstractImageProvider {
 	public static final String IMG_16_COMPLEX_GATEWAY = PREFIX + ComplexGateway.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_USER_TASK = PREFIX + UserTask.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_MANUAL_TASK = PREFIX + ManualTask.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_SCRIPT_TASK = PREFIX + ScriptTask.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_BUSINESS_RULE_TASK = PREFIX + BusinessRuleTask.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_SERVICE_TASK = PREFIX + ServiceTask.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_SEND_TASK = PREFIX + SendTask.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_RECEIVE_TASK = PREFIX + ReceiveTask.class.getSimpleName().toLowerCase() + dot16;
 	
 	@Override
 	protected void addAvailableImages() {
@@ -66,5 +76,10 @@ public class ImageProvider extends AbstractImageProvider {
 		addImageFilePath(IMG_16_COMPLEX_GATEWAY, ICONS_16 + "ComplexGateway.png");
 		addImageFilePath(IMG_16_USER_TASK, ICONS_16 + "UserTask.png");
 		addImageFilePath(IMG_16_MANUAL_TASK, ICONS_16 + "ManualTask.png");
+		addImageFilePath(IMG_16_SCRIPT_TASK, ICONS_16 + "ScriptTask.png");
+		addImageFilePath(IMG_16_BUSINESS_RULE_TASK, ICONS_16 + "BusinessRuleTask.png");
+		addImageFilePath(IMG_16_SERVICE_TASK, ICONS_16 + "ServiceTask.png");
+		addImageFilePath(IMG_16_SEND_TASK, ICONS_16 + "SendTask.png");
+		addImageFilePath(IMG_16_RECEIVE_TASK, ICONS_16 + "ReceiveTask.png");
 	}
 }
