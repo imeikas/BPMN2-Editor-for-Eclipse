@@ -28,7 +28,6 @@ public class Bpmn2AdvancedPropertySection extends GFPropertySection implements I
 		if (pe != null) {
 			BaseElement be = (BaseElement) Graphiti.getLinkService().getBusinessObjectForLinkedPictogramElement(pe);
 			composite.setDiagramEditor(((BPMN2Editor) getDiagramEditor()));
-			composite.setPictogramElement(pe);
 			composite.setBaseElement(be);
 		}
 

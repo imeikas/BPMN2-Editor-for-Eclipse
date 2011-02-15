@@ -13,7 +13,6 @@ import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.RecordingCommand;
-import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -34,10 +33,9 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 	protected BaseElement be;
 	protected BPMN2Editor bpmn2Editor;
 	protected final DataBindingContext bindingContext;
-	private final ArrayList<Widget> widgets = new ArrayList<Widget>();
+	protected final ArrayList<Widget> widgets = new ArrayList<Widget>();
 	protected final ArrayList<Binding> bindings = new ArrayList<Binding>();
 	protected final Composite parent;
-	private PictogramElement pe;
 	protected final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
 
 	public AbstractBpmn2PropertiesComposite(Composite parent, int style) {
@@ -59,36 +57,20 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 	public final void setBaseElement(final BaseElement be) {
 		this.be = be;
 		cleanBindings();
-		createBindings();
+		if (be != null) {
+			createBindings();
+		}
+		layout(true, true);
+		parent.setSize(parent.computeSize(parent.getSize().x, SWT.DEFAULT, true));
+
 	}
 
 	public abstract void createBindings();
-
-	protected Text createIntInput(String name) {
-		createLabel(name);
-		Text text = new Text(this, SWT.NONE);
-		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		toolkit.adapt(text, true, true);
-		widgets.add(text);
-
-		return text;
-	}
-
-	protected Button createBooleanInput(String name) {
-		createLabel(name);
-
-		Button button = new Button(this, SWT.CHECK);
-		toolkit.adapt(button, true, true);
-		widgets.add(button);
-
-		return button;
-	}
 
 	protected Text createTextInput(String name) {
 		createLabel(name);
 
 		Text text = new Text(this, SWT.NONE);
-		// FIXME:add verify listener
 		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		toolkit.adapt(text, true, true);
 		widgets.add(text);
@@ -96,7 +78,7 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 		return text;
 	}
 
-	private void createLabel(String name) {
+	protected void createLabel(String name) {
 		Label label = new Label(this, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		toolkit.adapt(label, true, true);
@@ -185,10 +167,6 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 					}
 				}));
 		return bindValue;
-	}
-
-	public void setPictogramElement(PictogramElement pe) {
-		this.pe = pe;
 	}
 
 	private void cleanBindings() {
