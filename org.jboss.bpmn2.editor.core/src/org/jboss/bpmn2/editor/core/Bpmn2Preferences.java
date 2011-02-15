@@ -17,7 +17,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -26,7 +25,6 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.BasicExtendedMetaData;
 import org.eclipse.emf.ecore.util.ExtendedMetaData;
-import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
@@ -37,8 +35,6 @@ public class Bpmn2Preferences {
 	private final Preferences prefs;
 
 	private static HashSet<EClass> elementSet = new HashSet<EClass>();
-
-	private static ComposedAdapterFactory adapterFactory;
 
 	private static final EStructuralFeature taskName;
 	private final static EStructuralFeature waitFor;
@@ -90,7 +86,6 @@ public class Bpmn2Preferences {
 		ArrayList<ToolEnablement> ret = new ArrayList<ToolEnablement>();
 
 		for (EClass e : elementSet) {
-			AdapterFactory factoryForType = adapterFactory.getFactoryForType(e);
 
 			ToolEnablement tool = new ToolEnablement();
 			tool.setTool(e);
