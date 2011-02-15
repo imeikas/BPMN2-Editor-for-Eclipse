@@ -12,7 +12,6 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.BasicFeatureMap;
 import org.eclipse.emf.ecore.util.FeatureMap.Entry;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.jboss.bpmn2.editor.core.Bpmn2Preferences;
@@ -62,7 +61,5 @@ public class JbpmPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 				}
 			}
 		}
-		layout(true, true);
-		parent.setSize(parent.computeSize(parent.getSize().x, SWT.DEFAULT, true));
 	}
 }

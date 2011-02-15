@@ -1,6 +1,5 @@
 package org.jboss.bpmn2.editor.core.features.gateway;
 
-import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
@@ -16,11 +15,7 @@ public class CreateParallelGatewayFeature extends AbstractCreateFlowElementFeatu
 	
 	@Override
     protected ParallelGateway createFlowElement(ICreateContext context) {
-		ParallelGateway gateway = ModelHandler.FACTORY.createParallelGateway();
-		if(support.isTargetLane(context)) {
-			gateway.getLanes().add((Lane) getBusinessObjectForPictogramElement(context.getTargetContainer()));
-		}
-		return gateway;
+		return ModelHandler.FACTORY.createParallelGateway();
     }
 	
 	@Override

@@ -85,7 +85,6 @@ public abstract class FeatureSupport {
 		IGaService service = Graphiti.getGaService();
 		int height = 0;
 		int width = container.getGraphicsAlgorithm().getWidth() - 15;
-		List<GraphicsAlgorithm> gaList = new ArrayList<GraphicsAlgorithm>();
 
 		for (Shape s : container.getChildren()) {
 			Object bo = getBusinessObject(s);
@@ -98,7 +97,6 @@ public abstract class FeatureSupport {
 				} else {
 					service.setSize(ga, width, ga.getHeight());
 				}
-				gaList.add(ga);
 			}
 		}
 

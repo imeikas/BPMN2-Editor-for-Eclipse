@@ -1,7 +1,5 @@
 package org.jboss.bpmn2.editor.ui.preferences;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -180,7 +178,7 @@ public class ToolEnablementPropertyPage extends PropertyPage {
 		try {
 			updateToolEnablement(tools, Arrays.asList(checkboxTreeViewer.getCheckedElements()));
 		} catch (BackingStoreException e) {
-			Activator.logError(e);
+			Activator.showErrorWithLogging(e);
 		}
 		return true;
 	}

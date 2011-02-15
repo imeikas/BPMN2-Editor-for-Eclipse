@@ -9,6 +9,7 @@ import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.bpmn2.IntermediateCatchEvent;
 import org.eclipse.bpmn2.IntermediateThrowEvent;
 import org.eclipse.bpmn2.Lane;
+import org.eclipse.bpmn2.ManualTask;
 import org.eclipse.bpmn2.MessageFlow;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.Participant;
@@ -16,6 +17,7 @@ import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.bpmn2.Task;
 import org.eclipse.bpmn2.TextAnnotation;
+import org.eclipse.bpmn2.UserTask;
 import org.eclipse.graphiti.ui.platform.AbstractImageProvider;
 
 public class ImageProvider extends AbstractImageProvider {
@@ -40,7 +42,9 @@ public class ImageProvider extends AbstractImageProvider {
 	public static final String IMG_16_MESSAGE_FLOW = PREFIX + MessageFlow.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_INTERMEDIATE_CATCH_EVENT = PREFIX + IntermediateCatchEvent.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_INTERMEDIATE_THORW_EVENT = PREFIX + IntermediateThrowEvent.class.getSimpleName().toLowerCase() + dot16;
-	public static final String IMG_16_COMPLEX_GATEWAYT = PREFIX + ComplexGateway.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_COMPLEX_GATEWAY = PREFIX + ComplexGateway.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_USER_TASK = PREFIX + UserTask.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_MANUAL_TASK = PREFIX + ManualTask.class.getSimpleName().toLowerCase() + dot16;
 	
 	@Override
 	protected void addAvailableImages() {
@@ -59,6 +63,8 @@ public class ImageProvider extends AbstractImageProvider {
 		addImageFilePath(IMG_16_MESSAGE_FLOW, ICONS_16 + "MessageFlow.png");
 		addImageFilePath(IMG_16_INTERMEDIATE_CATCH_EVENT, ICONS_16 + "IntermediateCatchEvent.png");
 		addImageFilePath(IMG_16_INTERMEDIATE_THORW_EVENT, ICONS_16 + "IntermediateThrowEvent.png");
-		addImageFilePath(IMG_16_COMPLEX_GATEWAYT, ICONS_16 + "ComplexGateway.png");
+		addImageFilePath(IMG_16_COMPLEX_GATEWAY, ICONS_16 + "ComplexGateway.png");
+		addImageFilePath(IMG_16_USER_TASK, ICONS_16 + "UserTask.png");
+		addImageFilePath(IMG_16_MANUAL_TASK, ICONS_16 + "ManualTask.png");
 	}
 }
