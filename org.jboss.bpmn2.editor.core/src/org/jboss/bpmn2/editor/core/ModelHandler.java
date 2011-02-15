@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.graphiti.mm.pictograms.Diagram;
 
 public class ModelHandler {
 	public static final Bpmn2Factory FACTORY = Bpmn2Factory.eINSTANCE;
@@ -71,6 +72,23 @@ public class ModelHandler {
 		return addFlowElement(getInternalParticipant(), elem);
 	}
 
+	public void moveFlowNode(FlowNode node, Participant source, Participant target) {
+		if (!source.equals(target)) {
+			Process sourceProcess = getOrCreateProcess(source);
+			Process targetProcess = getOrCreateProcess(target);
+			moveFlowNode(node, sourceProcess, targetProcess);
+		}
+	}
+
+	private void moveFlowNode(FlowNode node, Process sourceProcess, Process targetProcess) {
+		sourceProcess.getFlowElements().remove(node);
+		targetProcess.getFlowElements().add(node);
+		for (SequenceFlow flow : node.getOutgoing()) {
+			targetProcess.getFlowElements().add(flow);
+			sourceProcess.getFlowElements().remove(flow);
+		}
+	}
+
 	public Participant addParticipant() {
 		Collaboration collaboration = getCollaboration();
 		Participant participant = FACTORY.createParticipant();
@@ -85,17 +103,38 @@ public class ModelHandler {
 	}
 
 	public Lane addLane(Participant participant) {
-		LaneSet laneSet = FACTORY.createLaneSet();
 		Lane lane = FACTORY.createLane();
-		laneSet.getLanes().add(lane);
 		Process process = getOrCreateProcess(participant);
-		process.getLaneSets().add(laneSet);
+		if (process.getLaneSets().isEmpty()) {
+			process.getLaneSets().add(FACTORY.createLaneSet());
+		}
+		process.getLaneSets().get(0).getLanes().add(lane);
 		return lane;
+	}
+
+	@Deprecated
+	public void moveLane(Lane movedLane, Participant targetParticipant) {
+		Participant sourceParticipant = getParticipant(movedLane);
+		moveLane(movedLane, sourceParticipant, targetParticipant);
+	}
+
+	public void moveLane(Lane movedLane, Participant sourceParticipant, Participant targetParticipant) {
+		Process sourceProcess = getOrCreateProcess(sourceParticipant);
+		Process targetProcess = getOrCreateProcess(targetParticipant);
+		for (FlowNode node : movedLane.getFlowNodeRefs()) {
+			moveFlowNode(node, sourceProcess, targetProcess);
+		}
+		if (movedLane.getChildLaneSet() != null && !movedLane.getChildLaneSet().getLanes().isEmpty()) {
+			for (Lane lane : movedLane.getChildLaneSet().getLanes()) {
+				moveLane(lane, sourceParticipant, targetParticipant);
+			}
+		}
 	}
 
 	private Process getOrCreateProcess(Participant participant) {
 		if (participant.getProcessRef() == null) {
 			Process process = FACTORY.createProcess();
+			process.setName("Process for " + participant.getName());
 			getDefinitions().getRootElements().add(process);
 			participant.setProcessRef(process);
 		}
@@ -198,6 +237,12 @@ public class ModelHandler {
 	}
 
 	public Participant getParticipant(Object o) {
+		if (o instanceof Diagram)
+			return getInternalParticipant();
+
+		if (o instanceof Participant)
+			return (Participant) o;
+
 		for (Participant p : getCollaboration().getParticipants()) {
 
 			if (p.getProcessRef() == null)
@@ -209,7 +254,7 @@ public class ModelHandler {
 				return p;
 			else if (process.getFlowElements().contains(o))
 				return p;
-			
+
 		}
 		return null;
 	}
@@ -231,7 +276,10 @@ public class ModelHandler {
 	}
 
 	private boolean isSubLane(LaneSet set, Lane lane) {
-		if (set != null && set.getLanes().contains(lane))
+		if (set == null)
+			return false;
+
+		if (set.getLanes().contains(lane))
 			return true;
 
 		boolean found = false;

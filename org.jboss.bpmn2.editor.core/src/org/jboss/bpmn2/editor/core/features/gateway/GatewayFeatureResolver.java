@@ -6,6 +6,7 @@ import java.util.List;
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.EventBasedGateway;
 import org.eclipse.bpmn2.ExclusiveGateway;
+import org.eclipse.bpmn2.Gateway;
 import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.graphiti.features.IAddFeature;
@@ -18,6 +19,7 @@ import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureResolver;
+import org.jboss.bpmn2.editor.core.features.MoveFlowNodeFeature;
 
 public class GatewayFeatureResolver implements FeatureResolver {
 
@@ -66,7 +68,10 @@ public class GatewayFeatureResolver implements FeatureResolver {
 
 	@Override
     public IMoveShapeFeature getMoveFeature(IFeatureProvider fp, BaseElement e) {
-	    return null; // NOT YET SUPPORTED
+		if(e instanceof Gateway) {
+			return new MoveFlowNodeFeature(fp);
+		}
+	    return null;
     }
 
 	@Override

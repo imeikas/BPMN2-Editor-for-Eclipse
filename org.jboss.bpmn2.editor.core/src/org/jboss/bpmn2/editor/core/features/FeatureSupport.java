@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.Participant;
@@ -13,7 +14,9 @@ import org.eclipse.graphiti.features.context.IPictogramElementContext;
 import org.eclipse.graphiti.features.context.ITargetContext;
 import org.eclipse.graphiti.mm.algorithms.AbstractText;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
+import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.eclipse.graphiti.mm.algorithms.Text;
+import org.eclipse.graphiti.mm.algorithms.styles.Point;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
@@ -71,22 +74,21 @@ public abstract class FeatureSupport {
 	private ContainerShape getRootContainer(ContainerShape container) {
 		ContainerShape parent = container.getContainer();
 		Object bo = getBusinessObject(parent);
-		if (bo != null && bo instanceof Lane) {
+		if (bo != null && (bo instanceof Lane || bo instanceof Participant)) {
 			return getRootContainer(parent);
 		}
 		return container;
 	}
 
 	private Dimension resize(ContainerShape container) {
-		Lane lane = (Lane) getBusinessObject(container);
+		BaseElement elem = (BaseElement) getBusinessObject(container);
 		IGaService service = Graphiti.getGaService();
 		int height = 0;
 		int width = container.getGraphicsAlgorithm().getWidth() - 15;
-		List<GraphicsAlgorithm> gaList = new ArrayList<GraphicsAlgorithm>();
 
 		for (Shape s : container.getChildren()) {
 			Object bo = getBusinessObject(s);
-			if (bo != null && bo instanceof Lane && !bo.equals(lane)) {
+			if (bo != null && (bo instanceof Lane || bo instanceof Participant) && !bo.equals(elem)) {
 				GraphicsAlgorithm ga = s.getGraphicsAlgorithm();
 				service.setLocation(ga, 15, height);
 				height += ga.getHeight() - 1;
@@ -95,7 +97,6 @@ public abstract class FeatureSupport {
 				} else {
 					service.setSize(ga, width, ga.getHeight());
 				}
-				gaList.add(ga);
 			}
 		}
 
@@ -109,8 +110,14 @@ public abstract class FeatureSupport {
 			service.setSize(ga, newWidth, newHeight);
 
 			for (Shape s : container.getChildren()) {
-				if (s.getGraphicsAlgorithm() instanceof Text) {
+				GraphicsAlgorithm childGa = s.getGraphicsAlgorithm();
+				if (childGa instanceof Text) {
 					s.getGraphicsAlgorithm().setHeight(newHeight);
+				} else if (childGa instanceof Polyline) {
+					Polyline line = (Polyline) childGa;
+	        		Point firstPoint = line.getPoints().get(0);
+	        		Point newPoint = service.createPoint(firstPoint.getX(), newHeight);
+	        		line.getPoints().set(1, newPoint);
 				}
 			}
 
@@ -119,14 +126,15 @@ public abstract class FeatureSupport {
 	}
 
 	private Dimension resizeRecursively(ContainerShape root) {
-		Lane lane = (Lane) getBusinessObject(root);
+		BaseElement elem = (BaseElement) getBusinessObject(root);
 		List<Dimension> dimensions = new ArrayList<Dimension>();
-		int foundLanes = 0;
+		IGaService service = Graphiti.getGaService();
+		int foundContainers = 0;
 
 		for (Shape s : root.getChildren()) {
 			Object bo = getBusinessObject(s);
-			if (s instanceof ContainerShape && bo != null && bo instanceof Lane && !bo.equals(lane)) {
-				foundLanes += 1;
+			if (checkForResize(elem, s, bo)) {
+				foundContainers += 1;
 				Dimension d = resizeRecursively((ContainerShape) s);
 				if (d != null) {
 					dimensions.add(d);
@@ -137,18 +145,34 @@ public abstract class FeatureSupport {
 		if (dimensions.isEmpty()) {
 			GraphicsAlgorithm ga = root.getGraphicsAlgorithm();
 			for (Shape s : root.getChildren()) {
-				if (s.getGraphicsAlgorithm() instanceof Text) {
+				GraphicsAlgorithm childGa = s.getGraphicsAlgorithm();
+				if (childGa instanceof Text) {
 					s.getGraphicsAlgorithm().setHeight(ga.getHeight());
+				} else if (childGa instanceof Polyline) {
+					Polyline line = (Polyline) childGa;
+	        		Point firstPoint = line.getPoints().get(0);
+	        		Point newPoint = service.createPoint(firstPoint.getX(), ga.getHeight());
+	        		line.getPoints().set(1, newPoint);
 				}
 			}
 			return new Dimension(ga.getWidth(), ga.getHeight());
 		}
 
-		if (foundLanes > 0) {
+		if (foundContainers > 0) {
 			return resize(root);
 		}
 
 		return getMaxDimension(dimensions);
+	}
+
+	private boolean checkForResize(BaseElement currentBo, Shape s, Object bo) {
+		if (!(s instanceof ContainerShape))
+			return false;
+		if (bo == null)
+			return false;
+		if (!(bo instanceof Lane || bo instanceof Participant))
+			return false;
+		return !bo.equals(currentBo);
 	}
 
 	private Dimension getMaxDimension(List<Dimension> dimensions) {
@@ -170,12 +194,12 @@ public abstract class FeatureSupport {
 
 	private void postResizeFixLenghts(ContainerShape root) {
 		IGaService service = Graphiti.getGaService();
-		Lane lane = (Lane) getBusinessObject(root);
+		BaseElement elem = (BaseElement) getBusinessObject(root);
 		int width = root.getGraphicsAlgorithm().getWidth() - 15;
 
 		for (Shape s : root.getChildren()) {
 			Object o = getBusinessObject(s);
-			if (s instanceof ContainerShape && o != null && o instanceof Lane && !o.equals(lane)) {
+			if (checkForResize(elem, s, o)) {
 				GraphicsAlgorithm ga = s.getGraphicsAlgorithm();
 				service.setSize(ga, width, ga.getHeight());
 				postResizeFixLenghts((ContainerShape) s);
