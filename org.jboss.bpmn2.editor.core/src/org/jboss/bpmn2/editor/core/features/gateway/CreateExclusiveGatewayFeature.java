@@ -1,7 +1,6 @@
 package org.jboss.bpmn2.editor.core.features.gateway;
 
 import org.eclipse.bpmn2.ExclusiveGateway;
-import org.eclipse.bpmn2.Lane;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.jboss.bpmn2.editor.core.ImageProvider;
@@ -16,11 +15,7 @@ public class CreateExclusiveGatewayFeature extends AbstractCreateFlowElementFeat
 
 	@Override
     protected ExclusiveGateway createFlowElement(ICreateContext context) {
-		ExclusiveGateway gateway = ModelHandler.FACTORY.createExclusiveGateway();
-		if(support.isTargetLane(context)) {
-			gateway.getLanes().add((Lane) getBusinessObjectForPictogramElement(context.getTargetContainer()));
-		}
-		return gateway;
+		return ModelHandler.FACTORY.createExclusiveGateway();
     }
 	
 	@Override
