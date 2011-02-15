@@ -72,6 +72,23 @@ public class ModelHandler {
 		return addFlowElement(getInternalParticipant(), elem);
 	}
 
+	public void moveFlowNode(FlowNode node, Participant source, Participant target) {
+		if (!source.equals(target)) {
+			Process sourceProcess = getOrCreateProcess(source);
+			Process targetProcess = getOrCreateProcess(target);
+			moveFlowNode(node, sourceProcess, targetProcess);
+		}
+	}
+
+	private void moveFlowNode(FlowNode node, Process sourceProcess, Process targetProcess) {
+		sourceProcess.getFlowElements().remove(node);
+		targetProcess.getFlowElements().add(node);
+		for (SequenceFlow flow : node.getOutgoing()) {
+			targetProcess.getFlowElements().add(flow);
+			sourceProcess.getFlowElements().remove(flow);
+		}
+	}
+
 	public Participant addParticipant() {
 		Collaboration collaboration = getCollaboration();
 		Participant participant = FACTORY.createParticipant();
@@ -88,36 +105,31 @@ public class ModelHandler {
 	public Lane addLane(Participant participant) {
 		Lane lane = FACTORY.createLane();
 		Process process = getOrCreateProcess(participant);
-		if(process.getLaneSets().isEmpty()) {
+		if (process.getLaneSets().isEmpty()) {
 			process.getLaneSets().add(FACTORY.createLaneSet());
 		}
 		process.getLaneSets().get(0).getLanes().add(lane);
 		return lane;
 	}
-	
+
 	@Deprecated
 	public void moveLane(Lane movedLane, Participant targetParticipant) {
 		Participant sourceParticipant = getParticipant(movedLane);
 		moveLane(movedLane, sourceParticipant, targetParticipant);
 	}
-	
+
 	public void moveLane(Lane movedLane, Participant sourceParticipant, Participant targetParticipant) {
 		Process sourceProcess = getOrCreateProcess(sourceParticipant);
 		Process targetProcess = getOrCreateProcess(targetParticipant);
 		for (FlowNode node : movedLane.getFlowNodeRefs()) {
-			targetProcess.getFlowElements().add(node);
-			sourceProcess.getFlowElements().remove(node);
-			for(SequenceFlow flow : node.getOutgoing()) {
-				targetProcess.getFlowElements().add(flow);
-				sourceProcess.getFlowElements().remove(flow);
-			}
+			moveFlowNode(node, sourceProcess, targetProcess);
 		}
 		if (movedLane.getChildLaneSet() != null && !movedLane.getChildLaneSet().getLanes().isEmpty()) {
 			for (Lane lane : movedLane.getChildLaneSet().getLanes()) {
 				moveLane(lane, sourceParticipant, targetParticipant);
 			}
 		}
-    }
+	}
 
 	private Process getOrCreateProcess(Participant participant) {
 		if (participant.getProcessRef() == null) {
@@ -227,6 +239,9 @@ public class ModelHandler {
 	public Participant getParticipant(Object o) {
 		if (o instanceof Diagram)
 			return getInternalParticipant();
+
+		if (o instanceof Participant)
+			return (Participant) o;
 
 		for (Participant p : getCollaboration().getParticipants()) {
 

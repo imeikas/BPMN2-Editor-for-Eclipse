@@ -20,6 +20,7 @@ import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.DirectEditFlowElementFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureResolver;
+import org.jboss.bpmn2.editor.core.features.MoveFlowNodeFeature;
 
 public class EventFeatureResolver implements FeatureResolver {
 
@@ -77,7 +78,10 @@ public class EventFeatureResolver implements FeatureResolver {
 
 	@Override
 	public IMoveShapeFeature getMoveFeature(IFeatureProvider fp, BaseElement e) {
-		return null; // NOT SUPPORTED YET
+		if(e instanceof Event) {
+			return new MoveFlowNodeFeature(fp);
+		}
+		return null;
 	}
 
 	@Override

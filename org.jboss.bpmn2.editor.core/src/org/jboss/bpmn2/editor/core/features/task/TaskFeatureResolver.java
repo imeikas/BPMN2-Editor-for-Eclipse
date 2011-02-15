@@ -15,6 +15,7 @@ import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureResolver;
+import org.jboss.bpmn2.editor.core.features.MoveFlowNodeFeature;
 
 public class TaskFeatureResolver implements FeatureResolver {
 
@@ -64,7 +65,10 @@ public class TaskFeatureResolver implements FeatureResolver {
 
 	@Override
     public IMoveShapeFeature getMoveFeature(IFeatureProvider fp, BaseElement e) {
-	    return null; // NOT YET SUPPORTED
+		if(e instanceof Task) {
+			return new MoveFlowNodeFeature(fp);
+		}
+	    return null;
     }
 
 	@Override
