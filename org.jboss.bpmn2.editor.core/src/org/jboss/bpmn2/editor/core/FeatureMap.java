@@ -21,7 +21,14 @@ import org.jboss.bpmn2.editor.core.features.gateway.CreateInclusiveGatewayFeatur
 import org.jboss.bpmn2.editor.core.features.gateway.CreateParallelGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.lane.CreateLaneFeature;
 import org.jboss.bpmn2.editor.core.features.participant.CreateParticipantFeature;
+import org.jboss.bpmn2.editor.core.features.task.CreateBusinessRuleTaskFeature;
+import org.jboss.bpmn2.editor.core.features.task.CreateManualTaskFeature;
+import org.jboss.bpmn2.editor.core.features.task.CreateReceiveTaskFeature;
+import org.jboss.bpmn2.editor.core.features.task.CreateScriptTaskFeature;
+import org.jboss.bpmn2.editor.core.features.task.CreateSendTaskFeature;
+import org.jboss.bpmn2.editor.core.features.task.CreateServiceTaskFeature;
 import org.jboss.bpmn2.editor.core.features.task.CreateTaskFeature;
+import org.jboss.bpmn2.editor.core.features.task.CreateUserTaskFeature;
 
 public class FeatureMap {
 	public static Map<EClass, Class<? extends IFeature>> FEATURE_MAP;
@@ -44,6 +51,13 @@ public class FeatureMap {
 		featureMap.put(i.getMessageFlow(), CreateMessageFlowFeature.class);
 		featureMap.put(i.getIntermediateThrowEvent(), CreateIntermediateThrowEventFeature.class);
 		featureMap.put(i.getIntermediateCatchEvent(), CreateIntermediateCatchEventFeature.class);
+		featureMap.put(i.getManualTask(), CreateManualTaskFeature.class);
+		featureMap.put(i.getUserTask(), CreateUserTaskFeature.class);
+		featureMap.put(i.getScriptTask(), CreateScriptTaskFeature.class);
+		featureMap.put(i.getBusinessRuleTask(), CreateBusinessRuleTaskFeature.class);
+		featureMap.put(i.getServiceTask(), CreateServiceTaskFeature.class);
+		featureMap.put(i.getSendTask(), CreateSendTaskFeature.class);
+		featureMap.put(i.getReceiveTask(), CreateReceiveTaskFeature.class);
 		FEATURE_MAP = Collections.unmodifiableMap(featureMap);
 	}
 

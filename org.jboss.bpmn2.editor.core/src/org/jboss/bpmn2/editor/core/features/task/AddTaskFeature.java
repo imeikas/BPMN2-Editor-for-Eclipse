@@ -22,29 +22,29 @@ import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
 public class AddTaskFeature extends AbstractAddShapeFeature {
-
-	public AddTaskFeature(IFeatureProvider fp) {
-		super(fp);
-	}
-
-	private FeatureSupport support = new FeatureSupport() {
+	
+	protected FeatureSupport support = new FeatureSupport() {
 		@Override
 		public Object getBusinessObject(PictogramElement element) {
 			return getBusinessObjectForPictogramElement(element);
 		}
 	};
+	
+	public AddTaskFeature(IFeatureProvider fp) {
+	    super(fp);
+    }
 
 	@Override
-	public boolean canAdd(IAddContext context) {
+    public boolean canAdd(IAddContext context) {
 		boolean isTask = context.getNewObject() instanceof Task;
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
 		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context);
 		boolean intoParticipant = support.isTargetParticipant(context);
 		return isTask && (intoDiagram || intoLane || intoParticipant);
-	}
+    }
 
 	@Override
-	public PictogramElement add(IAddContext context) {
+    public PictogramElement add(IAddContext context) {
 		Task addedTask = (Task) context.getNewObject();
 
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
@@ -58,11 +58,12 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
 		gaService.setRenderingStyle(roundedRectangle, gradient);
 
-		gaService.setLocationAndSize(roundedRectangle, context.getX(), context.getY(), WIDTH, HEIGHT);
+		gaService.setLocationAndSize(roundedRectangle, context.getX(), context.getY(), getWidth(), HEIGHT);
 
 		if (addedTask.eResource() == null) {
 			getDiagram().eResource().getContents().add(addedTask);
 		}
+		
 		link(containerShape, addedTask);
 
 		Shape shape = peCreateService.createShape(containerShape, false);
@@ -71,13 +72,20 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 		text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		text.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 		text.getFont().setBold(true);
-		gaService.setLocationAndSize(text, 0, 0, WIDTH, 20);
-
-		// create link and wire it
+		gaService.setLocationAndSize(text, 0, 0, getWidth(), 20);
+		
 		link(shape, addedTask);
-
+		
+		decorateTask(roundedRectangle, context);
+		
 		peCreateService.createChopboxAnchor(containerShape);
 		layoutPictogramElement(containerShape);
 		return containerShape;
+    }
+	
+	protected void decorateTask(RoundedRectangle rect, IAddContext context) {}
+	
+	protected int getWidth() {
+		return WIDTH;
 	}
 }
