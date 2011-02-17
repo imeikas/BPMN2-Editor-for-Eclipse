@@ -26,22 +26,26 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 class ViewContentProvider implements IStructuredContentProvider, ITreeContentProvider {
 	private TreeParent invisibleRoot;
 
+	@Override
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-		System.out.println(v);
 	}
 
+	@Override
 	public void dispose() {
 	}
 
+	@Override
 	public Object[] getElements(Object parent) {
 		if (parent instanceof IViewSite) {
-			if (invisibleRoot == null)
+			if (invisibleRoot == null) {
 				initialize();
+			}
 			return getChildren(invisibleRoot);
 		}
 		return getChildren(parent);
 	}
 
+	@Override
 	public Object getParent(Object child) {
 		if (child instanceof TreeObject) {
 			return ((TreeObject) child).getParent();
@@ -49,6 +53,7 @@ class ViewContentProvider implements IStructuredContentProvider, ITreeContentPro
 		return null;
 	}
 
+	@Override
 	public Object[] getChildren(Object parent) {
 		if (parent instanceof TreeParent) {
 			return ((TreeParent) parent).getChildren();
@@ -56,9 +61,11 @@ class ViewContentProvider implements IStructuredContentProvider, ITreeContentPro
 		return new Object[0];
 	}
 
+	@Override
 	public boolean hasChildren(Object parent) {
-		if (parent instanceof TreeParent)
+		if (parent instanceof TreeParent) {
 			return ((TreeParent) parent).hasChildren();
+		}
 		return false;
 	}
 
@@ -72,8 +79,9 @@ class ViewContentProvider implements IStructuredContentProvider, ITreeContentPro
 
 	void updateModel(ModelHandler mh) {
 		invisibleRoot.removeChildren();
-		if (mh == null)
+		if (mh == null) {
 			return;
+		}
 
 		Definitions definitions = mh.getDefinitions();
 
@@ -95,13 +103,14 @@ class ViewContentProvider implements IStructuredContentProvider, ITreeContentPro
 	private void createLaneSets(TreeParent proc, List<LaneSet> laneSets) {
 		for (LaneSet laneSet : laneSets) {
 			createLaneSetTree(proc, laneSet);
-			
+
 		}
 	}
 
 	private void createLaneSetTree(TreeParent proc, LaneSet laneSet) {
-		if (laneSet == null)
+		if (laneSet == null) {
 			return;
+		}
 		for (Lane lane : laneSet.getLanes()) {
 			TreeParent parent = new TreeParent(lane);
 			proc.addChild(parent);
@@ -123,12 +132,14 @@ class ViewContentProvider implements IStructuredContentProvider, ITreeContentPro
 		if (selection instanceof StructuredSelection) {
 			StructuredSelection sel = (StructuredSelection) selection;
 			List<Object> selected = Arrays.asList(sel.toArray());
-			if (selected.size() == 0 || !(selected.get(0) instanceof ContainerShapeEditPart))
+			if (selected.size() == 0 || !(selected.get(0) instanceof ContainerShapeEditPart)) {
 				return null;
+			}
 
 			PictogramLink link = ((ContainerShapeEditPart) selected.get(0)).getPictogramElement().getLink();
-			if (link == null)
+			if (link == null) {
 				return null;
+			}
 
 			EList<EObject> businessObjects = link.getBusinessObjects();
 			TreeObject[] children = invisibleRoot.getChildren();

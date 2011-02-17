@@ -81,7 +81,14 @@
                     label="BPMN2">
               </propertyTab>
               <propertyTab
-                    afterTab="bpmn2.main.tab"
+                    afterTab="bpmn2.advanced.tab"
+                    category="BPMN2"
+                    id="bpmn2.advanced.tab"
+                    label="Advanced">
+              </propertyTab>
+              
+              <propertyTab
+                    afterTab="bpmn2.advanced.tab"
                     category="BPMN2"
                     id="bpmn2.jbpm.tab"
                     label="jBPM">
@@ -93,15 +100,21 @@
           point="org.eclipse.ui.views.properties.tabbed.propertySections">
           <propertySections contributorId="BPMN2.PropertyContributor">
               <propertySection
-                    class="org.jboss.bpmn2.editor.ui.property.Bpmn2AdvancedPropertySection"
+                    class="org.jboss.bpmn2.editor.ui.property.Bpmn2MainPropertySection"
                     filter="org.jboss.bpmn2.editor.ui.property.Bpmn2PropertyFilter"
                     id="bpmn2.main.tab.id"
                     tab="bpmn2.main.tab">
               </propertySection>
               <propertySection
+                    class="org.jboss.bpmn2.editor.ui.property.AdvancedPropertySection"
+                    filter="org.jboss.bpmn2.editor.ui.property.Bpmn2PropertyFilter"
+                    id="bpmn2.advanced.tab"
+                    tab="bpmn2.advanced.tab">
+              </propertySection>
+              <propertySection
                     class="org.jboss.bpmn2.editor.ui.property.JbpmPropertySection"
                     filter="org.jboss.bpmn2.editor.ui.property.Bpmn2PropertyFilter"
-                    id="bpmn2.jbpm.tab."
+                    id="bpmn2.jbpm.tab"
                     tab="bpmn2.jbpm.tab">
               </propertySection>
           </propertySections>
