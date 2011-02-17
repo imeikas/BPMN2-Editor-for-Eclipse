@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.eclipse.graphiti.mm.GraphicsAlgorithmContainer;
 import org.eclipse.graphiti.mm.algorithms.Ellipse;
+import org.eclipse.graphiti.mm.algorithms.Image;
 import org.eclipse.graphiti.mm.algorithms.Polygon;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.eclipse.graphiti.mm.algorithms.Rectangle;
@@ -126,6 +127,18 @@ public class ShapeUtil {
 		return circle;
 	}
 	
+	public static Image createImage(Ellipse ellipse, String imageId) {
+		Image image = gaService.createImage(ellipse, imageId);
+		gaService.setLocationAndSize(image, 8, 8, 20, 20);
+		return image;
+	}
+	
+	public static Polygon createTriangle(Ellipse e) {
+		Polygon polygon = gaService.createPolygon(e, new int[] {16, 4, 28, 26, 7, 26});
+		polygon.setLineWidth(1);
+	    return polygon;
+    }
+	
 	/* OTHER */
 	
 	public static Envelope createEnvelope(Shape container) {
@@ -136,7 +149,7 @@ public class ShapeUtil {
 		Rectangle rect = gaService.createRectangle(container);
 		gaService.setLocationAndSize(rect, x, y, w, h);
 		
-		Polyline line = gaService.createPolyline(rect, new int[] {0, 0, x / 2, y / 2, 2 * w, 0});
+		Polyline line = gaService.createPolyline(rect, new int[] {0, 0, w / 2, h / 2, w, 0});
 		
 		Envelope envelope = new Envelope();
 		envelope.rect = rect;

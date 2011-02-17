@@ -3,6 +3,7 @@ package org.jboss.bpmn2.editor.core;
 import org.eclipse.bpmn2.Association;
 import org.eclipse.bpmn2.BusinessRuleTask;
 import org.eclipse.bpmn2.ComplexGateway;
+import org.eclipse.bpmn2.ConditionalEventDefinition;
 import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.EventBasedGateway;
 import org.eclipse.bpmn2.ExclusiveGateway;
@@ -11,6 +12,7 @@ import org.eclipse.bpmn2.IntermediateCatchEvent;
 import org.eclipse.bpmn2.IntermediateThrowEvent;
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.ManualTask;
+import org.eclipse.bpmn2.MessageEventDefinition;
 import org.eclipse.bpmn2.MessageFlow;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.Participant;
@@ -19,16 +21,20 @@ import org.eclipse.bpmn2.ScriptTask;
 import org.eclipse.bpmn2.SendTask;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.ServiceTask;
+import org.eclipse.bpmn2.SignalEventDefinition;
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.bpmn2.Task;
 import org.eclipse.bpmn2.TextAnnotation;
+import org.eclipse.bpmn2.TimerEventDefinition;
 import org.eclipse.bpmn2.UserTask;
 import org.eclipse.graphiti.ui.platform.AbstractImageProvider;
 
 public class ImageProvider extends AbstractImageProvider {
 	
 	private static final String dot16 = ".16";
+	private static final String dot20 = ".20";
 	private static final String ICONS_16 = "icons/16/";
+	private static final String ICONS_20 = "icons/20/";
 	
 	public static final String PREFIX = ImageProvider.class.getPackage().getName() + ".";
 	
@@ -55,6 +61,13 @@ public class ImageProvider extends AbstractImageProvider {
 	public static final String IMG_16_SERVICE_TASK = PREFIX + ServiceTask.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_SEND_TASK = PREFIX + SendTask.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_RECEIVE_TASK = PREFIX + ReceiveTask.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_CONDITION = PREFIX + ConditionalEventDefinition.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_TIMER = PREFIX + TimerEventDefinition.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_SIGNAL = PREFIX + SignalEventDefinition.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_MESSAGE = PREFIX + MessageEventDefinition.class.getSimpleName().toLowerCase() + dot16;
+	
+	public static final String IMG_20_CONDITION = PREFIX + ConditionalEventDefinition.class.getSimpleName().toLowerCase() + dot20;
+	public static final String IMG_20_TIMER = PREFIX + TimerEventDefinition.class.getSimpleName().toLowerCase() + dot20;
 	
 	@Override
 	protected void addAvailableImages() {
@@ -81,5 +94,12 @@ public class ImageProvider extends AbstractImageProvider {
 		addImageFilePath(IMG_16_SERVICE_TASK, ICONS_16 + "ServiceTask.png");
 		addImageFilePath(IMG_16_SEND_TASK, ICONS_16 + "SendTask.png");
 		addImageFilePath(IMG_16_RECEIVE_TASK, ICONS_16 + "ReceiveTask.png");
+		addImageFilePath(IMG_16_CONDITION, ICONS_16 + "condition_16x16.png");
+		addImageFilePath(IMG_16_TIMER, ICONS_16 + "timer_16x16.png");
+		addImageFilePath(IMG_16_SIGNAL, ICONS_16 + "Signal.png");
+		addImageFilePath(IMG_16_MESSAGE, ICONS_16 + "Message.png");
+		
+		addImageFilePath(IMG_20_CONDITION, ICONS_20 + "condition_20x20.png");
+		addImageFilePath(IMG_20_TIMER, ICONS_20 + "timer_20x20.png");
 	}
 }

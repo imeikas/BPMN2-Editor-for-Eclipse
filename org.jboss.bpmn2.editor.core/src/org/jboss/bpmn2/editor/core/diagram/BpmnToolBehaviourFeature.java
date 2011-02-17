@@ -12,6 +12,7 @@ import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IFeatureChecker;
 import org.eclipse.graphiti.features.IFeatureCheckerHolder;
 import org.eclipse.graphiti.features.IFeatureProvider;
+import org.eclipse.graphiti.features.context.IContext;
 import org.eclipse.graphiti.palette.IPaletteCompartmentEntry;
 import org.eclipse.graphiti.palette.impl.ConnectionCreationToolEntry;
 import org.eclipse.graphiti.palette.impl.ObjectCreationToolEntry;
@@ -72,7 +73,15 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 	@Override
 	public IFeatureChecker getFeatureChecker() {
 		return new FeatureCheckerAdapter(false) {
-			// TODO add dynamic behavior depending on context - find controller for the element and ask allowXXX from controller 
+			@Override
+			public boolean allowAdd(IContext context) {
+			    return super.allowAdd(context);
+			}
+			
+			@Override
+			public boolean allowCreate() {
+			    return super.allowCreate();
+			}
 		};
 	}
 }
