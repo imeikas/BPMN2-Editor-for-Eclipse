@@ -6,6 +6,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.jboss.bpmn2.editor.core.Bpmn2Preferences;
 
 public class AdvancedPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 
@@ -28,7 +29,9 @@ public class AdvancedPropertiesComposite extends AbstractBpmn2PropertiesComposit
 		if (ioGroup != null) {
 			ioGroup.setVisible(false);
 		}
-		if (be instanceof Activity || be instanceof CallableElement) {
+
+		if ((be instanceof Activity || be instanceof CallableElement)
+				&& Bpmn2Preferences.getPreferences(project).isEnabled(be.eClass().getName() + ".ioSpecification")) {
 			if (ioSpecificationComposite == null) {
 				ioGroup = new Group(this, SWT.NONE);
 				ioGroup.setText("IO Specification");

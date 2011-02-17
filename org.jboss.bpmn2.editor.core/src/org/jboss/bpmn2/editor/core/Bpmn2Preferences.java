@@ -21,6 +21,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.BasicExtendedMetaData;
@@ -97,7 +98,7 @@ public class Bpmn2Preferences {
 				attribs.add(a);
 				if (!("id".equals(a.getName()) || "anyAttribute".equals(a.getName()))) {
 					ToolEnablement toolEnablement = new ToolEnablement(a, tool);
-					toolEnablement.setEnabled(isEnabled(e));
+					toolEnablement.setEnabled(isEnabled(e, a));
 					children.add(toolEnablement);
 				}
 			}
@@ -107,14 +108,14 @@ public class Bpmn2Preferences {
 				attribs.add((EAttribute) a);
 				if (!("id".equals(a.getName()) || "anyAttribute".equals(a.getName()))) {
 					ToolEnablement toolEnablement = new ToolEnablement(a, tool);
-					toolEnablement.setEnabled(isEnabled(e));
+					toolEnablement.setEnabled(isEnabled(e, a));
 					children.add(toolEnablement);
 				}
 			}
 
 			for (EReference a : e.getEAllContainments()) {
 				ToolEnablement toolEnablement = new ToolEnablement(a, tool);
-				toolEnablement.setEnabled(isEnabled(e));
+				toolEnablement.setEnabled(isEnabled(e, a));
 				children.add(toolEnablement);
 			}
 			tool.setChildren(children);
@@ -142,12 +143,8 @@ public class Bpmn2Preferences {
 		return prefs.getBoolean(name, b);
 	}
 
-	public boolean isEnabled(EAttribute element) {
-		return prefs.getBoolean(element.getEContainingClass().getName() + "." + element.getName(), true);
-	}
-
-	public boolean isEnabled(EReference element) {
-		return prefs.getBoolean(element.getEContainingClass().getName() + "." + element.getName(), true);
+	public boolean isEnabled(EClass c, ENamedElement element) {
+		return prefs.getBoolean(c.getName() + "." + element.getName(), true);
 	}
 
 	public void setEnabled(ToolEnablement tool, boolean enabled) {

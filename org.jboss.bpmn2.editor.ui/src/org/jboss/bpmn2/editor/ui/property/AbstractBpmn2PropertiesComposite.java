@@ -10,6 +10,8 @@ import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.RecordingCommand;
@@ -37,6 +39,7 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 	protected final ArrayList<Binding> bindings = new ArrayList<Binding>();
 	protected final Composite parent;
 	protected final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
+	protected IProject project;
 
 	/**
 	 * NB! Must call setBaseElement for updating contents and rebuild the UI.
@@ -61,6 +64,8 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 	}
 
 	public final void setBaseElement(BPMN2Editor bpmn2Editor, final BaseElement be) {
+		String projectName = bpmn2Editor.getDiagramTypeProvider().getDiagram().eResource().getURI().segment(1);
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 		setDiagramEditor(bpmn2Editor);
 		setBaseElement(be);
 	}
