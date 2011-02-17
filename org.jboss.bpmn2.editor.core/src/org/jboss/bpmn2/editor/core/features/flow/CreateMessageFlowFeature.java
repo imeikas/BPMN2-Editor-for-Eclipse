@@ -53,7 +53,7 @@ public class CreateMessageFlowFeature extends AbstractCreateConnectionFeature {
 				AddConnectionContext addContext = new AddConnectionContext(context.getSourceAnchor(),
 				        context.getTargetAnchor());
 				addContext.setNewObject(flow);
-
+				
 				return (Connection) getFeatureProvider().addIfPossible(addContext);
 			} catch (IOException e) {
 				Activator.logError(e);

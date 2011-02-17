@@ -11,14 +11,14 @@ import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 
 public abstract class AbstractBaseElementUpdateFeature extends AbstractUpdateFeature {
-	
+
 	protected FeatureSupport support = new FeatureSupport() {
 		@Override
 		public Object getBusinessObject(PictogramElement element) {
 			return getBusinessObjectForPictogramElement(element);
 		}
 	};
-	
+
 	public AbstractBaseElementUpdateFeature(IFeatureProvider fp) {
 		super(fp);
 	}
@@ -41,7 +41,7 @@ public abstract class AbstractBaseElementUpdateFeature extends AbstractUpdateFea
 	@Override
 	public boolean update(IUpdateContext context) {
 		// TODO here it should get an updated picture from the element controller
-		
+
 		PictogramElement pe = context.getPictogramElement();
 		if (pe instanceof ContainerShape) {
 			ContainerShape cs = (ContainerShape) pe;
@@ -55,4 +55,5 @@ public abstract class AbstractBaseElementUpdateFeature extends AbstractUpdateFea
 		}
 		return false;
 	}
+
 }
