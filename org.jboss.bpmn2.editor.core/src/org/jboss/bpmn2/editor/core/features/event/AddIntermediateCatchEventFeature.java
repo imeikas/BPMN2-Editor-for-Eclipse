@@ -7,20 +7,20 @@ import org.eclipse.graphiti.mm.algorithms.Ellipse;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
-public class AddIntermediateCatchEventFeature  extends AbstractAddEventFeature {
+public class AddIntermediateCatchEventFeature extends AbstractAddEventFeature {
 
 	public AddIntermediateCatchEventFeature(IFeatureProvider fp) {
-	    super(fp);
-    }
+		super(fp);
+	}
 
 	@Override
-    protected Class<? extends Event> getEventClass() {
-	    return IntermediateCatchEvent.class;
-    }
-	
+	protected Class<? extends Event> getEventClass() {
+		return IntermediateCatchEvent.class;
+	}
+
 	@Override
 	protected void decorateEllipse(Ellipse e) {
-		Ellipse circle = ShapeUtil.createTriggerCircle(e);
+		Ellipse circle = ShapeUtil.createIntermediateEventCircle(e);
 		circle.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 	}
 }

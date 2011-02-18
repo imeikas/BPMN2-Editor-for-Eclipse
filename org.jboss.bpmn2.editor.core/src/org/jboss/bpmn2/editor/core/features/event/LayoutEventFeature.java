@@ -33,7 +33,6 @@ public class LayoutEventFeature extends AbstractLayoutFeature {
 
 		ContainerShape containerShape = (ContainerShape) context.getPictogramElement();
 		GraphicsAlgorithm containerGa = containerShape.getGraphicsAlgorithm();
-		//IGaService gaService = Graphiti.getGaService();
 
 		if (containerGa.getWidth() < ShapeUtil.EVENT_SIZE || containerGa.getWidth() > ShapeUtil.EVENT_SIZE) {
 			containerGa.setWidth(ShapeUtil.EVENT_SIZE);
@@ -47,34 +46,6 @@ public class LayoutEventFeature extends AbstractLayoutFeature {
 			changed = true;
 		}
 
-		// int containerWidth = containerGa.getWidth();
-		// int containerHeight = containerGa.getHeight();
-		//
-		// Iterator<Shape> iterator = containerShape.getChildren().iterator();
-		// while (iterator.hasNext()) {
-		// Shape shape = (Shape) iterator.next();
-		// GraphicsAlgorithm ga = shape.getGraphicsAlgorithm();
-		// IDimension size = gaService.calculateSize(ga);
-		//
-		// if(containerWidth != size.getWidth()) {
-		// gaService.setWidth(ga, containerWidth);
-		// changed = true;
-		// }
-		//
-		// int sizeForEllipse = containerHeight - ShapeUtil.EVENT_TEXT_AREA;
-		// if (ga instanceof Ellipse) {
-		// if(sizeForEllipse != ga.getHeight()) {
-		// gaService.setHeight(ga, sizeForEllipse);
-		// changed = true;
-		// }
-		// } else if (ga instanceof Text) {
-		// if(sizeForEllipse != ga.getY()) {
-		// gaService.setLocation(ga, 0, sizeForEllipse);
-		// changed = true;
-		// }
-		// }
-		// }
-		//
 		return changed;
 	}
 

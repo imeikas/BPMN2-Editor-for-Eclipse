@@ -22,9 +22,14 @@ import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
+import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.FeatureResolver;
 import org.jboss.bpmn2.editor.core.features.artifact.ArtifactFeatureResolver;
 import org.jboss.bpmn2.editor.core.features.event.EventFeatureResolver;
+import org.jboss.bpmn2.editor.core.features.event.definitions.ConditionalEventDefinitionContainer;
+import org.jboss.bpmn2.editor.core.features.event.definitions.MessageEventDefinitionContainer;
+import org.jboss.bpmn2.editor.core.features.event.definitions.SignalEventDefinitionContainer;
+import org.jboss.bpmn2.editor.core.features.event.definitions.TimerEventDefinitionContainer;
 import org.jboss.bpmn2.editor.core.features.flow.FlowFeatureResolver;
 import org.jboss.bpmn2.editor.core.features.gateway.GatewayFeatureResolver;
 import org.jboss.bpmn2.editor.core.features.lane.LaneFeatureResolver;
@@ -38,6 +43,8 @@ import org.jboss.bpmn2.editor.core.features.task.TaskFeatureResolver;
  * 
  */
 public class BPMNFeatureProvider extends DefaultFeatureProvider {
+
+	private List<FeatureContainer> containers;
 
 	private List<FeatureResolver> resolvers;
 
@@ -57,31 +64,60 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		resolvers.add(new ParticipantFeatureResolver());
 		resolvers.add(new ArtifactFeatureResolver());
 
+		containers = new ArrayList<FeatureContainer>();
+		containers.add(new ConditionalEventDefinitionContainer());
+		containers.add(new MessageEventDefinitionContainer());
+		containers.add(new TimerEventDefinitionContainer());
+		containers.add(new SignalEventDefinitionContainer());
+		
 		List<ICreateFeature> createFeaturesList = new ArrayList<ICreateFeature>();
+		
 		for (FeatureResolver r : resolvers) {
 			createFeaturesList.addAll(r.getCreateFeatures(this));
 		}
+
+		for(FeatureContainer container : containers) {
+			createFeaturesList.add(container.getCreateFeature(this));
+		}
+		
 		createFeatures = createFeaturesList.toArray(new ICreateFeature[createFeaturesList.size()]);
 
 		List<ICreateConnectionFeature> createConnectionFeatureList = new ArrayList<ICreateConnectionFeature>();
 		for (FeatureResolver r : resolvers) {
 			createConnectionFeatureList.addAll(r.getCreateConnectionFeatures(this));
 		}
+		
 		createConnectionFeatures = createConnectionFeatureList
 		        .toArray(new ICreateConnectionFeature[createConnectionFeatureList.size()]);
+
 	}
 
 	@Override
 	public IAddFeature getAddFeature(IAddContext context) {
 		Object o = context.getNewObject();
-		if (o instanceof BaseElement) {
-			for (FeatureResolver r : resolvers) {
-				IAddFeature f = r.getAddFeature(this, (BaseElement) o);
-				if (f != null) {
-					return f;
-				}
+
+		if (isNotBaseElement(o)) {
+			return super.getAddFeature(context);
+		}
+
+		BaseElement element = (BaseElement) o;
+
+		for (FeatureResolver r : resolvers) {
+			IAddFeature f = r.getAddFeature(this, element);
+			if (f != null) {
+				return f;
 			}
 		}
+
+		for (FeatureContainer container : containers) {
+			if (container.canApplyTo(element)) {
+				IAddFeature feature = container.getAddFeature(this);
+				if (feature == null)
+					continue;
+				return feature;
+			}
+		}
+
 		return super.getAddFeature(context);
 	}
 
@@ -168,5 +204,9 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			}
 		}
 		return super.getResizeShapeFeature(context);
+	}
+
+	private boolean isNotBaseElement(Object o) {
+		return !(o instanceof BaseElement);
 	}
 }

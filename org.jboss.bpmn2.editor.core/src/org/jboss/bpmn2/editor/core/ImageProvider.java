@@ -68,6 +68,7 @@ public class ImageProvider extends AbstractImageProvider {
 	
 	public static final String IMG_20_CONDITION = PREFIX + ConditionalEventDefinition.class.getSimpleName().toLowerCase() + dot20;
 	public static final String IMG_20_TIMER = PREFIX + TimerEventDefinition.class.getSimpleName().toLowerCase() + dot20;
+	public static final String IMG_20_MULTIPLE = PREFIX + "multipleeventdefinition" + dot20;
 	
 	@Override
 	protected void addAvailableImages() {
@@ -94,12 +95,13 @@ public class ImageProvider extends AbstractImageProvider {
 		addImageFilePath(IMG_16_SERVICE_TASK, ICONS_16 + "ServiceTask.png");
 		addImageFilePath(IMG_16_SEND_TASK, ICONS_16 + "SendTask.png");
 		addImageFilePath(IMG_16_RECEIVE_TASK, ICONS_16 + "ReceiveTask.png");
-		addImageFilePath(IMG_16_CONDITION, ICONS_16 + "condition_16x16.png");
-		addImageFilePath(IMG_16_TIMER, ICONS_16 + "timer_16x16.png");
+		addImageFilePath(IMG_16_CONDITION, ICONS_16 + "Condition.png");
+		addImageFilePath(IMG_16_TIMER, ICONS_16 + "Timer.png");
 		addImageFilePath(IMG_16_SIGNAL, ICONS_16 + "Signal.png");
 		addImageFilePath(IMG_16_MESSAGE, ICONS_16 + "Message.png");
 		
-		addImageFilePath(IMG_20_CONDITION, ICONS_20 + "condition_20x20.png");
-		addImageFilePath(IMG_20_TIMER, ICONS_20 + "timer_20x20.png");
+		addImageFilePath(IMG_20_CONDITION, ICONS_20 + "Condition.png");
+		addImageFilePath(IMG_20_TIMER, ICONS_20 + "Timer.png");
+		addImageFilePath(IMG_20_MULTIPLE, ICONS_20 + "Multiple.png");
 	}
 }

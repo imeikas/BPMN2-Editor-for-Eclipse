@@ -9,14 +9,14 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.graphiti.features.IFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.CreateAssociationFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.CreateTextAnnotationFeature;
-import org.jboss.bpmn2.editor.core.features.event.CreateConditionalStartEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.CreateEndEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.CreateIntermediateCatchEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.CreateIntermediateThrowEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.CreateMessageStartEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.CreateSignalStartEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.CreateStartEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.CreateTimerStartEventFeature;
+import org.jboss.bpmn2.editor.core.features.event.definitions.ConditionalEventDefinitionContainer.CreateConditionalEventDefinition;
+import org.jboss.bpmn2.editor.core.features.event.definitions.MessageEventDefinitionContainer.CreateMessageEventDefinition;
+import org.jboss.bpmn2.editor.core.features.event.definitions.SignalEventDefinitionContainer.CreateSignalEventDefinition;
+import org.jboss.bpmn2.editor.core.features.event.definitions.TimerEventDefinitionContainer.CreateTimerEventDefinition;
 import org.jboss.bpmn2.editor.core.features.flow.CreateMessageFlowFeature;
 import org.jboss.bpmn2.editor.core.features.flow.CreateSequenceFlowFeature;
 import org.jboss.bpmn2.editor.core.features.gateway.CreateEventBasedGatewayFeature;
@@ -62,10 +62,10 @@ public class FeatureMap {
 		featureMap.put(i.getServiceTask(), CreateServiceTaskFeature.class);
 		featureMap.put(i.getSendTask(), CreateSendTaskFeature.class);
 		featureMap.put(i.getReceiveTask(), CreateReceiveTaskFeature.class);
-		featureMap.put(i.getConditionalEventDefinition(), CreateConditionalStartEventFeature.class);
-		featureMap.put(i.getTimerEventDefinition(), CreateTimerStartEventFeature.class);
-		featureMap.put(i.getSignalEventDefinition(), CreateSignalStartEventFeature.class);
-		featureMap.put(i.getMessageEventDefinition(), CreateMessageStartEventFeature.class);
+		featureMap.put(i.getConditionalEventDefinition(), CreateConditionalEventDefinition.class);
+		featureMap.put(i.getTimerEventDefinition(), CreateTimerEventDefinition.class);
+		featureMap.put(i.getSignalEventDefinition(), CreateSignalEventDefinition.class);
+		featureMap.put(i.getMessageEventDefinition(), CreateMessageEventDefinition.class);
 		FEATURE_MAP = Collections.unmodifiableMap(featureMap);
 	}
 
