@@ -149,7 +149,7 @@ public class ToolEnablementPropertyPage extends PropertyPage {
 	}
 
 	private void initData() {
-		preferences = Bpmn2Preferences.getPreferences((IProject) getElement());
+		preferences = Bpmn2Preferences.getPreferences((IProject) getElement().getAdapter(IProject.class));
 
 		reloadPreferences();
 	}
