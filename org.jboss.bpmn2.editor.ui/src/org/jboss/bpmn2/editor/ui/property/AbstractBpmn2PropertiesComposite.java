@@ -10,6 +10,8 @@ import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.RecordingCommand;
@@ -37,7 +39,14 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 	protected final ArrayList<Binding> bindings = new ArrayList<Binding>();
 	protected final Composite parent;
 	protected final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
+	protected IProject project;
 
+	/**
+	 * NB! Must call setBaseElement for updating contents and rebuild the UI.
+	 * 
+	 * @param parent
+	 * @param style
+	 */
 	public AbstractBpmn2PropertiesComposite(Composite parent, int style) {
 		super(parent, style);
 		this.parent = parent;
@@ -54,7 +63,18 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 
 	}
 
-	public final void setBaseElement(final BaseElement be) {
+	public final void setBaseElement(BPMN2Editor bpmn2Editor, final BaseElement be) {
+		String projectName = bpmn2Editor.getDiagramTypeProvider().getDiagram().eResource().getURI().segment(1);
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+		setDiagramEditor(bpmn2Editor);
+		setBaseElement(be);
+	}
+
+	private final void setDiagramEditor(BPMN2Editor bpmn2Editor) {
+		this.bpmn2Editor = bpmn2Editor;
+	}
+
+	private final void setBaseElement(final BaseElement be) {
 		this.be = be;
 		cleanBindings();
 		if (be != null) {
@@ -65,6 +85,10 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 
 	}
 
+	/**
+	 * This method is called when setBaseElement is called and this should recreate all bindings and widgets for the
+	 * component.
+	 */
 	public abstract void createBindings();
 
 	protected Text createTextInput(String name) {
@@ -76,6 +100,25 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 		widgets.add(text);
 
 		return text;
+	}
+
+	protected Text createIntInput(String name) {
+		createLabel(name);
+
+		Text text = new Text(this, SWT.NONE);
+		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		toolkit.adapt(text, true, true);
+		widgets.add(text);
+		return text;
+	}
+
+	protected Button createBooleanInput(String name) {
+		createLabel(name);
+
+		Button button = new Button(this, SWT.CHECK);
+		toolkit.adapt(button, true, true);
+		widgets.add(button);
+		return button;
 	}
 
 	protected void createLabel(String name) {
@@ -139,20 +182,40 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 	protected Binding bindInt(final EStructuralFeature a, final Text t) {
 		IObservableValue textObserveTextObserveWidget = SWTObservables.observeText(t, SWT.Modify);
 		IObservableValue holderIdObserveValue = EMFObservables.observeValue(be, a);
+
 		textObserveTextObserveWidget.addValueChangeListener(new IValueChangeListener() {
-			@SuppressWarnings("restriction")
 			@Override
 			public void handleValueChange(ValueChangeEvent event) {
 
-				final int i = Integer.parseInt(t.getText());
-				if (!be.eGet(a).equals(i)) {
-					bpmn2Editor.getEditingDomain().getCommandStack()
-							.execute(new RecordingCommand(bpmn2Editor.getEditingDomain()) {
-								@Override
-								protected void doExecute() {
-									be.eSet(a, i);
-								}
-							});
+				try {
+					final int i = Integer.parseInt(t.getText());
+					if (!be.eGet(a).equals(i)) {
+						setFeatureValue(i);
+					}
+				} catch (NumberFormatException e) {
+					resetValue(event);
+				}
+			}
+
+			@SuppressWarnings("restriction")
+			private void setFeatureValue(final int i) {
+				RecordingCommand command = new RecordingCommand(bpmn2Editor.getEditingDomain()) {
+					@Override
+					protected void doExecute() {
+						be.eSet(a, i);
+					}
+				};
+				bpmn2Editor.getEditingDomain().getCommandStack().execute(command);
+			}
+
+			private void resetValue(ValueChangeEvent event) {
+				int caretPosition = t.getCaretPosition();
+				t.setText((String) event.diff.getOldValue());
+				int position = caretPosition - 1;
+				if (position >= 0) {
+					t.setSelection(position);
+				} else {
+					t.setSelection(0);
 				}
 			}
 		});
@@ -169,7 +232,7 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 		return bindValue;
 	}
 
-	private void cleanBindings() {
+	protected void cleanBindings() {
 		for (Binding b : bindings) {
 			b.dispose();
 		}
@@ -179,11 +242,6 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 			w.dispose();
 		}
 		widgets.clear();
-	}
-
-	public void setDiagramEditor(BPMN2Editor bpmn2Editor) {
-		this.bpmn2Editor = bpmn2Editor;
-
 	}
 
 }

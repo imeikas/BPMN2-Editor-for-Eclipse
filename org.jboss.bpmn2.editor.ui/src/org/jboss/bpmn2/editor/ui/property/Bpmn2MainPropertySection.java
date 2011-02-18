@@ -11,15 +11,15 @@ import org.eclipse.ui.views.properties.tabbed.ITabbedPropertyConstants;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.jboss.bpmn2.editor.ui.editor.BPMN2Editor;
 
-public class Bpmn2AdvancedPropertySection extends GFPropertySection implements ITabbedPropertyConstants {
+public class Bpmn2MainPropertySection extends GFPropertySection implements ITabbedPropertyConstants {
 
-	private AdvancedPropertiesComposite composite;
+	private MainPropertiesComposite composite;
 
 	@Override
 	public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		super.createControls(parent, aTabbedPropertySheetPage);
 		parent.setLayout(new FillLayout());
-		composite = new AdvancedPropertiesComposite(parent, SWT.None);
+		composite = new MainPropertiesComposite(parent, SWT.None);
 	}
 
 	@Override
@@ -27,9 +27,7 @@ public class Bpmn2AdvancedPropertySection extends GFPropertySection implements I
 		PictogramElement pe = getSelectedPictogramElement();
 		if (pe != null) {
 			BaseElement be = (BaseElement) Graphiti.getLinkService().getBusinessObjectForLinkedPictogramElement(pe);
-			composite.setDiagramEditor(((BPMN2Editor) getDiagramEditor()));
-			composite.setBaseElement(be);
+			composite.setBaseElement((BPMN2Editor) getDiagramEditor(), be);
 		}
-
 	}
 }

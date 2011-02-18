@@ -49,7 +49,7 @@ public class Bpmn2Preferences {
 		elementSet.addAll(getSubClasses(i.getItemAwareElement()));
 		elementSet.addAll(getSubClasses(i.getDataAssociation()));
 		elementSet.addAll(getSubClasses(i.getRootElement()));
-		elementSet.addAll(getSubClasses(i.getEventDefinition()));
+		//elementSet.addAll(getSubClasses(i.getEventDefinition()));
 		elementSet.addAll(getSubClasses(i.getLoopCharacteristics()));
 		elementSet.addAll(getSubClasses(i.getExpression()));
 		elementSet.add(i.getOperation());
@@ -87,7 +87,10 @@ public class Bpmn2Preferences {
 		ArrayList<ToolEnablement> ret = new ArrayList<ToolEnablement>();
 
 		for (EClass e : elementSet) {
+<<<<<<< HEAD
+=======
 
+>>>>>>> origin/master
 			ToolEnablement tool = new ToolEnablement();
 			tool.setTool(e);
 			tool.setEnabled(isEnabled(e));
