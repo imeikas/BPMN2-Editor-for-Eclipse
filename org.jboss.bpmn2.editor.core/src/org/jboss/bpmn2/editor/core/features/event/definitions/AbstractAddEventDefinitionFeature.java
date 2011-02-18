@@ -1,6 +1,5 @@
 package org.jboss.bpmn2.editor.core.features.event.definitions;
 
-import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.Event;
 import org.eclipse.bpmn2.EventDefinition;
 import org.eclipse.bpmn2.ThrowEvent;

@@ -29,27 +29,25 @@ public class ConditionalEventDefinitionContainer extends EventDefinitionFeatureC
 
 	@Override
 	protected Shape drawForStart(DecorationAlgorithm algorithm, ContainerShape shape) {
-		return drawConditional(shape);
+		return draw(shape);
 	}
 
 	@Override
 	protected Shape drawForEnd(DecorationAlgorithm algorithm, ContainerShape shape) {
-		return drawConditional(shape);
+		return draw(shape);
 	}
 
 	@Override
     protected Shape drawForThrow(DecorationAlgorithm decorationAlgorithm, ContainerShape shape) {
-	    // TODO Auto-generated method stub
-	    return null;
+	    return null; // NOT ALLOWED ACCORDING TO SPEC
     }
 
 	@Override
     protected Shape drawForCatch(DecorationAlgorithm decorationAlgorithm, ContainerShape shape) {
-	    // TODO Auto-generated method stub
-	    return null;
+	    return draw(shape);
     }
 	
-	private Shape drawConditional(ContainerShape shape) {
+	private Shape draw(ContainerShape shape) {
 		Shape conditionShape = Graphiti.getPeService().createShape(shape, false);
 		ShapeUtil.createEventImage(conditionShape, ImageProvider.IMG_20_CONDITION);
 		return conditionShape;

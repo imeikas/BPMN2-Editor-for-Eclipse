@@ -39,14 +39,12 @@ public class TimerEventDefinitionContainer extends EventDefinitionFeatureContain
 	
 	@Override
     protected Shape drawForThrow(DecorationAlgorithm decorationAlgorithm, ContainerShape shape) {
-	    // TODO Auto-generated method stub
-	    return null;
+	    return null; // NOT ALLOWED ACCORDING TO SPEC
     }
 
 	@Override
     protected Shape drawForCatch(DecorationAlgorithm decorationAlgorithm, ContainerShape shape) {
-	    // TODO Auto-generated method stub
-	    return null;
+	    return draw(shape);
     }
 
 	private Shape draw(ContainerShape shape) {

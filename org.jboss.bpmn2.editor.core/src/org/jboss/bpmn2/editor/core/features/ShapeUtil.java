@@ -37,6 +37,11 @@ public class ShapeUtil {
 		public Polyline diagonalAsc;
 	}
 
+	public static class Compensation {
+		public Polygon arrow1;
+		public Polygon arrow2;
+	}
+
 	/* GATEWAY */
 
 	public static final int GATEWAY_RADIUS = 25;
@@ -152,6 +157,98 @@ public class ShapeUtil {
 		return polygon;
 	}
 
+	public static Polygon createEventEscalation(Shape shape) {
+		int radius = EVENT_SIZE / 2;
+		int[] points = { radius, 8, radius + 8, radius + 9, radius, radius + 2, radius - 8, radius + 9 };
+		Polygon polygon = gaService.createPolygon(shape, points);
+		polygon.setLineWidth(1);
+		return polygon;
+	}
+
+	public static Compensation createEventCompensation(Shape shape) {
+		Rectangle rect = gaService.createInvisibleRectangle(shape);
+		
+		int w = 22;
+		int h = 18;
+		gaService.setLocationAndSize(rect, 5, 9, w, h);
+		
+		int _w = w / 2;
+		int _h = h / 2;
+		int[] pontsArrow1 = {
+				_w, 0,
+				_w, h,
+				0, _h
+		};
+		Polygon arrow1 = gaService.createPolygon(rect, pontsArrow1);
+		
+		int[] pontsArrow2 = {
+				w, 0,
+				w, h,
+				w / 2, _h
+		};
+		Polygon arrow2 = gaService.createPolygon(rect, pontsArrow2);
+		
+		Compensation compensation = new Compensation();
+		compensation.arrow1 = arrow1;
+		compensation.arrow2 = arrow2;
+		return compensation;
+	}
+	
+	public static Polygon createEventLink(Shape shape) {
+		int radius = EVENT_SIZE / 2;
+		int[] points = {
+				32, radius,
+				23, radius + 11,
+				23, radius + 6,
+				5, radius + 6,
+				5, radius - 6,
+				23, radius - 6,
+				23, radius - 11
+		};
+	    Polygon polygon = gaService.createPolygon(shape, points);
+		polygon.setLineWidth(1);
+	    return polygon;
+    }
+	
+	public static Polygon createEventError(Shape shape) {
+		int radius = EVENT_SIZE / 2;
+		int[] points = {
+				radius + 4, radius,
+				radius + 10, radius - 10,
+				radius + 7, radius + 10,
+				radius - 4, radius, 
+				radius - 10, radius + 10,
+				radius - 7, radius - 10
+		};
+		Polygon polygon = gaService.createPolygon(shape, points);
+		polygon.setLineWidth(1);
+	    return polygon;
+    }
+	
+	public static Polygon createEventCancel(Shape shape) {
+		int radius = EVENT_SIZE / 2;
+		int c = 4;
+		int a = 9;
+		int b = 12;
+		int[] points = {
+				radius, radius - c,
+				radius + a, radius - b,
+				radius + b, radius - a,
+				radius + c, radius, 
+				radius + b, radius + a,
+				radius + a, radius + b,
+				radius, radius + c,
+				radius - a, radius + b,
+				radius - b, radius + a,
+				radius - c, radius,
+				radius - b, radius - a,
+				radius - a, radius - b
+		};
+		Polygon polygon = gaService.createPolygon(shape, points);
+		polygon.setLineWidth(1);
+	    return polygon;
+    }
+	
 	public static boolean clearEvent(ContainerShape shape) {
 		boolean cleared = false;
 

@@ -26,7 +26,12 @@ import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.FeatureResolver;
 import org.jboss.bpmn2.editor.core.features.artifact.ArtifactFeatureResolver;
 import org.jboss.bpmn2.editor.core.features.event.EventFeatureResolver;
+import org.jboss.bpmn2.editor.core.features.event.definitions.CancelEventDefinitionContainer;
+import org.jboss.bpmn2.editor.core.features.event.definitions.CompensateEventDefinitionContainer;
 import org.jboss.bpmn2.editor.core.features.event.definitions.ConditionalEventDefinitionContainer;
+import org.jboss.bpmn2.editor.core.features.event.definitions.ErrorEventDefinitionContainer;
+import org.jboss.bpmn2.editor.core.features.event.definitions.EscalationEventDefinitionContainer;
+import org.jboss.bpmn2.editor.core.features.event.definitions.LinkEventDefinitionContainer;
 import org.jboss.bpmn2.editor.core.features.event.definitions.MessageEventDefinitionContainer;
 import org.jboss.bpmn2.editor.core.features.event.definitions.SignalEventDefinitionContainer;
 import org.jboss.bpmn2.editor.core.features.event.definitions.TimerEventDefinitionContainer;
@@ -54,7 +59,8 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 	public BPMNFeatureProvider(IDiagramTypeProvider dtp) {
 		super(dtp);
-
+		
+		// TODO convert resolvers to containers, provides better decoupling
 		resolvers = new ArrayList<FeatureResolver>();
 		resolvers.add(new TaskFeatureResolver());
 		resolvers.add(new EventFeatureResolver());
@@ -69,6 +75,11 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers.add(new MessageEventDefinitionContainer());
 		containers.add(new TimerEventDefinitionContainer());
 		containers.add(new SignalEventDefinitionContainer());
+		containers.add(new EscalationEventDefinitionContainer());
+		containers.add(new CompensateEventDefinitionContainer());
+		containers.add(new LinkEventDefinitionContainer());
+		containers.add(new ErrorEventDefinitionContainer());
+		containers.add(new CancelEventDefinitionContainer());
 		
 		List<ICreateFeature> createFeaturesList = new ArrayList<ICreateFeature>();
 		

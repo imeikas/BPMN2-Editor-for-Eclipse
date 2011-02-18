@@ -24,9 +24,9 @@ public abstract class EventDefinitionFeatureContainer implements FeatureContaine
 
 	protected abstract Shape drawForEnd(DecorationAlgorithm algorithm, ContainerShape shape);
 	
-	protected abstract Shape drawForThrow(DecorationAlgorithm decorationAlgorithm, ContainerShape shape);
+	protected abstract Shape drawForThrow(DecorationAlgorithm algorithm, ContainerShape shape);
 
-	protected abstract Shape drawForCatch(DecorationAlgorithm decorationAlgorithm, ContainerShape shape);
+	protected abstract Shape drawForCatch(DecorationAlgorithm algorithm, ContainerShape shape);
 
 	class AddEventDefinitionFeature extends AbstractAddEventDefinitionFeature {
 

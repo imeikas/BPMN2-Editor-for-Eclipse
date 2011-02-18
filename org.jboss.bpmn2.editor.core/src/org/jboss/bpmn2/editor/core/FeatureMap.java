@@ -13,7 +13,12 @@ import org.jboss.bpmn2.editor.core.features.event.CreateEndEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.CreateIntermediateCatchEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.CreateIntermediateThrowEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.CreateStartEventFeature;
+import org.jboss.bpmn2.editor.core.features.event.definitions.CancelEventDefinitionContainer.CreateCancelEventDefinition;
+import org.jboss.bpmn2.editor.core.features.event.definitions.CompensateEventDefinitionContainer.CreateCompensateEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.ConditionalEventDefinitionContainer.CreateConditionalEventDefinition;
+import org.jboss.bpmn2.editor.core.features.event.definitions.ErrorEventDefinitionContainer.CreateErrorEventDefinition;
+import org.jboss.bpmn2.editor.core.features.event.definitions.EscalationEventDefinitionContainer.CreateEscalationEventDefinition;
+import org.jboss.bpmn2.editor.core.features.event.definitions.LinkEventDefinitionContainer.CreateLinkEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.MessageEventDefinitionContainer.CreateMessageEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.SignalEventDefinitionContainer.CreateSignalEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.TimerEventDefinitionContainer.CreateTimerEventDefinition;
@@ -66,6 +71,11 @@ public class FeatureMap {
 		featureMap.put(i.getTimerEventDefinition(), CreateTimerEventDefinition.class);
 		featureMap.put(i.getSignalEventDefinition(), CreateSignalEventDefinition.class);
 		featureMap.put(i.getMessageEventDefinition(), CreateMessageEventDefinition.class);
+		featureMap.put(i.getEscalationEventDefinition(), CreateEscalationEventDefinition.class);
+		featureMap.put(i.getCompensateEventDefinition(), CreateCompensateEventDefinition.class);
+		featureMap.put(i.getLinkEventDefinition(), CreateLinkEventDefinition.class);
+		featureMap.put(i.getErrorEventDefinition(), CreateErrorEventDefinition.class);
+		featureMap.put(i.getCancelEventDefinition(), CreateCancelEventDefinition.class);
 		FEATURE_MAP = Collections.unmodifiableMap(featureMap);
 	}
 
