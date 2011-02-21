@@ -20,6 +20,7 @@ public class AdvancedPropertySection extends GFPropertySection implements ITabbe
 		super.createControls(parent, aTabbedPropertySheetPage);
 		parent.setLayout(new FillLayout());
 		composite = new AdvancedPropertiesComposite(parent, SWT.None);
+		composite.setSheetPage(aTabbedPropertySheetPage);
 	}
 
 	@Override

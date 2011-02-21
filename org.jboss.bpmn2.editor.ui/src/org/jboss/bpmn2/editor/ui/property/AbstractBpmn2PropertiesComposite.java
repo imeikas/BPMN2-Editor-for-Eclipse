@@ -3,6 +3,8 @@ package org.jboss.bpmn2.editor.ui.property;
 import java.util.ArrayList;
 
 import org.eclipse.bpmn2.BaseElement;
+import org.eclipse.bpmn2.di.provider.BpmnDiItemProviderAdapterFactory;
+import org.eclipse.bpmn2.provider.Bpmn2ItemProviderAdapterFactory;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -12,8 +14,13 @@ import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.dd.dc.provider.DcItemProviderAdapterFactory;
+import org.eclipse.dd.di.provider.DiItemProviderAdapterFactory;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
+import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
@@ -32,6 +39,7 @@ import org.jboss.bpmn2.editor.ui.editor.BPMN2Editor;
 
 public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 
+	public final static ComposedAdapterFactory ADAPTER_FACTORY;
 	protected BaseElement be;
 	protected BPMN2Editor bpmn2Editor;
 	protected final DataBindingContext bindingContext;
@@ -40,6 +48,17 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 	protected final Composite parent;
 	protected final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
 	protected IProject project;
+
+	static {
+		ADAPTER_FACTORY = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+
+		ADAPTER_FACTORY.addAdapterFactory(new ResourceItemProviderAdapterFactory());
+		ADAPTER_FACTORY.addAdapterFactory(new Bpmn2ItemProviderAdapterFactory());
+		ADAPTER_FACTORY.addAdapterFactory(new BpmnDiItemProviderAdapterFactory());
+		ADAPTER_FACTORY.addAdapterFactory(new DiItemProviderAdapterFactory());
+		ADAPTER_FACTORY.addAdapterFactory(new DcItemProviderAdapterFactory());
+		ADAPTER_FACTORY.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
+	}
 
 	/**
 	 * NB! Must call setBaseElement for updating contents and rebuild the UI.
