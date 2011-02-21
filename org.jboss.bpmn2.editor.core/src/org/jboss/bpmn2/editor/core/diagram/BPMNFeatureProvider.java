@@ -216,7 +216,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		}
 		return super.getResizeShapeFeature(context);
 	}
-
+	
 	private boolean isNotBaseElement(Object o) {
 		return !(o instanceof BaseElement);
 	}

@@ -1,6 +1,7 @@
 package org.jboss.bpmn2.editor.core;
 
 import org.eclipse.bpmn2.Association;
+import org.eclipse.bpmn2.BoundaryEvent;
 import org.eclipse.bpmn2.BusinessRuleTask;
 import org.eclipse.bpmn2.CancelEventDefinition;
 import org.eclipse.bpmn2.CompensateEventDefinition;
@@ -75,6 +76,7 @@ public class ImageProvider extends AbstractImageProvider {
 	public static final String IMG_16_LINK = PREFIX + LinkEventDefinition.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_ERROR = PREFIX + ErrorEventDefinition.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_CANCEL = PREFIX + CancelEventDefinition.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_BOUNDARY_EVENT = PREFIX + BoundaryEvent.class.getSimpleName().toLowerCase() + dot16;
 	
 	public static final String IMG_20_CONDITION = PREFIX + ConditionalEventDefinition.class.getSimpleName().toLowerCase() + dot20;
 	public static final String IMG_20_TIMER = PREFIX + TimerEventDefinition.class.getSimpleName().toLowerCase() + dot20;
@@ -114,6 +116,7 @@ public class ImageProvider extends AbstractImageProvider {
 		addImageFilePath(IMG_16_LINK, ICONS_16 + "Link.png");
 		addImageFilePath(IMG_16_ERROR, ICONS_16 + "Error.png");
 		addImageFilePath(IMG_16_CANCEL, ICONS_16 + "Cancel.png");
+		addImageFilePath(IMG_16_BOUNDARY_EVENT, ICONS_16 + "BoundaryEvent.png");
 		
 		addImageFilePath(IMG_20_CONDITION, ICONS_20 + "Condition.png");
 		addImageFilePath(IMG_20_TIMER, ICONS_20 + "Timer.png");

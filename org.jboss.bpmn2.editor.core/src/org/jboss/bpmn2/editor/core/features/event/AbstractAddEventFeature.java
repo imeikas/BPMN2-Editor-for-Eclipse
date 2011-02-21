@@ -9,6 +9,7 @@ import org.eclipse.graphiti.mm.algorithms.Rectangle;
 import org.eclipse.graphiti.mm.algorithms.Text;
 import org.eclipse.graphiti.mm.algorithms.styles.AdaptedGradientColoredAreas;
 import org.eclipse.graphiti.mm.algorithms.styles.Orientation;
+import org.eclipse.graphiti.mm.pictograms.ChopboxAnchor;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
@@ -85,7 +86,9 @@ public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
 		link(containerShape, e);
 
 		
-		peCreateService.createChopboxAnchor(containerShape);
+		ChopboxAnchor anchor = peCreateService.createChopboxAnchor(containerShape);
+		anchor.setReferencedGraphicsAlgorithm(ellipse);
+		
 		layoutPictogramElement(containerShape);
 		return containerShape;
 	}
@@ -97,4 +100,5 @@ public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
 	}
 
 	protected abstract Class<? extends Event> getEventClass();
+	
 }

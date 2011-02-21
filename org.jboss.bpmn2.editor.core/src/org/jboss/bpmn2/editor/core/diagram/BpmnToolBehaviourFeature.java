@@ -1,10 +1,14 @@
 package org.jboss.bpmn2.editor.core.diagram;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.bpmn2.Event;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.graphiti.dt.IDiagramTypeProvider;
 import org.eclipse.graphiti.features.FeatureCheckerAdapter;
 import org.eclipse.graphiti.features.ICreateConnectionFeature;
@@ -13,10 +17,13 @@ import org.eclipse.graphiti.features.IFeatureChecker;
 import org.eclipse.graphiti.features.IFeatureCheckerHolder;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IContext;
+import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
+import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.palette.IPaletteCompartmentEntry;
 import org.eclipse.graphiti.palette.impl.ConnectionCreationToolEntry;
 import org.eclipse.graphiti.palette.impl.ObjectCreationToolEntry;
 import org.eclipse.graphiti.palette.impl.PaletteCompartmentEntry;
+import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.tb.DefaultToolBehaviorProvider;
 import org.jboss.bpmn2.editor.core.Bpmn2Preferences;
 import org.jboss.bpmn2.editor.core.FeatureMap;
@@ -49,7 +56,7 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 		for (ICreateFeature cf : createFeatures) {
 			if (pref.isEnabled(FeatureMap.getElement(cf))) {
 				ObjectCreationToolEntry objectCreationToolEntry = new ObjectCreationToolEntry(cf.getCreateName(),
-						cf.getCreateDescription(), cf.getCreateImageId(), cf.getCreateLargeImageId(), cf);
+				        cf.getCreateDescription(), cf.getCreateImageId(), cf.getCreateLargeImageId(), cf);
 				compartmentEntry.addToolEntry(objectCreationToolEntry);
 			}
 		}
@@ -61,8 +68,8 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 		for (ICreateConnectionFeature cf : createConnectionFeatures) {
 			if (pref.isEnabled(FeatureMap.getElement(cf))) {
 				ConnectionCreationToolEntry connectionCreationToolEntry = new ConnectionCreationToolEntry(
-						cf.getCreateName(), cf.getCreateDescription(), cf.getCreateImageId(),
-						cf.getCreateLargeImageId());
+				        cf.getCreateName(), cf.getCreateDescription(), cf.getCreateImageId(),
+				        cf.getCreateLargeImageId());
 				connectionCreationToolEntry.addCreateConnectionFeature(cf);
 				compartmentEntry.addToolEntry(connectionCreationToolEntry);
 			}
@@ -75,13 +82,39 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 		return new FeatureCheckerAdapter(false) {
 			@Override
 			public boolean allowAdd(IContext context) {
-			    return super.allowAdd(context);
+				return super.allowAdd(context);
 			}
-			
+
 			@Override
 			public boolean allowCreate() {
-			    return super.allowCreate();
+				return super.allowCreate();
 			}
 		};
+	}
+
+	@Override
+	public GraphicsAlgorithm[] getClickArea(PictogramElement pe) {
+		IFeatureProvider featureProvider = getFeatureProvider();
+		Object bo = featureProvider.getBusinessObjectForPictogramElement(pe);
+		if (bo instanceof Event) {
+			Collection<PictogramElement> elements = Graphiti.getPeService().getAllContainedPictogramElements(pe);
+			GraphicsAlgorithm graphicsAlgorithm = elements.iterator().next().getGraphicsAlgorithm();
+			return new GraphicsAlgorithm[] { graphicsAlgorithm };
+		}
+		return super.getClickArea(pe);
+	}
+
+	@Override
+	public GraphicsAlgorithm getSelectionBorder(PictogramElement pe) {
+		IFeatureProvider featureProvider = getFeatureProvider();
+		Object bo = featureProvider.getBusinessObjectForPictogramElement(pe);
+		if (bo instanceof Event) {
+			Collection<PictogramElement> elements = Graphiti.getPeService().getAllContainedPictogramElements(pe);
+			if(!elements.isEmpty()) {
+				GraphicsAlgorithm graphicsAlgorithm = elements.iterator().next().getGraphicsAlgorithm();
+				return graphicsAlgorithm;
+			}
+		}
+		return super.getSelectionBorder(pe);
 	}
 }
