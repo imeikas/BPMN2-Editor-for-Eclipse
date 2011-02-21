@@ -10,7 +10,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.graphiti.ui,
  org.eclipse.graphiti,
  org.eclipse.bpmn2,
- org.eclipse.bpmn2.edit
+ org.eclipse.bpmn2.edit,
+ org.eclipse.emf.query;bundle-version="1.2.100"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.jboss.bpmn2.editor.core;

@@ -1,12 +1,12 @@
 package org.jboss.bpmn2.editor.ui.property.iospecification;
 
-import org.eclipse.bpmn2.DataInput;
-import org.eclipse.bpmn2.DataOutput;
+import java.util.List;
+
+import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.InputOutputSpecification;
 import org.eclipse.bpmn2.InputSet;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.swt.SWT;
@@ -25,7 +25,7 @@ import com.swtdesigner.SWTResourceManager;
 public class IOSpecificationComposite extends AbstractBpmn2PropertiesComposite {
 
 	private final DataInputsComposite dataInputs;
-	private final DataOutputComposite dataOutputs;
+	private final NamedElementComposite dataOutputs;
 	private final Button btnAddIoSpecification;
 	private InputOutputSpecification spec;
 	private SelectionListener ioSpecListener;
@@ -70,10 +70,12 @@ public class IOSpecificationComposite extends AbstractBpmn2PropertiesComposite {
 	}
 
 	private void showAddIOSpecificationButton(final EReference mRef) {
-		dataInputs.setInputs(null);
-		dataOutputs.setOutputs(null);
+		dataInputs.setContent(null);
+		dataOutputs.setContent(null);
+		inputSets.setSets(null);
 		dataInputs.setVisible(false);
 		dataOutputs.setVisible(false);
+		inputSets.setVisible(false);
 
 		btnAddIoSpecification.setVisible(true);
 		relayout();
@@ -110,25 +112,22 @@ public class IOSpecificationComposite extends AbstractBpmn2PropertiesComposite {
 		btnAddIoSpecification.setVisible(false);
 		dataInputs.setVisible(true);
 		dataOutputs.setVisible(true);
+		dataInputs.setVisible(true);
 
 		EList<EReference> specContainments = spec.eClass().getEAllContainments();
 		for (EReference sRef : specContainments) {
 			if ("dataInputs".equals(sRef.getName())) {
 				dataInputs.setDiagramEditor(bpmn2Editor);
-				dataInputs.setInputs((EObjectContainmentEList<DataInput>) spec.eGet(sRef));
+				dataInputs.setContent((List<BaseElement>) spec.eGet(sRef));
 				toolkit.adapt(dataInputs);
 			} else if ("dataOutputs".equals(sRef.getName())) {
 				dataOutputs.setDiagramEditor(bpmn2Editor);
-				dataOutputs.setOutputs((EObjectContainmentEList<DataOutput>) spec.eGet(sRef));
+				dataOutputs.setContent((List<BaseElement>) spec.eGet(sRef));
 				toolkit.adapt(dataOutputs);
 			} else if ("inputSets".equals(sRef.getName())) {
-				EObjectContainmentEList<InputSet> sets = (EObjectContainmentEList<InputSet>) spec.eGet(sRef);
+				List<InputSet> sets = (List<InputSet>) spec.eGet(sRef);
 				inputSets.setDiagramEditor(bpmn2Editor);
-				inputSets.setSets(sets);
-				// if (sets.size() > 0) {
-				// final InputSetImpl set = (InputSetImpl) sets.get(0);
-				// inputSets.setInputSet(set);
-				// }
+				inputSets.setSets((List<InputSet>) sets);
 
 			} else if ("outputSets".equals(sRef.getName())) {
 

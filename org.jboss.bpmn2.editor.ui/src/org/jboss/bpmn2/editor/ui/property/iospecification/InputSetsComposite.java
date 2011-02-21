@@ -1,14 +1,12 @@
 package org.jboss.bpmn2.editor.ui.property.iospecification;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.bpmn2.DataInput;
 import org.eclipse.bpmn2.InputSet;
-import org.eclipse.bpmn2.impl.InputSetImpl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.edit.ui.celleditor.FeatureEditorDialog;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.emf.transaction.RecordingCommand;
@@ -20,26 +18,15 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Widget;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.jboss.bpmn2.editor.core.ModelHandler;
-import org.jboss.bpmn2.editor.ui.editor.BPMN2Editor;
 import org.jboss.bpmn2.editor.ui.property.AbstractBpmn2PropertiesComposite;
-import org.jboss.bpmn2.editor.ui.property.AdvancedPropertiesComposite;
 
-public class InputSetsComposite extends Composite {
-	protected final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
-
+public class InputSetsComposite extends AbstractPropertyComposite {
 	private SelectionListener inSetListener;
-	private EObjectContainmentEList<InputSet> list;
-	private final ArrayList<Widget> widgets = new ArrayList<Widget>();
-
+	private List<InputSet> list;
 	private final Button btnAddInputSet;
-	private BPMN2Editor bpmn2Editor;
-
 	private SelectionListener listener;
 
 	private class InputSetsDetailsComposite extends AbstractBpmn2PropertiesComposite {
@@ -74,7 +61,7 @@ public class InputSetsComposite extends Composite {
 			for (EReference a : be.eClass().getEAllReferences()) {
 				if ("dataInputRefs".equals(a.getName())) {
 					final EReference x = a;
-					final List<DataInput> refs = ((InputSetImpl) be).getDataInputRefs();
+					final List<DataInput> refs = ((InputSet) be).getDataInputRefs();
 					updateTextField(refs);
 					if (inSetListener != null) {
 						inputsetsButton.removeSelectionListener(inSetListener);
@@ -83,9 +70,12 @@ public class InputSetsComposite extends Composite {
 
 						@Override
 						public void widgetSelected(SelectionEvent e) {
-
+							List<Object> l = null;
+							if (modelHandler != null) {
+								l = Arrays.asList(modelHandler.getAll(DataInput.class));
+							}
 							FeatureEditorDialog featureEditorDialog = new FeatureEditorDialog(getShell(),
-									LABEL_PROVIDER, be, x, "x", refs);
+									LABEL_PROVIDER, be, x, "x", l);
 							featureEditorDialog.open();
 							final EList<DataInput> result = (EList<DataInput>) featureEditorDialog.getResult();
 							TransactionalEditingDomain domain = bpmn2Editor.getEditingDomain();
@@ -165,7 +155,7 @@ public class InputSetsComposite extends Composite {
 
 	}
 
-	public void setSets(final EObjectContainmentEList<InputSet> list) {
+	public void setSets(final List<InputSet> list) {
 		this.list = list;
 		cleanWidgets();
 
@@ -238,24 +228,5 @@ public class InputSetsComposite extends Composite {
 		});
 		toolkit.adapt(button, true, true);
 		widgets.add(button);
-	}
-
-	private void relayout() {
-		Composite p = this;
-		while (!(p instanceof AdvancedPropertiesComposite)) {
-			p = p.getParent();
-		}
-		((AdvancedPropertiesComposite) p).relayout();
-	}
-
-	private void cleanWidgets() {
-		for (Widget w : widgets) {
-			w.dispose();
-		}
-		widgets.clear();
-	}
-
-	public void setDiagramEditor(BPMN2Editor bpmn2Editor) {
-		this.bpmn2Editor = bpmn2Editor;
 	}
 }

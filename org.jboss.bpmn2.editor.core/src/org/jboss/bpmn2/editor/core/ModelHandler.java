@@ -23,6 +23,10 @@ import org.eclipse.bpmn2.TextAnnotation;
 import org.eclipse.bpmn2.util.Bpmn2ResourceImpl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.query.conditions.eobjects.EObjectCondition;
+import org.eclipse.emf.query.statements.FROM;
+import org.eclipse.emf.query.statements.SELECT;
+import org.eclipse.emf.query.statements.WHERE;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -52,6 +56,7 @@ public class ModelHandler {
 				definitions.getRootElements().add(collaboration);
 
 				domain.getCommandStack().execute(new RecordingCommand(domain) {
+					@Override
 					protected void doExecute() {
 						docRoot.setDefinitions(definitions);
 						resource.getContents().add(docRoot);
@@ -207,6 +212,7 @@ public class ModelHandler {
 		TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(resource);
 		if (domain != null) {
 			domain.getCommandStack().execute(new RecordingCommand(domain) {
+				@Override
 				protected void doExecute() {
 					saveResource();
 				}
@@ -237,31 +243,36 @@ public class ModelHandler {
 	}
 
 	public Participant getParticipant(Object o) {
-		if (o instanceof Diagram)
+		if (o instanceof Diagram) {
 			return getInternalParticipant();
+		}
 
-		if (o instanceof Participant)
+		if (o instanceof Participant) {
 			return (Participant) o;
+		}
 
 		for (Participant p : getCollaboration().getParticipants()) {
 
-			if (p.getProcessRef() == null)
+			if (p.getProcessRef() == null) {
 				continue;
+			}
 
 			Process process = p.getProcessRef();
 
-			if (o instanceof Lane && isSubLane(process, (Lane) o))
+			if (o instanceof Lane && isSubLane(process, (Lane) o)) {
 				return p;
-			else if (process.getFlowElements().contains(o))
+			} else if (process.getFlowElements().contains(o)) {
 				return p;
+			}
 
 		}
 		return null;
 	}
 
 	private boolean isSubLane(Process p, Lane lane) {
-		if (p.getLaneSets().isEmpty())
+		if (p.getLaneSets().isEmpty()) {
 			return false;
+		}
 
 		boolean found = false;
 
@@ -276,11 +287,13 @@ public class ModelHandler {
 	}
 
 	private boolean isSubLane(LaneSet set, Lane lane) {
-		if (set == null)
+		if (set == null) {
 			return false;
+		}
 
-		if (set.getLanes().contains(lane))
+		if (set.getLanes().contains(lane)) {
 			return true;
+		}
 
 		boolean found = false;
 
@@ -292,5 +305,16 @@ public class ModelHandler {
 		}
 
 		return found;
+	}
+
+	public Object[] getAll(final Class class1) {
+		SELECT select = new SELECT(new FROM(resource.getContents()), new WHERE(new EObjectCondition() {
+
+			@Override
+			public boolean isSatisfied(EObject eObject) {
+				return class1.isInstance(eObject);
+			}
+		}));
+		return select.execute().toArray();
 	}
 }
