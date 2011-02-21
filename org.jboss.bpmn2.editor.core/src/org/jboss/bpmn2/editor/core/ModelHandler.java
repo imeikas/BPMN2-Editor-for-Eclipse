@@ -307,6 +307,7 @@ public class ModelHandler {
 		return found;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public Object[] getAll(final Class class1) {
 		SELECT select = new SELECT(new FROM(resource.getContents()), new WHERE(new EObjectCondition() {
 

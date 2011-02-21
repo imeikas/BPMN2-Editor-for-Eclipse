@@ -15,7 +15,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 public abstract class NamedElementComposite extends AbstractPropertyComposite {
-	private List<BaseElement> list;
 	protected final Button btnAddNew;
 	private SelectionListener listener;
 
@@ -59,6 +58,7 @@ public abstract class NamedElementComposite extends AbstractPropertyComposite {
 		button.setText("Remove");
 		button.addSelectionListener(new SelectionListener() {
 
+			@SuppressWarnings("restriction")
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				TransactionalEditingDomain domain = bpmn2Editor.getEditingDomain();
@@ -82,7 +82,6 @@ public abstract class NamedElementComposite extends AbstractPropertyComposite {
 	}
 
 	public void setContent(final List<BaseElement> list) {
-		this.list = list;
 		cleanWidgets();
 
 		if (list == null) {

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.InputOutputSpecification;
-import org.eclipse.bpmn2.InputSet;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.transaction.RecordingCommand;
@@ -31,6 +30,7 @@ public class IOSpecificationComposite extends AbstractBpmn2PropertiesComposite {
 	private SelectionListener ioSpecListener;
 
 	private final InputSetsComposite inputSets;
+	private final OutputSetsComposite outputSets;
 
 	public IOSpecificationComposite(Composite parent, int style) {
 		super(parent, style);
@@ -49,6 +49,9 @@ public class IOSpecificationComposite extends AbstractBpmn2PropertiesComposite {
 		dataOutputs.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
 		inputSets = new InputSetsComposite(this, SWT.None);
 		inputSets.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
+		outputSets = new OutputSetsComposite(this, SWT.None);
+		outputSets.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
+
 	}
 
 	@Override
@@ -73,9 +76,11 @@ public class IOSpecificationComposite extends AbstractBpmn2PropertiesComposite {
 		dataInputs.setContent(null);
 		dataOutputs.setContent(null);
 		inputSets.setSets(null);
+		outputSets.setSets(null);
 		dataInputs.setVisible(false);
 		dataOutputs.setVisible(false);
 		inputSets.setVisible(false);
+		outputSets.setVisible(false);
 
 		btnAddIoSpecification.setVisible(true);
 		relayout();
@@ -112,7 +117,7 @@ public class IOSpecificationComposite extends AbstractBpmn2PropertiesComposite {
 		btnAddIoSpecification.setVisible(false);
 		dataInputs.setVisible(true);
 		dataOutputs.setVisible(true);
-		dataInputs.setVisible(true);
+		inputSets.setVisible(true);
 
 		EList<EReference> specContainments = spec.eClass().getEAllContainments();
 		for (EReference sRef : specContainments) {
@@ -125,12 +130,13 @@ public class IOSpecificationComposite extends AbstractBpmn2PropertiesComposite {
 				dataOutputs.setContent((List<BaseElement>) spec.eGet(sRef));
 				toolkit.adapt(dataOutputs);
 			} else if ("inputSets".equals(sRef.getName())) {
-				List<InputSet> sets = (List<InputSet>) spec.eGet(sRef);
+				List<BaseElement> sets = (List<BaseElement>) spec.eGet(sRef);
 				inputSets.setDiagramEditor(bpmn2Editor);
-				inputSets.setSets((List<InputSet>) sets);
-
+				inputSets.setSets(sets);
 			} else if ("outputSets".equals(sRef.getName())) {
-
+				List<BaseElement> sets = (List<BaseElement>) spec.eGet(sRef);
+				outputSets.setDiagramEditor(bpmn2Editor);
+				outputSets.setSets(sets);
 			}
 		}
 		relayout();
@@ -142,6 +148,12 @@ public class IOSpecificationComposite extends AbstractBpmn2PropertiesComposite {
 
 		gd = (GridData) dataOutputs.getLayoutData();
 		gd.exclude = !dataOutputs.isVisible();
+
+		gd = (GridData) inputSets.getLayoutData();
+		gd.exclude = !inputSets.isVisible();
+
+		gd = (GridData) outputSets.getLayoutData();
+		gd.exclude = !outputSets.isVisible();
 
 		gd = (GridData) btnAddIoSpecification.getLayoutData();
 		gd.exclude = !btnAddIoSpecification.isVisible();
