@@ -50,6 +50,12 @@ public class LinkEventDefinitionContainer extends EventDefinitionFeatureContaine
 	    return draw(algorithm, shape);
     }
 	
+	@Override
+    protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
+	    // TODO Auto-generated method stub
+	    return null;
+    }
+	
 	private Shape draw(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape linkShape = Graphiti.getPeService().createShape(shape, false);
 		Polygon link = ShapeUtil.createEventLink(linkShape);

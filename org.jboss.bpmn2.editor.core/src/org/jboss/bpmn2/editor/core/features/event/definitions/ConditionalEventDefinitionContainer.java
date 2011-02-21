@@ -46,6 +46,11 @@ public class ConditionalEventDefinitionContainer extends EventDefinitionFeatureC
     protected Shape drawForCatch(DecorationAlgorithm decorationAlgorithm, ContainerShape shape) {
 	    return draw(shape);
     }
+		
+	@Override
+    protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
+	    return null; //TODO
+    }
 	
 	private Shape draw(ContainerShape shape) {
 		Shape conditionShape = Graphiti.getPeService().createShape(shape, false);

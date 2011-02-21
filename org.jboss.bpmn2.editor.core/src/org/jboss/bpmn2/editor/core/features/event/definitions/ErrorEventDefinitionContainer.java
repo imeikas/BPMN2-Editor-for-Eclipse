@@ -55,6 +55,12 @@ public class ErrorEventDefinitionContainer extends EventDefinitionFeatureContain
 	    return null; // NOT ALLOWED ACCORDING TO SPEC
     }
 	
+	@Override
+    protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
+	    // TODO Auto-generated method stub
+	    return null;
+    }
+	
 	public static class CreateErrorEventDefinition extends CreateEventDefinition {
 
 		public CreateErrorEventDefinition(IFeatureProvider fp) {

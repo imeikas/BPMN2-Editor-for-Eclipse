@@ -46,6 +46,11 @@ public class TimerEventDefinitionContainer extends EventDefinitionFeatureContain
     protected Shape drawForCatch(DecorationAlgorithm decorationAlgorithm, ContainerShape shape) {
 	    return draw(shape);
     }
+	
+	@Override
+    protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
+	    return draw(shape);
+    }
 
 	private Shape draw(ContainerShape shape) {
 		Shape timerShape = Graphiti.getPeService().createShape(shape, false);
@@ -58,12 +63,12 @@ public class TimerEventDefinitionContainer extends EventDefinitionFeatureContain
 		public CreateTimerEventDefinition(IFeatureProvider fp) {
 			super(fp, "Timer Definition", "Adds time condition to event");
 		}
-
+		
 		@Override
 		public boolean canCreate(ICreateContext context) {
 			if (!super.canCreate(context))
 				return false;
-
+			
 			Event e = (Event) getBusinessObjectForPictogramElement(context.getTargetContainer());
 			if (e instanceof ThrowEvent)
 				return false;

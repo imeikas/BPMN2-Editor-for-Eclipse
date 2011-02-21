@@ -55,6 +55,11 @@ public class CancelEventDefinitionContainer extends EventDefinitionFeatureContai
 		return null; // NOT ALLOWED ACCORDING TO SPEC
     }
 	
+	@Override
+    protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
+	    return null; //TODO
+    }
+	
 	public static class CreateCancelEventDefinition extends CreateEventDefinition {
 
 		public CreateCancelEventDefinition(IFeatureProvider fp) {

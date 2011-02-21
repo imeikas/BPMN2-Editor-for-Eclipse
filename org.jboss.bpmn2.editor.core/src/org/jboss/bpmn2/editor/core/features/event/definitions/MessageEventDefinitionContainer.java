@@ -48,6 +48,12 @@ public class MessageEventDefinitionContainer extends EventDefinitionFeatureConta
 		return drawEnvleope(algorithm, shape);
 	}
 	
+	@Override
+    protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
+	    // TODO Auto-generated method stub
+	    return null;
+    }
+	
 	private Shape drawEnvleope(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape envelopeShape = Graphiti.getPeService().createShape(shape, false);
 		Envelope env = ShapeUtil.createEventEnvelope(envelopeShape);

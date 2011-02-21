@@ -47,6 +47,12 @@ public class SignalEventDefinitionContainer extends EventDefinitionFeatureContai
 	    return drawSignal(algorithm, shape);
     }
 	
+	@Override
+    protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
+	    // TODO Auto-generated method stub
+	    return null;
+    }
+	
 	private Shape drawSignal(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape signalShape = Graphiti.getPeService().createShape(shape, false);
 		Polygon signal = ShapeUtil.createEventSignal(signalShape);

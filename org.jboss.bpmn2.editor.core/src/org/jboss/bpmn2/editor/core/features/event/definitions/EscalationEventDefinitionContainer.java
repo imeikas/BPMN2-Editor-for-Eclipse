@@ -49,6 +49,12 @@ public class EscalationEventDefinitionContainer extends EventDefinitionFeatureCo
 		return null; // NOT ALLOWED ACCORDING TO SPEC
 	}
 	
+	@Override
+    protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
+	    // TODO Auto-generated method stub
+	    return null;
+    }
+	
 	// Will be used with boundary and sub-events
 	// private Shape draw(DecorationAlgorithm algorithm, ContainerShape shape) {
 	// Shape escalationShape = Graphiti.getPeService().createShape(shape, false);

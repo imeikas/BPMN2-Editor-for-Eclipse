@@ -48,9 +48,4 @@ public class EventDefinitionSupport {
 			return new ThrowEventWithDefinitions((ThrowEvent) event);
 		return null;
 	}
-	
-	boolean isValidTarget(Object bo) {
-		return bo != null && (bo instanceof Event);
-	}
-	
 }

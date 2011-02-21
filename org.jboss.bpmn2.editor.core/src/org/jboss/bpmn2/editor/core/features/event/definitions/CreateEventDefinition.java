@@ -18,12 +18,9 @@ public abstract class CreateEventDefinition extends AbstractCreateFeature {
 	@Override
 	public boolean canCreate(ICreateContext context) {
 		Object bo = getBusinessObjectForPictogramElement(context.getTargetContainer());
-		if (bo == null || !(bo instanceof Event))
-			return false;
-		
-		return true;
+		return bo != null && bo instanceof Event;
 	}
-	
+
 	@Override
 	public Object[] create(ICreateContext context) {
 		Event e = (Event) getBusinessObjectForPictogramElement(context.getTargetContainer());

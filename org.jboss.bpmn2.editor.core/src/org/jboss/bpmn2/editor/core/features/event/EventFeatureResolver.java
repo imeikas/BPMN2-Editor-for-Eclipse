@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.bpmn2.BaseElement;
+import org.eclipse.bpmn2.BoundaryEvent;
 import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.Event;
 import org.eclipse.bpmn2.IntermediateCatchEvent;
@@ -55,7 +56,7 @@ public class EventFeatureResolver implements FeatureResolver {
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IFeatureProvider fp, BaseElement e) {
-		if (e instanceof Event)
+		if (e instanceof Event && !(e instanceof BoundaryEvent))
 			return new UpdateEventFeature(fp);
 		else
 			return null;
@@ -78,7 +79,7 @@ public class EventFeatureResolver implements FeatureResolver {
 
 	@Override
 	public IMoveShapeFeature getMoveFeature(IFeatureProvider fp, BaseElement e) {
-		if (e instanceof Event) {
+		if (e instanceof Event && !(e instanceof BoundaryEvent)) {
 			return new MoveFlowNodeFeature(fp);
 		}
 		return null;

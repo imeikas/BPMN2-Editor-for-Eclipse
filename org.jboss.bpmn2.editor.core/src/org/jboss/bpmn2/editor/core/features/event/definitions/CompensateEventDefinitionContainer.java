@@ -48,7 +48,12 @@ public class CompensateEventDefinitionContainer extends EventDefinitionFeatureCo
 	protected Shape drawForCatch(DecorationAlgorithm algorithm, ContainerShape shape) {
 		return null; // NOT ALLOWED ACCORDING TO SPEC
 	}
-
+	
+	@Override
+    protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
+	    return null; //TODO
+    }
+	
 	private Shape drawFilled(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape compensateShape = Graphiti.getPeService().createShape(shape, false);
 		Compensation compensation = ShapeUtil.createEventCompensation(compensateShape);

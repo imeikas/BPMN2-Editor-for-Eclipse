@@ -85,7 +85,6 @@ public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
 
 		link(containerShape, e);
 
-		
 		ChopboxAnchor anchor = peCreateService.createChopboxAnchor(containerShape);
 		anchor.setReferencedGraphicsAlgorithm(ellipse);
 		

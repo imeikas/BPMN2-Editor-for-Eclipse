@@ -26,18 +26,19 @@ public abstract class AbstractAddEventDefinitionFeature extends AbstractAddShape
 	@Override
 	public boolean canAdd(IAddContext context) {
 		Object bo = getBusinessObjectForPictogramElement(context.getTargetContainer());
-		return support.isValidTarget(bo);
+		return bo != null && bo instanceof Event;
 	}
 
 	@Override
 	public PictogramElement add(IAddContext context) {
-		Event event = (Event) getBusinessObjectForPictogramElement(context.getTargetContainer());
 		ContainerShape container = context.getTargetContainer();
+		Event event = (Event) getBusinessObjectForPictogramElement(container);
+
 		EventWithDefinitions definitions = support.create(event);
 		int size = definitions.getEventDefinitions().size();
-		
+
 		if (size > 1) {
-			if(ShapeUtil.clearEvent(container)) {
+			if (ShapeUtil.clearEvent(container)) {
 				Shape multipleShape = Graphiti.getPeService().createShape(container, false);
 				drawForEvent(event, multipleShape);
 				link(multipleShape, definitions.getEventDefinitions().toArray(new EventDefinition[size]));
@@ -46,12 +47,12 @@ public abstract class AbstractAddEventDefinitionFeature extends AbstractAddShape
 			Shape addedShape = getDecorationAlgorithm(event).draw(container);
 			link(addedShape, context.getNewObject());
 		}
-		
+
 		return null;
 	}
 
 	protected abstract DecorationAlgorithm getDecorationAlgorithm(Event event);
-	
+
 	private void drawForEvent(Event event, Shape shape) {
 		Polygon pentagon = ShapeUtil.createEventPentagon(shape);
 		pentagon.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));

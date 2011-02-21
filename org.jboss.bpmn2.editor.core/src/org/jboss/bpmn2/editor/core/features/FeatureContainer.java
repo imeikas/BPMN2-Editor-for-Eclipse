@@ -4,6 +4,7 @@ import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
+import org.eclipse.graphiti.features.IUpdateFeature;
 
 public interface FeatureContainer {
 	
@@ -12,4 +13,6 @@ public interface FeatureContainer {
 	ICreateFeature getCreateFeature(IFeatureProvider fp);
 	
 	IAddFeature getAddFeature(IFeatureProvider fp);
+	
+	IUpdateFeature getUpdateFeature(IFeatureProvider fp);
 }

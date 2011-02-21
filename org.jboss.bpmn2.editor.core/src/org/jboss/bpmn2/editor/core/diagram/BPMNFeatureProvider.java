@@ -19,12 +19,12 @@ import org.eclipse.graphiti.features.context.ILayoutContext;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.features.context.IUpdateContext;
-import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.FeatureResolver;
 import org.jboss.bpmn2.editor.core.features.artifact.ArtifactFeatureResolver;
+import org.jboss.bpmn2.editor.core.features.event.BoundaryEventFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.event.EventFeatureResolver;
 import org.jboss.bpmn2.editor.core.features.event.definitions.CancelEventDefinitionContainer;
 import org.jboss.bpmn2.editor.core.features.event.definitions.CompensateEventDefinitionContainer;
@@ -71,6 +71,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		resolvers.add(new ArtifactFeatureResolver());
 
 		containers = new ArrayList<FeatureContainer>();
+		containers.add(new BoundaryEventFeatureContainer());
 		containers.add(new ConditionalEventDefinitionContainer());
 		containers.add(new MessageEventDefinitionContainer());
 		containers.add(new TimerEventDefinitionContainer());
@@ -139,18 +140,30 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IUpdateContext context) {
-		PictogramElement pictogramElement = context.getPictogramElement();
-		if (pictogramElement instanceof ContainerShape) {
-			Object o = getBusinessObjectForPictogramElement(pictogramElement);
-			if (o instanceof BaseElement) {
-				for (FeatureResolver r : resolvers) {
-					IUpdateFeature f = r.getUpdateFeature(this, (BaseElement) o);
-					if (f != null) {
-						return f;
-					}
-				}
+		Object o = getBusinessObjectForPictogramElement(context.getPictogramElement());
+
+		if (isNotBaseElement(o)) {
+			return super.getUpdateFeature(context);
+		}
+
+		BaseElement element = (BaseElement) o;
+		
+		for (FeatureResolver r : resolvers) {
+			IUpdateFeature f = r.getUpdateFeature(this, element);
+			if (f != null) {
+				return f;
 			}
 		}
+		
+		for (FeatureContainer container : containers) {
+			if (container.canApplyTo(element)) {
+				IUpdateFeature feature = container.getUpdateFeature(this);
+				if (feature == null)
+					continue;
+				return feature;
+			}
+		}
+		
 		return super.getUpdateFeature(context);
 	}
 

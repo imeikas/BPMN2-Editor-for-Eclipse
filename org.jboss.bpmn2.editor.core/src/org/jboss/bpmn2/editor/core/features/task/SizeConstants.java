@@ -9,4 +9,8 @@ public interface SizeConstants {
 	int HEIGHT = 50;
 	
 	int HEIGHT_MIN = 25;
+	
+	int PADDING_RIGHT = 46;
+	
+	int PADDING_BOTTOM = 18;
 }

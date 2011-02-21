@@ -1,16 +1,19 @@
 package org.jboss.bpmn2.editor.core.features.task;
 
 import static org.jboss.bpmn2.editor.core.features.task.SizeConstants.HEIGHT;
+import static org.jboss.bpmn2.editor.core.features.task.SizeConstants.PADDING_BOTTOM;
 import static org.jboss.bpmn2.editor.core.features.task.SizeConstants.WIDTH;
 
 import org.eclipse.bpmn2.Task;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
+import org.eclipse.graphiti.mm.algorithms.Rectangle;
 import org.eclipse.graphiti.mm.algorithms.RoundedRectangle;
 import org.eclipse.graphiti.mm.algorithms.Text;
 import org.eclipse.graphiti.mm.algorithms.styles.AdaptedGradientColoredAreas;
 import org.eclipse.graphiti.mm.algorithms.styles.Orientation;
+import org.eclipse.graphiti.mm.pictograms.ChopboxAnchor;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
@@ -47,38 +50,40 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
     public PictogramElement add(IAddContext context) {
 		Task addedTask = (Task) context.getNewObject();
 
+		IGaService gaService = Graphiti.getGaService();
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
 		ContainerShape containerShape = peCreateService.createContainerShape(context.getTargetContainer(), true);
 
-		IGaService gaService = Graphiti.getGaService();
-
-		RoundedRectangle roundedRectangle = gaService.createRoundedRectangle(containerShape, 5, 5);
+		Rectangle invisibleRectangle = gaService.createInvisibleRectangle(containerShape);
+		gaService.setLocationAndSize(invisibleRectangle, context.getX(), context.getY(), getWidth(), HEIGHT + PADDING_BOTTOM);
+		
+		Shape taskShape = peCreateService.createShape(containerShape, false);
+		RoundedRectangle roundedRectangle = gaService.createRoundedRectangle(taskShape, 5, 5);
+		gaService.setLocationAndSize(roundedRectangle, 0, 0, getWidth(), HEIGHT);
 		roundedRectangle.setStyle(StyleUtil.getStyleForClass(getDiagram()));
-
 		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
 		gaService.setRenderingStyle(roundedRectangle, gradient);
-
-		gaService.setLocationAndSize(roundedRectangle, context.getX(), context.getY(), getWidth(), HEIGHT);
-
+		link(taskShape, addedTask);
+		decorateTask(roundedRectangle, context);
+		
 		if (addedTask.eResource() == null) {
 			getDiagram().eResource().getContents().add(addedTask);
 		}
-		
-		link(containerShape, addedTask);
 
-		Shape shape = peCreateService.createShape(containerShape, false);
-		Text text = gaService.createDefaultText(shape, addedTask.getName());
+		Shape textShape = peCreateService.createShape(containerShape, false);
+		Text text = gaService.createDefaultText(textShape, addedTask.getName());
+		gaService.setLocationAndSize(text, 0, 0, getWidth(), 20);
 		text.setStyle(StyleUtil.getStyleForText(getDiagram()));
 		text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		text.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 		text.getFont().setBold(true);
-		gaService.setLocationAndSize(text, 0, 0, getWidth(), 20);
+		link(textShape, addedTask);
 		
-		link(shape, addedTask);
+		link(containerShape, addedTask);
 		
-		decorateTask(roundedRectangle, context);
+		ChopboxAnchor anchor = peCreateService.createChopboxAnchor(containerShape);
+		anchor.setReferencedGraphicsAlgorithm(roundedRectangle);
 		
-		peCreateService.createChopboxAnchor(containerShape);
 		layoutPictogramElement(containerShape);
 		return containerShape;
     }
