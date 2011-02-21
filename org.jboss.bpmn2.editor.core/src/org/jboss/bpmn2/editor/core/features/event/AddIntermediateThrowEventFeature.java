@@ -18,9 +18,10 @@ public class AddIntermediateThrowEventFeature extends AbstractAddEventFeature {
 	    return IntermediateThrowEvent.class;
     }
 	
+
 	@Override
 	protected void decorateEllipse(Ellipse e) {
-		Ellipse circle = ShapeUtil.createTriggerCircle(e);
+		Ellipse circle = ShapeUtil.createIntermediateEventCircle(e);
 		circle.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 	}
 }

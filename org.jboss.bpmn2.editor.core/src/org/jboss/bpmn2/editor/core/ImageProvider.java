@@ -2,15 +2,20 @@ package org.jboss.bpmn2.editor.core;
 
 import org.eclipse.bpmn2.Association;
 import org.eclipse.bpmn2.BusinessRuleTask;
+import org.eclipse.bpmn2.CancelEventDefinition;
+import org.eclipse.bpmn2.CompensateEventDefinition;
 import org.eclipse.bpmn2.ComplexGateway;
 import org.eclipse.bpmn2.ConditionalEventDefinition;
 import org.eclipse.bpmn2.EndEvent;
+import org.eclipse.bpmn2.ErrorEventDefinition;
+import org.eclipse.bpmn2.EscalationEventDefinition;
 import org.eclipse.bpmn2.EventBasedGateway;
 import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.bpmn2.IntermediateCatchEvent;
 import org.eclipse.bpmn2.IntermediateThrowEvent;
 import org.eclipse.bpmn2.Lane;
+import org.eclipse.bpmn2.LinkEventDefinition;
 import org.eclipse.bpmn2.ManualTask;
 import org.eclipse.bpmn2.MessageEventDefinition;
 import org.eclipse.bpmn2.MessageFlow;
@@ -65,9 +70,15 @@ public class ImageProvider extends AbstractImageProvider {
 	public static final String IMG_16_TIMER = PREFIX + TimerEventDefinition.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_SIGNAL = PREFIX + SignalEventDefinition.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_MESSAGE = PREFIX + MessageEventDefinition.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_ESCAlATION = PREFIX + EscalationEventDefinition.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_COMPENSATE = PREFIX + CompensateEventDefinition.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_LINK = PREFIX + LinkEventDefinition.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_ERROR = PREFIX + ErrorEventDefinition.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_CANCEL = PREFIX + CancelEventDefinition.class.getSimpleName().toLowerCase() + dot16;
 	
 	public static final String IMG_20_CONDITION = PREFIX + ConditionalEventDefinition.class.getSimpleName().toLowerCase() + dot20;
 	public static final String IMG_20_TIMER = PREFIX + TimerEventDefinition.class.getSimpleName().toLowerCase() + dot20;
+	public static final String IMG_20_MULTIPLE = PREFIX + "multipleeventdefinition" + dot20; // FIXME
 	
 	@Override
 	protected void addAvailableImages() {
@@ -94,12 +105,18 @@ public class ImageProvider extends AbstractImageProvider {
 		addImageFilePath(IMG_16_SERVICE_TASK, ICONS_16 + "ServiceTask.png");
 		addImageFilePath(IMG_16_SEND_TASK, ICONS_16 + "SendTask.png");
 		addImageFilePath(IMG_16_RECEIVE_TASK, ICONS_16 + "ReceiveTask.png");
-		addImageFilePath(IMG_16_CONDITION, ICONS_16 + "condition_16x16.png");
-		addImageFilePath(IMG_16_TIMER, ICONS_16 + "timer_16x16.png");
+		addImageFilePath(IMG_16_CONDITION, ICONS_16 + "Condition.png");
+		addImageFilePath(IMG_16_TIMER, ICONS_16 + "Timer.png");
 		addImageFilePath(IMG_16_SIGNAL, ICONS_16 + "Signal.png");
 		addImageFilePath(IMG_16_MESSAGE, ICONS_16 + "Message.png");
+		addImageFilePath(IMG_16_ESCAlATION, ICONS_16 + "Escalation.png");
+		addImageFilePath(IMG_16_COMPENSATE, ICONS_16 + "Compensate.png");
+		addImageFilePath(IMG_16_LINK, ICONS_16 + "Link.png");
+		addImageFilePath(IMG_16_ERROR, ICONS_16 + "Error.png");
+		addImageFilePath(IMG_16_CANCEL, ICONS_16 + "Cancel.png");
 		
-		addImageFilePath(IMG_20_CONDITION, ICONS_20 + "condition_20x20.png");
-		addImageFilePath(IMG_20_TIMER, ICONS_20 + "timer_20x20.png");
+		addImageFilePath(IMG_20_CONDITION, ICONS_20 + "Condition.png");
+		addImageFilePath(IMG_20_TIMER, ICONS_20 + "Timer.png");
+		addImageFilePath(IMG_20_MULTIPLE, ICONS_20 + "Multiple.png");
 	}
 }

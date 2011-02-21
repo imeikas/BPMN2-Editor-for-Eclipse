@@ -2,36 +2,48 @@ package org.jboss.bpmn2.editor.core.features;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
-import org.eclipse.graphiti.mm.GraphicsAlgorithmContainer;
+import org.eclipse.bpmn2.EventDefinition;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.mm.algorithms.Ellipse;
 import org.eclipse.graphiti.mm.algorithms.Image;
 import org.eclipse.graphiti.mm.algorithms.Polygon;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.eclipse.graphiti.mm.algorithms.Rectangle;
 import org.eclipse.graphiti.mm.algorithms.styles.Point;
+import org.eclipse.graphiti.mm.pictograms.ContainerShape;
+import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
+import org.eclipse.graphiti.services.IPeService;
 
 public class ShapeUtil {
 
 	private static final IGaService gaService = Graphiti.getGaService();
+	private static final IPeService peService = Graphiti.getPeService();
 
 	public static class Envelope {
 		public Rectangle rect;
 		public Polyline line;
 	}
-	
+
 	public static class Asterisk {
 		public Polyline horizontal;
 		public Polyline vertical;
 		public Polyline diagonalDesc;
 		public Polyline diagonalAsc;
 	}
-	
+
+	public static class Compensation {
+		public Polygon arrow1;
+		public Polygon arrow2;
+	}
+
 	/* GATEWAY */
-	
+
 	public static final int GATEWAY_RADIUS = 25;
 	private static final int[] GATEWAY = { 0, GATEWAY_RADIUS, GATEWAY_RADIUS, 0, 2 * GATEWAY_RADIUS, GATEWAY_RADIUS,
 	        GATEWAY_RADIUS, 2 * GATEWAY_RADIUS };
@@ -58,7 +70,7 @@ public class ShapeUtil {
 		ellipse.setFilled(false);
 		return ellipse;
 	}
-	
+
 	public static Polygon createCross(Polygon gateway) {
 		int n1 = 14;
 		int n2 = 22;
@@ -82,20 +94,20 @@ public class ShapeUtil {
 		cross.setLineWidth(1);
 		return cross;
 	}
-	
+
 	public static Asterisk createAsterisk(Polygon gateway) {
-		Polyline vertical = gaService.createPolyline(gateway, new int [] {24, 8, 24, 42});
+		Polyline vertical = gaService.createPolyline(gateway, new int[] { 24, 8, 24, 42 });
 		vertical.setLineWidth(5);
-		
-		Polyline horizontal = gaService.createPolyline(gateway, new int [] {8, 24, 42, 24});
+
+		Polyline horizontal = gaService.createPolyline(gateway, new int[] { 8, 24, 42, 24 });
 		horizontal.setLineWidth(5);
-		
-		Polyline diagonalDesc = gaService.createPolyline(gateway, new int [] {13, 14, 37, 37});
+
+		Polyline diagonalDesc = gaService.createPolyline(gateway, new int[] { 13, 14, 37, 37 });
 		diagonalDesc.setLineWidth(4);
-		
-		Polyline diagonalAsc = gaService.createPolyline(gateway, new int [] {37, 13, 14, 37});
+
+		Polyline diagonalAsc = gaService.createPolyline(gateway, new int[] { 37, 13, 14, 37 });
 		diagonalAsc.setLineWidth(4);
-		
+
 		Asterisk a = new Asterisk();
 		a.horizontal = horizontal;
 		a.vertical = vertical;
@@ -103,7 +115,7 @@ public class ShapeUtil {
 		a.diagonalAsc = diagonalAsc;
 		return a;
 	}
-	
+
 	/* EVENT */
 
 	public static final int EVENT_SIZE = 36;
@@ -111,50 +123,167 @@ public class ShapeUtil {
 
 	public static Ellipse createEventShape(Shape container) {
 		Ellipse ellipse = gaService.createEllipse(container);
-		gaService.setSize(ellipse, EVENT_SIZE, EVENT_SIZE);
+		gaService.setLocationAndSize(ellipse, 0, 0, EVENT_SIZE, EVENT_SIZE);
 		return ellipse;
 	}
 
-	public static Envelope createEnvelope(Ellipse event) {
-		return createEnvelope(event, 9, 9, 18, 18);
+	public static Envelope createEventEnvelope(Shape shape) {
+		return createEnvelope(shape, 9, 9, 18, 18);
 	}
-	
-	public static Ellipse createTriggerCircle(Ellipse event) {
-		Ellipse circle = gaService.createEllipse(event);
+
+	public static Polygon createEventPentagon(Shape shape) {
+		int radius = EVENT_SIZE / 2;
+		return gaService.createPolygon(shape, new int[] { radius, 7, radius + 10, radius - 4, radius + 7, radius + 10,
+		        radius - 7, radius + 10, radius - 10, radius - 4 });
+	}
+
+	public static Ellipse createIntermediateEventCircle(Ellipse ellipse) {
+		Ellipse circle = gaService.createEllipse(ellipse);
 		gaService.setLocationAndSize(circle, 4, 4, EVENT_SIZE - 8, EVENT_SIZE - 8);
 		circle.setLineWidth(1);
 		circle.setFilled(false);
 		return circle;
 	}
-	
-	public static Image createImage(Ellipse ellipse, String imageId) {
-		Image image = gaService.createImage(ellipse, imageId);
+
+	public static Image createEventImage(Shape shape, String imageId) {
+		Image image = gaService.createImage(shape, imageId);
 		gaService.setLocationAndSize(image, 8, 8, 20, 20);
 		return image;
 	}
+
+	public static Polygon createEventSignal(Shape shape) {
+		Polygon polygon = gaService.createPolygon(shape, new int[] { 16, 4, 28, 26, 7, 26 });
+		polygon.setLineWidth(1);
+		return polygon;
+	}
+
+	public static Polygon createEventEscalation(Shape shape) {
+		int radius = EVENT_SIZE / 2;
+		int[] points = { radius, 8, radius + 8, radius + 9, radius, radius + 2, radius - 8, radius + 9 };
+		Polygon polygon = gaService.createPolygon(shape, points);
+		polygon.setLineWidth(1);
+		return polygon;
+	}
+
+	public static Compensation createEventCompensation(Shape shape) {
+		Rectangle rect = gaService.createInvisibleRectangle(shape);
+		
+		int w = 22;
+		int h = 18;
+		gaService.setLocationAndSize(rect, 5, 9, w, h);
+		
+		int _w = w / 2;
+		int _h = h / 2;
+		int[] pontsArrow1 = {
+				_w, 0,
+				_w, h,
+				0, _h
+		};
+		Polygon arrow1 = gaService.createPolygon(rect, pontsArrow1);
+		
+		int[] pontsArrow2 = {
+				w, 0,
+				w, h,
+				w / 2, _h
+		};
+		Polygon arrow2 = gaService.createPolygon(rect, pontsArrow2);
+		
+		Compensation compensation = new Compensation();
+		compensation.arrow1 = arrow1;
+		compensation.arrow2 = arrow2;
+		return compensation;
+	}
 	
-	public static Polygon createTriangle(Ellipse e) {
-		Polygon polygon = gaService.createPolygon(e, new int[] {16, 4, 28, 26, 7, 26});
+	public static Polygon createEventLink(Shape shape) {
+		int radius = EVENT_SIZE / 2;
+		int[] points = {
+				32, radius,
+				23, radius + 11,
+				23, radius + 6,
+				5, radius + 6,
+				5, radius - 6,
+				23, radius - 6,
+				23, radius - 11
+		};
+	    Polygon polygon = gaService.createPolygon(shape, points);
 		polygon.setLineWidth(1);
 	    return polygon;
     }
 	
-	/* OTHER */
+	public static Polygon createEventError(Shape shape) {
+		int radius = EVENT_SIZE / 2;
+		int[] points = {
+				radius + 4, radius,
+				radius + 10, radius - 10,
+				radius + 7, radius + 10,
+				radius - 4, radius, 
+				radius - 10, radius + 10,
+				radius - 7, radius - 10
+		};
+		Polygon polygon = gaService.createPolygon(shape, points);
+		polygon.setLineWidth(1);
+	    return polygon;
+    }
 	
-	public static Envelope createEnvelope(Shape container) {
-		return createEnvelope(container, 0, 0, 18, 18);
+	public static Polygon createEventCancel(Shape shape) {
+		int radius = EVENT_SIZE / 2;
+		int c = 4;
+		int a = 9;
+		int b = 12;
+		int[] points = {
+				radius, radius - c,
+				radius + a, radius - b,
+				radius + b, radius - a,
+				radius + c, radius, 
+				radius + b, radius + a,
+				radius + a, radius + b,
+				radius, radius + c,
+				radius - a, radius + b,
+				radius - b, radius + a,
+				radius - c, radius,
+				radius - b, radius - a,
+				radius - a, radius - b
+		};
+		Polygon polygon = gaService.createPolygon(shape, points);
+		polygon.setLineWidth(1);
+	    return polygon;
+    }
+	
+	public static boolean clearEvent(ContainerShape shape) {
+		boolean cleared = false;
+
+		Iterator<PictogramElement> iterator = peService.getAllContainedPictogramElements(shape).iterator();
+		while (iterator.hasNext()) {
+			PictogramElement element = (PictogramElement) iterator.next();
+
+			if (element.getLink() == null)
+				continue;
+
+			EList<EObject> objects = element.getLink().getBusinessObjects();
+
+			if (!objects.isEmpty() && objects.size() > 1) // already a multiple event
+				return false;
+
+			if (objects.get(0) != null && objects.get(0) instanceof EventDefinition) {
+				peService.deletePictogramElement(element);
+				cleared = true;
+			}
+		}
+
+		return cleared;
 	}
-	
-	private static Envelope createEnvelope(GraphicsAlgorithmContainer container, int x, int y, int w, int h) {
-		Rectangle rect = gaService.createRectangle(container);
+
+	/* OTHER */
+
+	private static Envelope createEnvelope(Shape shape, int x, int y, int w, int h) {
+		Rectangle rect = gaService.createRectangle(shape);
 		gaService.setLocationAndSize(rect, x, y, w, h);
-		
-		Polyline line = gaService.createPolyline(rect, new int[] {0, 0, w / 2, h / 2, w, 0});
-		
+		Polyline line = gaService.createPolyline(rect, new int[] { 0, 0, w / 2, h / 2, w, 0 });
+
 		Envelope envelope = new Envelope();
 		envelope.rect = rect;
 		envelope.line = line;
-		
+
 		return envelope;
 	}
 }

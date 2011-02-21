@@ -27,16 +27,7 @@ public class EventFeatureResolver implements FeatureResolver {
 	@Override
 	public IAddFeature getAddFeature(IFeatureProvider fp, BaseElement e) {
 		if (e instanceof StartEvent)
-			if (AddConditionalStartEventFeature.isDefinitionsMatch((StartEvent) e))
-				return new AddConditionalStartEventFeature(fp);
-			else if (AddTimerStartEventFeature.isDefinitionsMatch((StartEvent) e))
-				return new AddTimerStartEventFeature(fp);
-			else if (AddSignalStartEventFeature.isDefinitionsMatch((StartEvent) e))
-				return new AddSignalStartEventFeature(fp);
-			else if (AddMessageStartEventDefinition.isDefinitionsMatch((StartEvent) e))
-				return new AddMessageStartEventDefinition(fp);
-			else
-				return new AddStartEventFeature(fp);
+			return new AddStartEventFeature(fp);
 		if (e instanceof EndEvent)
 			return new AddEndEventFeature(fp);
 		if (e instanceof IntermediateThrowEvent)
@@ -82,10 +73,6 @@ public class EventFeatureResolver implements FeatureResolver {
 		list.add(new CreateEndEventFeature(fp));
 		list.add(new CreateIntermediateThrowEventFeature(fp));
 		list.add(new CreateIntermediateCatchEventFeature(fp));
-		list.add(new CreateMessageStartEventFeature(fp));
-		list.add(new CreateConditionalStartEventFeature(fp));
-		list.add(new CreateTimerStartEventFeature(fp));
-		list.add(new CreateSignalStartEventFeature(fp));
 		return list;
 	}
 

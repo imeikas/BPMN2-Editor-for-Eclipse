@@ -62,37 +62,38 @@ public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
 		Shape ellipseShape = peCreateService.createShape(containerShape, false);
 		Ellipse ellipse = ShapeUtil.createEventShape(ellipseShape);
 		ellipse.setStyle(StyleUtil.getStyleForClass(getDiagram()));
-		decorateEllipse(ellipse);
 		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
 		gaService.setRenderingStyle(ellipse, gradient);
-		gaService.setLocation(ellipse, 0, 0);
-
+		link(ellipseShape, e);
+		decorateEllipse(ellipse);
+		
+		addShapes(containerShape);
+		
 		Shape textShape = peCreateService.createShape(containerShape, false);
 		Text text = gaService.createDefaultText(textShape, e.getName());
 		text.setStyle(StyleUtil.getStyleForText(getDiagram()));
 		text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		text.setVerticalAlignment(Orientation.ALIGNMENT_BOTTOM);
 		text.setBackground(manageColor(IColorConstant.RED));
-		decorateText(text);
 		gaService.setLocationAndSize(text, 0, ShapeUtil.EVENT_SIZE, ShapeUtil.EVENT_SIZE, ShapeUtil.EVENT_TEXT_AREA);
+		link(textShape, e);
 
 		if (e.eResource() == null) {
 			getDiagram().eResource().getContents().add(e);
 		}
 
-		link(ellipseShape, e);
-		link(textShape, e);
 		link(containerShape, e);
 
+		
 		peCreateService.createChopboxAnchor(containerShape);
 		layoutPictogramElement(containerShape);
 		return containerShape;
 	}
 
-	protected void decorateEllipse(Ellipse e) {
-	}
+	protected void decorateEllipse(Ellipse ellipse) {
+    }
 
-	protected void decorateText(Text t) {
+	protected void addShapes(ContainerShape ellipseShape) {
 	}
 
 	protected abstract Class<? extends Event> getEventClass();

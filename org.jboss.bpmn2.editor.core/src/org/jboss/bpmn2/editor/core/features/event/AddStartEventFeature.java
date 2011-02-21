@@ -9,7 +9,7 @@ public class AddStartEventFeature extends AbstractAddEventFeature {
 	public AddStartEventFeature(IFeatureProvider fp) {
 		super(fp);
 	}
-
+	
 	@Override
     protected Class<? extends Event> getEventClass() {
 	    return StartEvent.class;
