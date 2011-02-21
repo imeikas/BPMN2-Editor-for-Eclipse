@@ -1,8 +1,8 @@
-package org.jboss.bpmn2.editor.ui.property;
+package org.jboss.bpmn2.editor.ui.property.iospecification;
 
 import java.util.ArrayList;
 
-import org.eclipse.bpmn2.DataInput;
+import org.eclipse.bpmn2.DataOutput;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
@@ -21,52 +21,56 @@ import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.ui.editor.BPMN2Editor;
+import org.jboss.bpmn2.editor.ui.property.AbstractBpmn2PropertiesComposite;
+import org.jboss.bpmn2.editor.ui.property.AdvancedPropertiesComposite;
 
-public class DataInputsComposite extends Composite {
+public class DataOutputComposite extends Composite {
 	protected final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
-	private EObjectContainmentEList<DataInput> list;
+	private EObjectContainmentEList<DataOutput> list;
 
 	private final ArrayList<Widget> widgets = new ArrayList<Widget>();
 	private BPMN2Editor bpmn2Editor;
-	private final Button btnAddNewInput;
+	private final Button btnAddNewOutput;
 	private SelectionListener listener;
 
-	public static class DataInputDetailsComposite extends AbstractBpmn2PropertiesComposite {
+	public static class DataOutputDetailsComposite extends AbstractBpmn2PropertiesComposite {
 
-		public DataInputDetailsComposite(DataInputsComposite dataInputsComposite, int none) {
-			super(dataInputsComposite, none);
+		public DataOutputDetailsComposite(DataOutputComposite dataOutputsComposite, int none) {
+			super(dataOutputsComposite, none);
 		}
 
 		@Override
 		public void createBindings() {
-			DataInput di = (DataInput) be;
+			DataOutput di = (DataOutput) be;
 			EList<EAttribute> eAllAttributes = di.eClass().getEAllAttributes();
 			for (EAttribute a : eAllAttributes) {
 				if ("name".equals(a.getName())) {
-					bind(a, createTextInput("Input Name"));
+					bind(a, createTextInput("Output Name"));
 				}
 			}
 		}
 
 	}
 
-	public DataInputsComposite(Composite parent, int style) {
+	public DataOutputComposite(Composite parent, int style) {
 		super(parent, style);
 		GridLayout gridLayout = new GridLayout(3, false);
+		gridLayout.marginHeight = 0;
+		gridLayout.marginWidth = 0;
 		gridLayout.verticalSpacing = 0;
 		gridLayout.horizontalSpacing = 0;
 		setLayout(gridLayout);
 		toolkit.adapt(this);
 		toolkit.paintBordersFor(this);
 
-		Label lblDataInputs = new Label(this, SWT.NONE);
-		toolkit.adapt(lblDataInputs, true, true);
-		lblDataInputs.setText("Data Inputs");
+		Label lblDataOutputs = new Label(this, SWT.NONE);
+		toolkit.adapt(lblDataOutputs, true, true);
+		lblDataOutputs.setText("Data Outputs");
 
-		btnAddNewInput = new Button(this, SWT.NONE);
-		btnAddNewInput.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 2, 1));
-		toolkit.adapt(btnAddNewInput, true, true);
-		btnAddNewInput.setText("Add New Input");
+		btnAddNewOutput = new Button(this, SWT.NONE);
+		btnAddNewOutput.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 2, 1));
+		toolkit.adapt(btnAddNewOutput, true, true);
+		btnAddNewOutput.setText("Add New Output");
 
 		Label label = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
 		GridData gd_label = new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1);
@@ -76,7 +80,7 @@ public class DataInputsComposite extends Composite {
 
 	}
 
-	public void setInputs(final EObjectContainmentEList<DataInput> list) {
+	public void setOutputs(final EObjectContainmentEList<DataOutput> list) {
 		this.list = list;
 		cleanWidgets();
 
@@ -85,13 +89,14 @@ public class DataInputsComposite extends Composite {
 		}
 
 		if (listener != null) {
-			btnAddNewInput.removeSelectionListener(listener);
+			btnAddNewOutput.removeSelectionListener(listener);
 		}
 		listener = new SelectionListener() {
 
+			@SuppressWarnings("restriction")
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				final DataInput di = ModelHandler.FACTORY.createDataInput();
+				final DataOutput di = ModelHandler.FACTORY.createDataOutput();
 				TransactionalEditingDomain domain = bpmn2Editor.getEditingDomain();
 				domain.getCommandStack().execute(new RecordingCommand(domain) {
 					@Override
@@ -99,7 +104,7 @@ public class DataInputsComposite extends Composite {
 						list.add(di);
 					}
 				});
-				createDataInputComposite(di);
+				createDataOutputComposite(di);
 				relayout();
 			}
 
@@ -108,10 +113,10 @@ public class DataInputsComposite extends Composite {
 
 			}
 		};
-		btnAddNewInput.addSelectionListener(listener);
+		btnAddNewOutput.addSelectionListener(listener);
 
-		for (DataInput value : list) {
-			createDataInputComposite(value);
+		for (DataOutput value : list) {
+			createDataOutputComposite(value);
 		}
 		relayout();
 	}
@@ -124,8 +129,8 @@ public class DataInputsComposite extends Composite {
 		p.getParent().getParent().layout(true, true);
 	}
 
-	private void createDataInputComposite(final DataInput value) {
-		final DataInputDetailsComposite c = new DataInputDetailsComposite(this, SWT.NONE);
+	private void createDataOutputComposite(final DataOutput value) {
+		final DataOutputDetailsComposite c = new DataOutputDetailsComposite(this, SWT.NONE);
 		c.setBaseElement(bpmn2Editor, value);
 		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		toolkit.adapt(c);
@@ -135,6 +140,7 @@ public class DataInputsComposite extends Composite {
 		button.setText("Remove");
 		button.addSelectionListener(new SelectionListener() {
 
+			@SuppressWarnings("restriction")
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				TransactionalEditingDomain domain = bpmn2Editor.getEditingDomain();
