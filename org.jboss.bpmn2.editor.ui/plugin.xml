@@ -33,9 +33,17 @@
     <page
           class="org.jboss.bpmn2.editor.ui.preferences.ToolEnablementPropertyPage"
           id="org.jboss.bpmn2.editor.ui.toolEnablement"
-          name="BPMN2"
-          objectClass="org.eclipse.core.resources.IProject">
+          name="BPMN2">
     </page>
+      <page name="BPMN2"
+             class="org.jboss.bpmn2.editor.ui.preferences.ToolEnablementPropertyPage"
+             id="org.jboss.bpmn2.editor.ui.toolEnablement2">
+          <enabledWhen>
+        <adapt type="org.eclipse.core.resources.IProject">
+             <test property="org.eclipse.core.resources.projectNature" value="org.eclipse.jdt.core.javanature"/>
+        </adapt>
+          </enabledWhen>
+       </page>
  </extension>
 <!-- <extension
        point="org.eclipse.ui.views">
