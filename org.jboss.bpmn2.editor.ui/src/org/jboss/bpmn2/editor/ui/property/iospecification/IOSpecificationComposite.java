@@ -19,8 +19,6 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.ui.property.AbstractBpmn2PropertiesComposite;
 import org.jboss.bpmn2.editor.ui.property.AdvancedPropertiesComposite;
 
-import com.swtdesigner.SWTResourceManager;
-
 public class IOSpecificationComposite extends AbstractBpmn2PropertiesComposite {
 
 	private final DataInputsComposite dataInputs;
@@ -34,7 +32,6 @@ public class IOSpecificationComposite extends AbstractBpmn2PropertiesComposite {
 
 	public IOSpecificationComposite(Composite parent, int style) {
 		super(parent, style);
-		setBackground(SWTResourceManager.getColor(SWT.COLOR_YELLOW));
 		GridLayout gridLayout = (GridLayout) getLayout();
 		gridLayout.numColumns = 3;
 		toolkit.adapt(this);
