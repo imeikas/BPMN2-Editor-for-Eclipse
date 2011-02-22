@@ -22,7 +22,9 @@ import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
 public class AddSubprocessFeature extends AbstractAddFeature {
-
+	
+	public static final String TRIGGERED_BY_EVENT = "triggered-by-event-key";
+	
 	protected FeatureSupport support = new FeatureSupport() {
 		@Override
 		public Object getBusinessObject(PictogramElement element) {
@@ -91,6 +93,7 @@ public class AddSubprocessFeature extends AbstractAddFeature {
 			getDiagram().eResource().getContents().add(subprocess);
 		}
 		
+		peService.setPropertyValue(containerShape, TRIGGERED_BY_EVENT, "false");
 		link(containerShape, subprocess);
 		return containerShape;
 	}

@@ -5,6 +5,7 @@ import org.eclipse.bpmn2.SubProcess;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
+import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
@@ -26,6 +27,11 @@ public class SubProcessFeatureContainer extends AbstractSubProcessFeatureContain
 	    return new AddSubprocessFeature(fp);
 	}
 	
+	@Override
+	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
+	    return new UpdateSubProcessFeature(fp);
+	}
+	
 	public static class CreateSubProcessFeature extends AbstractCreateSubProcess {
 
 		public CreateSubProcessFeature(IFeatureProvider fp) {
@@ -36,6 +42,7 @@ public class SubProcessFeatureContainer extends AbstractSubProcessFeatureContain
 		protected SubProcess createFlowElement(ICreateContext context) {
 			SubProcess subProcess = ModelHandler.FACTORY.createSubProcess();
 			subProcess.setName("SubProcess");
+			subProcess.setTriggeredByEvent(false);
 			return subProcess;
 		}
 		
