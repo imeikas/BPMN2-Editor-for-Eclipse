@@ -47,7 +47,7 @@ public abstract class AbstractSetsComposite extends AbstractPropertyComposite {
 			lblInputSets.setText(getLabelText());
 			toolkit.adapt(lblInputSets, false, false);
 
-			text = new Text(this, SWT.NONE);
+			text = new Text(this, SWT.BORDER);
 			text.setEditable(false);
 			text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 			toolkit.adapt(text, false, false);

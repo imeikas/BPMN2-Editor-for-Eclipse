@@ -115,6 +115,7 @@ public class IOSpecificationComposite extends AbstractBpmn2PropertiesComposite {
 		dataInputs.setVisible(true);
 		dataOutputs.setVisible(true);
 		inputSets.setVisible(true);
+		outputSets.setVisible(true);
 
 		EList<EReference> specContainments = spec.eClass().getEAllContainments();
 		for (EReference sRef : specContainments) {
