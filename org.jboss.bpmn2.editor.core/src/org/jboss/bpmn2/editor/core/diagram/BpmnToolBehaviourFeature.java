@@ -22,7 +22,7 @@ import org.eclipse.graphiti.palette.impl.PaletteCompartmentEntry;
 import org.eclipse.graphiti.tb.DefaultToolBehaviorProvider;
 import org.jboss.bpmn2.editor.core.Bpmn2Preferences;
 import org.jboss.bpmn2.editor.core.FeatureMap;
-import org.jboss.bpmn2.editor.core.features.task.TaskSelectionBehavior;
+import org.jboss.bpmn2.editor.core.features.ActivitySelectionBehavior;
 
 public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implements IFeatureCheckerHolder {
 
@@ -90,16 +90,16 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 	
 	@Override
 	public GraphicsAlgorithm[] getClickArea(PictogramElement pe) {
-	    if(TaskSelectionBehavior.canApplyTo(pe)) {
-	    	return TaskSelectionBehavior.getClickArea(pe);
+	    if(ActivitySelectionBehavior.canApplyTo(pe)) {
+	    	return ActivitySelectionBehavior.getClickArea(pe);
 	    }
 	    return super.getClickArea(pe);
 	}
 	
 	@Override
 	public GraphicsAlgorithm getSelectionBorder(PictogramElement pe) {
-	    if(TaskSelectionBehavior.canApplyTo(pe)) {
-	    	return TaskSelectionBehavior.getSelectionBorder(pe);
+	    if(ActivitySelectionBehavior.canApplyTo(pe)) {
+	    	return ActivitySelectionBehavior.getSelectionBorder(pe);
 	    }
 	    return super.getSelectionBorder(pe);
 	}

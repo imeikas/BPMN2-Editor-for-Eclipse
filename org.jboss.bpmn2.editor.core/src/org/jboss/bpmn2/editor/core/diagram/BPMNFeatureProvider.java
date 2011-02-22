@@ -38,6 +38,8 @@ import org.jboss.bpmn2.editor.core.features.flow.FlowFeatureResolver;
 import org.jboss.bpmn2.editor.core.features.gateway.GatewayFeatureResolver;
 import org.jboss.bpmn2.editor.core.features.lane.LaneFeatureResolver;
 import org.jboss.bpmn2.editor.core.features.participant.ParticipantFeatureResolver;
+import org.jboss.bpmn2.editor.core.features.subprocess.SubProcessFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.subprocess.TransactionFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.task.BusinessRuleTaskFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.task.ManualTaskFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.task.ReceiveTaskFeatureContainer;
@@ -84,6 +86,8 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers.add(new SendTaskFeatureContainer());
 		containers.add(new ReceiveTaskFeatureContainer());
 		containers.add(new TaskFeatureContainer());
+		containers.add(new TransactionFeatureContainer());
+		containers.add(new SubProcessFeatureContainer());
 		containers.add(new BoundaryEventFeatureContainer());
 		containers.add(new ConditionalEventDefinitionContainer());
 		containers.add(new MessageEventDefinitionContainer());

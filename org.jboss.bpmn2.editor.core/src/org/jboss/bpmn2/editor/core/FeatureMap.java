@@ -31,6 +31,8 @@ import org.jboss.bpmn2.editor.core.features.gateway.CreateInclusiveGatewayFeatur
 import org.jboss.bpmn2.editor.core.features.gateway.CreateParallelGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.lane.CreateLaneFeature;
 import org.jboss.bpmn2.editor.core.features.participant.CreateParticipantFeature;
+import org.jboss.bpmn2.editor.core.features.subprocess.SubProcessFeatureContainer.CreateSubProcessFeature;
+import org.jboss.bpmn2.editor.core.features.subprocess.TransactionFeatureContainer.CreateTransactionFeature;
 import org.jboss.bpmn2.editor.core.features.task.BusinessRuleTaskFeatureContainer.CreateBusinessRuleTaskFeature;
 import org.jboss.bpmn2.editor.core.features.task.ManualTaskFeatureContainer.CreateManualTaskFeature;
 import org.jboss.bpmn2.editor.core.features.task.ReceiveTaskFeatureContainer.CreateReceiveTaskFeature;
@@ -78,6 +80,8 @@ public class FeatureMap {
 		featureMap.put(i.getErrorEventDefinition(), CreateErrorEventDefinition.class);
 		featureMap.put(i.getCancelEventDefinition(), CreateCancelEventDefinition.class);
 		featureMap.put(i.getBoundaryEvent(), CreateBoundaryEvent.class);
+		featureMap.put(i.getSubProcess(), CreateSubProcessFeature.class);
+		featureMap.put(i.getTransaction(), CreateTransactionFeature.class);
 		FEATURE_MAP = Collections.unmodifiableMap(featureMap);
 	}
 

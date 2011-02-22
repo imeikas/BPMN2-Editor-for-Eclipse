@@ -231,6 +231,7 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 			}
 
 			peService.setPropertyValue(containerShape, cancelKey, "true");
+			layoutPictogramElement(context.getTargetContainer());
 			return containerShape;
 		}
 	}

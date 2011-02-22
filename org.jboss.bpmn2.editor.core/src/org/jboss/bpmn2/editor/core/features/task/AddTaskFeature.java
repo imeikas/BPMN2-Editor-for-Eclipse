@@ -20,7 +20,6 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeCreateService;
-import org.eclipse.graphiti.util.IColorConstant;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
@@ -71,7 +70,6 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 		Text text = gaService.createDefaultText(textShape, addedTask.getName());
 		gaService.setLocationAndSize(text, 0, 0, getWidth(), 20);
 		text.setStyle(StyleUtil.getStyleForText(getDiagram()));
-		text.setBackground(manageColor(IColorConstant.GREEN));
 		text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		text.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 		text.getFont().setBold(true);

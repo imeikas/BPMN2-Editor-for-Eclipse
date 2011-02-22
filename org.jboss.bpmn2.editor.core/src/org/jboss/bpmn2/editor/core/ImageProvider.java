@@ -29,9 +29,11 @@ import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.ServiceTask;
 import org.eclipse.bpmn2.SignalEventDefinition;
 import org.eclipse.bpmn2.StartEvent;
+import org.eclipse.bpmn2.SubProcess;
 import org.eclipse.bpmn2.Task;
 import org.eclipse.bpmn2.TextAnnotation;
 import org.eclipse.bpmn2.TimerEventDefinition;
+import org.eclipse.bpmn2.Transaction;
 import org.eclipse.bpmn2.UserTask;
 import org.eclipse.graphiti.ui.platform.AbstractImageProvider;
 
@@ -77,6 +79,8 @@ public class ImageProvider extends AbstractImageProvider {
 	public static final String IMG_16_ERROR = PREFIX + ErrorEventDefinition.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_CANCEL = PREFIX + CancelEventDefinition.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_BOUNDARY_EVENT = PREFIX + BoundaryEvent.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_SUB_PROCESS = PREFIX + SubProcess.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_TRANSACTION = PREFIX + Transaction.class.getSimpleName().toLowerCase() + dot16;
 	
 	public static final String IMG_20_CONDITION = PREFIX + ConditionalEventDefinition.class.getSimpleName().toLowerCase() + dot20;
 	public static final String IMG_20_TIMER = PREFIX + TimerEventDefinition.class.getSimpleName().toLowerCase() + dot20;
@@ -117,6 +121,8 @@ public class ImageProvider extends AbstractImageProvider {
 		addImageFilePath(IMG_16_ERROR, ICONS_16 + "Error.png");
 		addImageFilePath(IMG_16_CANCEL, ICONS_16 + "Cancel.png");
 		addImageFilePath(IMG_16_BOUNDARY_EVENT, ICONS_16 + "BoundaryEvent.png");
+		addImageFilePath(IMG_16_SUB_PROCESS, ICONS_16 + "SubProcess.png");
+		addImageFilePath(IMG_16_TRANSACTION, ICONS_16 + "Transaction.png");
 		
 		addImageFilePath(IMG_20_CONDITION, ICONS_20 + "Condition.png");
 		addImageFilePath(IMG_20_TIMER, ICONS_20 + "Timer.png");

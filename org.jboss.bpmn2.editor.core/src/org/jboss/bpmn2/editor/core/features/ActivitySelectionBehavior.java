@@ -1,11 +1,9 @@
-package org.jboss.bpmn2.editor.core.features.task;
+package org.jboss.bpmn2.editor.core.features;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
-import org.eclipse.bpmn2.Task;
+import org.eclipse.bpmn2.Activity;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
@@ -13,7 +11,7 @@ import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.services.Graphiti;
 
-public class TaskSelectionBehavior {
+public class ActivitySelectionBehavior {
 
 	public static boolean canApplyTo(PictogramElement element) {
 		if (element.getLink() == null)
@@ -24,7 +22,7 @@ public class TaskSelectionBehavior {
 		if (size == 0 || size > 1)
 			return false;
 
-		return objects.get(0) instanceof Task && element instanceof ContainerShape;
+		return objects.get(0) instanceof Activity && element instanceof ContainerShape;
 	}
 
 	public static GraphicsAlgorithm[] getClickArea(PictogramElement element) {

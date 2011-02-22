@@ -21,50 +21,52 @@ import org.eclipse.graphiti.services.IGaService;
 public class LayoutTaskFeature extends AbstractLayoutFeature {
 
 	public LayoutTaskFeature(IFeatureProvider fp) {
-	    super(fp);
-    }
+		super(fp);
+	}
 
 	@Override
-    public boolean canLayout(ILayoutContext context) {
+	public boolean canLayout(ILayoutContext context) {
 		PictogramElement pictoElem = context.getPictogramElement();
-		if(!(pictoElem instanceof ContainerShape)) {
+		if (!(pictoElem instanceof ContainerShape)) {
 			return false;
 		}
 		EList<EObject> businessObjs = pictoElem.getLink().getBusinessObjects();
-	    return businessObjs.size() == 1 && businessObjs.get(0) instanceof Task;
-    }
+		return businessObjs.size() == 1 && businessObjs.get(0) instanceof Task;
+	}
 
 	@Override
-    public boolean layout(ILayoutContext context) {
+	public boolean layout(ILayoutContext context) {
 		boolean changed = false;
-		
+
 		ContainerShape containerShape = (ContainerShape) context.getPictogramElement();
 		GraphicsAlgorithm containerGa = containerShape.getGraphicsAlgorithm();
 		IGaService gaService = Graphiti.getGaService();
-		
-		if(containerGa.getWidth() < WIDTH_MIN) {
+
+		if (containerGa.getWidth() < WIDTH_MIN) {
 			containerGa.setWidth(WIDTH_MIN);
 			changed = true;
 		}
-		
-		if(containerGa.getHeight() < HEIGHT_MIN) {
+
+		if (containerGa.getHeight() < HEIGHT_MIN) {
 			containerGa.setHeight(HEIGHT_MIN);
 			changed = true;
 		}
-		
+
 		int containerWidth = containerGa.getWidth();
 		Iterator<Shape> iterator = containerShape.getChildren().iterator();
 		while (iterator.hasNext()) {
-	        Shape shape = (Shape) iterator.next();
-	        GraphicsAlgorithm ga = shape.getGraphicsAlgorithm();
-	        IDimension size = gaService.calculateSize(ga);
-	        if(containerWidth != size.getWidth()) {
-	        	gaService.setWidth(ga, containerWidth);
-	        	changed = true;
-	        }
-        }
-		
-	    return changed;
-    }
+			Shape shape = (Shape) iterator.next();
+			Object bo = getBusinessObjectForPictogramElement(shape);
+			if (bo == null || !(bo instanceof Task))
+				continue;
+			GraphicsAlgorithm ga = shape.getGraphicsAlgorithm();
+			IDimension size = gaService.calculateSize(ga);
+			if (containerWidth != size.getWidth()) {
+				gaService.setWidth(ga, containerWidth);
+				changed = true;
+			}
+		}
 
+		return changed;
+	}
 }
