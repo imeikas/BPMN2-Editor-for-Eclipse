@@ -1,10 +1,11 @@
 package org.jboss.bpmn2.editor.core.features.event.definitions;
 
 import org.eclipse.bpmn2.BaseElement;
-import org.eclipse.bpmn2.CatchEvent;
 import org.eclipse.bpmn2.EscalationEventDefinition;
 import org.eclipse.bpmn2.Event;
 import org.eclipse.bpmn2.EventDefinition;
+import org.eclipse.bpmn2.IntermediateCatchEvent;
+import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
@@ -48,21 +49,19 @@ public class EscalationEventDefinitionContainer extends EventDefinitionFeatureCo
 	protected Shape drawForCatch(DecorationAlgorithm algorithm, ContainerShape shape) {
 		return null; // NOT ALLOWED ACCORDING TO SPEC
 	}
-	
+
 	@Override
-    protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    // TODO Auto-generated method stub
-	    return null;
-    }
-	
-	// Will be used with boundary and sub-events
-	// private Shape draw(DecorationAlgorithm algorithm, ContainerShape shape) {
-	// Shape escalationShape = Graphiti.getPeService().createShape(shape, false);
-	// Polygon escalation = ShapeUtil.createEventEscalation(escalationShape);
-	// escalation.setFilled(false);
-	// escalation.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
-	// return escalationShape;
-	// }
+	protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
+		return draw(algorithm, shape);
+	}
+
+	private Shape draw(DecorationAlgorithm algorithm, ContainerShape shape) {
+		Shape escalationShape = Graphiti.getPeService().createShape(shape, false);
+		Polygon escalation = ShapeUtil.createEventEscalation(escalationShape);
+		escalation.setFilled(false);
+		escalation.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
+		return escalationShape;
+	}
 
 	private Shape drawFilled(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape escalationShape = Graphiti.getPeService().createShape(shape, false);
@@ -85,7 +84,7 @@ public class EscalationEventDefinitionContainer extends EventDefinitionFeatureCo
 				return false;
 
 			Event e = (Event) getBusinessObjectForPictogramElement(context.getTargetContainer());
-			if (e instanceof CatchEvent)
+			if (e instanceof StartEvent || e instanceof IntermediateCatchEvent)
 				return false;
 
 			return true;

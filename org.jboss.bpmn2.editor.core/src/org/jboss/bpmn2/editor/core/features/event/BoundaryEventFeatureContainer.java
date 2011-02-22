@@ -74,19 +74,21 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 				Property cancelProperty = Graphiti.getPeService().getProperty(context.getPictogramElement(), cancelKey);
 				BoundaryEvent event = (BoundaryEvent) getBusinessObjectForPictogramElement(context
 				        .getPictogramElement());
-
 				boolean changed = Boolean.parseBoolean(cancelProperty.getValue()) != event.isCancelActivity();
-				
-				if(changed == false)
-					return Reason.createFalseReason();
-				
-				boolean canUpdate = false;
+				IReason reason = changed ? Reason.createTrueReason("Boundary type changed") : Reason.createFalseReason();
+				return reason;
+			}
+
+			@Override
+			public boolean update(IUpdateContext context) {
+				BoundaryEvent event = (BoundaryEvent) getBusinessObjectForPictogramElement(context
+				        .getPictogramElement());
+
+				boolean canUpdate = true;
 
 				List<EventDefinition> definitions = event.getEventDefinitions();
 
-				if (definitions.isEmpty()) {
-					canUpdate = true;
-				} else if (event.isCancelActivity() == false) {
+				if (event.isCancelActivity() == false) {
 					for (EventDefinition d : definitions) {
 						if (d instanceof ErrorEventDefinition || d instanceof CancelEventDefinition
 						        || d instanceof CompensateEventDefinition) {
@@ -96,25 +98,19 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 					}
 				}
 
-				IReason reason = canUpdate ? Reason.createTrueReason() : Reason.createFalseReason();
-
-				return reason;
-			}
-
-			@Override
-			public boolean update(IUpdateContext context) {
-				BoundaryEvent event = (BoundaryEvent) getBusinessObjectForPictogramElement(context
-				        .getPictogramElement());
+				if (canUpdate == false)
+					return false;
 				
-				Graphiti.getPeService().setPropertyValue(context.getPictogramElement(), cancelKey, Boolean.toString(event.isCancelActivity()));
-				
+				Graphiti.getPeService().setPropertyValue(context.getPictogramElement(), cancelKey,
+				        Boolean.toString(event.isCancelActivity()));
+
 				Ellipse ellipse = (Ellipse) context.getPictogramElement().getGraphicsAlgorithm();
 				Ellipse innerEllipse = (Ellipse) ellipse.getGraphicsAlgorithmChildren().get(0);
 				LineStyle lineStyle = event.isCancelActivity() ? LineStyle.SOLID : LineStyle.DASH;
 
 				ellipse.setLineStyle(lineStyle);
 				innerEllipse.setLineStyle(lineStyle);
-				
+
 				return true;
 			}
 

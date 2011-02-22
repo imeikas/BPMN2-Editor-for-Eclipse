@@ -1,11 +1,14 @@
 package org.jboss.bpmn2.editor.core.features.event.definitions;
 
 import org.eclipse.bpmn2.BaseElement;
+import org.eclipse.bpmn2.BoundaryEvent;
 import org.eclipse.bpmn2.CatchEvent;
 import org.eclipse.bpmn2.ErrorEventDefinition;
 import org.eclipse.bpmn2.Event;
 import org.eclipse.bpmn2.EventDefinition;
+import org.eclipse.bpmn2.IntermediateCatchEvent;
 import org.eclipse.bpmn2.IntermediateThrowEvent;
+import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
@@ -37,12 +40,7 @@ public class ErrorEventDefinitionContainer extends EventDefinitionFeatureContain
 
 	@Override
     protected Shape drawForEnd(DecorationAlgorithm algorithm, ContainerShape shape) {
-		Shape errorShape = Graphiti.getPeService().createShape(shape, false);
-		Polygon error = ShapeUtil.createEventError(errorShape);
-		error.setFilled(true);
-		error.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
-		error.setBackground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
-	    return errorShape;
+		return drawFilled(algorithm, shape);
     }
 
 	@Override
@@ -54,11 +52,27 @@ public class ErrorEventDefinitionContainer extends EventDefinitionFeatureContain
     protected Shape drawForCatch(DecorationAlgorithm algorithm, ContainerShape shape) {
 	    return null; // NOT ALLOWED ACCORDING TO SPEC
     }
-	
+		
 	@Override
     protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    // TODO Auto-generated method stub
-	    return null;
+	    return draw(algorithm, shape);
+    }
+	
+	private Shape draw(DecorationAlgorithm algorithm, ContainerShape shape) {
+		Shape errorShape = Graphiti.getPeService().createShape(shape, false);
+		Polygon error = ShapeUtil.createEventError(errorShape);
+		error.setFilled(false);
+		error.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
+	    return errorShape;
+	}
+	
+	private Shape drawFilled(DecorationAlgorithm algorithm, ContainerShape shape) {
+	    Shape errorShape = Graphiti.getPeService().createShape(shape, false);
+		Polygon error = ShapeUtil.createEventError(errorShape);
+		error.setFilled(true);
+		error.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
+		error.setBackground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
+	    return errorShape;
     }
 	
 	public static class CreateErrorEventDefinition extends CreateEventDefinition {
@@ -73,6 +87,11 @@ public class ErrorEventDefinitionContainer extends EventDefinitionFeatureContain
 				return false;
 
 			Event e = (Event) getBusinessObjectForPictogramElement(context.getTargetContainer());
+			
+			if(e instanceof BoundaryEvent) {
+				BoundaryEvent be = (BoundaryEvent) e;
+				return be.isCancelActivity();
+			}
 			
 			if (e instanceof CatchEvent || e instanceof IntermediateThrowEvent)
 				return false;

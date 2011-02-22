@@ -49,7 +49,7 @@ public class ConditionalEventDefinitionContainer extends EventDefinitionFeatureC
 		
 	@Override
     protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    return null; //TODO
+	    return draw(shape);
     }
 	
 	private Shape draw(ContainerShape shape) {

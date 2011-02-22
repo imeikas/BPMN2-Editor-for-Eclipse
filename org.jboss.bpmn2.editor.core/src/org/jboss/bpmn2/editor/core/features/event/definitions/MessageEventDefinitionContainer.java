@@ -50,8 +50,7 @@ public class MessageEventDefinitionContainer extends EventDefinitionFeatureConta
 	
 	@Override
     protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    // TODO Auto-generated method stub
-	    return null;
+	    return drawEnvleope(algorithm, shape);
     }
 	
 	private Shape drawEnvleope(DecorationAlgorithm algorithm, ContainerShape shape) {

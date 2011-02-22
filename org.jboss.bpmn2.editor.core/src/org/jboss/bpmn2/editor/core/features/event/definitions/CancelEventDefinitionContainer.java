@@ -1,6 +1,7 @@
 package org.jboss.bpmn2.editor.core.features.event.definitions;
 
 import org.eclipse.bpmn2.BaseElement;
+import org.eclipse.bpmn2.BoundaryEvent;
 import org.eclipse.bpmn2.CancelEventDefinition;
 import org.eclipse.bpmn2.CatchEvent;
 import org.eclipse.bpmn2.Event;
@@ -37,12 +38,7 @@ public class CancelEventDefinitionContainer extends EventDefinitionFeatureContai
 
 	@Override
     protected Shape drawForEnd(DecorationAlgorithm algorithm, ContainerShape shape) {
-		Shape cancelShape = Graphiti.getPeService().createShape(shape, false);
-		Polygon link = ShapeUtil.createEventCancel(cancelShape);
-		link.setFilled(true);
-		link.setBackground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
-		link.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
-		return cancelShape;
+		return drawFilled(algorithm, shape);
     }
 
 	@Override
@@ -57,7 +53,24 @@ public class CancelEventDefinitionContainer extends EventDefinitionFeatureContai
 	
 	@Override
     protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    return null; //TODO
+	    return draw(algorithm, shape);
+    }
+	
+	private Shape draw(DecorationAlgorithm algorithm, ContainerShape shape) {
+	    Shape cancelShape = Graphiti.getPeService().createShape(shape, false);
+		Polygon link = ShapeUtil.createEventCancel(cancelShape);
+		link.setFilled(false);
+		link.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
+		return cancelShape;
+    }
+	
+	private Shape drawFilled(DecorationAlgorithm algorithm, ContainerShape shape) {
+	    Shape cancelShape = Graphiti.getPeService().createShape(shape, false);
+		Polygon link = ShapeUtil.createEventCancel(cancelShape);
+		link.setFilled(true);
+		link.setBackground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
+		link.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
+		return cancelShape;
     }
 	
 	public static class CreateCancelEventDefinition extends CreateEventDefinition {
@@ -73,9 +86,14 @@ public class CancelEventDefinitionContainer extends EventDefinitionFeatureContai
 
 			Event e = (Event) getBusinessObjectForPictogramElement(context.getTargetContainer());
 			
+			if(e instanceof BoundaryEvent) {
+				BoundaryEvent be = (BoundaryEvent) e;
+				return be.isCancelActivity();
+			}
+
 			if (e instanceof CatchEvent || e instanceof IntermediateThrowEvent)
 				return false;
-
+			
 			return true;
 		}
 

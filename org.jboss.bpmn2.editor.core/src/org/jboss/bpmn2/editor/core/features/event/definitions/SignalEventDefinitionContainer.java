@@ -29,31 +29,30 @@ public class SignalEventDefinitionContainer extends EventDefinitionFeatureContai
 
 	@Override
     protected Shape drawForStart(DecorationAlgorithm algorithm, ContainerShape shape) {
-		return drawSignal(algorithm, shape);
+		return draw(algorithm, shape);
     }
 
 	@Override
     protected Shape drawForEnd(DecorationAlgorithm algorithm, ContainerShape shape) {
-		return drawSignalFilled(algorithm, shape);
+		return drawFilled(algorithm, shape);
     }
 	
 	@Override
     protected Shape drawForThrow(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    return drawSignalFilled(algorithm, shape);
+	    return drawFilled(algorithm, shape);
     }
 
 	@Override
     protected Shape drawForCatch(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    return drawSignal(algorithm, shape);
+	    return draw(algorithm, shape);
     }
 	
 	@Override
     protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    // TODO Auto-generated method stub
-	    return null;
+	    return draw(algorithm, shape);
     }
 	
-	private Shape drawSignal(DecorationAlgorithm algorithm, ContainerShape shape) {
+	private Shape draw(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape signalShape = Graphiti.getPeService().createShape(shape, false);
 		Polygon signal = ShapeUtil.createEventSignal(signalShape);
 		signal.setFilled(false);
@@ -61,7 +60,7 @@ public class SignalEventDefinitionContainer extends EventDefinitionFeatureContai
 	    return signalShape;
 	}
 	
-	private Shape drawSignalFilled(DecorationAlgorithm algorithm, ContainerShape shape) {
+	private Shape drawFilled(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape signalShape = Graphiti.getPeService().createShape(shape, false);
 		Polygon signal = ShapeUtil.createEventSignal(signalShape);
 		signal.setFilled(true);
