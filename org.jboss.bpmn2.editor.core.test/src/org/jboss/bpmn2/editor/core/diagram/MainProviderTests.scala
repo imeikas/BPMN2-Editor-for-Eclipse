@@ -1,6 +1,6 @@
 package org.jboss.bpmn2.editor.core.diagram
 
-import org.jboss.bpmn2.editor.core.features.task.CreateTaskFeature
+import org.jboss.bpmn2.editor.core.features.task.TaskFeatureContainer.CreateTaskFeature
 import org.jboss.bpmn2.editor.core.NiceObject._
 import org.jboss.bpmn2.editor.core.Activator
 import org.jboss.bpmn2.editor.core.features._

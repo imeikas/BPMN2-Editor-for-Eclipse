@@ -28,13 +28,12 @@ public abstract class AbstractBaseElementUpdateFeature extends AbstractUpdateFea
 		String shapeValue = support.getShapeValue(context);
 		String businessValue = support.getBusinessValue(context);
 
-		boolean businessObjectHasVal = shapeValue == null && businessValue != null;
-		boolean businessObjectHasDifferentVal = shapeValue != null && !shapeValue.equals(businessValue);
-
-		boolean updateNeeded = businessObjectHasVal || businessObjectHasDifferentVal;
+		boolean updateNeeded = shapeValue != null && !shapeValue.equals(businessValue);
+		
 		if (updateNeeded) {
 			return Reason.createTrueReason("Name out of date");
 		}
+		
 		return Reason.createFalseReason();
 	}
 

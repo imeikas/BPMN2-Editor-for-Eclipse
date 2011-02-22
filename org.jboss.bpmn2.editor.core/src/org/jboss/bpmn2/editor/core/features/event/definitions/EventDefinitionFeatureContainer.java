@@ -7,7 +7,11 @@ import org.eclipse.bpmn2.IntermediateCatchEvent;
 import org.eclipse.bpmn2.IntermediateThrowEvent;
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.graphiti.features.IAddFeature;
+import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
+import org.eclipse.graphiti.features.ILayoutFeature;
+import org.eclipse.graphiti.features.IMoveShapeFeature;
+import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.mm.algorithms.styles.Color;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
@@ -68,5 +72,25 @@ public abstract class EventDefinitionFeatureContainer implements FeatureContaine
 				}
 			};
 		}
+	}
+	
+	@Override
+	public IDirectEditingFeature getDirectEditingFeature(IFeatureProvider fp) {
+	    return null;
+	}
+	
+	@Override
+	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
+	    return null;
+	}
+	
+	@Override
+	public IMoveShapeFeature getMoveFeature(IFeatureProvider fp) {
+	    return null;
+	}
+	
+	@Override
+	public IResizeShapeFeature getResizeFeature(IFeatureProvider fp) {
+	    return null;
 	}
 }

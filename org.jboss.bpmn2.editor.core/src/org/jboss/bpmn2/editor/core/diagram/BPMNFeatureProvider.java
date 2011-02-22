@@ -19,7 +19,6 @@ import org.eclipse.graphiti.features.context.ILayoutContext;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.features.context.IUpdateContext;
-import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.FeatureResolver;
@@ -39,7 +38,14 @@ import org.jboss.bpmn2.editor.core.features.flow.FlowFeatureResolver;
 import org.jboss.bpmn2.editor.core.features.gateway.GatewayFeatureResolver;
 import org.jboss.bpmn2.editor.core.features.lane.LaneFeatureResolver;
 import org.jboss.bpmn2.editor.core.features.participant.ParticipantFeatureResolver;
-import org.jboss.bpmn2.editor.core.features.task.TaskFeatureResolver;
+import org.jboss.bpmn2.editor.core.features.task.BusinessRuleTaskFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.task.ManualTaskFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.task.ReceiveTaskFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.task.ScriptTaskFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.task.SendTaskFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.task.ServiceTaskFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.task.TaskFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.task.UserTaskFeatureContainer;
 
 /**
  * Determines what kinds of business objects can be added to a diagram.
@@ -59,10 +65,9 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 	public BPMNFeatureProvider(IDiagramTypeProvider dtp) {
 		super(dtp);
-		
+
 		// TODO convert resolvers to containers, provides better decoupling
 		resolvers = new ArrayList<FeatureResolver>();
-		resolvers.add(new TaskFeatureResolver());
 		resolvers.add(new EventFeatureResolver());
 		resolvers.add(new GatewayFeatureResolver());
 		resolvers.add(new FlowFeatureResolver());
@@ -71,6 +76,14 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		resolvers.add(new ArtifactFeatureResolver());
 
 		containers = new ArrayList<FeatureContainer>();
+		containers.add(new ServiceTaskFeatureContainer());
+		containers.add(new UserTaskFeatureContainer());
+		containers.add(new ManualTaskFeatureContainer());
+		containers.add(new ScriptTaskFeatureContainer());
+		containers.add(new BusinessRuleTaskFeatureContainer());
+		containers.add(new SendTaskFeatureContainer());
+		containers.add(new ReceiveTaskFeatureContainer());
+		containers.add(new TaskFeatureContainer());
 		containers.add(new BoundaryEventFeatureContainer());
 		containers.add(new ConditionalEventDefinitionContainer());
 		containers.add(new MessageEventDefinitionContainer());
@@ -81,24 +94,24 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers.add(new LinkEventDefinitionContainer());
 		containers.add(new ErrorEventDefinitionContainer());
 		containers.add(new CancelEventDefinitionContainer());
-		
+
 		List<ICreateFeature> createFeaturesList = new ArrayList<ICreateFeature>();
-		
+
 		for (FeatureResolver r : resolvers) {
 			createFeaturesList.addAll(r.getCreateFeatures(this));
 		}
 
-		for(FeatureContainer container : containers) {
+		for (FeatureContainer container : containers) {
 			createFeaturesList.add(container.getCreateFeature(this));
 		}
-		
+
 		createFeatures = createFeaturesList.toArray(new ICreateFeature[createFeaturesList.size()]);
 
 		List<ICreateConnectionFeature> createConnectionFeatureList = new ArrayList<ICreateConnectionFeature>();
 		for (FeatureResolver r : resolvers) {
 			createConnectionFeatureList.addAll(r.getCreateConnectionFeatures(this));
 		}
-		
+
 		createConnectionFeatures = createConnectionFeatureList
 		        .toArray(new ICreateConnectionFeature[createConnectionFeatureList.size()]);
 
@@ -114,6 +127,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 		BaseElement element = (BaseElement) o;
 
+		// TODO remove after refactoring all remaining resolvers -> containers
 		for (FeatureResolver r : resolvers) {
 			IAddFeature f = r.getAddFeature(this, element);
 			if (f != null) {
@@ -147,14 +161,15 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		}
 
 		BaseElement element = (BaseElement) o;
-		
+
+		// TODO remove after refactoring all remaining resolvers -> containers
 		for (FeatureResolver r : resolvers) {
 			IUpdateFeature f = r.getUpdateFeature(this, element);
 			if (f != null) {
 				return f;
 			}
 		}
-		
+
 		for (FeatureContainer container : containers) {
 			if (container.canApplyTo(element)) {
 				IUpdateFeature feature = container.getUpdateFeature(this);
@@ -163,7 +178,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 				return feature;
 			}
 		}
-		
+
 		return super.getUpdateFeature(context);
 	}
 
@@ -174,63 +189,124 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 	@Override
 	public IDirectEditingFeature getDirectEditingFeature(IDirectEditingContext context) {
-		PictogramElement pe = context.getPictogramElement();
-		Object o = getBusinessObjectForPictogramElement(pe);
-		if (o instanceof BaseElement) {
-			for (FeatureResolver r : resolvers) {
-				IDirectEditingFeature f = r.getDirectEditingFeature(this, (BaseElement) o);
-				if (f != null) {
-					return f;
-				}
+		Object o = getBusinessObjectForPictogramElement(context.getPictogramElement());
+
+		if (isNotBaseElement(o)) {
+			return super.getDirectEditingFeature(context);
+		}
+
+		BaseElement element = (BaseElement) o;
+
+		// TODO remove after refactoring all remaining resolvers -> containers
+		for (FeatureResolver r : resolvers) {
+			IDirectEditingFeature f = r.getDirectEditingFeature(this, (BaseElement) o);
+			if (f != null) {
+				return f;
 			}
 		}
+
+		for (FeatureContainer container : containers) {
+			if (container.canApplyTo(element)) {
+				IDirectEditingFeature feature = container.getDirectEditingFeature(this);
+				if (feature == null)
+					continue;
+				return feature;
+			}
+		}
+
 		return super.getDirectEditingFeature(context);
 	}
 
 	@Override
 	public ILayoutFeature getLayoutFeature(ILayoutContext context) {
-		PictogramElement pictogramElement = context.getPictogramElement();
-		Object o = getBusinessObjectForPictogramElement(pictogramElement);
-		if (o instanceof BaseElement) {
-			for (FeatureResolver r : resolvers) {
-				ILayoutFeature f = r.getLayoutFeature(this, (BaseElement) o);
-				if (f != null) {
-					return f;
-				}
+		Object o = getBusinessObjectForPictogramElement(context.getPictogramElement());
+
+		if (isNotBaseElement(o)) {
+			return super.getLayoutFeature(context);
+		}
+
+		BaseElement element = (BaseElement) o;
+
+		// TODO remove after refactoring all remaining resolvers -> containers
+		for (FeatureResolver r : resolvers) {
+			ILayoutFeature f = r.getLayoutFeature(this, (BaseElement) o);
+			if (f != null) {
+				return f;
 			}
 		}
+
+		for (FeatureContainer container : containers) {
+			if (container.canApplyTo(element)) {
+				ILayoutFeature feature = container.getLayoutFeature(this);
+				if (feature == null)
+					continue;
+				return feature;
+			}
+		}
+
 		return super.getLayoutFeature(context);
 	}
 
 	@Override
 	public IMoveShapeFeature getMoveShapeFeature(IMoveShapeContext context) {
-		Object o = getBusinessObjectForPictogramElement(context.getShape());
-		if (o instanceof BaseElement) {
-			for (FeatureResolver r : resolvers) {
-				IMoveShapeFeature f = r.getMoveFeature(this, (BaseElement) o);
-				if (f != null) {
-					return f;
-				}
+		Object o = getBusinessObjectForPictogramElement(context.getPictogramElement());
+
+		if (isNotBaseElement(o)) {
+			return super.getMoveShapeFeature(context);
+		}
+
+		BaseElement element = (BaseElement) o;
+
+		// TODO remove after refactoring all remaining resolvers -> containers
+		for (FeatureResolver r : resolvers) {
+			IMoveShapeFeature f = r.getMoveFeature(this, (BaseElement) o);
+			if (f != null) {
+				return f;
 			}
 		}
+
+		for (FeatureContainer container : containers) {
+			if (container.canApplyTo(element)) {
+				IMoveShapeFeature feature = container.getMoveFeature(this);
+				if (feature == null)
+					continue;
+				return feature;
+			}
+		}
+
 		return super.getMoveShapeFeature(context);
 	}
 
 	@Override
 	public IResizeShapeFeature getResizeShapeFeature(IResizeShapeContext context) {
-		Object o = getBusinessObjectForPictogramElement(context.getShape());
-		if (o instanceof BaseElement) {
-			for (FeatureResolver r : resolvers) {
-				IResizeShapeFeature f = r.getResizeFeature(this, (BaseElement) o);
-				if (f != null) {
-					return f;
-				}
+		Object o = getBusinessObjectForPictogramElement(context.getPictogramElement());
+
+		if (isNotBaseElement(o)) {
+			return super.getResizeShapeFeature(context);
+		}
+
+		BaseElement element = (BaseElement) o;
+
+		// TODO remove after refactoring all remaining resolvers -> containers
+		for (FeatureResolver r : resolvers) {
+			IResizeShapeFeature f = r.getResizeFeature(this, (BaseElement) o);
+			if (f != null) {
+				return f;
 			}
 		}
+
+		for (FeatureContainer container : containers) {
+			if (container.canApplyTo(element)) {
+				IResizeShapeFeature feature = container.getResizeFeature(this);
+				if (feature == null)
+					continue;
+				return feature;
+			}
+		}
+
 		return super.getResizeShapeFeature(context);
 	}
-	
-	
+
 	private boolean isNotBaseElement(Object o) {
 		return !(o instanceof BaseElement);
 	}

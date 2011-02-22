@@ -13,15 +13,23 @@ import org.eclipse.bpmn2.ErrorEventDefinition;
 import org.eclipse.bpmn2.EventDefinition;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
+import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
+import org.eclipse.graphiti.features.ILayoutFeature;
+import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IReason;
+import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.features.context.ICreateContext;
+import org.eclipse.graphiti.features.context.IMoveShapeContext;
+import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
 import org.eclipse.graphiti.features.impl.AbstractCreateFeature;
+import org.eclipse.graphiti.features.impl.AbstractMoveShapeFeature;
 import org.eclipse.graphiti.features.impl.AbstractUpdateFeature;
+import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
 import org.eclipse.graphiti.features.impl.Reason;
 import org.eclipse.graphiti.mm.Property;
 import org.eclipse.graphiti.mm.algorithms.Ellipse;
@@ -75,7 +83,8 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 				BoundaryEvent event = (BoundaryEvent) getBusinessObjectForPictogramElement(context
 				        .getPictogramElement());
 				boolean changed = Boolean.parseBoolean(cancelProperty.getValue()) != event.isCancelActivity();
-				IReason reason = changed ? Reason.createTrueReason("Boundary type changed") : Reason.createFalseReason();
+				IReason reason = changed ? Reason.createTrueReason("Boundary type changed") : Reason
+				        .createFalseReason();
 				return reason;
 			}
 
@@ -100,7 +109,7 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 
 				if (canUpdate == false)
 					return false;
-				
+
 				Graphiti.getPeService().setPropertyValue(context.getPictogramElement(), cancelKey,
 				        Boolean.toString(event.isCancelActivity()));
 
@@ -224,5 +233,40 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 			peService.setPropertyValue(containerShape, cancelKey, "true");
 			return containerShape;
 		}
+	}
+
+	@Override
+	public IDirectEditingFeature getDirectEditingFeature(IFeatureProvider fp) {
+		return null;
+	}
+
+	@Override
+	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
+		return null;
+	}
+
+	@Override
+	public IMoveShapeFeature getMoveFeature(IFeatureProvider fp) {
+		return new AbstractMoveShapeFeature(fp) {
+
+			@Override
+			public void moveShape(IMoveShapeContext context) {
+			}
+
+			@Override
+			public boolean canMoveShape(IMoveShapeContext context) {
+				return false;
+			}
+		};
+	}
+
+	@Override
+	public IResizeShapeFeature getResizeFeature(IFeatureProvider fp) {
+		return new DefaultResizeShapeFeature(fp) {
+			@Override
+			public boolean canResizeShape(IResizeShapeContext context) {
+			    return false;
+			}
+		};
 	}
 }

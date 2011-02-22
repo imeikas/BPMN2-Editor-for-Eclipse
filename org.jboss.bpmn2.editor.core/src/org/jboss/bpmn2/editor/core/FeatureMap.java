@@ -31,14 +31,14 @@ import org.jboss.bpmn2.editor.core.features.gateway.CreateInclusiveGatewayFeatur
 import org.jboss.bpmn2.editor.core.features.gateway.CreateParallelGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.lane.CreateLaneFeature;
 import org.jboss.bpmn2.editor.core.features.participant.CreateParticipantFeature;
-import org.jboss.bpmn2.editor.core.features.task.CreateBusinessRuleTaskFeature;
-import org.jboss.bpmn2.editor.core.features.task.CreateManualTaskFeature;
-import org.jboss.bpmn2.editor.core.features.task.CreateReceiveTaskFeature;
-import org.jboss.bpmn2.editor.core.features.task.CreateScriptTaskFeature;
-import org.jboss.bpmn2.editor.core.features.task.CreateSendTaskFeature;
-import org.jboss.bpmn2.editor.core.features.task.CreateServiceTaskFeature;
-import org.jboss.bpmn2.editor.core.features.task.CreateTaskFeature;
-import org.jboss.bpmn2.editor.core.features.task.CreateUserTaskFeature;
+import org.jboss.bpmn2.editor.core.features.task.BusinessRuleTaskFeatureContainer.CreateBusinessRuleTaskFeature;
+import org.jboss.bpmn2.editor.core.features.task.ManualTaskFeatureContainer.CreateManualTaskFeature;
+import org.jboss.bpmn2.editor.core.features.task.ReceiveTaskFeatureContainer.CreateReceiveTaskFeature;
+import org.jboss.bpmn2.editor.core.features.task.ScriptTaskFeatureContainer.CreateScriptTaskFeature;
+import org.jboss.bpmn2.editor.core.features.task.SendTaskFeatureContainer.CreateSendTaskFeature;
+import org.jboss.bpmn2.editor.core.features.task.ServiceTaskFeatureContainer.CreateServiceTaskFeature;
+import org.jboss.bpmn2.editor.core.features.task.TaskFeatureContainer.CreateTaskFeature;
+import org.jboss.bpmn2.editor.core.features.task.UserTaskFeatureContainer.CreateUserTaskFeature;
 
 public class FeatureMap {
 	public static Map<EClass, Class<? extends IFeature>> FEATURE_MAP;
