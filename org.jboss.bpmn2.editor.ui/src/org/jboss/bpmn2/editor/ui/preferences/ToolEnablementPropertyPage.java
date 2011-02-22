@@ -7,13 +7,17 @@ import java.util.List;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.IElementComparer;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -29,11 +33,8 @@ import org.jboss.bpmn2.editor.core.ToolEnablement;
 import org.jboss.bpmn2.editor.ui.Activator;
 import org.osgi.service.prefs.BackingStoreException;
 
-import com.instantiations.designer.databinding.BeansListObservableFactory;
-import com.instantiations.designer.databinding.TreeBeanAdvisor;
-import com.instantiations.designer.databinding.TreeObservableLabelProvider;
-
 public class ToolEnablementPropertyPage extends PropertyPage {
+
 	private DataBindingContext m_bindingContext;
 
 	private Bpmn2Preferences preferences;
@@ -197,15 +198,85 @@ public class ToolEnablementPropertyPage extends PropertyPage {
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
-		BeansListObservableFactory treeObservableFactory = new BeansListObservableFactory(ToolEnablement.class,
-				"children");
-		TreeBeanAdvisor treeAdvisor = new TreeBeanAdvisor(ToolEnablement.class, "parent", "children", "anyChildren");
-		ObservableListTreeContentProvider treeContentProvider = new ObservableListTreeContentProvider(
-				treeObservableFactory, treeAdvisor);
-		checkboxTreeViewer.setContentProvider(treeContentProvider);
-		//
-		checkboxTreeViewer.setLabelProvider(new TreeObservableLabelProvider(treeContentProvider.getKnownElements(),
-				ToolEnablement.class, "name", null));
+		checkboxTreeViewer.setContentProvider(new ITreeContentProvider() {
+
+			@Override
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+				System.out.println(viewer + " " + oldInput + " " + newInput);
+			}
+
+			@Override
+			public void dispose() {
+			}
+
+			@Override
+			public boolean hasChildren(Object element) {
+				if (element instanceof ToolEnablement) {
+					return !((ToolEnablement) element).getChildren().isEmpty();
+				}
+				return false;
+			}
+
+			@Override
+			public Object getParent(Object element) {
+				if (element instanceof ToolEnablement) {
+					return ((ToolEnablement) element).getParent();
+				}
+				return null;
+			}
+
+			@Override
+			public Object[] getElements(Object inputElement) {
+				if (inputElement instanceof WritableList) {
+					return ((WritableList) inputElement).toArray();
+				}
+				return null;
+			}
+
+			@Override
+			public Object[] getChildren(Object parentElement) {
+				if (parentElement instanceof ToolEnablement) {
+					return ((ToolEnablement) parentElement).getChildren().toArray();
+				}
+				return null;
+			}
+		});
+
+		checkboxTreeViewer.setLabelProvider(new ILabelProvider() {
+			@Override
+			public void removeListener(ILabelProviderListener listener) {
+				System.out.println(listener);
+			}
+
+			@Override
+			public boolean isLabelProperty(Object element, String property) {
+				System.out.println(element + "  " + property);
+				return false;
+			}
+
+			@Override
+			public void dispose() {
+
+			}
+
+			@Override
+			public void addListener(ILabelProviderListener listener) {
+				System.out.println(listener);
+			}
+
+			@Override
+			public Image getImage(Object element) {
+				return null;
+			}
+
+			@Override
+			public String getText(Object element) {
+				if (element instanceof ToolEnablement) {
+					return ((ToolEnablement) element).getName();
+				}
+				return null;
+			}
+		});
 		writableList = new WritableList(tools, ToolEnablement.class);
 		checkboxTreeViewer.setInput(writableList);
 		//
