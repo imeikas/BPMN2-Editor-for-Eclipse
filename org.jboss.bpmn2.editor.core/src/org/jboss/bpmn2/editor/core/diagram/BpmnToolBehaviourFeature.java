@@ -13,6 +13,8 @@ import org.eclipse.graphiti.features.IFeatureChecker;
 import org.eclipse.graphiti.features.IFeatureCheckerHolder;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IContext;
+import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
+import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.palette.IPaletteCompartmentEntry;
 import org.eclipse.graphiti.palette.impl.ConnectionCreationToolEntry;
 import org.eclipse.graphiti.palette.impl.ObjectCreationToolEntry;
@@ -20,6 +22,7 @@ import org.eclipse.graphiti.palette.impl.PaletteCompartmentEntry;
 import org.eclipse.graphiti.tb.DefaultToolBehaviorProvider;
 import org.jboss.bpmn2.editor.core.Bpmn2Preferences;
 import org.jboss.bpmn2.editor.core.FeatureMap;
+import org.jboss.bpmn2.editor.core.features.task.TaskSelectionBehavior;
 
 public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implements IFeatureCheckerHolder {
 
@@ -83,5 +86,21 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 				return super.allowCreate();
 			}
 		};
+	}
+	
+	@Override
+	public GraphicsAlgorithm[] getClickArea(PictogramElement pe) {
+	    if(TaskSelectionBehavior.canApplyTo(pe)) {
+	    	return TaskSelectionBehavior.getClickArea(pe);
+	    }
+	    return super.getClickArea(pe);
+	}
+	
+	@Override
+	public GraphicsAlgorithm getSelectionBorder(PictogramElement pe) {
+	    if(TaskSelectionBehavior.canApplyTo(pe)) {
+	    	return TaskSelectionBehavior.getSelectionBorder(pe);
+	    }
+	    return super.getSelectionBorder(pe);
 	}
 }
