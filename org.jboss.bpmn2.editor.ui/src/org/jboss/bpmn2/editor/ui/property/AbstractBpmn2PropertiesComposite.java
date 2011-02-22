@@ -113,7 +113,7 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 	protected Text createTextInput(String name) {
 		createLabel(name);
 
-		Text text = new Text(this, SWT.NONE);
+		Text text = new Text(this, SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		toolkit.adapt(text, true, true);
 		widgets.add(text);
@@ -124,7 +124,7 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 	protected Text createIntInput(String name) {
 		createLabel(name);
 
-		Text text = new Text(this, SWT.NONE);
+		Text text = new Text(this, SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		toolkit.adapt(text, true, true);
 		widgets.add(text);
