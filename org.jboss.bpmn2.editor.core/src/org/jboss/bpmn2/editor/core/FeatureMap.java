@@ -25,10 +25,10 @@ import org.jboss.bpmn2.editor.core.features.event.definitions.SignalEventDefinit
 import org.jboss.bpmn2.editor.core.features.event.definitions.TimerEventDefinitionContainer.CreateTimerEventDefinition;
 import org.jboss.bpmn2.editor.core.features.flow.CreateMessageFlowFeature;
 import org.jboss.bpmn2.editor.core.features.flow.CreateSequenceFlowFeature;
-import org.jboss.bpmn2.editor.core.features.gateway.CreateEventBasedGatewayFeature;
-import org.jboss.bpmn2.editor.core.features.gateway.CreateExclusiveGatewayFeature;
-import org.jboss.bpmn2.editor.core.features.gateway.CreateInclusiveGatewayFeature;
-import org.jboss.bpmn2.editor.core.features.gateway.CreateParallelGatewayFeature;
+import org.jboss.bpmn2.editor.core.features.gateway.EventBasedGatewayFeatureContainer.CreateEventBasedGatewayFeature;
+import org.jboss.bpmn2.editor.core.features.gateway.ExclusiveGatewayFeatureContainer.CreateExclusiveGatewayFeature;
+import org.jboss.bpmn2.editor.core.features.gateway.InclusiveGatewayFeatureContainer.CreateInclusiveGatewayFeature;
+import org.jboss.bpmn2.editor.core.features.gateway.ParallelGatewayFeatureContainer.CreateParallelGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.lane.CreateLaneFeature;
 import org.jboss.bpmn2.editor.core.features.participant.CreateParticipantFeature;
 import org.jboss.bpmn2.editor.core.features.subprocess.SubProcessFeatureContainer.CreateSubProcessFeature;

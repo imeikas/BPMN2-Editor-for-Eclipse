@@ -16,7 +16,7 @@ import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
-public abstract class AbstractAddGatewayFeature<T extends Gateway> extends AbstractAddShapeFeature {
+public class DefaultAddGatewayFeature extends AbstractAddShapeFeature {
 	
 	public static final int RADIUS = 25;
 	
@@ -27,23 +27,21 @@ public abstract class AbstractAddGatewayFeature<T extends Gateway> extends Abstr
 		}
 	};
 	
-	public AbstractAddGatewayFeature(IFeatureProvider fp) {
+	public DefaultAddGatewayFeature(IFeatureProvider fp) {
 	    super(fp);
     }
 
 	@Override
     public boolean canAdd(IAddContext context) {
-		boolean assignable = getGatewayClass().isAssignableFrom(context.getNewObject().getClass());
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
 		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context);
 		boolean intoParticipant = support.isTargetParticipant(context);
-		return assignable && (intoDiagram || intoLane || intoParticipant);
+		return intoDiagram || intoLane || intoParticipant;
     }
 
-	@SuppressWarnings("unchecked")
-    @Override
+	@Override
     public PictogramElement add(IAddContext context) {
-		T addedGateway = (T) context.getNewObject();
+		Gateway addedGateway = (Gateway) context.getNewObject();
 
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
 		ContainerShape containerShape = peCreateService.createContainerShape(context.getTargetContainer(), true);
@@ -68,8 +66,6 @@ public abstract class AbstractAddGatewayFeature<T extends Gateway> extends Abstr
 		peCreateService.createChopboxAnchor(containerShape);
 		return containerShape;
     }
-	
-	protected abstract Class<? extends Gateway> getGatewayClass();
 	
 	protected void decorateGateway(Polygon gateway) {}
 }

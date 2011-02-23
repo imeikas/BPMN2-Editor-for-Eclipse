@@ -35,7 +35,10 @@ import org.jboss.bpmn2.editor.core.features.event.definitions.MessageEventDefini
 import org.jboss.bpmn2.editor.core.features.event.definitions.SignalEventDefinitionContainer;
 import org.jboss.bpmn2.editor.core.features.event.definitions.TimerEventDefinitionContainer;
 import org.jboss.bpmn2.editor.core.features.flow.FlowFeatureResolver;
-import org.jboss.bpmn2.editor.core.features.gateway.GatewayFeatureResolver;
+import org.jboss.bpmn2.editor.core.features.gateway.EventBasedGatewayFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.gateway.ExclusiveGatewayFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.gateway.InclusiveGatewayFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.gateway.ParallelGatewayFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.lane.LaneFeatureResolver;
 import org.jboss.bpmn2.editor.core.features.participant.ParticipantFeatureResolver;
 import org.jboss.bpmn2.editor.core.features.subprocess.SubProcessFeatureContainer;
@@ -71,7 +74,6 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		// TODO convert resolvers to containers, provides better decoupling
 		resolvers = new ArrayList<FeatureResolver>();
 		resolvers.add(new EventFeatureResolver());
-		resolvers.add(new GatewayFeatureResolver());
 		resolvers.add(new FlowFeatureResolver());
 		resolvers.add(new LaneFeatureResolver());
 		resolvers.add(new ParticipantFeatureResolver());
@@ -86,6 +88,10 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers.add(new SendTaskFeatureContainer());
 		containers.add(new ReceiveTaskFeatureContainer());
 		containers.add(new TaskFeatureContainer());
+		containers.add(new ExclusiveGatewayFeatureContainer());
+		containers.add(new InclusiveGatewayFeatureContainer());
+		containers.add(new ParallelGatewayFeatureContainer());
+		containers.add(new EventBasedGatewayFeatureContainer());
 		containers.add(new TransactionFeatureContainer());
 		containers.add(new SubProcessFeatureContainer());
 		containers.add(new BoundaryEventFeatureContainer());

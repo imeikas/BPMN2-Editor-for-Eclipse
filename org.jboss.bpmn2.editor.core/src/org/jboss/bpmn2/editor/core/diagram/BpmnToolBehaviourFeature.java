@@ -45,7 +45,7 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 		// add new compartment at the end of the existing compartments
 		PaletteCompartmentEntry compartmentEntry = new PaletteCompartmentEntry("Flow Objects", null);
 		ret.add(compartmentEntry);
-
+		
 		// add all create-features to the new stack-entry
 		IFeatureProvider featureProvider = getFeatureProvider();
 		ICreateFeature[] createFeatures = featureProvider.getCreateFeatures();
