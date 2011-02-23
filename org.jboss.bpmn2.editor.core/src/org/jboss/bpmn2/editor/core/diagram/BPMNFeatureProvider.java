@@ -35,6 +35,7 @@ import org.jboss.bpmn2.editor.core.features.event.definitions.MessageEventDefini
 import org.jboss.bpmn2.editor.core.features.event.definitions.SignalEventDefinitionContainer;
 import org.jboss.bpmn2.editor.core.features.event.definitions.TimerEventDefinitionContainer;
 import org.jboss.bpmn2.editor.core.features.flow.FlowFeatureResolver;
+import org.jboss.bpmn2.editor.core.features.gateway.ComplexGatewayFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.gateway.EventBasedGatewayFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.gateway.ExclusiveGatewayFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.gateway.InclusiveGatewayFeatureContainer;
@@ -92,6 +93,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers.add(new InclusiveGatewayFeatureContainer());
 		containers.add(new ParallelGatewayFeatureContainer());
 		containers.add(new EventBasedGatewayFeatureContainer());
+		containers.add(new ComplexGatewayFeatureContainer());
 		containers.add(new TransactionFeatureContainer());
 		containers.add(new SubProcessFeatureContainer());
 		containers.add(new BoundaryEventFeatureContainer());

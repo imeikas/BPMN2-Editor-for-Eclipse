@@ -25,6 +25,7 @@ import org.jboss.bpmn2.editor.core.features.event.definitions.SignalEventDefinit
 import org.jboss.bpmn2.editor.core.features.event.definitions.TimerEventDefinitionContainer.CreateTimerEventDefinition;
 import org.jboss.bpmn2.editor.core.features.flow.CreateMessageFlowFeature;
 import org.jboss.bpmn2.editor.core.features.flow.CreateSequenceFlowFeature;
+import org.jboss.bpmn2.editor.core.features.gateway.ComplexGatewayFeatureContainer.CreateComplexGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.gateway.EventBasedGatewayFeatureContainer.CreateEventBasedGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.gateway.ExclusiveGatewayFeatureContainer.CreateExclusiveGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.gateway.InclusiveGatewayFeatureContainer.CreateInclusiveGatewayFeature;
@@ -60,6 +61,7 @@ public class FeatureMap {
 		featureMap.put(i.getAssociation(), CreateAssociationFeature.class);
 		featureMap.put(i.getTextAnnotation(), CreateTextAnnotationFeature.class);
 		featureMap.put(i.getEventBasedGateway(), CreateEventBasedGatewayFeature.class);
+		featureMap.put(i.getComplexGateway(), CreateComplexGatewayFeature.class);
 		featureMap.put(i.getMessageFlow(), CreateMessageFlowFeature.class);
 		featureMap.put(i.getIntermediateThrowEvent(), CreateIntermediateThrowEventFeature.class);
 		featureMap.put(i.getIntermediateCatchEvent(), CreateIntermediateCatchEventFeature.class);

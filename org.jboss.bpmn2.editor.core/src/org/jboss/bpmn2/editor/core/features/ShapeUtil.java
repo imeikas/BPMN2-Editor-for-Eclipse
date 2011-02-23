@@ -96,7 +96,7 @@ public class ShapeUtil {
 	}
 
 	public static Asterisk createAsterisk(Polygon gateway) {
-		Polyline vertical = gaService.createPolyline(gateway, new int[] { 24, 8, 24, 42 });
+		Polyline vertical = gaService.createPolyline(gateway, new int[] { 23, 8, 23, 42 });
 		vertical.setLineWidth(5);
 
 		Polyline horizontal = gaService.createPolyline(gateway, new int[] { 8, 24, 42, 24 });
@@ -105,7 +105,7 @@ public class ShapeUtil {
 		Polyline diagonalDesc = gaService.createPolyline(gateway, new int[] { 13, 14, 37, 37 });
 		diagonalDesc.setLineWidth(4);
 
-		Polyline diagonalAsc = gaService.createPolyline(gateway, new int[] { 37, 13, 14, 37 });
+		Polyline diagonalAsc = gaService.createPolyline(gateway, new int[] { 37, 14, 13, 37 });
 		diagonalAsc.setLineWidth(4);
 
 		Asterisk a = new Asterisk();
