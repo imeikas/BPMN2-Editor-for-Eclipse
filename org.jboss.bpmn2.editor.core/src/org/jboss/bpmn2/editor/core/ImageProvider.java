@@ -93,8 +93,8 @@ public class ImageProvider extends AbstractImageProvider {
 		addImageFilePath(IMG_16_TASK, ICONS_16 + "Task.png");
 		addImageFilePath(IMG_16_EXCLUSIVE_GATEWAY, ICONS_16 + "ExclusiveGateway.png");
 		addImageFilePath(IMG_16_SEQUENCE_FLOW, ICONS_16 + "SequenceFlow.png");
-		addImageFilePath(IMG_16_PARTICIPANT, ICONS_16 + "Participant.gif");
-		addImageFilePath(IMG_16_LANE, ICONS_16 + "Lane.gif");
+		addImageFilePath(IMG_16_PARTICIPANT, ICONS_16 + "Participant.png");
+		addImageFilePath(IMG_16_LANE, ICONS_16 + "Lane.png");
 		addImageFilePath(IMG_16_TEXT_ANNOTATION, ICONS_16 + "TextAnnotation.png");
 		addImageFilePath(IMG_16_ASSOCIATION, ICONS_16 + "Association.png");
 		addImageFilePath(IMG_16_INCLUSIVE_GATEWAY, ICONS_16 + "InclusiveGateway.png");

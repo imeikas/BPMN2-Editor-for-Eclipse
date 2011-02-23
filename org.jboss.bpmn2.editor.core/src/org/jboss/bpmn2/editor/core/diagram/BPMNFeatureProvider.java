@@ -81,6 +81,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		resolvers.add(new ArtifactFeatureResolver());
 
 		containers = new ArrayList<FeatureContainer>();
+		containers.add(new BoundaryEventFeatureContainer());
 		containers.add(new ServiceTaskFeatureContainer());
 		containers.add(new UserTaskFeatureContainer());
 		containers.add(new ManualTaskFeatureContainer());
@@ -96,7 +97,6 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers.add(new ComplexGatewayFeatureContainer());
 		containers.add(new TransactionFeatureContainer());
 		containers.add(new SubProcessFeatureContainer());
-		containers.add(new BoundaryEventFeatureContainer());
 		containers.add(new ConditionalEventDefinitionContainer());
 		containers.add(new MessageEventDefinitionContainer());
 		containers.add(new TimerEventDefinitionContainer());
