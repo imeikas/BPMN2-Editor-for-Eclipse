@@ -6,12 +6,12 @@ import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
-import org.eclipse.graphiti.mm.algorithms.Polygon;
+import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
-import org.jboss.bpmn2.editor.core.features.StyleUtil;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil.Asterisk;
+import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
 public class ComplexGatewayFeatureContainer extends AbstractGatewayFeatureContainer {
 
@@ -29,8 +29,8 @@ public class ComplexGatewayFeatureContainer extends AbstractGatewayFeatureContai
     public IAddFeature getAddFeature(IFeatureProvider fp) {
 	    return new DefaultAddGatewayFeature(fp) {
 	    	@Override
-	    	protected void decorateGateway(Polygon gateway) {
-	    		Asterisk asterisk = ShapeUtil.createAsterisk(gateway);
+	    	protected void decorateGateway(ContainerShape container) {
+	    		Asterisk asterisk = ShapeUtil.createGatewayAsterisk(container);
 	    		asterisk.horizontal.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 	    		asterisk.vertical.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 	    		asterisk.diagonalAsc.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));

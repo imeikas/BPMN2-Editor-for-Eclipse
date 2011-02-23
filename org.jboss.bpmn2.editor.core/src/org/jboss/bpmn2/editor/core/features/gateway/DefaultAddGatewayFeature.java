@@ -10,7 +10,7 @@ import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
-import org.eclipse.graphiti.services.IPeCreateService;
+import org.eclipse.graphiti.services.IPeService;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
@@ -42,11 +42,11 @@ public class DefaultAddGatewayFeature extends AbstractAddShapeFeature {
 	@Override
     public PictogramElement add(IAddContext context) {
 		Gateway addedGateway = (Gateway) context.getNewObject();
-
-		IPeCreateService peCreateService = Graphiti.getPeCreateService();
-		ContainerShape containerShape = peCreateService.createContainerShape(context.getTargetContainer(), true);
-
 		IGaService gaService = Graphiti.getGaService();
+		IPeService peService = Graphiti.getPeService();
+
+		ContainerShape containerShape = peService.createContainerShape(context.getTargetContainer(), true);
+		
 		Polygon gateway = ShapeUtil.createGateway(containerShape);
 		gateway.setStyle(StyleUtil.getStyleForClass(getDiagram()));
 
@@ -55,7 +55,7 @@ public class DefaultAddGatewayFeature extends AbstractAddShapeFeature {
 
 		gaService.setLocationAndSize(gateway, context.getX(), context.getY(), 2 * RADIUS, 2 * RADIUS);
 		
-		decorateGateway(gateway);
+		decorateGateway(containerShape);
 		
 		if (addedGateway.eResource() == null) {
 			getDiagram().eResource().getContents().add(addedGateway);
@@ -63,9 +63,9 @@ public class DefaultAddGatewayFeature extends AbstractAddShapeFeature {
 
 		link(containerShape, addedGateway);
 
-		peCreateService.createChopboxAnchor(containerShape);
+		peService.createChopboxAnchor(containerShape);
 		return containerShape;
     }
 	
-	protected void decorateGateway(Polygon gateway) {}
+	protected void decorateGateway(ContainerShape container) {}
 }
