@@ -9,6 +9,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.graphiti.features.IFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.CreateAssociationFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.CreateTextAnnotationFeature;
+import org.jboss.bpmn2.editor.core.features.artifact.GroupFeatureContainer.CreateGroupFeature;
 import org.jboss.bpmn2.editor.core.features.event.BoundaryEventFeatureContainer.CreateBoundaryEvent;
 import org.jboss.bpmn2.editor.core.features.event.CreateEndEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.CreateIntermediateCatchEventFeature;
@@ -84,6 +85,7 @@ public class FeatureMap {
 		featureMap.put(i.getBoundaryEvent(), CreateBoundaryEvent.class);
 		featureMap.put(i.getSubProcess(), CreateSubProcessFeature.class);
 		featureMap.put(i.getTransaction(), CreateTransactionFeature.class);
+		featureMap.put(i.getGroup(), CreateGroupFeature.class);
 		FEATURE_MAP = Collections.unmodifiableMap(featureMap);
 	}
 
