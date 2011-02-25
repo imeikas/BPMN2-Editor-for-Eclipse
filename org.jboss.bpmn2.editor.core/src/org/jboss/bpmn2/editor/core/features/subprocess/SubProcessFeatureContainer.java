@@ -11,7 +11,9 @@ import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 
 public class SubProcessFeatureContainer extends AbstractSubProcessFeatureContainer {
-
+	
+	public static final String TRIGGERED_BY_EVENT = "triggered-by-event-key";
+	
 	@Override
     public boolean canApplyTo(BaseElement element) {
 	    return element instanceof SubProcess;
@@ -24,7 +26,7 @@ public class SubProcessFeatureContainer extends AbstractSubProcessFeatureContain
 
 	@Override
     public IAddFeature getAddFeature(IFeatureProvider fp) {
-	    return new AddSubprocessFeature(fp);
+	    return new AddExpandedSubProcessFeature(fp);
 	}
 	
 	@Override

@@ -36,7 +36,8 @@ public class DefaultAddGatewayFeature extends AbstractAddShapeFeature {
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
 		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context);
 		boolean intoParticipant = support.isTargetParticipant(context);
-		return intoDiagram || intoLane || intoParticipant;
+		boolean intoSubProcess = support.isTargetSubProcess(context);
+		return intoDiagram || intoLane || intoParticipant || intoSubProcess;
     }
 
 	@Override

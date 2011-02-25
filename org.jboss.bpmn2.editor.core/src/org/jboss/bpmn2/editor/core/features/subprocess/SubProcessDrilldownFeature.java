@@ -9,6 +9,7 @@ import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.ui.features.AbstractDrillDownFeature;
 
+// NOT USED YET
 public class SubProcessDrilldownFeature extends AbstractDrillDownFeature {
 
 	public SubProcessDrilldownFeature(IFeatureProvider fp) {

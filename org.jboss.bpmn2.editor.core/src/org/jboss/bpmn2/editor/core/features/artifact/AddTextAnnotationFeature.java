@@ -36,7 +36,8 @@ public class AddTextAnnotationFeature extends AbstractAddShapeFeature {
 		boolean isAnnotation = context.getNewObject() instanceof TextAnnotation;
 		boolean intoDiagram = context.getTargetContainer() instanceof Diagram;
 		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context);
-		return isAnnotation && (intoDiagram || intoLane);
+		boolean intoSubProcess = support.isTargetSubProcess(context);
+		return isAnnotation && (intoDiagram || intoLane || intoSubProcess);
 	}
 
 	@Override

@@ -30,7 +30,8 @@ public abstract class AbstractCreateFlowElementFeature<T extends FlowElement> ex
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
 		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context);
 		boolean intoParticipant = support.isTargetParticipant(context);
-		return intoDiagram || intoLane || intoParticipant;
+		boolean intoSubProcess = support.isTargetSubProcess(context);
+		return intoDiagram || intoLane || intoParticipant || intoSubProcess;
 	}
 
 	@Override
@@ -45,7 +46,7 @@ public abstract class AbstractCreateFlowElementFeature<T extends FlowElement> ex
 				        (Lane) getBusinessObjectForPictogramElement(context.getTargetContainer()));
 			}
 			
-			handler.addFlowElement(support.getTargetParticipant(context, handler), element);
+			handler.addFlowElement(getBusinessObjectForPictogramElement(context.getTargetContainer()), element);
 		} catch (IOException e) {
 			Activator.logError(e);
 		}

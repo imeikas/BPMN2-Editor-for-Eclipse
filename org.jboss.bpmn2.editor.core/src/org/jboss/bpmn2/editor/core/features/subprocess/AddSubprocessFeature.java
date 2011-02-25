@@ -1,5 +1,6 @@
 package org.jboss.bpmn2.editor.core.features.subprocess;
 
+import static org.jboss.bpmn2.editor.core.features.subprocess.SubProcessFeatureContainer.TRIGGERED_BY_EVENT;
 import org.eclipse.bpmn2.SubProcess;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
@@ -21,9 +22,8 @@ import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
+// NOT USED CURRENTLY
 public class AddSubprocessFeature extends AbstractAddFeature {
-	
-	public static final String TRIGGERED_BY_EVENT = "triggered-by-event-key";
 	
 	protected FeatureSupport support = new FeatureSupport() {
 		@Override
@@ -38,11 +38,11 @@ public class AddSubprocessFeature extends AbstractAddFeature {
 
 	@Override
 	public boolean canAdd(IAddContext context) {
-		boolean isTask = context.getNewObject() instanceof SubProcess;
+		boolean isSubProcess = context.getNewObject() instanceof SubProcess;
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
 		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context);
 		boolean intoParticipant = support.isTargetParticipant(context);
-		return isTask && (intoDiagram || intoLane || intoParticipant);
+		return isSubProcess && (intoDiagram || intoLane || intoParticipant);
 	}
 
 	@Override

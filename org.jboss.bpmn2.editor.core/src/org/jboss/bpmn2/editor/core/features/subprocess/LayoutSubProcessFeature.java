@@ -2,11 +2,12 @@ package org.jboss.bpmn2.editor.core.features.subprocess;
 
 import java.util.Iterator;
 
+import org.eclipse.bpmn2.BoundaryEvent;
 import org.eclipse.bpmn2.SubProcess;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ILayoutContext;
 import org.eclipse.graphiti.features.impl.AbstractLayoutFeature;
-import org.eclipse.graphiti.mm.algorithms.MultiText;
+import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.RoundedRectangle;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.Shape;
@@ -27,14 +28,24 @@ public class LayoutSubProcessFeature extends AbstractLayoutFeature {
 
 	@Override
     public boolean layout(ILayoutContext context) {
+		ContainerShape containerShape = (ContainerShape) context.getPictogramElement();
+		GraphicsAlgorithm containerGa = containerShape.getGraphicsAlgorithm();
 		IGaService gaService = Graphiti.getGaService();
 		
-		Iterator<Shape> iterator = Graphiti.getPeService().getAllContainedShapes((ContainerShape) context.getPictogramElement()).iterator();
+		Iterator<Shape> iterator = Graphiti.getPeService().getAllContainedShapes(containerShape).iterator();
+		
 		RoundedRectangle rect = (RoundedRectangle) iterator.next().getGraphicsAlgorithm();
+		gaService.setSize(rect, containerGa.getWidth(), containerGa.getHeight() - 18);
 		
 		layoutInRectangle(rect);
-		MultiText text = (MultiText) iterator.next().getGraphicsAlgorithm();
-		gaService.setSize(text, rect.getWidth() - 20, rect.getHeight() - 20);
+		
+		while (iterator.hasNext()) {
+	        Shape shape = (Shape) iterator.next();
+	        Object o = getBusinessObjectForPictogramElement(shape);
+	        if(o != null && o instanceof BoundaryEvent) {
+	        	//layoutPictogramElement(shape);
+	        }
+        }
 		
 	    return true;
     }

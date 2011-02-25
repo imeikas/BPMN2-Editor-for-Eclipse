@@ -11,6 +11,7 @@ import org.eclipse.bpmn2.CancelEventDefinition;
 import org.eclipse.bpmn2.CompensateEventDefinition;
 import org.eclipse.bpmn2.ErrorEventDefinition;
 import org.eclipse.bpmn2.EventDefinition;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IDirectEditingFeature;
@@ -22,11 +23,13 @@ import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.features.context.ICreateContext;
+import org.eclipse.graphiti.features.context.ILayoutContext;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
 import org.eclipse.graphiti.features.impl.AbstractCreateFeature;
+import org.eclipse.graphiti.features.impl.AbstractLayoutFeature;
 import org.eclipse.graphiti.features.impl.AbstractMoveShapeFeature;
 import org.eclipse.graphiti.features.impl.AbstractUpdateFeature;
 import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
@@ -52,12 +55,12 @@ import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
-import org.jboss.bpmn2.editor.core.features.task.SizeConstants;
 
 public class BoundaryEventFeatureContainer implements FeatureContainer {
 
-	private static String cancelKey = "cancel-activity";
-
+	private static String cancelKey = "cancel.activity";
+	private static String boundaryDistance = "boundary.distance";
+	
 	@Override
 	public boolean canApplyTo(BaseElement element) {
 		return element instanceof BoundaryEvent;
@@ -159,7 +162,7 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 				event.setAttachedToRef(activity);
 				event.setName("Boundary event");
 				event.setCancelActivity(true); // by default is interrupting
-				handler.addFlowElement(support.getTargetParticipant(context, handler), event);
+				handler.addFlowElement(getBusinessObjectForPictogramElement(context.getTargetContainer()), event);
 			} catch (IOException e) {
 				Activator.logError(e);
 			}
@@ -203,11 +206,20 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 			BoundaryEvent event = (BoundaryEvent) context.getNewObject();
 
 			ContainerShape containerShape = peService.createContainerShape(context.getTargetContainer(), true);
+			
+			String distanceProp = peService.getPropertyValue(context.getTargetContainer(), boundaryDistance);
+			int x = 5;
+			if(distanceProp != null) {
+				x = Integer.parseInt(distanceProp);
+			}
+			
+			int y = ga.getHeight() - ShapeUtil.EVENT_SIZE / 2;
 
 			Ellipse ellipse = gaService.createEllipse(containerShape);
-			gaService.setLocationAndSize(ellipse, ga.getWidth(), ga.getHeight() - 18, ShapeUtil.EVENT_SIZE,
-			        ShapeUtil.EVENT_SIZE);
+			gaService.setLocationAndSize(ellipse, x, y, ShapeUtil.EVENT_SIZE, ShapeUtil.EVENT_SIZE);
 
+			peService.setPropertyValue(context.getTargetContainer(), boundaryDistance, Integer.toString(x + ShapeUtil.EVENT_SIZE + 5));
+			
 			Style style = StyleUtil.getStyleForClass(getDiagram());
 			ellipse.setStyle(style);
 
@@ -221,10 +233,6 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 
 			ChopboxAnchor anchor = peService.createChopboxAnchor(containerShape);
 			anchor.setReferencedGraphicsAlgorithm(ellipse);
-
-			GraphicsAlgorithm parentGa = context.getTargetContainer().getGraphicsAlgorithm();
-			gaService.setSize(parentGa, parentGa.getWidth() + SizeConstants.PADDING_RIGHT, parentGa.getHeight());
-			gaService.setSize(ga, ga.getWidth() + SizeConstants.PADDING_RIGHT, ga.getHeight());
 
 			if (event.eResource() == null) {
 				getDiagram().eResource().getContents().add(event);
@@ -243,7 +251,20 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 
 	@Override
 	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
-		return null;
+		return new AbstractLayoutFeature(fp) {
+			
+			@Override
+			public boolean canLayout(ILayoutContext context) {
+				return true;
+			}
+			
+			@Override
+			public boolean layout(ILayoutContext context) {
+				PictogramElement element = context.getPictogramElement();
+				System.out.println(element);
+				return true;
+			}
+		};
 	}
 
 	@Override
@@ -266,7 +287,7 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 		return new DefaultResizeShapeFeature(fp) {
 			@Override
 			public boolean canResizeShape(IResizeShapeContext context) {
-			    return false;
+				return false;
 			}
 		};
 	}

@@ -1,10 +1,13 @@
 package org.jboss.bpmn2.editor.core.features;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.Participant;
+import org.eclipse.bpmn2.SubProcess;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.eclipse.graphiti.features.impl.DefaultMoveShapeFeature;
@@ -13,8 +16,10 @@ import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 
 public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
-	
-	private MoveStrategy strategy;
+
+	private List<Algorithm> algorithms;
+
+	private AlgorithmContainer algorithmContainer;
 
 	protected FeatureSupport support = new FeatureSupport() {
 		@Override
@@ -25,6 +30,13 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 
 	public MoveFlowNodeFeature(IFeatureProvider fp) {
 		super(fp);
+		algorithms = new ArrayList<MoveFlowNodeFeature.Algorithm>();
+		algorithms.add(new FromLaneAlgorithm());
+		algorithms.add(new ToLaneAlgorithm());
+		algorithms.add(new FromParticipantAlgorithm());
+		algorithms.add(new ToParticipantAlgorithm());
+		algorithms.add(new FromSubProcessAlgorithm());
+		algorithms.add(new ToSubProcess());
 	}
 
 	@Override
@@ -32,37 +44,127 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 		if (!(getBusinessObjectForPictogramElement(context.getShape()) instanceof FlowNode))
 			return false;
 
-		strategy = getMoveStrategy(context);
+		try {
+			ModelHandler handler = support.getModelHanderInstance(getDiagram());
 
-		if (strategy == null) {
-			return super.canMoveShape(context);
+			algorithmContainer = getAlgorithmContainer(context);
+
+			if (algorithmContainer.isEmpty()) {
+				return super.canMoveShape(context);
+			}
+
+			return algorithmContainer.isMoveAllowed(getSourceBo(context, handler), getTargetBo(context, handler));
+		} catch (IOException e) {
+			Activator.logError(e);
 		}
 
-		return strategy.canMoveShape(context);
+		return false;
 	}
 
 	@Override
 	protected void postMoveShape(IMoveShapeContext context) {
-		if (strategy == null) {
+		if (algorithmContainer == null) {
 			super.postMoveShape(context);
 			return;
 		}
-		strategy.postMoveShape(context);
+		try {
+			ModelHandler handler = support.getModelHanderInstance(getDiagram());
+			FlowNode node = (FlowNode) getBusinessObjectForPictogramElement(context.getShape());
+			algorithmContainer.move(node, getSourceBo(context, handler), getTargetBo(context, handler));
+		} catch (Exception e) {
+			Activator.logError(e);
+		}
 	}
 
-	private abstract class MoveStrategy {
+	private Object getSourceBo(IMoveShapeContext context, ModelHandler handler) {
+		return context.getSourceContainer().equals(getDiagram()) ? handler.getInternalParticipant()
+		        : getBusinessObjectForPictogramElement(context.getSourceContainer());
+	}
 
-		FlowNode node;
-		Participant source;
-		Participant target;
+	private Object getTargetBo(IMoveShapeContext context, ModelHandler handler) {
+		return context.getTargetContainer().equals(getDiagram()) ? handler.getInternalParticipant()
+		        : getBusinessObjectForPictogramElement(context.getTargetContainer());
+	}
 
-		public MoveStrategy(IMoveShapeContext context, Participant source, Participant target) {
-			this.source = source;
-			this.target = target;
-			this.node = (FlowNode) getBusinessObjectForPictogramElement(context.getShape());
+	private boolean isSourceParticipant(IMoveShapeContext context) {
+		Object bo = getBusinessObjectForPictogramElement(context.getSourceContainer());
+		return context.getSourceContainer().equals(getDiagram()) || (bo != null && bo instanceof Participant);
+	}
+
+	private boolean isSourceLane(IMoveShapeContext context) {
+		Object bo = getBusinessObjectForPictogramElement(context.getSourceContainer());
+		return bo != null && bo instanceof Lane;
+	}
+
+	class AlgorithmContainer {
+		public Algorithm fromAlgorithm;
+		public Algorithm toAlgorithm;
+
+		public AlgorithmContainer(Algorithm fromAlgorithm, Algorithm toAlgorithm) {
+			this.fromAlgorithm = fromAlgorithm;
+			this.toAlgorithm = toAlgorithm;
 		}
 
-		void postMoveShape(IMoveShapeContext context) {
+		boolean isMoveAllowed(Object source, Object target) {
+			return fromAlgorithm.isMoveAllowed(source, target) && toAlgorithm.isMoveAllowed(source, target);
+		}
+
+		void move(FlowNode node, Object source, Object target) {
+			fromAlgorithm.move(node, source, target);
+			toAlgorithm.move(node, source, target);
+		}
+		
+		boolean isEmpty() {
+			return fromAlgorithm == null || toAlgorithm == null;
+		}
+	}
+
+	private AlgorithmContainer getAlgorithmContainer(IMoveShapeContext context) {
+		Algorithm fromAlgorithm = null;
+		Algorithm toAlgorithm = null;
+
+		for (Algorithm a : algorithms) {
+			if (a.canApplyTo(context)) {
+				switch (a.getType()) {
+				case Algorithm.TYPE_FROM:
+					System.out.println(a + "can apply for context as FROM");
+					fromAlgorithm = a;
+					break;
+				case Algorithm.TYPE_TO:
+					System.out.println(a + "can apply for context as TO");
+					toAlgorithm = a;
+					break;
+				}
+			}
+		}
+
+		return new AlgorithmContainer(fromAlgorithm, toAlgorithm);
+	}
+
+	interface Algorithm {
+
+		int TYPE_FROM = 0;
+
+		int TYPE_TO = 1;
+
+		int getType();
+
+		boolean canApplyTo(IMoveShapeContext context);
+
+		boolean isMoveAllowed(Object source, Object target);
+
+		void move(FlowNode node, Object source, Object target);
+	}
+
+	abstract class DefaultAlgorithm implements Algorithm {
+
+		@Override
+		public boolean isMoveAllowed(Object source, Object target) {
+			return true;
+		}
+
+		@Override
+		public void move(FlowNode node, Object source, Object target) {
 			try {
 				ModelHandler handler = support.getModelHanderInstance(getDiagram());
 				handler.moveFlowNode(node, source, target);
@@ -70,154 +172,161 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 				Activator.logError(e);
 			}
 		}
-
-		abstract boolean canMoveShape(IMoveShapeContext context);
 	}
 
-	private class FromParticipantToParticipant extends MoveStrategy {
+	class FromLaneAlgorithm extends DefaultAlgorithm {
 
-		public FromParticipantToParticipant(IMoveShapeContext context, Participant source, Participant target) {
-			super(context, source, target);
+		@Override
+		public int getType() {
+			return TYPE_FROM;
 		}
 
 		@Override
-		public boolean canMoveShape(IMoveShapeContext context) {
-			return canMoveToParticipant(context, target);
-		}
-	}
-
-	private class FromLaneToLane extends MoveStrategy {
-
-		public FromLaneToLane(IMoveShapeContext context, Participant source, Participant target) {
-			super(context, source, target);
+		public boolean canApplyTo(IMoveShapeContext context) {
+			return isSourceLane(context);
 		}
 
 		@Override
-		public boolean canMoveShape(IMoveShapeContext context) {
-			return canMoveToLane(context);
-		}
-
-		@Override
-		public void postMoveShape(IMoveShapeContext context) {
-			super.postMoveShape(context);
-			Lane sourceLane = (Lane) getBusinessObjectForPictogramElement(context.getSourceContainer());
-			Lane targetLane = (Lane) getBusinessObjectForPictogramElement(context.getTargetContainer());
-			removeFromLane(node, sourceLane);
-			addToLane(node, targetLane);
-		}
-	}
-
-	private class FromLaneToParticipant extends MoveStrategy {
-
-		public FromLaneToParticipant(IMoveShapeContext context, Participant source, Participant target) {
-			super(context, source, target);
-		}
-
-		@Override
-		public boolean canMoveShape(IMoveShapeContext context) {
-			return canMoveToParticipant(context, target);
+		public void move(FlowNode node, Object source, Object target) {
+			Lane lane = (Lane) source;
+			lane.getFlowNodeRefs().remove(node);
+			node.getLanes().remove(lane);
 		}
 		
 		@Override
-		public void postMoveShape(IMoveShapeContext context) {
-			super.postMoveShape(context);
-			Lane sourceLane = (Lane) getBusinessObjectForPictogramElement(context.getSourceContainer());
-			removeFromLane(node, sourceLane);
+		public String toString() {
+		    return "FromLane";
 		}
 	}
 
-	private class FromParticipantToLane extends MoveStrategy {
+	class ToLaneAlgorithm extends DefaultAlgorithm {
 
-		public FromParticipantToLane(IMoveShapeContext context, Participant source, Participant target) {
-			super(context, source, target);
+		@Override
+		public int getType() {
+			return TYPE_TO;
 		}
 
 		@Override
-		public boolean canMoveShape(IMoveShapeContext context) {
-			return canMoveToLane(context);
+		public boolean canApplyTo(IMoveShapeContext context) {
+			return support.isTargetLane(context);
 		}
 
 		@Override
-		public void postMoveShape(IMoveShapeContext context) {
-			super.postMoveShape(context);
-			Lane targetLane = (Lane) getBusinessObjectForPictogramElement(context.getTargetContainer());
-			addToLane(node, targetLane);
+		public boolean isMoveAllowed(Object source, Object target) {
+			Lane lane = (Lane) target;
+			return lane.getChildLaneSet() == null || lane.getChildLaneSet().getLanes().isEmpty();
+		}
+
+		@Override
+		public void move(FlowNode node, Object source, Object target) {
+			Lane lane = (Lane) target;
+			lane.getFlowNodeRefs().add(node);
+			node.getLanes().add(lane);
+			super.move(node, source, target);
+		}
+		
+		@Override
+		public String toString() {
+		    return "toLane";
 		}
 	}
-	
-	private void removeFromLane(FlowNode node, Lane lane) {
-		lane.getFlowNodeRefs().remove(node);
-		node.getLanes().remove(lane);
-	}
-	
-	private void addToLane(FlowNode node, Lane lane) {
-		lane.getFlowNodeRefs().add(node);
-		node.getLanes().add(lane);
-	}
-	
-	private boolean canMoveToParticipant(IMoveShapeContext context, Participant participant) {
-		if (context.getTargetContainer().equals(getDiagram()))
-			return true;
-		if (participant.getProcessRef() == null)
-			return true;
-		if (participant.getProcessRef().getLaneSets().isEmpty())
-			return true;
-		return false;
-	}
 
-	private boolean canMoveToLane(IMoveShapeContext context) {
-		Lane targetLane = (Lane) getBusinessObjectForPictogramElement(context.getTargetContainer());
-		return targetLane.getChildLaneSet() == null || targetLane.getChildLaneSet().getLanes().isEmpty();
-	}
+	class FromParticipantAlgorithm extends DefaultAlgorithm {
 
-	private MoveStrategy getMoveStrategy(IMoveShapeContext context) {
-		try {
-			ModelHandler handler = support.getModelHanderInstance(getDiagram());
-
-			Object sourceBo = getBusinessObjectForPictogramElement(context.getSourceContainer());
-			Object targetBo = getBusinessObjectForPictogramElement(context.getTargetContainer());
-
-			if (context.getSourceContainer().equals(getDiagram())) {
-				Participant source = handler.getParticipant(getDiagram());
-				if (context.getTargetContainer().equals(getDiagram()))
-					return null;
-				if (support.isTargetLane(context))
-					return new FromParticipantToLane(context, source, handler.getParticipant(targetBo));
-				if (support.isTargetParticipant(context)) {
-					return new FromParticipantToParticipant(context, source, handler.getParticipant(targetBo));
-				}
-			}
-			if (isSourceLane(context)) {
-				Participant source = handler.getParticipant(sourceBo);
-				if (context.getTargetContainer().equals(getDiagram()))
-					return new FromLaneToParticipant(context, source, handler.getParticipant(getDiagram()));
-				if (support.isTargetLane(context))
-					return new FromLaneToLane(context, source, handler.getParticipant(targetBo));
-				if (support.isTargetParticipant(context))
-					return new FromLaneToParticipant(context, source, handler.getParticipant(targetBo));
-			}
-			if (isSourceParticipant(context)) {
-				Participant source = (Participant) sourceBo;
-				if (context.getTargetContainer().equals(getDiagram()))
-					return new FromParticipantToParticipant(context, source, handler.getParticipant(getDiagram()));
-				if (support.isTargetLane(context))
-					return new FromParticipantToLane(context, source, handler.getParticipant(targetBo));
-				if (support.isTargetParticipant(context))
-					return new FromParticipantToParticipant(context, source, (Participant) targetBo);
-			}
-		} catch (IOException e) {
-			Activator.logError(e);
+		@Override
+		public int getType() {
+			return TYPE_FROM;
 		}
-		return null;
+
+		@Override
+		public boolean canApplyTo(IMoveShapeContext context) {
+			return isSourceParticipant(context);
+		}
+
+		@Override
+		public void move(FlowNode node, Object source, Object target) {
+			// DO NOTHING HERE
+		}
+		
+		@Override
+		public String toString() {
+		    return "fromParticipant";
+		}
 	}
 
-	private boolean isSourceParticipant(IMoveShapeContext context) {
-		Object bo = getBusinessObjectForPictogramElement(context.getSourceContainer());
-		return bo != null && bo instanceof Participant;
+	class ToParticipantAlgorithm extends DefaultAlgorithm {
+
+		@Override
+		public int getType() {
+			return TYPE_TO;
+		}
+
+		@Override
+		public boolean canApplyTo(IMoveShapeContext context) {
+			return context.getTargetContainer().equals(getDiagram()) || support.isTargetParticipant(context);
+		}
+
+		@Override
+		public boolean isMoveAllowed(Object source, Object target) {
+			try {
+				Participant p = (Participant) target;
+				if (p.equals(support.getModelHanderInstance(getDiagram()).getInternalParticipant()))
+					return true;
+				if (p.getProcessRef() == null)
+					return true;
+				if (p.getProcessRef().getLaneSets().isEmpty())
+					return true;
+			} catch (Exception e) {
+				Activator.logError(e);
+			}
+			return false;
+		}
+		
+		@Override
+		public String toString() {
+		    return "toParticipant";
+		}
 	}
 
-	private boolean isSourceLane(IMoveShapeContext context) {
-		Object bo = getBusinessObjectForPictogramElement(context.getSourceContainer());
-		return bo != null && bo instanceof Lane;
+	class FromSubProcessAlgorithm extends DefaultAlgorithm {
+
+		@Override
+		public int getType() {
+			return TYPE_FROM;
+		}
+
+		@Override
+		public boolean canApplyTo(IMoveShapeContext context) {
+			Object bo = getBusinessObjectForPictogramElement(context.getSourceContainer());
+			return bo != null && bo instanceof SubProcess;
+		}
+
+		@Override
+		public void move(FlowNode node, Object source, Object target) {
+		}
+		
+		@Override
+		public String toString() {
+		    return "fromSubProcess";
+		}
+	}
+
+	class ToSubProcess extends DefaultAlgorithm {
+
+		@Override
+		public int getType() {
+			return TYPE_TO;
+		}
+
+		@Override
+		public boolean canApplyTo(IMoveShapeContext context) {
+			Object bo = getBusinessObjectForPictogramElement(context.getTargetContainer());
+			return bo != null && bo instanceof SubProcess;
+		}
+		
+		@Override
+		public String toString() {
+		    return "toSubProcess";
+		}
 	}
 }
