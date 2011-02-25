@@ -25,6 +25,7 @@ Export-Package: org.jboss.bpmn2.editor.core;
    org.eclipse.bpmn2.util,
    org.eclipse.core.resources,
    org.osgi.framework",
+ org.jboss.bpmn2.editor.core.di,
  org.jboss.bpmn2.editor.core.diagram;
   uses:="org.eclipse.graphiti.features,
    org.eclipse.graphiti.features.context,

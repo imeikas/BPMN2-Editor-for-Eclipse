@@ -202,7 +202,6 @@ public class ToolEnablementPropertyPage extends PropertyPage {
 
 			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-				System.out.println(viewer + " " + oldInput + " " + newInput);
 			}
 
 			@Override
@@ -245,12 +244,10 @@ public class ToolEnablementPropertyPage extends PropertyPage {
 		checkboxTreeViewer.setLabelProvider(new ILabelProvider() {
 			@Override
 			public void removeListener(ILabelProviderListener listener) {
-				System.out.println(listener);
 			}
 
 			@Override
 			public boolean isLabelProperty(Object element, String property) {
-				System.out.println(element + "  " + property);
 				return false;
 			}
 
@@ -261,7 +258,6 @@ public class ToolEnablementPropertyPage extends PropertyPage {
 
 			@Override
 			public void addListener(ILabelProviderListener listener) {
-				System.out.println(listener);
 			}
 
 			@Override
