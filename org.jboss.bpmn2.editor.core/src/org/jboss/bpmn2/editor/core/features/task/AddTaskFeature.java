@@ -53,13 +53,16 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 		IGaService gaService = Graphiti.getGaService();
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
 		ContainerShape containerShape = peCreateService.createContainerShape(context.getTargetContainer(), true);
-
+		
+		int width = context.getWidth() > 0 ? context.getWidth() : getWidth();
+		int height = context.getHeight() > 0 ? context.getHeight() : HEIGHT + PADDING_BOTTOM;
+		
 		Rectangle invisibleRectangle = gaService.createInvisibleRectangle(containerShape);
-		gaService.setLocationAndSize(invisibleRectangle, context.getX(), context.getY(), getWidth(), HEIGHT + PADDING_BOTTOM);
+		gaService.setLocationAndSize(invisibleRectangle, context.getX(), context.getY(), width, height);
 		
 		Shape taskShape = peCreateService.createShape(containerShape, false);
 		RoundedRectangle roundedRectangle = gaService.createRoundedRectangle(taskShape, 5, 5);
-		gaService.setLocationAndSize(roundedRectangle, 0, 0, getWidth(), HEIGHT);
+		gaService.setLocationAndSize(roundedRectangle, 0, 0, width, height - PADDING_BOTTOM);
 		roundedRectangle.setStyle(StyleUtil.getStyleForClass(getDiagram()));
 		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
 		gaService.setRenderingStyle(roundedRectangle, gradient);
@@ -68,7 +71,7 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 		
 		Shape textShape = peCreateService.createShape(containerShape, false);
 		Text text = gaService.createDefaultText(textShape, addedTask.getName());
-		gaService.setLocationAndSize(text, 0, 0, getWidth(), 20);
+		gaService.setLocationAndSize(text, 0, 0, width, 20);
 		text.setStyle(StyleUtil.getStyleForText(getDiagram()));
 		text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		text.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);

@@ -41,8 +41,8 @@ public class AddParticipantFeature extends AbstractAddShapeFeature {
 		ContainerShape containerShape = peCreateService.createContainerShape(targetDiagram, true);
 		IGaService gaService = Graphiti.getGaService();
 		
-		int width = 600;
-		int height = 100;
+		int width = context.getWidth() > 0 ? context.getWidth() : 600;
+		int height = context.getHeight() > 0 ? context.getHeight() : 100;
 		
 		Rectangle rect = gaService.createRectangle(containerShape);
 		rect.setStyle(StyleUtil.getStyleForClass(getDiagram()));

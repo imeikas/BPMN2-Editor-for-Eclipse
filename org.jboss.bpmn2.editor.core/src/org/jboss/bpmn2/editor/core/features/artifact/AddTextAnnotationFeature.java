@@ -48,8 +48,8 @@ public class AddTextAnnotationFeature extends AbstractAddShapeFeature {
 
 		IGaService gaService = Graphiti.getGaService();
 		
-		int height = 50;
-		int width = 100;
+		int height = context.getWidth() > 0 ? context.getWidth() : 50;
+		int width = context.getHeight() > 0 ? context.getHeight() : 100;
 		int commentEdge = 15;
 		
 		Rectangle rect = gaService.createInvisibleRectangle(containerShape);

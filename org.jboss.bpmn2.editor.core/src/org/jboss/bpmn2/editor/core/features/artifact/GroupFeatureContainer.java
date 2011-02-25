@@ -52,14 +52,17 @@ public class GroupFeatureContainer implements FeatureContainer {
 				IGaService gaService = Graphiti.getGaService();
 				IPeService peService = Graphiti.getPeService();
 				Group group = (Group) context.getNewObject();
-
+				
+				int width = context.getWidth() > 0 ? context.getWidth() : 400;
+				int height = context.getHeight() > 0 ? context.getHeight() : 400;
+				
 				ContainerShape container = peService.createContainerShape(context.getTargetContainer(), true);
 				RoundedRectangle rect = gaService.createRoundedRectangle(container, 5, 5);
 				rect.setFilled(false);
 				rect.setLineWidth(2);
 				rect.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 				rect.setLineStyle(LineStyle.DASHDOT);
-				gaService.setLocationAndSize(rect, context.getX(), context.getY(), 400, 400);
+				gaService.setLocationAndSize(rect, context.getX(), context.getY(), width, height);
 
 				if (group.eResource() == null) {
 					getDiagram().eResource().getContents().add(group);

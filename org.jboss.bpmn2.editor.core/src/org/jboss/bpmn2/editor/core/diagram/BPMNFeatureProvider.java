@@ -24,6 +24,7 @@ import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.FeatureResolver;
 import org.jboss.bpmn2.editor.core.features.artifact.ArtifactFeatureResolver;
 import org.jboss.bpmn2.editor.core.features.artifact.GroupFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.data.DataFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.event.BoundaryEventFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.event.EventFeatureResolver;
 import org.jboss.bpmn2.editor.core.features.event.definitions.CancelEventDefinitionContainer;
@@ -83,6 +84,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 		containers = new ArrayList<FeatureContainer>();
 		containers.add(new GroupFeatureContainer());
+		containers.add(new DataFeatureContainer());
 		containers.add(new BoundaryEventFeatureContainer());
 		containers.add(new ServiceTaskFeatureContainer());
 		containers.add(new UserTaskFeatureContainer());

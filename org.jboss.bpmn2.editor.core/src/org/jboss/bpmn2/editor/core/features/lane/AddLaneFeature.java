@@ -53,9 +53,9 @@ public class AddLaneFeature extends AbstractAddShapeFeature {
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
 		ContainerShape containerShape = peCreateService.createContainerShape(context.getTargetContainer(), true);
 		IGaService gaService = Graphiti.getGaService();
-
-		int width = 600;
-		int height = 100;
+		
+		int width = context.getWidth() > 0 ? context.getWidth() : 600;
+		int height = context.getHeight() > 0 ? context.getHeight() : 100;
 
 		Rectangle rect = gaService.createRectangle(containerShape);
 		rect.setStyle(StyleUtil.getStyleForClass(getDiagram()));
