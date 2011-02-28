@@ -14,9 +14,9 @@ import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 
 public class CreateLaneFeature extends AbstractCreateFeature {
-	
+
 	private static int index = 1;
-	
+
 	private FeatureSupport support = new FeatureSupport() {
 		@Override
 		public Object getBusinessObject(PictogramElement element) {
@@ -33,7 +33,8 @@ public class CreateLaneFeature extends AbstractCreateFeature {
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
 		boolean intoLane = support.isTargetLane(context);
 		boolean intoParticipant = support.isTargetParticipant(context);
-		return intoDiagram || intoLane || intoParticipant;
+		boolean intoSubProcess = support.isTargetSubProcess(context);
+		return intoDiagram || intoLane || intoParticipant || intoSubProcess;
 	}
 
 	@Override
@@ -41,13 +42,12 @@ public class CreateLaneFeature extends AbstractCreateFeature {
 		Lane lane = null;
 		try {
 			ModelHandler mh = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
+			Object o = getBusinessObjectForPictogramElement(context.getTargetContainer());
 			if (support.isTargetLane(context)) {
-				Lane targetLane = (Lane) getBusinessObjectForPictogramElement(context.getTargetContainer());
-				lane = mh.addLaneTo(targetLane);
-			} else if (support.isTargetParticipant(context)) {
-				lane = mh.addLane(support.getTargetParticipant(context, mh));
+				Lane targetLane = (Lane) o;
+				lane = mh.createLane(targetLane);
 			} else {
-				lane = mh.addLane(mh.getInternalParticipant());
+				lane = mh.createLane(o);
 			}
 			lane.setName("Lane nr " + index++);
 		} catch (IOException e) {

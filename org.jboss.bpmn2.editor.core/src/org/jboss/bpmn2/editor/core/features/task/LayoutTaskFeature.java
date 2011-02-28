@@ -1,17 +1,21 @@
 package org.jboss.bpmn2.editor.core.features.task;
 
-import static org.jboss.bpmn2.editor.core.features.task.SizeConstants.*;
+import static org.jboss.bpmn2.editor.core.features.task.SizeConstants.HEIGHT_MIN;
+import static org.jboss.bpmn2.editor.core.features.task.SizeConstants.PADDING_BOTTOM;
+import static org.jboss.bpmn2.editor.core.features.task.SizeConstants.WIDTH_MIN;
 
 import java.util.Iterator;
 
+import org.eclipse.bpmn2.BoundaryEvent;
 import org.eclipse.bpmn2.Task;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.graphiti.datatypes.IDimension;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ILayoutContext;
 import org.eclipse.graphiti.features.impl.AbstractLayoutFeature;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
+import org.eclipse.graphiti.mm.algorithms.RoundedRectangle;
+import org.eclipse.graphiti.mm.algorithms.Text;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
@@ -36,37 +40,37 @@ public class LayoutTaskFeature extends AbstractLayoutFeature {
 
 	@Override
 	public boolean layout(ILayoutContext context) {
-		boolean changed = false;
-
 		ContainerShape containerShape = (ContainerShape) context.getPictogramElement();
 		GraphicsAlgorithm containerGa = containerShape.getGraphicsAlgorithm();
 		IGaService gaService = Graphiti.getGaService();
 
 		if (containerGa.getWidth() < WIDTH_MIN) {
 			containerGa.setWidth(WIDTH_MIN);
-			changed = true;
 		}
 
 		if (containerGa.getHeight() < HEIGHT_MIN) {
 			containerGa.setHeight(HEIGHT_MIN);
-			changed = true;
 		}
-
-		int containerWidth = containerGa.getWidth();
-		Iterator<Shape> iterator = containerShape.getChildren().iterator();
+		
+		int newWidth = containerGa.getWidth();
+		int newHeight = containerGa.getHeight() - PADDING_BOTTOM;
+		
+		Iterator<Shape> iterator = Graphiti.getPeService().getAllContainedShapes(containerShape).iterator();
+		
+		RoundedRectangle rect = (RoundedRectangle) iterator.next().getGraphicsAlgorithm();
+		gaService.setSize(rect, newWidth, newHeight);
+		
+		Text text = (Text) iterator.next().getGraphicsAlgorithm();
+		gaService.setSize(text, newWidth, text.getHeight());
+		
 		while (iterator.hasNext()) {
 			Shape shape = (Shape) iterator.next();
 			Object bo = getBusinessObjectForPictogramElement(shape);
-			if (bo == null || !(bo instanceof Task))
-				continue;
-			GraphicsAlgorithm ga = shape.getGraphicsAlgorithm();
-			IDimension size = gaService.calculateSize(ga);
-			if (containerWidth != size.getWidth()) {
-				gaService.setWidth(ga, containerWidth);
-				changed = true;
+			if (bo != null && bo instanceof BoundaryEvent) {
+				//layoutPictogramElement(shape);
 			}
 		}
 
-		return changed;
+		return true;
 	}
 }

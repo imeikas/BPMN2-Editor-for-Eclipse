@@ -10,6 +10,7 @@ import org.eclipse.bpmn2.Collaboration;
 import org.eclipse.bpmn2.Definitions;
 import org.eclipse.bpmn2.DocumentRoot;
 import org.eclipse.bpmn2.FlowElement;
+import org.eclipse.bpmn2.FlowElementsContainer;
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.InteractionNode;
 import org.eclipse.bpmn2.Lane;
@@ -66,55 +67,47 @@ public class ModelHandler {
 			}
 		}
 	}
-
-	public <T extends FlowElement> T addFlowElement(Participant participant, T elem) {
-		Process process = getOrCreateProcess(participant);
-		process.getFlowElements().add(elem);
+	
+	/**
+	 * @param <T>
+	 * @param target object that this element is being added to
+	 * @param elem flow element to be added
+	 * @return
+	 */
+	public <T extends FlowElement> T addFlowElement(Object target, T elem) {
+		FlowElementsContainer container = getFlowElementContainer(target);
+		container.getFlowElements().add(elem);
 		return elem;
 	}
-
-	public <T extends FlowElement> T addFlowElement(T elem) {
-		return addFlowElement(getInternalParticipant(), elem);
+	
+	/**
+	 * @param <A>
+	 * @param target object that this artifact is being added to
+	 * @param artifact artifact to be added
+	 * @return
+	 */
+	public <A extends Artifact> A addArtifact(Object target, A artifact) {
+		Process process = getOrCreateProcess(getParticipant(target));
+		process.getArtifacts().add(artifact);
+		return artifact;
 	}
-
-	public void moveFlowNode(FlowNode node, Participant source, Participant target) {
-		if (!source.equals(target)) {
-			Process sourceProcess = getOrCreateProcess(source);
-			Process targetProcess = getOrCreateProcess(target);
-			moveFlowNode(node, sourceProcess, targetProcess);
+	
+	public void moveFlowNode(FlowNode node, Object source, Object target) {
+		FlowElementsContainer sourceContainer = getFlowElementContainer(source);
+		FlowElementsContainer targetContainer = getFlowElementContainer(target);
+		sourceContainer.getFlowElements().remove(node);
+		targetContainer.getFlowElements().add(node);
+		for(SequenceFlow flow : node.getOutgoing()) {
+			sourceContainer.getFlowElements().remove(flow);
+			targetContainer.getFlowElements().add(flow);
 		}
 	}
-
-	private void moveFlowNode(FlowNode node, Process sourceProcess, Process targetProcess) {
-		sourceProcess.getFlowElements().remove(node);
-		targetProcess.getFlowElements().add(node);
-		for (SequenceFlow flow : node.getOutgoing()) {
-			targetProcess.getFlowElements().add(flow);
-			sourceProcess.getFlowElements().remove(flow);
-		}
-	}
-
+	
 	public Participant addParticipant() {
 		Collaboration collaboration = getCollaboration();
 		Participant participant = FACTORY.createParticipant();
 		collaboration.getParticipants().add(participant);
 		return participant;
-	}
-
-	public <A extends Artifact> A addArtifact(Participant participant, A artifact) {
-		Process process = getOrCreateProcess(participant);
-		process.getArtifacts().add(artifact);
-		return artifact;
-	}
-
-	public Lane addLane(Participant participant) {
-		Lane lane = FACTORY.createLane();
-		Process process = getOrCreateProcess(participant);
-		if (process.getLaneSets().isEmpty()) {
-			process.getLaneSets().add(FACTORY.createLaneSet());
-		}
-		process.getLaneSets().get(0).getLanes().add(lane);
-		return lane;
 	}
 
 	@Deprecated
@@ -146,7 +139,7 @@ public class ModelHandler {
 		return participant.getProcessRef();
 	}
 
-	public Lane addLaneTo(Lane targetLane) {
+	public Lane createLane(Lane targetLane) {
 		Lane lane = FACTORY.createLane();
 
 		if (targetLane.getChildLaneSet() == null) {
@@ -161,6 +154,16 @@ public class ModelHandler {
 
 		return lane;
 	}
+	
+	public Lane createLane(Object target) {
+		Lane lane = FACTORY.createLane();
+		FlowElementsContainer container = getFlowElementContainer(target);
+		if (container.getLaneSets().isEmpty()) {
+			container.getLaneSets().add(FACTORY.createLaneSet());
+		}
+		container.getLaneSets().get(0).getLanes().add(lane);
+		return lane;
+	}
 
 	public void laneToTop(Lane lane) {
 		LaneSet laneSet = FACTORY.createLaneSet();
@@ -170,7 +173,7 @@ public class ModelHandler {
 	}
 
 	public SequenceFlow createSequenceFlow(FlowNode source, FlowNode target) {
-		SequenceFlow flow = addFlowElement(FACTORY.createSequenceFlow());
+		SequenceFlow flow = addFlowElement(source, FACTORY.createSequenceFlow());
 		flow.setSourceRef(source);
 		flow.setTargetRef(target);
 		return flow;
@@ -185,7 +188,7 @@ public class ModelHandler {
 	}
 
 	public Association createAssociation(TextAnnotation annotation, BaseElement element) {
-		Association association = addArtifact(getParticipant(element), FACTORY.createAssociation());
+		Association association = addArtifact(element, FACTORY.createAssociation());
 		association.setSourceRef(element);
 		association.setTargetRef(annotation);
 		return association;
@@ -241,70 +244,44 @@ public class ModelHandler {
 	public Participant getInternalParticipant() {
 		return getCollaboration().getParticipants().get(0);
 	}
+	
+	public FlowElementsContainer getFlowElementContainer(Object o) {
+		if (o == null) {
+			return getOrCreateProcess(getInternalParticipant());
+		}
+		if (o instanceof Participant) {
+			return getOrCreateProcess((Participant) o);
+		}
+		return findElementOfType(FlowElementsContainer.class, o);
+	}
 
 	public Participant getParticipant(Object o) {
-		if (o instanceof Diagram) {
+		if (o == null || o instanceof Diagram) {
 			return getInternalParticipant();
 		}
-
-		if (o instanceof Participant) {
-			return (Participant) o;
-		}
-
+		
+		Process process = findElementOfType(Process.class, o);
+		
 		for (Participant p : getCollaboration().getParticipants()) {
-
-			if (p.getProcessRef() == null) {
-				continue;
-			}
-
-			Process process = p.getProcessRef();
-
-			if (o instanceof Lane && isSubLane(process, (Lane) o)) {
-				return p;
-			} else if (process.getFlowElements().contains(o)) {
+			if(p.getProcessRef().equals(process)) {
 				return p;
 			}
-
 		}
+		
 		return null;
 	}
-
-	private boolean isSubLane(Process p, Lane lane) {
-		if (p.getLaneSets().isEmpty()) {
-			return false;
+	
+	@SuppressWarnings("unchecked")
+	public <T extends BaseElement> T findElementOfType(Class<T> clazz, Object from) {
+		if (!(from instanceof BaseElement)) {
+			return null;
 		}
 
-		boolean found = false;
-
-		for (LaneSet s : p.getLaneSets()) {
-			if (isSubLane(s, lane)) {
-				found = true;
-				break;
-			}
+		if (clazz.isAssignableFrom(from.getClass())) {
+			return (T) from;
 		}
 
-		return found;
-	}
-
-	private boolean isSubLane(LaneSet set, Lane lane) {
-		if (set == null) {
-			return false;
-		}
-
-		if (set.getLanes().contains(lane)) {
-			return true;
-		}
-
-		boolean found = false;
-
-		for (Lane l : set.getLanes()) {
-			if (isSubLane(l.getChildLaneSet(), lane)) {
-				found = true;
-				break;
-			}
-		}
-
-		return found;
+		return findElementOfType(clazz, ((BaseElement) from).eContainer());
 	}
 
 	@SuppressWarnings("rawtypes")

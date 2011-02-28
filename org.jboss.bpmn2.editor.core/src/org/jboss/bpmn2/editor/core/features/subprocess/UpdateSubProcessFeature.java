@@ -1,5 +1,7 @@
 package org.jboss.bpmn2.editor.core.features.subprocess;
 
+import static org.jboss.bpmn2.editor.core.features.subprocess.SubProcessFeatureContainer.TRIGGERED_BY_EVENT;
+
 import org.eclipse.bpmn2.SubProcess;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.IReason;
@@ -26,7 +28,7 @@ public class UpdateSubProcessFeature extends AbstractUpdateFeature {
 	@Override
 	public IReason updateNeeded(IUpdateContext context) {
 		Property triggerProperty = Graphiti.getPeService().getProperty(context.getPictogramElement(),
-		        AddSubprocessFeature.TRIGGERED_BY_EVENT);
+		        TRIGGERED_BY_EVENT);
 		if (triggerProperty == null)
 			return Reason.createFalseReason();
 		SubProcess process = (SubProcess) getBusinessObjectForPictogramElement(context.getPictogramElement());
@@ -39,8 +41,8 @@ public class UpdateSubProcessFeature extends AbstractUpdateFeature {
 	public boolean update(IUpdateContext context) {
 		SubProcess process = (SubProcess) getBusinessObjectForPictogramElement(context.getPictogramElement());
 
-		Graphiti.getPeService().setPropertyValue(context.getPictogramElement(),
-		        AddSubprocessFeature.TRIGGERED_BY_EVENT, Boolean.toString(process.isTriggeredByEvent()));
+		Graphiti.getPeService().setPropertyValue(context.getPictogramElement(), TRIGGERED_BY_EVENT,
+		        Boolean.toString(process.isTriggeredByEvent()));
 
 		RoundedRectangle rectangle = (RoundedRectangle) Graphiti.getPeService()
 		        .getAllContainedPictogramElements(context.getPictogramElement()).iterator().next()

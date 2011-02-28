@@ -155,7 +155,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			if (container.canApplyTo(element)) {
 				IAddFeature feature = container.getAddFeature(this);
 				if (feature == null)
-					continue;
+					break;
 				return feature;
 			}
 		}
@@ -190,7 +190,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			if (container.canApplyTo(element)) {
 				IUpdateFeature feature = container.getUpdateFeature(this);
 				if (feature == null)
-					continue;
+					break;
 				return feature;
 			}
 		}
@@ -225,7 +225,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			if (container.canApplyTo(element)) {
 				IDirectEditingFeature feature = container.getDirectEditingFeature(this);
 				if (feature == null)
-					continue;
+					break;
 				return feature;
 			}
 		}
@@ -255,7 +255,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			if (container.canApplyTo(element)) {
 				ILayoutFeature feature = container.getLayoutFeature(this);
 				if (feature == null)
-					continue;
+					break;
 				return feature;
 			}
 		}
@@ -285,7 +285,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			if (container.canApplyTo(element)) {
 				IMoveShapeFeature feature = container.getMoveFeature(this);
 				if (feature == null)
-					continue;
+					break;
 				return feature;
 			}
 		}
@@ -315,7 +315,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			if (container.canApplyTo(element)) {
 				IResizeShapeFeature feature = container.getResizeFeature(this);
 				if (feature == null)
-					continue;
+					break;
 				return feature;
 			}
 		}

@@ -6,8 +6,6 @@ import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
-import org.eclipse.graphiti.features.context.IResizeShapeContext;
-import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 
 public abstract class AbstractSubProcessFeatureContainer implements FeatureContainer {
@@ -33,11 +31,6 @@ public abstract class AbstractSubProcessFeatureContainer implements FeatureConta
 
 	@Override
     public IResizeShapeFeature getResizeFeature(IFeatureProvider fp) {
-	    return new DefaultResizeShapeFeature(fp) {
-	    	@Override
-	    	public boolean canResizeShape(IResizeShapeContext context) {
-	    	    return false; // FIXME
-	    	}
-	    };
+		return null;
     }
 }

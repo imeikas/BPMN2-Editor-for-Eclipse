@@ -9,6 +9,7 @@ import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.Participant;
+import org.eclipse.bpmn2.SubProcess;
 import org.eclipse.bpmn2.TextAnnotation;
 import org.eclipse.graphiti.features.context.IPictogramElementContext;
 import org.eclipse.graphiti.features.context.ITargetContext;
@@ -29,7 +30,12 @@ import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
 public abstract class FeatureSupport {
 
 	public abstract Object getBusinessObject(PictogramElement element);
-
+	
+	public boolean isTargetSubProcess(ITargetContext context) {
+		Object bo = getBusinessObject(context.getTargetContainer());
+		return bo != null && bo instanceof SubProcess;
+	}
+	
 	public boolean isTargetLane(ITargetContext context) {
 		return isLane(context.getTargetContainer());
 	}

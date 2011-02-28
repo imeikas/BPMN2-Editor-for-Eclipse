@@ -43,8 +43,9 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
 		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context);
 		boolean intoParticipant = support.isTargetParticipant(context);
-		return isTask && (intoDiagram || intoLane || intoParticipant);
-	}
+		boolean intoSubProcess = support.isTargetSubProcess(context);
+		return isTask && (intoDiagram || intoLane || intoParticipant || intoSubProcess);
+    }
 
 	@Override
 	public PictogramElement add(IAddContext context) {

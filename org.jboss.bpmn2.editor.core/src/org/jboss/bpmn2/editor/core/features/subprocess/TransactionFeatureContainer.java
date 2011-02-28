@@ -8,7 +8,6 @@ import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.context.ICreateContext;
-import org.eclipse.graphiti.mm.algorithms.Rectangle;
 import org.eclipse.graphiti.mm.algorithms.RoundedRectangle;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
@@ -30,19 +29,14 @@ public class TransactionFeatureContainer extends AbstractSubProcessFeatureContai
 
 	@Override
 	public IAddFeature getAddFeature(IFeatureProvider fp) {
-		return new AddSubprocessFeature(fp) {
+		return new AddExpandedSubProcessFeature(fp) {
 			@Override
 			protected void decorateRect(RoundedRectangle rect) {
 				IGaService gaService = Graphiti.getGaService();
 				RoundedRectangle innerRect = gaService.createRoundedRectangle(rect, 5, 5);
 				innerRect.setFilled(false);
 				innerRect.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
-				gaService.setLocationAndSize(innerRect, 3, 3, 94, 94);
-			}
-			
-			@Override
-			protected void decorateBox(Rectangle box) {
-				Graphiti.getGaService().setLocation(box, box.getX(), box.getY() - 3);
+				gaService.setLocationAndSize(innerRect, 3, 3, rect.getWidth() - 6, rect.getHeight() - 6);
 			}
 		};
 	}
