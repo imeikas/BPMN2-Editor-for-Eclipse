@@ -260,8 +260,19 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 			@Override
 			public boolean layout(ILayoutContext context) {
 				PictogramElement element = context.getPictogramElement();
-				System.out.println(element);
-				return true;
+				GraphicsAlgorithm ga = element.getGraphicsAlgorithm();
+
+				ContainerShape parentContainer = (ContainerShape) element.eContainer();
+				GraphicsAlgorithm parentGa = parentContainer.getGraphicsAlgorithm();
+				
+				int y = parentGa.getHeight() - ShapeUtil.EVENT_SIZE;
+				
+				if(ga.getY() != y) {
+					Graphiti.getGaService().setLocation(ga, ga.getX(), y);
+					return true;
+				}
+				
+				return false;
 			}
 		};
 	}
