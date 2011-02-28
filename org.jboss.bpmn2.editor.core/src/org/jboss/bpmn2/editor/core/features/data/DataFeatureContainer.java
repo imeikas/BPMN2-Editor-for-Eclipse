@@ -1,5 +1,7 @@
 package org.jboss.bpmn2.editor.core.features.data;
 
+import java.util.Iterator;
+
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.DataObject;
 import org.eclipse.graphiti.features.IAddFeature;
@@ -8,13 +10,17 @@ import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
+import org.eclipse.graphiti.features.IReason;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.features.context.IResizeShapeContext;
+import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
+import org.eclipse.graphiti.features.impl.AbstractUpdateFeature;
 import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
+import org.eclipse.graphiti.features.impl.Reason;
 import org.eclipse.graphiti.mm.algorithms.Polygon;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.eclipse.graphiti.mm.algorithms.Rectangle;
@@ -35,7 +41,10 @@ import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
 public class DataFeatureContainer implements FeatureContainer {
-
+	
+	static final String COLLECTION_PROPERTY = "isCollection";
+	static final String HIDEABLE_PROPERTY = "hideable";
+	
 	@Override
 	public boolean canApplyTo(BaseElement element) {
 		return element instanceof DataObject;
@@ -72,7 +81,7 @@ public class DataFeatureContainer implements FeatureContainer {
 				IPeService peService = Graphiti.getPeService();
 				DataObject data = (DataObject) context.getNewObject();
 
-				int width = 35;
+				int width = 36;
 				int height = 50;
 				int e = 10;
 				
@@ -92,23 +101,79 @@ public class DataFeatureContainer implements FeatureContainer {
 				Polyline edge = gaService.createPolyline(rect, new int[] { p, 0, p, e + 1, width, e + 1});
 				edge.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 				edge.setLineWidth(1);
-
+				
+				int whalf = width / 2;
+				createCollectionShape(container, new int[] {whalf - 2, height - 8, whalf - 2, height});
+				createCollectionShape(container, new int[] {whalf, height - 8, whalf, height});
+				createCollectionShape(container, new int[] {whalf + 2, height - 8, whalf + 2, height});
+				
 				ChopboxAnchor anchor = peService.createChopboxAnchor(container);
 				anchor.setReferencedGraphicsAlgorithm(rect);
 
 				if (data.eResource() == null) {
 					getDiagram().eResource().getContents().add(data);
 				}
-
+				
+				Graphiti.getPeService().setPropertyValue(container, COLLECTION_PROPERTY, Boolean.toString(false));
 				link(container, data);
 				return container;
+			}
+			
+			private Shape createCollectionShape(ContainerShape container, int[] xy) {
+				IPeService peService = Graphiti.getPeService();
+				IGaService gaService = Graphiti.getGaService();
+				Shape collectionShape = peService.createShape(container, false);
+				Polyline line = gaService.createPolyline(collectionShape, xy);
+				line.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
+				line.setLineWidth(1);
+				line.setLineVisible(false);
+				peService.setPropertyValue(collectionShape, HIDEABLE_PROPERTY, Boolean.toString(true));
+				return collectionShape;
 			}
 		};
 	}
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
-		return null;
+		return new AbstractUpdateFeature(fp) {
+
+			@Override
+            public boolean canUpdate(IUpdateContext context) {
+				Object o = getBusinessObjectForPictogramElement(context.getPictogramElement());
+	            return o != null && o instanceof BaseElement && canApplyTo((BaseElement) o);
+            }
+
+			@Override
+            public IReason updateNeeded(IUpdateContext context) {
+				IPeService peService = Graphiti.getPeService();
+				ContainerShape container = (ContainerShape) context.getPictogramElement();
+	            DataObject data = (DataObject) getBusinessObjectForPictogramElement(container);
+	            boolean isCollection = Boolean.parseBoolean(peService.getPropertyValue(container, COLLECTION_PROPERTY));
+	            return data.isIsCollection() != isCollection ? Reason.createTrueReason() : Reason.createFalseReason();
+            }
+
+			@Override
+            public boolean update(IUpdateContext context) {
+				IPeService peService = Graphiti.getPeService();
+				ContainerShape container = (ContainerShape) context.getPictogramElement();
+	            DataObject data = (DataObject) getBusinessObjectForPictogramElement(container);
+	            
+	            boolean drawCollectionMarker = data.isIsCollection();
+	            
+	            Iterator<Shape> iterator = peService.getAllContainedShapes(container).iterator();
+	            while (iterator.hasNext()) {
+	                Shape shape = (Shape) iterator.next();
+	                String prop = peService.getPropertyValue(shape, HIDEABLE_PROPERTY);
+	                if(prop != null && new Boolean(prop)) {
+	                	Polyline line = (Polyline) shape.getGraphicsAlgorithm();
+	                	line.setLineVisible(drawCollectionMarker);
+	                }
+                }
+	            
+	            peService.setPropertyValue(container, COLLECTION_PROPERTY, Boolean.toString(data.isIsCollection()));
+	            return true;
+            }
+		};
 	}
 
 	@Override
@@ -145,7 +210,10 @@ public class DataFeatureContainer implements FeatureContainer {
 
 		@Override
 		protected DataObject createFlowElement(ICreateContext context) {
-			return ModelHandler.FACTORY.createDataObject();
+			DataObject data = ModelHandler.FACTORY.createDataObject();
+			data.setIsCollection(false);
+			data.setName("Data Object");
+			return data;
 		}
 
 		@Override

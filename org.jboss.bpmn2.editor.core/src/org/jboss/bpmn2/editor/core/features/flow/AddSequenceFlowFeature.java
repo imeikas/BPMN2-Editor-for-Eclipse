@@ -17,8 +17,8 @@ import org.eclipse.graphiti.util.ColorConstant;
 import org.eclipse.graphiti.util.IColorConstant;
 
 public class AddSequenceFlowFeature extends AbstractAddShapeFeature {
-	private static final int WIDTH = 5;
-	private static final int LENGTH = 15;
+	private static final int WIDTH = 3;
+	private static final int LENGTH = 8;
 	private static final IColorConstant CLASS_FOREGROUND = new ColorConstant(146, 146, 208);
 
 	public AddSequenceFlowFeature(IFeatureProvider fp) {
