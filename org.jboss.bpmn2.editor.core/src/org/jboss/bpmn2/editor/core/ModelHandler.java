@@ -86,10 +86,15 @@ public class ModelHandler {
 	 * @param artifact artifact to be added
 	 * @return
 	 */
-	public <A extends Artifact> A addArtifact(Object target, A artifact) {
+	public <T extends Artifact> T addArtifact(Object target, T artifact) {
 		Process process = getOrCreateProcess(getParticipant(target));
 		process.getArtifacts().add(artifact);
 		return artifact;
+	}
+	
+	public <T extends RootElement> T addRootElement(T element) {
+		getDefinitions().getRootElements().add(element);
+		return element;
 	}
 	
 	public void moveFlowNode(FlowNode node, Object source, Object target) {
@@ -188,7 +193,7 @@ public class ModelHandler {
 	}
 
 	public Association createAssociation(TextAnnotation annotation, BaseElement element) {
-		Association association = addArtifact(element, FACTORY.createAssociation());
+		Association association = addArtifact(annotation, FACTORY.createAssociation());
 		association.setSourceRef(element);
 		association.setTargetRef(annotation);
 		return association;

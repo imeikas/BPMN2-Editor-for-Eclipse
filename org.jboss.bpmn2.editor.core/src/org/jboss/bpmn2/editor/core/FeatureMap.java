@@ -11,6 +11,7 @@ import org.jboss.bpmn2.editor.core.features.artifact.CreateAssociationFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.CreateTextAnnotationFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.GroupFeatureContainer.CreateGroupFeature;
 import org.jboss.bpmn2.editor.core.features.data.DataFeatureContainer.CreateDataObjectFeature;
+import org.jboss.bpmn2.editor.core.features.data.DataStoreFeatureContainer.CreateDataStoreFeature;
 import org.jboss.bpmn2.editor.core.features.event.BoundaryEventFeatureContainer.CreateBoundaryEvent;
 import org.jboss.bpmn2.editor.core.features.event.EndEventFeatureContainer.CreateEndEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.IntermediateCatchEventFeatureContainer.CreateIntermediateCatchEventFeature;
@@ -90,6 +91,7 @@ public class FeatureMap {
 		featureMap.put(i.getTransaction(), CreateTransactionFeature.class);
 		featureMap.put(i.getGroup(), CreateGroupFeature.class);
 		featureMap.put(i.getDataObject(), CreateDataObjectFeature.class);
+		featureMap.put(i.getDataStore(), CreateDataStoreFeature.class);
 		FEATURE_MAP = Collections.unmodifiableMap(featureMap);
 	}
 
