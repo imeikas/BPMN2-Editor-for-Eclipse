@@ -30,17 +30,22 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.impl.AddConnectionContext;
 import org.eclipse.graphiti.features.context.impl.AddContext;
 import org.eclipse.graphiti.features.context.impl.AreaContext;
-import org.eclipse.graphiti.mm.pictograms.Anchor;
+import org.eclipse.graphiti.mm.algorithms.Rectangle;
 import org.eclipse.graphiti.mm.pictograms.AnchorContainer;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
+import org.eclipse.graphiti.mm.pictograms.FixPointAnchor;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
+import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.mm.pictograms.impl.FreeFormConnectionImpl;
 import org.eclipse.graphiti.services.Graphiti;
+import org.eclipse.graphiti.services.IGaService;
+import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 
+@SuppressWarnings("restriction")
 public class DIImport {
 
 	private Diagram diagram;
@@ -49,6 +54,14 @@ public class DIImport {
 	private IFeatureProvider featureProvider;
 	private HashMap<BaseElement, PictogramElement> elements;
 
+	private final IPeService peService = Graphiti.getPeService();
+	private final IGaService gaService = Graphiti.getGaService();
+
+	/**
+	 * Look for model diagram interchange information and generate all shapes for the diagrams.
+	 * 
+	 * NB! Currently only first found diagram is generated.
+	 */
 	public void generateFromDI() {
 		final Object[] diagrams = modelHandler.getAll(BPMNDiagram.class);
 		elements = new HashMap<BaseElement, PictogramElement>();
@@ -59,9 +72,12 @@ public class DIImport {
 				for (Object object : diagrams) {
 					List<DiagramElement> ownedElement = ((BPMNDiagram) object).getPlane().getPlaneElement();
 
+					// FIXME: here we should create a new diagram and an editor page
 					importShapes(ownedElement);
 					importConnections(ownedElement);
 
+					// FIXME: we don't really want to leave, but we also don't want all diagrams mixed together
+					return;
 				}
 			}
 		});
@@ -100,6 +116,11 @@ public class DIImport {
 		}
 	}
 
+	/**
+	 * Find a Graphiti feature for given shape and generate necessary diagram elements.
+	 * 
+	 * @param shape
+	 */
 	private void createShape(BPMNShape shape) {
 		BaseElement bpmnElement = shape.getBpmnElement();
 
@@ -151,6 +172,8 @@ public class DIImport {
 	private void handleLane(BaseElement bpmnElement, AddContext context, BPMNShape shape) {
 		BaseElement parent = (BaseElement) ((Lane) bpmnElement).eContainer().eContainer();
 		ContainerShape cont = diagram;
+
+		// find the process this lane belongs to
 		for (BaseElement be : elements.keySet()) {
 			if (be instanceof Participant) {
 				Process processRef = ((Participant) be).getProcessRef();
@@ -159,41 +182,49 @@ public class DIImport {
 				}
 			}
 		}
+
 		context.setTargetContainer(cont);
 		context.setLocation((int) shape.getBounds().getX(), (int) shape.getBounds().getY());
 
 	}
 
 	private void handleFlowNode(FlowNode node, AddContext context, BPMNShape shape) {
-		ContainerShape cont = diagram;
+		ContainerShape target = diagram;
 		int x = (int) shape.getBounds().getX();
 		int y = (int) shape.getBounds().getY();
 
+		// find a correct container element
 		List<Lane> lanes = node.getLanes();
 		if (node.eContainer() instanceof SubProcess) {
 			ContainerShape containerShape = (ContainerShape) elements.get(node.eContainer());
 			if (containerShape != null) {
-				cont = containerShape;
-				ILocation loc = Graphiti.getPeLayoutService().getLocationRelativeToDiagram(cont);
+				target = containerShape;
+				ILocation loc = Graphiti.getPeLayoutService().getLocationRelativeToDiagram(target);
 				x -= loc.getX();
 				y -= loc.getX();
 			}
 		} else if (!lanes.isEmpty()) {
 			for (Lane lane : lanes) {
-				cont = (ContainerShape) elements.get(lane);
-				ILocation loc = Graphiti.getPeLayoutService().getLocationRelativeToDiagram(cont);
+				target = (ContainerShape) elements.get(lane);
+				ILocation loc = Graphiti.getPeLayoutService().getLocationRelativeToDiagram(target);
 				x -= loc.getX();
 				y -= loc.getY();
 			}
 		}
-		context.setTargetContainer(cont);
+		context.setTargetContainer(target);
 		context.setLocation(x, y);
 	}
 
+	/**
+	 * Find a Graphiti feature for given edge and generate necessary connections and bendpoints.
+	 * 
+	 * @param shape
+	 */
 	private void importEdge(BPMNEdge bpmnEdge) {
 		BaseElement source = null;
 		BaseElement target = null;
 
+		// for some reason connectors don't have a common interface
 		if (bpmnEdge.getBpmnElement() instanceof MessageFlow) {
 			source = (BaseElement) ((MessageFlow) bpmnEdge.getBpmnElement()).getSourceRef();
 			target = (BaseElement) ((MessageFlow) bpmnEdge.getBpmnElement()).getTargetRef();
@@ -209,32 +240,82 @@ public class DIImport {
 		PictogramElement te = elements.get(target);
 
 		if (se != null && te != null) {
-			Anchor sa = Graphiti.getPeService().getChopboxAnchor((AnchorContainer) se);
-			Anchor ta = Graphiti.getPeService().getChopboxAnchor((AnchorContainer) te);
-
-			AddConnectionContext context = new AddConnectionContext(sa, ta);
-			context.setNewObject(bpmnEdge.getBpmnElement());
-
-			IAddFeature addFeature = featureProvider.getAddFeature(context);
-			if (addFeature.canAdd(context)) {
-				Connection connection = (Connection) addFeature.add(context);
-				if (connection instanceof FreeFormConnectionImpl) {
-					FreeFormConnectionImpl freeForm = (FreeFormConnectionImpl) connection;
-					List<Point> waypoint = bpmnEdge.getWaypoint();
-
-					// FIXME: if we add last waypoint arrows will draw themselves incorrectly
-					int size = waypoint.size() - 1;
-					for (int i = 0; i < size; i++) {
-						Point point = waypoint.get(i);
-						org.eclipse.graphiti.mm.algorithms.styles.Point p = Graphiti.getGaService().createPoint(
-								(int) point.getX(), (int) point.getY());
-						freeForm.getBendpoints().add(p);
-					}
-				}
-			}
+			createEdgeAndSetBendpoints(bpmnEdge, se, te);
 		} else {
 			Activator.logStatus(new Status(IStatus.WARNING, Activator.PLUGIN_ID,
 					"Couldn't find target element, probably not supported! Source: " + source + " Target: " + target));
 		}
+	}
+
+	private void createEdgeAndSetBendpoints(BPMNEdge bpmnEdge, PictogramElement sourceElement,
+			PictogramElement targetElement) {
+		FixPointAnchor sourceAnchor = createAnchor(sourceElement);
+		FixPointAnchor targetAnchor = createAnchor(targetElement);
+
+		AddConnectionContext context = new AddConnectionContext(sourceAnchor, targetAnchor);
+		context.setNewObject(bpmnEdge.getBpmnElement());
+
+		IAddFeature addFeature = featureProvider.getAddFeature(context);
+		if (addFeature.canAdd(context)) {
+			Connection connection = (Connection) addFeature.add(context);
+
+			if (connection instanceof FreeFormConnectionImpl) {
+				FreeFormConnectionImpl freeForm = (FreeFormConnectionImpl) connection;
+
+				List<Point> waypoint = bpmnEdge.getWaypoint();
+				int size = waypoint.size() - 1;
+
+				setAnchorLocation(sourceElement, sourceAnchor, waypoint.get(0));
+				setAnchorLocation(targetElement, targetAnchor, waypoint.get(size));
+
+				for (int i = 1; i < size; i++) {
+					addBendPoint(freeForm, waypoint.get(i));
+				}
+			}
+		}
+	}
+
+	private void addBendPoint(FreeFormConnectionImpl freeForm, Point point) {
+		freeForm.getBendpoints().add(gaService.createPoint((int) point.getX(), (int) point.getY()));
+	}
+
+	private FixPointAnchor createAnchor(PictogramElement elem) {
+		FixPointAnchor sa = peService.createFixPointAnchor((AnchorContainer) elem);
+		sa.setReferencedGraphicsAlgorithm(elem.getGraphicsAlgorithm());
+		Rectangle rect = gaService.createInvisibleRectangle(sa);
+		gaService.setSize(rect, 1, 1);
+		return sa;
+	}
+
+	private void setAnchorLocation(PictogramElement elem, FixPointAnchor anchor, Point point) {
+		org.eclipse.graphiti.mm.algorithms.styles.Point p = gaService.createPoint((int) point.getX(),
+				(int) point.getY());
+
+		int buffer = getBufferSize(elem, (Shape) elem);
+		ILocation loc = Graphiti.getPeLayoutService().getLocationRelativeToDiagram((Shape) elem);
+
+		int x = p.getX() - loc.getX();
+		int y = p.getY() - loc.getY();
+
+		// Apply buffer only when the connector connects to the bottom of the shape
+		if (Math.abs(y) > 5 && (x != 0 && Math.abs(x - ((Shape) elem).getGraphicsAlgorithm().getWidth()) > 3)) {
+			y -= buffer;
+		}
+
+		p.setX(x);
+		p.setY(y);
+
+		anchor.setLocation(p);
+	}
+
+	private int getBufferSize(PictogramElement te, Shape container) {
+		int buffer = 0;
+
+		if (!te.getGraphicsAlgorithm().getFilled() && !te.getGraphicsAlgorithm().getLineVisible()) {
+			buffer = container.getGraphicsAlgorithm().getHeight()
+					- peService.getAllContainedShapes((ContainerShape) te).iterator().next().getGraphicsAlgorithm()
+							.getHeight();
+		}
+		return buffer;
 	}
 }
