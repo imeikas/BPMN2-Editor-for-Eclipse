@@ -20,7 +20,6 @@ import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.Process;
 import org.eclipse.bpmn2.RootElement;
 import org.eclipse.bpmn2.SequenceFlow;
-import org.eclipse.bpmn2.TextAnnotation;
 import org.eclipse.bpmn2.util.Bpmn2ResourceImpl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -192,10 +191,19 @@ public class ModelHandler {
 		return messageFlow;
 	}
 
-	public Association createAssociation(TextAnnotation annotation, BaseElement element) {
-		Association association = addArtifact(annotation, FACTORY.createAssociation());
-		association.setSourceRef(element);
-		association.setTargetRef(annotation);
+	public Association createAssociation(BaseElement source, BaseElement target) {
+		BaseElement e = null;
+		if(getParticipant(source) != null) {
+			e = source;
+		} else if (getParticipant(target) != null) {
+			e = target;
+		} else {
+			e = getInternalParticipant();
+		}
+		Participant participant = getParticipant(source);
+		Association association = addArtifact(e, FACTORY.createAssociation());
+		association.setSourceRef(source);
+		association.setTargetRef(target);
 		return association;
 	}
 
