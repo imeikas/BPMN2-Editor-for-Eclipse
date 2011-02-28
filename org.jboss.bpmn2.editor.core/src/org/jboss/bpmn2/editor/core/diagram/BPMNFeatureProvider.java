@@ -26,7 +26,10 @@ import org.jboss.bpmn2.editor.core.features.artifact.ArtifactFeatureResolver;
 import org.jboss.bpmn2.editor.core.features.artifact.GroupFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.data.DataFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.event.BoundaryEventFeatureContainer;
-import org.jboss.bpmn2.editor.core.features.event.EventFeatureResolver;
+import org.jboss.bpmn2.editor.core.features.event.EndEventFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.event.IntermediateCatchEventFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.event.IntermediateThrowEventFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.event.StartEventFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.event.definitions.CancelEventDefinitionContainer;
 import org.jboss.bpmn2.editor.core.features.event.definitions.CompensateEventDefinitionContainer;
 import org.jboss.bpmn2.editor.core.features.event.definitions.ConditionalEventDefinitionContainer;
@@ -76,7 +79,6 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 		// TODO convert resolvers to containers, provides better decoupling
 		resolvers = new ArrayList<FeatureResolver>();
-		resolvers.add(new EventFeatureResolver());
 		resolvers.add(new FlowFeatureResolver());
 		resolvers.add(new LaneFeatureResolver());
 		resolvers.add(new ParticipantFeatureResolver());
@@ -85,6 +87,10 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers = new ArrayList<FeatureContainer>();
 		containers.add(new GroupFeatureContainer());
 		containers.add(new DataFeatureContainer());
+		containers.add(new StartEventFeatureContainer());
+		containers.add(new EndEventFeatureContainer());
+		containers.add(new IntermediateCatchEventFeatureContainer());
+		containers.add(new IntermediateThrowEventFeatureContainer());
 		containers.add(new BoundaryEventFeatureContainer());
 		containers.add(new ServiceTaskFeatureContainer());
 		containers.add(new UserTaskFeatureContainer());

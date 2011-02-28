@@ -22,9 +22,9 @@ import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
-public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
+public class AddEventFeature extends AbstractAddShapeFeature {
 
-	public AbstractAddEventFeature(IFeatureProvider fp) {
+	public AddEventFeature(IFeatureProvider fp) {
 		super(fp);
 	}
 
@@ -37,12 +37,11 @@ public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
 
 	@Override
 	public boolean canAdd(IAddContext context) {
-		boolean assignable = getEventClass().isAssignableFrom(context.getNewObject().getClass());
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
 		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context);
 		boolean intoParticipant = support.isTargetParticipant(context);
 		boolean intoSubProcess = support.isTargetSubProcess(context);
-		return assignable && (intoDiagram || intoLane || intoParticipant || intoSubProcess);
+		return intoDiagram || intoLane || intoParticipant || intoSubProcess;
 	}
 
 	@Override
@@ -98,7 +97,4 @@ public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
 
 	protected void addShapes(ContainerShape ellipseShape) {
 	}
-
-	protected abstract Class<? extends Event> getEventClass();
-	
 }

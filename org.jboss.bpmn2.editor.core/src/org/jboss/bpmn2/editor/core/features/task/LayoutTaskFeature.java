@@ -67,7 +67,7 @@ public class LayoutTaskFeature extends AbstractLayoutFeature {
 			Shape shape = (Shape) iterator.next();
 			Object bo = getBusinessObjectForPictogramElement(shape);
 			if (bo != null && bo instanceof BoundaryEvent) {
-				//layoutPictogramElement(shape);
+				layoutPictogramElement(shape);
 			}
 		}
 

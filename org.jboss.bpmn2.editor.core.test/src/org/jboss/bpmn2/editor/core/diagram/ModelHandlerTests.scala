@@ -64,7 +64,7 @@ class ModelHandlerTests extends Specification with JUnit {
 
     "be able to create Task" in {
       val handler = initHandler
-      val task = handler.addFlowElement(ModelHandler.FACTORY.createTask())
+      val task = handler.addFlowElement(handler.getInternalParticipant(), ModelHandler.FACTORY.createTask())
       task.isInstanceOf[TaskImpl] must beTrue
 
       "that is placed to model Resources" in {
@@ -120,8 +120,8 @@ class ModelHandlerTests extends Specification with JUnit {
       val defXml = XML.loadFile(new File(path.toFileString))
       defXml.child must_== Nil
 
-      val task = handler.addFlowElement(ModelHandler.FACTORY.createTask())
-      val gateway = handler.addFlowElement(ModelHandler.FACTORY.createExclusiveGateway())
+      val task = handler.addFlowElement(handler.getInternalParticipant(), ModelHandler.FACTORY.createTask())
+      val gateway = handler.addFlowElement(handler.getInternalParticipant(), ModelHandler.FACTORY.createExclusiveGateway())
       val flow = handler.createSequenceFlow(task, gateway)
 
       task must notBeNull
@@ -170,7 +170,7 @@ class ModelHandlerTests extends Specification with JUnit {
         defXml.child must_== Nil
 
         "have process and task when task is created" in {
-          handler.addFlowElement(ModelHandler.FACTORY.createTask())
+          handler.addFlowElement(handler.getInternalParticipant(), ModelHandler.FACTORY.createTask())
           handler save
 
           val taskXml = XML.loadFile(new File(path.toFileString))
@@ -182,7 +182,7 @@ class ModelHandlerTests extends Specification with JUnit {
           task must notBeNull
 
           "have two tasks when second task is created" in {
-            handler.addFlowElement(ModelHandler.FACTORY.createTask())
+            handler.addFlowElement(handler.getInternalParticipant(), ModelHandler.FACTORY.createTask())
             handler save
 
             val twoTaskXml = XML.loadFile(new File(path.toFileString))

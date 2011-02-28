@@ -12,10 +12,10 @@ import org.jboss.bpmn2.editor.core.features.artifact.CreateTextAnnotationFeature
 import org.jboss.bpmn2.editor.core.features.artifact.GroupFeatureContainer.CreateGroupFeature;
 import org.jboss.bpmn2.editor.core.features.data.DataFeatureContainer.CreateDataObjectFeature;
 import org.jboss.bpmn2.editor.core.features.event.BoundaryEventFeatureContainer.CreateBoundaryEvent;
-import org.jboss.bpmn2.editor.core.features.event.CreateEndEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.CreateIntermediateCatchEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.CreateIntermediateThrowEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.CreateStartEventFeature;
+import org.jboss.bpmn2.editor.core.features.event.EndEventFeatureContainer.CreateEndEventFeature;
+import org.jboss.bpmn2.editor.core.features.event.IntermediateCatchEventFeatureContainer.CreateIntermediateCatchEventFeature;
+import org.jboss.bpmn2.editor.core.features.event.IntermediateThrowEventFeatureContainer.CreateIntermediateThrowEventFeature;
+import org.jboss.bpmn2.editor.core.features.event.StartEventFeatureContainer.CreateStartEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.definitions.CancelEventDefinitionContainer.CreateCancelEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.CompensateEventDefinitionContainer.CreateCompensateEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.ConditionalEventDefinitionContainer.CreateConditionalEventDefinition;
