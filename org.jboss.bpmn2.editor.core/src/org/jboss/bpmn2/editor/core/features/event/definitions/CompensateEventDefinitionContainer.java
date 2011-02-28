@@ -6,6 +6,9 @@ import org.eclipse.bpmn2.CatchEvent;
 import org.eclipse.bpmn2.CompensateEventDefinition;
 import org.eclipse.bpmn2.Event;
 import org.eclipse.bpmn2.EventDefinition;
+import org.eclipse.bpmn2.StartEvent;
+import org.eclipse.bpmn2.SubProcess;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
@@ -32,7 +35,7 @@ public class CompensateEventDefinitionContainer extends EventDefinitionFeatureCo
 
 	@Override
 	protected Shape drawForStart(DecorationAlgorithm algorithm, ContainerShape shape) {
-		return null; // NOT ALLOWED ACCORDING TO SPEC
+		return draw(algorithm, shape);
 	}
 
 	@Override
@@ -93,6 +96,20 @@ public class CompensateEventDefinitionContainer extends EventDefinitionFeatureCo
 			if(e instanceof BoundaryEvent) {
 				BoundaryEvent be = (BoundaryEvent) e;
 				return be.isCancelActivity();
+			}
+			
+			if (e instanceof StartEvent) {
+				if (((StartEvent) e).isIsInterrupting() == false) {
+					return false;
+				}
+
+				EObject container = context.getTargetContainer().eContainer();
+				if (container instanceof Shape) {
+					Object o = getBusinessObjectForPictogramElement((Shape) container);
+					return o != null && o instanceof SubProcess;
+				}
+
+				return false;
 			}
 			
 			if (e instanceof CatchEvent)

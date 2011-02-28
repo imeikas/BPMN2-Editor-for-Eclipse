@@ -33,6 +33,7 @@ import org.eclipse.bpmn2.SignalEventDefinition;
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.bpmn2.SubProcess;
 import org.eclipse.bpmn2.Task;
+import org.eclipse.bpmn2.TerminateEventDefinition;
 import org.eclipse.bpmn2.TextAnnotation;
 import org.eclipse.bpmn2.TimerEventDefinition;
 import org.eclipse.bpmn2.Transaction;
@@ -85,6 +86,7 @@ public class ImageProvider extends AbstractImageProvider {
 	public static final String IMG_16_TRANSACTION = PREFIX + Transaction.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_GROUP = PREFIX + Group.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_DATA_OBJECT = PREFIX + DataObject.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_TERMINATE = PREFIX + TerminateEventDefinition.class.getSimpleName().toLowerCase() + dot16;
 	
 	public static final String IMG_20_CONDITION = PREFIX + ConditionalEventDefinition.class.getSimpleName().toLowerCase() + dot20;
 	public static final String IMG_20_TIMER = PREFIX + TimerEventDefinition.class.getSimpleName().toLowerCase() + dot20;
@@ -129,6 +131,7 @@ public class ImageProvider extends AbstractImageProvider {
 		addImageFilePath(IMG_16_TRANSACTION, ICONS_16 + "Transaction.png");
 		addImageFilePath(IMG_16_GROUP, ICONS_16 + "Group.png");
 		addImageFilePath(IMG_16_DATA_OBJECT, ICONS_16 + "DataObject.png");
+		addImageFilePath(IMG_16_TERMINATE, ICONS_16 + "Terminate.png");
 		
 		addImageFilePath(IMG_20_CONDITION, ICONS_20 + "Condition.png");
 		addImageFilePath(IMG_20_TIMER, ICONS_20 + "Timer.png");

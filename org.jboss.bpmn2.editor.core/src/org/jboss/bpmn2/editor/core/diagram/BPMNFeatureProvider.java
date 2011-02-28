@@ -38,6 +38,7 @@ import org.jboss.bpmn2.editor.core.features.event.definitions.EscalationEventDef
 import org.jboss.bpmn2.editor.core.features.event.definitions.LinkEventDefinitionContainer;
 import org.jboss.bpmn2.editor.core.features.event.definitions.MessageEventDefinitionContainer;
 import org.jboss.bpmn2.editor.core.features.event.definitions.SignalEventDefinitionContainer;
+import org.jboss.bpmn2.editor.core.features.event.definitions.TerminateEventDefinitionFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.event.definitions.TimerEventDefinitionContainer;
 import org.jboss.bpmn2.editor.core.features.flow.FlowFeatureResolver;
 import org.jboss.bpmn2.editor.core.features.gateway.ComplexGatewayFeatureContainer;
@@ -116,6 +117,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers.add(new LinkEventDefinitionContainer());
 		containers.add(new ErrorEventDefinitionContainer());
 		containers.add(new CancelEventDefinitionContainer());
+		containers.add(new TerminateEventDefinitionFeatureContainer());
 
 		List<ICreateFeature> createFeaturesList = new ArrayList<ICreateFeature>();
 

@@ -24,6 +24,7 @@ import org.jboss.bpmn2.editor.core.features.event.definitions.EscalationEventDef
 import org.jboss.bpmn2.editor.core.features.event.definitions.LinkEventDefinitionContainer.CreateLinkEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.MessageEventDefinitionContainer.CreateMessageEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.SignalEventDefinitionContainer.CreateSignalEventDefinition;
+import org.jboss.bpmn2.editor.core.features.event.definitions.TerminateEventDefinitionFeatureContainer.CreateTerminateEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.TimerEventDefinitionContainer.CreateTimerEventDefinition;
 import org.jboss.bpmn2.editor.core.features.flow.CreateMessageFlowFeature;
 import org.jboss.bpmn2.editor.core.features.flow.CreateSequenceFlowFeature;
@@ -83,6 +84,7 @@ public class FeatureMap {
 		featureMap.put(i.getLinkEventDefinition(), CreateLinkEventDefinition.class);
 		featureMap.put(i.getErrorEventDefinition(), CreateErrorEventDefinition.class);
 		featureMap.put(i.getCancelEventDefinition(), CreateCancelEventDefinition.class);
+		featureMap.put(i.getTerminateEventDefinition(), CreateTerminateEventDefinition.class);
 		featureMap.put(i.getBoundaryEvent(), CreateBoundaryEvent.class);
 		featureMap.put(i.getSubProcess(), CreateSubProcessFeature.class);
 		featureMap.put(i.getTransaction(), CreateTransactionFeature.class);

@@ -190,9 +190,9 @@ public class ShapeUtil {
 	}
 
 	public static Polygon createEventPentagon(Shape shape) {
-		int radius = EVENT_SIZE / 2;
-		return gaService.createPolygon(shape, new int[] { radius, 7, radius + 10, radius - 4, radius + 7, radius + 10,
-		        radius - 7, radius + 10, radius - 10, radius - 4 });
+		int r = EVENT_SIZE / 2;
+		return gaService.createPolygon(shape, new int[] { r, 7, r + 10, r - 4, r + 7, r + 10, r - 7, r + 10, r - 10,
+		        r - 4 });
 	}
 
 	public static Ellipse createIntermediateEventCircle(Ellipse ellipse) {
@@ -216,8 +216,8 @@ public class ShapeUtil {
 	}
 
 	public static Polygon createEventEscalation(Shape shape) {
-		int radius = EVENT_SIZE / 2;
-		int[] points = { radius, 8, radius + 8, radius + 9, radius, radius + 2, radius - 8, radius + 9 };
+		int r = EVENT_SIZE / 2;
+		int[] points = { r, 8, r + 8, r + 9, r, r + 2, r - 8, r + 9 };
 		Polygon polygon = gaService.createPolygon(shape, points);
 		polygon.setLineWidth(1);
 		return polygon;
@@ -245,34 +245,51 @@ public class ShapeUtil {
 	}
 
 	public static Polygon createEventLink(Shape shape) {
-		int radius = EVENT_SIZE / 2;
-		int[] points = { 32, radius, 23, radius + 11, 23, radius + 6, 5, radius + 6, 5, radius - 6, 23, radius - 6, 23,
-		        radius - 11 };
+		int r = EVENT_SIZE / 2;
+		int[] points = { 32, r, 23, r + 11, 23, r + 6, 5, r + 6, 5, r - 6, 23, r - 6, 23, r - 11 };
 		Polygon polygon = gaService.createPolygon(shape, points);
 		polygon.setLineWidth(1);
 		return polygon;
 	}
 
 	public static Polygon createEventError(Shape shape) {
-		int radius = EVENT_SIZE / 2;
-		int[] points = { radius + 4, radius, radius + 10, radius - 10, radius + 7, radius + 10, radius - 4, radius,
-		        radius - 10, radius + 10, radius - 7, radius - 10 };
+		int r = EVENT_SIZE / 2;
+		int[] points = { r + 4, r, r + 10, r - 10, r + 7, r + 10, r - 4, r, r - 10, r + 10, r - 7, r - 10 };
 		Polygon polygon = gaService.createPolygon(shape, points);
 		polygon.setLineWidth(1);
 		return polygon;
 	}
 
 	public static Polygon createEventCancel(Shape shape) {
-		int radius = EVENT_SIZE / 2;
-		int c = 4;
+		int r = EVENT_SIZE / 2;
 		int a = 9;
 		int b = 12;
-		int[] points = { radius, radius - c, radius + a, radius - b, radius + b, radius - a, radius + c, radius,
-		        radius + b, radius + a, radius + a, radius + b, radius, radius + c, radius - a, radius + b, radius - b,
-		        radius + a, radius - c, radius, radius - b, radius - a, radius - a, radius - b };
+		int c = 4;
+		int[] points = { r, r - c, r + a, r - b, r + b, r - a, r + c, r, r + b, r + a, r + a, r + b, r, r + c, r - a,
+		        r + b, r - b, r + a, r - c, r, r - b, r - a, r - a, r - b };
 		Polygon polygon = gaService.createPolygon(shape, points);
 		polygon.setLineWidth(1);
 		return polygon;
+	}
+
+	public static Ellipse createEventTerminate(Shape terminateShape) {
+		Ellipse ellipse = gaService.createEllipse(terminateShape);
+		gaService.setLocationAndSize(ellipse, 6, 6, EVENT_SIZE - 12, EVENT_SIZE - 12);
+		ellipse.setLineWidth(1);
+		ellipse.setFilled(true);
+		return ellipse;
+	}
+
+	public static Polygon createEventParallelMultiple(Shape shape) {
+		int r = EVENT_SIZE / 2;
+		int a = 3;
+		int b = 11;
+		int[] points = { r - a, r - b, r + a, r - b, r + a, r - a, r + b, r - a, r + b, r + a, r + a, r + a, r + a,
+		        r + b, r - a, r + b, r - a, r + a, r - b, r + a, r - b, r - a, r - a, r - a };
+		Polygon cross = gaService.createPolygon(shape, points);
+		cross.setFilled(false);
+		cross.setLineWidth(1);
+		return cross;
 	}
 
 	public static boolean clearEvent(ContainerShape shape) {

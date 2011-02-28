@@ -85,11 +85,16 @@ public class AddEventFeature extends AbstractAddShapeFeature {
 
 		ChopboxAnchor anchor = peCreateService.createChopboxAnchor(containerShape);
 		anchor.setReferencedGraphicsAlgorithm(ellipse);
-
+		
+		hook(containerShape);
+		
 		layoutPictogramElement(containerShape);
 		return containerShape;
 	}
 
 	protected void decorateEllipse(Ellipse ellipse) {
+	}
+	
+	protected void hook(ContainerShape container) {
 	}
 }
