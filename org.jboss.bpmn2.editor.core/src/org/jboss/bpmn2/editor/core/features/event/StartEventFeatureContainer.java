@@ -1,7 +1,5 @@
 package org.jboss.bpmn2.editor.core.features.event;
 
-import javax.xml.stream.events.StartElement;
-
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Event;
 import org.eclipse.bpmn2.StartEvent;
@@ -16,7 +14,7 @@ public class StartEventFeatureContainer extends AbstractEventFeatureContainer {
 
 	@Override
     public boolean canApplyTo(BaseElement element) {
-	    return element instanceof StartElement;
+	    return element instanceof StartEvent;
     }
 
 	@Override

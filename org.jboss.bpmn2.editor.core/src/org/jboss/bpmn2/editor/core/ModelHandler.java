@@ -260,6 +260,10 @@ public class ModelHandler {
 			return getInternalParticipant();
 		}
 		
+		if (o instanceof Participant) {
+			return (Participant) o;
+		}
+		
 		Process process = findElementOfType(Process.class, o);
 		
 		for (Participant p : getCollaboration().getParticipants()) {

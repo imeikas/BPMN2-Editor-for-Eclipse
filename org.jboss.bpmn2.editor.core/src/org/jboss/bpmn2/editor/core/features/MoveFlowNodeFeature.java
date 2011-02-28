@@ -127,11 +127,9 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 			if (a.canApplyTo(context)) {
 				switch (a.getType()) {
 				case Algorithm.TYPE_FROM:
-					System.out.println(a + "can apply for context as FROM");
 					fromAlgorithm = a;
 					break;
 				case Algorithm.TYPE_TO:
-					System.out.println(a + "can apply for context as TO");
 					toAlgorithm = a;
 					break;
 				}
@@ -192,11 +190,6 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 			lane.getFlowNodeRefs().remove(node);
 			node.getLanes().remove(lane);
 		}
-		
-		@Override
-		public String toString() {
-		    return "FromLane";
-		}
 	}
 
 	class ToLaneAlgorithm extends DefaultAlgorithm {
@@ -224,11 +217,6 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 			node.getLanes().add(lane);
 			super.move(node, source, target);
 		}
-		
-		@Override
-		public String toString() {
-		    return "toLane";
-		}
 	}
 
 	class FromParticipantAlgorithm extends DefaultAlgorithm {
@@ -246,11 +234,6 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 		@Override
 		public void move(FlowNode node, Object source, Object target) {
 			// DO NOTHING HERE
-		}
-		
-		@Override
-		public String toString() {
-		    return "fromParticipant";
 		}
 	}
 
@@ -281,11 +264,6 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 			}
 			return false;
 		}
-		
-		@Override
-		public String toString() {
-		    return "toParticipant";
-		}
 	}
 
 	class FromSubProcessAlgorithm extends DefaultAlgorithm {
@@ -304,11 +282,6 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 		@Override
 		public void move(FlowNode node, Object source, Object target) {
 		}
-		
-		@Override
-		public String toString() {
-		    return "fromSubProcess";
-		}
 	}
 
 	class ToSubProcess extends DefaultAlgorithm {
@@ -322,11 +295,6 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 		public boolean canApplyTo(IMoveShapeContext context) {
 			Object bo = getBusinessObjectForPictogramElement(context.getTargetContainer());
 			return bo != null && bo instanceof SubProcess;
-		}
-		
-		@Override
-		public String toString() {
-		    return "toSubProcess";
 		}
 	}
 }

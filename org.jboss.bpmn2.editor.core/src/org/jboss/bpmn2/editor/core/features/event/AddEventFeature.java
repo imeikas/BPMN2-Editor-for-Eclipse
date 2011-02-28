@@ -50,7 +50,7 @@ public class AddEventFeature extends AbstractAddShapeFeature {
 
 		// TODO here it should get the picture from controller for the element in the given context,
 		// not create it here right away, and use the same controller in AbstractBaseElementUpdateFeature
-		
+
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
 		ContainerShape containerShape = peCreateService.createContainerShape(context.getTargetContainer(), true);
 
@@ -67,9 +67,7 @@ public class AddEventFeature extends AbstractAddShapeFeature {
 		gaService.setRenderingStyle(ellipse, gradient);
 		link(ellipseShape, e);
 		decorateEllipse(ellipse);
-		
-		addShapes(containerShape);
-		
+
 		Shape textShape = peCreateService.createShape(containerShape, false);
 		Text text = gaService.createDefaultText(textShape, e.getName());
 		text.setStyle(StyleUtil.getStyleForText(getDiagram()));
@@ -87,14 +85,11 @@ public class AddEventFeature extends AbstractAddShapeFeature {
 
 		ChopboxAnchor anchor = peCreateService.createChopboxAnchor(containerShape);
 		anchor.setReferencedGraphicsAlgorithm(ellipse);
-		
+
 		layoutPictogramElement(containerShape);
 		return containerShape;
 	}
 
 	protected void decorateEllipse(Ellipse ellipse) {
-    }
-
-	protected void addShapes(ContainerShape ellipseShape) {
 	}
 }
