@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.task;
+package org.jboss.bpmn2.editor.core.features.activity.task;
 
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.ServiceTask;
@@ -6,7 +6,6 @@ import org.eclipse.bpmn2.Task;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
-import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.mm.algorithms.Image;
 import org.eclipse.graphiti.mm.algorithms.RoundedRectangle;
@@ -31,7 +30,7 @@ public class ServiceTaskFeatureContainer extends AbstractTaskFeatureContainer {
     public IAddFeature getAddFeature(IFeatureProvider fp) {
 	    return new AddTaskFeature(fp){
 	    	@Override
-	    	protected void decorateTask(RoundedRectangle rect, IAddContext context) {
+	    	protected void decorateActivityRectangle(RoundedRectangle rect) {
 	    		IGaService service = Graphiti.getGaService();
 	    		Image img = service.createImage(rect, ImageProvider.IMG_16_SERVICE_TASK);
 	    		service.setLocationAndSize(img, 0, 0, 16, 16);

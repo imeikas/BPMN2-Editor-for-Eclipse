@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.task;
+package org.jboss.bpmn2.editor.core.features.activity.task;
 
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.graphiti.features.IDirectEditingFeature;
@@ -11,12 +11,14 @@ import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.jboss.bpmn2.editor.core.features.AbstractBaseElementUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.MoveFlowNodeFeature;
+import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
+import org.jboss.bpmn2.editor.core.features.activity.ActivityMarkerUpdateFeature;
 
 public abstract class AbstractTaskFeatureContainer implements FeatureContainer {
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
-		return new AbstractBaseElementUpdateFeature(fp) {
+		AbstractBaseElementUpdateFeature nameUpdateFeature = new AbstractBaseElementUpdateFeature(fp) {
 
 			@Override
 			public boolean canUpdate(IUpdateContext context) {
@@ -24,6 +26,11 @@ public abstract class AbstractTaskFeatureContainer implements FeatureContainer {
 				return bo != null && bo instanceof BaseElement && canApplyTo((BaseElement) bo);
 			}
 		};
+		ActivityMarkerUpdateFeature activityMarkerUpdateFeature = new ActivityMarkerUpdateFeature(fp);
+		MultiUpdateFeature multiUpdate = new MultiUpdateFeature(fp);
+		multiUpdate.addUpdateFeature(nameUpdateFeature);
+		multiUpdate.addUpdateFeature(activityMarkerUpdateFeature);
+		return multiUpdate;
 	}
 
 	@Override

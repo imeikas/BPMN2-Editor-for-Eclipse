@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.subprocess;
+package org.jboss.bpmn2.editor.core.features.activity.subprocess;
 
 import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;

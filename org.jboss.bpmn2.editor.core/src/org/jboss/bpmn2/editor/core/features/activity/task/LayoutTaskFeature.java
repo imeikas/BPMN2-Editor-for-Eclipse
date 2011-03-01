@@ -1,8 +1,8 @@
-package org.jboss.bpmn2.editor.core.features.task;
+package org.jboss.bpmn2.editor.core.features.activity.task;
 
-import static org.jboss.bpmn2.editor.core.features.task.SizeConstants.HEIGHT_MIN;
-import static org.jboss.bpmn2.editor.core.features.task.SizeConstants.PADDING_BOTTOM;
-import static org.jboss.bpmn2.editor.core.features.task.SizeConstants.WIDTH_MIN;
+import static org.jboss.bpmn2.editor.core.features.activity.task.SizeConstants.HEIGHT_MIN;
+import static org.jboss.bpmn2.editor.core.features.activity.task.SizeConstants.PADDING_BOTTOM;
+import static org.jboss.bpmn2.editor.core.features.activity.task.SizeConstants.WIDTH_MIN;
 
 import java.util.Iterator;
 

@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features;
+package org.jboss.bpmn2.editor.core.features.activity;
 
 import java.util.Collection;
 import java.util.Iterator;

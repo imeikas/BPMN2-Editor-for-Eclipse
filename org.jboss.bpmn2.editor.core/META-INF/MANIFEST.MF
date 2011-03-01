@@ -41,7 +41,11 @@ Export-Package: org.jboss.bpmn2.editor.core;
    org.eclipse.graphiti.mm.pictograms,
    org.eclipse.graphiti.util,
    org.eclipse.graphiti.mm.algorithms",
+ org.jboss.bpmn2.editor.core.features.activity,
+ org.jboss.bpmn2.editor.core.features.activity.subprocess,
+ org.jboss.bpmn2.editor.core.features.activity.task,
  org.jboss.bpmn2.editor.core.features.artifact,
+ org.jboss.bpmn2.editor.core.features.data,
  org.jboss.bpmn2.editor.core.features.event;
   uses:="org.eclipse.graphiti.features.context,
    org.eclipse.bpmn2,
@@ -50,6 +54,7 @@ Export-Package: org.jboss.bpmn2.editor.core;
    org.eclipse.graphiti.mm.pictograms,
    org.eclipse.graphiti.mm.algorithms,
    org.jboss.bpmn2.editor.core.features",
+ org.jboss.bpmn2.editor.core.features.event.definitions,
  org.jboss.bpmn2.editor.core.features.flow,
  org.jboss.bpmn2.editor.core.features.gateway,
  org.jboss.bpmn2.editor.core.features.lane;
@@ -62,13 +67,6 @@ Export-Package: org.jboss.bpmn2.editor.core;
  org.jboss.bpmn2.editor.core.features.participant;
   uses:="org.eclipse.graphiti.features.context,
    org.eclipse.bpmn2,
-   org.eclipse.graphiti.features,
-   org.eclipse.graphiti.features.impl,
-   org.eclipse.graphiti.mm.pictograms,
-   org.jboss.bpmn2.editor.core.features",
- org.jboss.bpmn2.editor.core.features.task;
-  uses:="org.eclipse.bpmn2,
-   org.eclipse.graphiti.features.context,
    org.eclipse.graphiti.features,
    org.eclipse.graphiti.features.impl,
    org.eclipse.graphiti.mm.pictograms,

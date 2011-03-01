@@ -22,6 +22,16 @@ import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.FeatureResolver;
+import org.jboss.bpmn2.editor.core.features.activity.subprocess.SubProcessFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.activity.subprocess.TransactionFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.activity.task.BusinessRuleTaskFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.activity.task.ManualTaskFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.activity.task.ReceiveTaskFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.activity.task.ScriptTaskFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.activity.task.SendTaskFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.activity.task.ServiceTaskFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.activity.task.TaskFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.activity.task.UserTaskFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.artifact.ArtifactFeatureResolver;
 import org.jboss.bpmn2.editor.core.features.artifact.GroupFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.data.DataObjectFeatureContainer;
@@ -51,16 +61,6 @@ import org.jboss.bpmn2.editor.core.features.gateway.InclusiveGatewayFeatureConta
 import org.jboss.bpmn2.editor.core.features.gateway.ParallelGatewayFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.lane.LaneFeatureResolver;
 import org.jboss.bpmn2.editor.core.features.participant.ParticipantFeatureResolver;
-import org.jboss.bpmn2.editor.core.features.subprocess.SubProcessFeatureContainer;
-import org.jboss.bpmn2.editor.core.features.subprocess.TransactionFeatureContainer;
-import org.jboss.bpmn2.editor.core.features.task.BusinessRuleTaskFeatureContainer;
-import org.jboss.bpmn2.editor.core.features.task.ManualTaskFeatureContainer;
-import org.jboss.bpmn2.editor.core.features.task.ReceiveTaskFeatureContainer;
-import org.jboss.bpmn2.editor.core.features.task.ScriptTaskFeatureContainer;
-import org.jboss.bpmn2.editor.core.features.task.SendTaskFeatureContainer;
-import org.jboss.bpmn2.editor.core.features.task.ServiceTaskFeatureContainer;
-import org.jboss.bpmn2.editor.core.features.task.TaskFeatureContainer;
-import org.jboss.bpmn2.editor.core.features.task.UserTaskFeatureContainer;
 
 /**
  * Determines what kinds of business objects can be added to a diagram.

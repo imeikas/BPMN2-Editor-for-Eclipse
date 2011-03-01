@@ -1,6 +1,7 @@
-package org.jboss.bpmn2.editor.core.features.subprocess;
+package org.jboss.bpmn2.editor.core.features.activity.subprocess;
 
-import static org.jboss.bpmn2.editor.core.features.subprocess.SubProcessFeatureContainer.TRIGGERED_BY_EVENT;
+import static org.jboss.bpmn2.editor.core.features.activity.subprocess.SubProcessFeatureContainer.TRIGGERED_BY_EVENT;
+
 import org.eclipse.bpmn2.SubProcess;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;

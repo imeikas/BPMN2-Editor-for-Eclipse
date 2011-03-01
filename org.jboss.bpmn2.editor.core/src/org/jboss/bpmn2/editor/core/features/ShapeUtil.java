@@ -7,7 +7,9 @@ import java.util.Iterator;
 import org.eclipse.bpmn2.EventDefinition;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.graphiti.mm.GraphicsAlgorithmContainer;
 import org.eclipse.graphiti.mm.algorithms.Ellipse;
+import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Image;
 import org.eclipse.graphiti.mm.algorithms.Polygon;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
@@ -331,15 +333,62 @@ public class ShapeUtil {
 	}
 
 	public static Polygon createDataArrow(Polygon p) {
-		int[] points = {4, 8, 
-						14, 8, 
-						14, 4, 
-						18, 10, 
-						14, 16,
-						14, 12,
-						4, 12};
+		int[] points = { 4, 8, 14, 8, 14, 4, 18, 10, 14, 16, 14, 12, 4, 12 };
 		Polygon arrow = gaService.createPolygon(p, points);
 		arrow.setLineWidth(1);
-	    return arrow;
-    }
+		return arrow;
+	}
+
+	// ACTIVITY
+	
+	public static final int TASK_DEFAULT_WIDTH = 100;
+	public static final int TASK_DEFAULT_HEIGHT = 50;
+	
+	public static final int SUB_PROCEESS_DEFAULT_WIDTH = 300;
+	public static final int SUB_PROCESS_DEFAULT_HEIGHT = 300;
+	
+	public static final int ACTIVITY_BOTTOM_PADDING = EVENT_SIZE / 2;
+	
+	public static final String ACTIVITY_MARKER_COMPENSATE = "activity.marker.compensate";
+
+	public static Compensation createActivityMarkerCompensate(ContainerShape container) {
+		GraphicsAlgorithm ga = peService.getAllContainedShapes(container).iterator().next().getGraphicsAlgorithm();
+		Shape shape = peService.createShape(container, false);
+		peService.setPropertyValue(shape, ACTIVITY_MARKER_COMPENSATE, Boolean.toString(true));
+
+		int w = 10;
+		int h = 10;
+
+		Rectangle invisibleRect = gaService.createInvisibleRectangle(shape);
+		gaService.setLocationAndSize(invisibleRect, (ga.getWidth() / 2) - (w / 2), ga.getHeight() - h, w, h);
+
+		return createCompensation(invisibleRect, w, h);
+	}
+
+	public static void removerActivityMarker(ContainerShape container, String property) {
+		Iterator<Shape> iterator = peService.getAllContainedShapes(container).iterator();
+		while (iterator.hasNext()) {
+			Shape shape = (Shape) iterator.next();
+			String value = peService.getPropertyValue(shape, property);
+			if (value != null && new Boolean(value)) {
+				peService.deletePictogramElement(shape);
+			}
+		}
+	}
+
+	private static Compensation createCompensation(GraphicsAlgorithmContainer container, int w, int h) {
+		int[] xy = { 0, h / 2, w / 2, 0, w / 2, h };
+		Polygon arrow1 = gaService.createPolygon(container, xy);
+		arrow1.setFilled(false);
+
+		xy = new int[] { w / 2, h / 2, w, 0, w, h };
+		Polygon arrow2 = gaService.createPolygon(container, xy);
+		arrow2.setFilled(false);
+
+		Compensation compensation = new Compensation();
+		compensation.arrow1 = arrow1;
+		compensation.arrow2 = arrow2;
+
+		return compensation;
+	}
 }

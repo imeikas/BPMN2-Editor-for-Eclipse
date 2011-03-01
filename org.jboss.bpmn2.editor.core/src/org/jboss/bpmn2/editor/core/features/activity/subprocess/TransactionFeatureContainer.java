@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.subprocess;
+package org.jboss.bpmn2.editor.core.features.activity.subprocess;
 
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.SubProcess;
@@ -31,7 +31,7 @@ public class TransactionFeatureContainer extends AbstractSubProcessFeatureContai
 	public IAddFeature getAddFeature(IFeatureProvider fp) {
 		return new AddExpandedSubProcessFeature(fp) {
 			@Override
-			protected void decorateRect(RoundedRectangle rect) {
+			protected void decorateActivityRectangle(RoundedRectangle rect) {
 				IGaService gaService = Graphiti.getGaService();
 				RoundedRectangle innerRect = gaService.createRoundedRectangle(rect, 5, 5);
 				innerRect.setFilled(false);
