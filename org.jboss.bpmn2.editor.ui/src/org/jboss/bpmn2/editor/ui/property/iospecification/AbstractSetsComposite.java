@@ -1,6 +1,5 @@
 package org.jboss.bpmn2.editor.ui.property.iospecification;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.bpmn2.BaseElement;
@@ -81,10 +80,10 @@ public abstract class AbstractSetsComposite extends AbstractPropertyComposite {
 
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					List<Object> l = null;
+					List<BaseElement> l = null;
 
 					if (modelHandler != null) {
-						l = Arrays.asList(modelHandler.getAll(getElementClass()));
+						l = (List<BaseElement>) modelHandler.getAll(getElementClass());
 					}
 
 					FeatureEditorDialog featureEditorDialog = new FeatureEditorDialog(getShell(), LABEL_PROVIDER, be,

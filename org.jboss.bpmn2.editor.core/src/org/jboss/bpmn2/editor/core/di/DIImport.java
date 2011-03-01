@@ -15,7 +15,9 @@ import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.SubProcess;
 import org.eclipse.bpmn2.di.BPMNDiagram;
 import org.eclipse.bpmn2.di.BPMNEdge;
+import org.eclipse.bpmn2.di.BPMNPlane;
 import org.eclipse.bpmn2.di.BPMNShape;
+import org.eclipse.bpmn2.di.BpmnDiFactory;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dd.dc.Point;
@@ -63,14 +65,24 @@ public class DIImport {
 	 * NB! Currently only first found diagram is generated.
 	 */
 	public void generateFromDI() {
-		final Object[] diagrams = modelHandler.getAll(BPMNDiagram.class);
+		final List<BPMNDiagram> diagrams = modelHandler.getAll(BPMNDiagram.class);
 		elements = new HashMap<BaseElement, PictogramElement>();
 		domain.getCommandStack().execute(new RecordingCommand(domain) {
 			@Override
 			protected void doExecute() {
 
-				for (Object object : diagrams) {
-					List<DiagramElement> ownedElement = ((BPMNDiagram) object).getPlane().getPlaneElement();
+				if (diagrams.size() == 0) {
+					BPMNPlane plane = BpmnDiFactory.eINSTANCE.createBPMNPlane();
+					BPMNDiagram d = BpmnDiFactory.eINSTANCE.createBPMNDiagram();
+					d.setPlane(plane);
+
+					modelHandler.getDefinitions().getDiagrams().add(d);
+					featureProvider.link(diagram, d);
+				}
+
+				for (BPMNDiagram d : diagrams) {
+					featureProvider.link(diagram, d);
+					List<DiagramElement> ownedElement = d.getPlane().getPlaneElement();
 
 					// FIXME: here we should create a new diagram and an editor page
 					importShapes(ownedElement);
@@ -147,6 +159,7 @@ public class DIImport {
 
 		if (addFeature.canAdd(context)) {
 			PictogramElement newContainer = addFeature.add(context);
+			featureProvider.link(newContainer, new Object[] { bpmnElement, shape });
 			elements.put(bpmnElement, newContainer);
 			handleEvents(bpmnElement, newContainer);
 		}
@@ -272,6 +285,7 @@ public class DIImport {
 					addBendPoint(freeForm, waypoint.get(i));
 				}
 			}
+			featureProvider.link(connection, new Object[] { bpmnEdge.getBpmnElement(), bpmnEdge });
 		}
 	}
 

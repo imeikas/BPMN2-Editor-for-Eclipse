@@ -14,15 +14,19 @@ import org.eclipse.graphiti.services.Graphiti;
 public class ActivitySelectionBehavior {
 
 	public static boolean canApplyTo(PictogramElement element) {
-		if (element.getLink() == null)
+		if (element.getLink() == null || !(element instanceof ContainerShape)) {
 			return false;
+		}
 
 		EList<EObject> objects = element.getLink().getBusinessObjects();
-		int size = objects.size();
-		if (size == 0 || size > 1)
-			return false;
 
-		return objects.get(0) instanceof Activity && element instanceof ContainerShape;
+		for (EObject eObject : objects) {
+			if (eObject instanceof Activity) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public static GraphicsAlgorithm[] getClickArea(PictogramElement element) {

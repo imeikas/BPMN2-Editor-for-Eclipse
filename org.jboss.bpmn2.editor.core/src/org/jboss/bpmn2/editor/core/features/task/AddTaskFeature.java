@@ -4,7 +4,16 @@ import static org.jboss.bpmn2.editor.core.features.task.SizeConstants.HEIGHT;
 import static org.jboss.bpmn2.editor.core.features.task.SizeConstants.PADDING_BOTTOM;
 import static org.jboss.bpmn2.editor.core.features.task.SizeConstants.WIDTH;
 
+import java.io.IOException;
+
 import org.eclipse.bpmn2.Task;
+import org.eclipse.bpmn2.di.BPMNDiagram;
+import org.eclipse.bpmn2.di.BPMNShape;
+import org.eclipse.bpmn2.di.BpmnDiFactory;
+import org.eclipse.dd.dc.Bounds;
+import org.eclipse.dd.dc.DcFactory;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
@@ -21,6 +30,8 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeCreateService;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
+import org.jboss.bpmn2.editor.core.Activator;
+import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
@@ -45,7 +56,7 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 		boolean intoParticipant = support.isTargetParticipant(context);
 		boolean intoSubProcess = support.isTargetSubProcess(context);
 		return isTask && (intoDiagram || intoLane || intoParticipant || intoSubProcess);
-    }
+	}
 
 	@Override
 	public PictogramElement add(IAddContext context) {
@@ -79,7 +90,32 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 		text.getFont().setBold(true);
 		link(textShape, addedTask);
 
-		link(containerShape, addedTask);
+		try {
+			BPMNShape shape = ModelHandlerLocator.getModelHandler(getDiagram().eResource()).findDIElement(getDiagram(),
+					addedTask);
+			if (shape == null) {
+				EList<EObject> businessObjects = Graphiti.getLinkService().getLinkForPictogramElement(getDiagram())
+						.getBusinessObjects();
+				for (EObject eObject : businessObjects) {
+					if (eObject instanceof BPMNDiagram) {
+
+						shape = BpmnDiFactory.eINSTANCE.createBPMNShape();
+						shape.setBpmnElement(addedTask);
+						Bounds bounds = DcFactory.eINSTANCE.createBounds();
+						bounds.setHeight(height);
+						bounds.setWidth(width);
+						bounds.setX(context.getX());
+						bounds.setY(context.getY());
+						shape.setBounds(bounds);
+
+						((BPMNDiagram) eObject).getPlane().getPlaneElement().add(shape);
+					}
+				}
+			}
+			link(containerShape, new Object[] { addedTask, shape });
+		} catch (IOException e) {
+			Activator.logError(e);
+		}
 
 		ChopboxAnchor anchor = peCreateService.createChopboxAnchor(containerShape);
 		anchor.setReferencedGraphicsAlgorithm(roundedRectangle);

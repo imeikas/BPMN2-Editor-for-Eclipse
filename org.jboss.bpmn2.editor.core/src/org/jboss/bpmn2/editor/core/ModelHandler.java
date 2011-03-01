@@ -1,6 +1,8 @@
 package org.jboss.bpmn2.editor.core;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.bpmn2.Artifact;
 import org.eclipse.bpmn2.Association;
@@ -20,14 +22,15 @@ import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.Process;
 import org.eclipse.bpmn2.RootElement;
 import org.eclipse.bpmn2.SequenceFlow;
+import org.eclipse.bpmn2.Task;
 import org.eclipse.bpmn2.TextAnnotation;
+import org.eclipse.bpmn2.di.BPMNDiagram;
+import org.eclipse.bpmn2.di.BPMNShape;
 import org.eclipse.bpmn2.util.Bpmn2ResourceImpl;
+import org.eclipse.dd.di.DiagramElement;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.query.conditions.eobjects.EObjectCondition;
-import org.eclipse.emf.query.statements.FROM;
-import org.eclipse.emf.query.statements.SELECT;
-import org.eclipse.emf.query.statements.WHERE;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -67,11 +70,13 @@ public class ModelHandler {
 			}
 		}
 	}
-	
+
 	/**
 	 * @param <T>
-	 * @param target object that this element is being added to
-	 * @param elem flow element to be added
+	 * @param target
+	 *            object that this element is being added to
+	 * @param elem
+	 *            flow element to be added
 	 * @return
 	 */
 	public <T extends FlowElement> T addFlowElement(Object target, T elem) {
@@ -79,11 +84,13 @@ public class ModelHandler {
 		container.getFlowElements().add(elem);
 		return elem;
 	}
-	
+
 	/**
 	 * @param <A>
-	 * @param target object that this artifact is being added to
-	 * @param artifact artifact to be added
+	 * @param target
+	 *            object that this artifact is being added to
+	 * @param artifact
+	 *            artifact to be added
 	 * @return
 	 */
 	public <A extends Artifact> A addArtifact(Object target, A artifact) {
@@ -91,18 +98,18 @@ public class ModelHandler {
 		process.getArtifacts().add(artifact);
 		return artifact;
 	}
-	
+
 	public void moveFlowNode(FlowNode node, Object source, Object target) {
 		FlowElementsContainer sourceContainer = getFlowElementContainer(source);
 		FlowElementsContainer targetContainer = getFlowElementContainer(target);
 		sourceContainer.getFlowElements().remove(node);
 		targetContainer.getFlowElements().add(node);
-		for(SequenceFlow flow : node.getOutgoing()) {
+		for (SequenceFlow flow : node.getOutgoing()) {
 			sourceContainer.getFlowElements().remove(flow);
 			targetContainer.getFlowElements().add(flow);
 		}
 	}
-	
+
 	public Participant addParticipant() {
 		Collaboration collaboration = getCollaboration();
 		Participant participant = FACTORY.createParticipant();
@@ -154,7 +161,7 @@ public class ModelHandler {
 
 		return lane;
 	}
-	
+
 	public Lane createLane(Object target) {
 		Lane lane = FACTORY.createLane();
 		FlowElementsContainer container = getFlowElementContainer(target);
@@ -244,9 +251,9 @@ public class ModelHandler {
 	public Participant getInternalParticipant() {
 		return getCollaboration().getParticipants().get(0);
 	}
-	
+
 	public FlowElementsContainer getFlowElementContainer(Object o) {
-		if (o == null) {
+		if (o == null || o instanceof BPMNDiagram) {
 			return getOrCreateProcess(getInternalParticipant());
 		}
 		if (o instanceof Participant) {
@@ -259,18 +266,18 @@ public class ModelHandler {
 		if (o == null || o instanceof Diagram) {
 			return getInternalParticipant();
 		}
-		
+
 		Process process = findElementOfType(Process.class, o);
-		
+
 		for (Participant p : getCollaboration().getParticipants()) {
-			if(p.getProcessRef().equals(process)) {
+			if (p.getProcessRef().equals(process)) {
 				return p;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public <T extends BaseElement> T findElementOfType(Class<T> clazz, Object from) {
 		if (!(from instanceof BaseElement)) {
@@ -285,14 +292,32 @@ public class ModelHandler {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public Object[] getAll(final Class class1) {
-		SELECT select = new SELECT(new FROM(resource.getContents()), new WHERE(new EObjectCondition() {
-
-			@Override
-			public boolean isSatisfied(EObject eObject) {
-				return class1.isInstance(eObject);
+	public <T> List<T> getAll(final Class<T> class1) {
+		ArrayList<T> l = new ArrayList<T>();
+		TreeIterator<EObject> contents = resource.getAllContents();
+		for (; contents.hasNext();) {
+			Object t = contents.next();
+			if (class1.isInstance(t)) {
+				l.add((T) t);
 			}
-		}));
-		return select.execute().toArray();
+		}
+		return l;
+	}
+
+	public BPMNShape findDIElement(Diagram diagram, Task addedTask) {
+		List<BPMNDiagram> diagrams = getAll(BPMNDiagram.class);
+
+		for (BPMNDiagram d : diagrams) {
+			List<DiagramElement> planeElement = d.getPlane().getPlaneElement();
+
+			for (DiagramElement elem : planeElement) {
+				if (elem instanceof BPMNShape && addedTask.getId() != null
+						&& addedTask.getId().equals(((BPMNShape) elem).getBpmnElement().getId())) {
+					return ((BPMNShape) elem);
+				}
+			}
+		}
+
+		return null;
 	}
 }
