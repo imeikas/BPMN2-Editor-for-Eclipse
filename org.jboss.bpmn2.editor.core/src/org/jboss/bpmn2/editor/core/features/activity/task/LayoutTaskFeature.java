@@ -1,9 +1,5 @@
 package org.jboss.bpmn2.editor.core.features.activity.task;
 
-import static org.jboss.bpmn2.editor.core.features.activity.task.SizeConstants.HEIGHT_MIN;
-import static org.jboss.bpmn2.editor.core.features.activity.task.SizeConstants.PADDING_BOTTOM;
-import static org.jboss.bpmn2.editor.core.features.activity.task.SizeConstants.WIDTH_MIN;
-
 import java.util.Iterator;
 
 import org.eclipse.bpmn2.BoundaryEvent;
@@ -21,6 +17,7 @@ import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
+import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 
 public class LayoutTaskFeature extends AbstractLayoutFeature {
 
@@ -44,16 +41,16 @@ public class LayoutTaskFeature extends AbstractLayoutFeature {
 		GraphicsAlgorithm containerGa = containerShape.getGraphicsAlgorithm();
 		IGaService gaService = Graphiti.getGaService();
 
-		if (containerGa.getWidth() < WIDTH_MIN) {
-			containerGa.setWidth(WIDTH_MIN);
+		if (containerGa.getWidth() < 50) {
+			containerGa.setWidth(50);
 		}
 
-		if (containerGa.getHeight() < HEIGHT_MIN) {
-			containerGa.setHeight(HEIGHT_MIN);
+		if (containerGa.getHeight() < 25) {
+			containerGa.setHeight(25);
 		}
 		
 		int newWidth = containerGa.getWidth();
-		int newHeight = containerGa.getHeight() - PADDING_BOTTOM;
+		int newHeight = containerGa.getHeight() - ShapeUtil.ACTIVITY_BOTTOM_PADDING;
 		
 		Iterator<Shape> iterator = Graphiti.getPeService().getAllContainedShapes(containerShape).iterator();
 		

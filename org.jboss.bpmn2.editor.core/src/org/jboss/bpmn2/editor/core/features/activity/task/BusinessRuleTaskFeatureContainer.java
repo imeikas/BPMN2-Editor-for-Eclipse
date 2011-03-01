@@ -13,6 +13,7 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
+import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 
 public class BusinessRuleTaskFeatureContainer extends AbstractTaskFeatureContainer {
 
@@ -38,7 +39,7 @@ public class BusinessRuleTaskFeatureContainer extends AbstractTaskFeatureContain
 
 			@Override
 			protected int getWidth() {
-				return SizeConstants.WIDTH + 50;
+				return ShapeUtil.TASK_DEFAULT_WIDTH+ 50;
 			}
 		};
 	}

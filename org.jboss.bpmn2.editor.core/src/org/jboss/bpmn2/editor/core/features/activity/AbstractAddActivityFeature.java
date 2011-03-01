@@ -66,17 +66,24 @@ public abstract class AbstractAddActivityFeature extends AbstractAddShapeFeature
 
 		hook(activity, containerShape, context, width, height); // hook for subclasses to inject extra code
 
+		ContainerShape markerContainer = peService.createContainerShape(containerShape, false);
+		Rectangle markerInvisibleRect = gaService.createInvisibleRectangle(markerContainer);
+		int h = 10;
+		int y = height - paddingBottom - h - getMarkerContainerOffset();
+		gaService.setLocationAndSize(markerInvisibleRect, 0, y, invisibleRect.getWidth(), h);
+		peService.setPropertyValue(markerContainer, ShapeUtil.ACTIVITY_MARKER_CONTAINER, Boolean.toString(true));
+
 		ChopboxAnchor anchor = peService.createChopboxAnchor(containerShape);
 		anchor.setReferencedGraphicsAlgorithm(rect);
-		
+
 		link(containerShape, activity);
-		
+
 		if (activity.eResource() == null) {
 			getDiagram().eResource().getContents().add(activity);
 		}
 
-		Graphiti.getPeService().setPropertyValue(containerShape, ActivityMarkerUpdateFeature.IS_COMPENSATE_PROPERTY,
-		        Boolean.toString(false));
+		Graphiti.getPeService().setPropertyValue(containerShape,
+		        ActivityCompensateMarkerUpdateFeature.IS_COMPENSATE_PROPERTY, Boolean.toString(false));
 
 		layoutPictogramElement(containerShape);
 
@@ -87,6 +94,10 @@ public abstract class AbstractAddActivityFeature extends AbstractAddShapeFeature
 	}
 
 	protected void hook(Activity activity, ContainerShape container, IAddContext context, int width, int height) {
+	}
+
+	protected int getMarkerContainerOffset() {
+		return 0;
 	}
 
 	protected abstract int getWidth();

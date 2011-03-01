@@ -349,10 +349,11 @@ public class ShapeUtil {
 	
 	public static final int ACTIVITY_BOTTOM_PADDING = EVENT_SIZE / 2;
 	
+	public static final String ACTIVITY_MARKER_CONTAINER = "activity.marker.container";
 	public static final String ACTIVITY_MARKER_COMPENSATE = "activity.marker.compensate";
 
 	public static Compensation createActivityMarkerCompensate(ContainerShape container) {
-		GraphicsAlgorithm ga = peService.getAllContainedShapes(container).iterator().next().getGraphicsAlgorithm();
+		GraphicsAlgorithm ga = container.getGraphicsAlgorithm();
 		Shape shape = peService.createShape(container, false);
 		peService.setPropertyValue(shape, ACTIVITY_MARKER_COMPENSATE, Boolean.toString(true));
 
