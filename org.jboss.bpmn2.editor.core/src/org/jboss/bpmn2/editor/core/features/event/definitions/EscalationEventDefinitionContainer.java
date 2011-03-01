@@ -6,6 +6,8 @@ import org.eclipse.bpmn2.Event;
 import org.eclipse.bpmn2.EventDefinition;
 import org.eclipse.bpmn2.IntermediateCatchEvent;
 import org.eclipse.bpmn2.StartEvent;
+import org.eclipse.bpmn2.SubProcess;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
@@ -32,7 +34,7 @@ public class EscalationEventDefinitionContainer extends EventDefinitionFeatureCo
 
 	@Override
 	protected Shape drawForStart(DecorationAlgorithm algorithm, ContainerShape shape) {
-		return null; // NOT ALLOWED ACCORDING TO SPEC
+		return draw(algorithm, shape);
 	}
 
 	@Override
@@ -84,7 +86,18 @@ public class EscalationEventDefinitionContainer extends EventDefinitionFeatureCo
 				return false;
 
 			Event e = (Event) getBusinessObjectForPictogramElement(context.getTargetContainer());
-			if (e instanceof StartEvent || e instanceof IntermediateCatchEvent)
+			
+			if (e instanceof StartEvent) {
+				EObject container = context.getTargetContainer().eContainer();
+				if (container instanceof Shape) {
+					Object o = getBusinessObjectForPictogramElement((Shape) container);
+					return o != null && o instanceof SubProcess;
+				}
+
+				return false;
+			}
+			
+			if (e instanceof IntermediateCatchEvent)
 				return false;
 
 			return true;

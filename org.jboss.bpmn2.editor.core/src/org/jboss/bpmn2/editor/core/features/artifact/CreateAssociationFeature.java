@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.eclipse.bpmn2.Association;
 import org.eclipse.bpmn2.BaseElement;
-import org.eclipse.bpmn2.TextAnnotation;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateConnectionContext;
 import org.eclipse.graphiti.features.context.impl.AddConnectionContext;
@@ -26,9 +25,7 @@ public class CreateAssociationFeature extends AbstractCreateConnectionFeature {
 	public boolean canCreate(ICreateConnectionContext context) {
 		BaseElement source = getBaseElement(context.getSourceAnchor());
 		BaseElement target = getBaseElement(context.getTargetAnchor());
-		if(source == null || target == null) return false;
-		boolean can = source instanceof TextAnnotation ^ target instanceof TextAnnotation;
-		return can;
+		return source != null && target != null;
 	}
 
 	@Override
@@ -36,13 +33,10 @@ public class CreateAssociationFeature extends AbstractCreateConnectionFeature {
 		BaseElement source = getBaseElement(context.getSourceAnchor());
 		BaseElement target = getBaseElement(context.getTargetAnchor());
 		
-		TextAnnotation annotation = getTarget(source, target);
-		BaseElement element = getSource(source, target);
-		
-		if (annotation != null && element != null) {
+		if (source != null && target != null) {
 			try {
 				ModelHandler mh = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
-				Association association = mh.createAssociation(annotation, element);
+				Association association = mh.createAssociation(source, target);
 				AddConnectionContext addContext = new AddConnectionContext(context.getSourceAnchor(),
 				        context.getTargetAnchor());
 				addContext.setNewObject(association);
@@ -65,26 +59,6 @@ public class CreateAssociationFeature extends AbstractCreateConnectionFeature {
 			if (o instanceof BaseElement) {
 				return (BaseElement) o;
 			}
-		}
-		return null;
-	}
-	
-	private TextAnnotation getTarget(BaseElement source, BaseElement target) {
-		if(source instanceof TextAnnotation) {
-			return (TextAnnotation) source;
-		}
-		if(target instanceof TextAnnotation) {
-			return (TextAnnotation) target;
-		}
-		return null;
-	}
-	
-	private BaseElement getSource(BaseElement source, BaseElement target) {
-		if(!(source instanceof TextAnnotation)) {
-			return source;
-		} 
-		if (!(target instanceof TextAnnotation)){
-			return target;
 		}
 		return null;
 	}

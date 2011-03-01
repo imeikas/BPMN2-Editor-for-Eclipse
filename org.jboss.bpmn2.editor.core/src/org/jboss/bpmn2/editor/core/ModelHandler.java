@@ -9,11 +9,14 @@ import org.eclipse.bpmn2.Association;
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Bpmn2Factory;
 import org.eclipse.bpmn2.Collaboration;
+import org.eclipse.bpmn2.DataInput;
+import org.eclipse.bpmn2.DataOutput;
 import org.eclipse.bpmn2.Definitions;
 import org.eclipse.bpmn2.DocumentRoot;
 import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.bpmn2.FlowElementsContainer;
 import org.eclipse.bpmn2.FlowNode;
+import org.eclipse.bpmn2.InputOutputSpecification;
 import org.eclipse.bpmn2.InteractionNode;
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.LaneSet;
@@ -93,12 +96,35 @@ public class ModelHandler {
 	 *            artifact to be added
 	 * @return
 	 */
-	public <A extends Artifact> A addArtifact(Object target, A artifact) {
+	public <T extends Artifact> T addArtifact(Object target, T artifact) {
 		Process process = getOrCreateProcess(getParticipant(target));
 		process.getArtifacts().add(artifact);
 		return artifact;
 	}
-
+	
+	public <T extends RootElement> T addRootElement(T element) {
+		getDefinitions().getRootElements().add(element);
+		return element;
+	}
+	
+	public DataOutput addDataOutput(Object target, DataOutput dataOutput) {
+		getOrCreateIOSpecification(target).getDataOutputs().add(dataOutput);
+		return dataOutput;
+	}
+	
+	public DataInput addDataInput(Object target, DataInput dataInput) {
+		getOrCreateIOSpecification(target).getDataInputs().add(dataInput);
+		return dataInput;
+	}
+	
+	private InputOutputSpecification getOrCreateIOSpecification(Object target) {
+		Process process = getOrCreateProcess(getParticipant(target));
+		if(process.getIoSpecification() == null) {
+			process.setIoSpecification(FACTORY.createInputOutputSpecification());
+		}
+		return process.getIoSpecification();
+	}
+	
 	public void moveFlowNode(FlowNode node, Object source, Object target) {
 		FlowElementsContainer sourceContainer = getFlowElementContainer(source);
 		FlowElementsContainer targetContainer = getFlowElementContainer(target);
@@ -194,10 +220,18 @@ public class ModelHandler {
 		return messageFlow;
 	}
 
-	public Association createAssociation(TextAnnotation annotation, BaseElement element) {
-		Association association = addArtifact(element, FACTORY.createAssociation());
-		association.setSourceRef(element);
-		association.setTargetRef(annotation);
+	public Association createAssociation(BaseElement source, BaseElement target) {
+		BaseElement e = null;
+		if(getParticipant(source) != null) {
+			e = source;
+		} else if (getParticipant(target) != null) {
+			e = target;
+		} else {
+			e = getInternalParticipant();
+		}
+		Association association = addArtifact(e, FACTORY.createAssociation());
+		association.setSourceRef(source);
+		association.setTargetRef(target);
 		return association;
 	}
 
@@ -266,7 +300,11 @@ public class ModelHandler {
 		if (o == null || o instanceof Diagram) {
 			return getInternalParticipant();
 		}
-
+		
+		if (o instanceof Participant) {
+			return (Participant) o;
+		}
+		
 		Process process = findElementOfType(Process.class, o);
 
 		for (Participant p : getCollaboration().getParticipants()) {

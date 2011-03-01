@@ -10,12 +10,15 @@ import org.eclipse.graphiti.features.IFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.CreateAssociationFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.CreateTextAnnotationFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.GroupFeatureContainer.CreateGroupFeature;
-import org.jboss.bpmn2.editor.core.features.data.DataFeatureContainer.CreateDataObjectFeature;
+import org.jboss.bpmn2.editor.core.features.data.DataObjectFeatureContainer.CreateDataObjectFeature;
+import org.jboss.bpmn2.editor.core.features.data.DataInputFeatureContainer.CreateDataInputFeature;
+import org.jboss.bpmn2.editor.core.features.data.DataOutputFeatureContainer.CreateDataOutputFeature;
+import org.jboss.bpmn2.editor.core.features.data.DataStoreFeatureContainer.CreateDataStoreFeature;
 import org.jboss.bpmn2.editor.core.features.event.BoundaryEventFeatureContainer.CreateBoundaryEvent;
-import org.jboss.bpmn2.editor.core.features.event.CreateEndEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.CreateIntermediateCatchEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.CreateIntermediateThrowEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.CreateStartEventFeature;
+import org.jboss.bpmn2.editor.core.features.event.EndEventFeatureContainer.CreateEndEventFeature;
+import org.jboss.bpmn2.editor.core.features.event.IntermediateCatchEventFeatureContainer.CreateIntermediateCatchEventFeature;
+import org.jboss.bpmn2.editor.core.features.event.IntermediateThrowEventFeatureContainer.CreateIntermediateThrowEventFeature;
+import org.jboss.bpmn2.editor.core.features.event.StartEventFeatureContainer.CreateStartEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.definitions.CancelEventDefinitionContainer.CreateCancelEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.CompensateEventDefinitionContainer.CreateCompensateEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.ConditionalEventDefinitionContainer.CreateConditionalEventDefinition;
@@ -24,6 +27,7 @@ import org.jboss.bpmn2.editor.core.features.event.definitions.EscalationEventDef
 import org.jboss.bpmn2.editor.core.features.event.definitions.LinkEventDefinitionContainer.CreateLinkEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.MessageEventDefinitionContainer.CreateMessageEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.SignalEventDefinitionContainer.CreateSignalEventDefinition;
+import org.jboss.bpmn2.editor.core.features.event.definitions.TerminateEventDefinitionFeatureContainer.CreateTerminateEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.TimerEventDefinitionContainer.CreateTimerEventDefinition;
 import org.jboss.bpmn2.editor.core.features.flow.CreateMessageFlowFeature;
 import org.jboss.bpmn2.editor.core.features.flow.CreateSequenceFlowFeature;
@@ -83,11 +87,15 @@ public class FeatureMap {
 		featureMap.put(i.getLinkEventDefinition(), CreateLinkEventDefinition.class);
 		featureMap.put(i.getErrorEventDefinition(), CreateErrorEventDefinition.class);
 		featureMap.put(i.getCancelEventDefinition(), CreateCancelEventDefinition.class);
+		featureMap.put(i.getTerminateEventDefinition(), CreateTerminateEventDefinition.class);
 		featureMap.put(i.getBoundaryEvent(), CreateBoundaryEvent.class);
 		featureMap.put(i.getSubProcess(), CreateSubProcessFeature.class);
 		featureMap.put(i.getTransaction(), CreateTransactionFeature.class);
 		featureMap.put(i.getGroup(), CreateGroupFeature.class);
 		featureMap.put(i.getDataObject(), CreateDataObjectFeature.class);
+		featureMap.put(i.getDataStore(), CreateDataStoreFeature.class);
+		featureMap.put(i.getDataInput(), CreateDataInputFeature.class);
+		featureMap.put(i.getDataOutput(), CreateDataOutputFeature.class);
 		FEATURE_MAP = Collections.unmodifiableMap(featureMap);
 	}
 

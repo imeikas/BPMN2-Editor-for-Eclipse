@@ -11,7 +11,6 @@ import org.eclipse.bpmn2.CancelEventDefinition;
 import org.eclipse.bpmn2.CompensateEventDefinition;
 import org.eclipse.bpmn2.ErrorEventDefinition;
 import org.eclipse.bpmn2.EventDefinition;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IDirectEditingFeature;
@@ -261,8 +260,19 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 			@Override
 			public boolean layout(ILayoutContext context) {
 				PictogramElement element = context.getPictogramElement();
-				System.out.println(element);
-				return true;
+				GraphicsAlgorithm ga = element.getGraphicsAlgorithm();
+
+				ContainerShape parentContainer = (ContainerShape) element.eContainer();
+				GraphicsAlgorithm parentGa = parentContainer.getGraphicsAlgorithm();
+				
+				int y = parentGa.getHeight() - ShapeUtil.EVENT_SIZE;
+				
+				if(ga.getY() != y) {
+					Graphiti.getGaService().setLocation(ga, ga.getX(), y);
+					return true;
+				}
+				
+				return false;
 			}
 		};
 	}

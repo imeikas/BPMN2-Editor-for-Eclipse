@@ -22,9 +22,9 @@ import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
-public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
+public class AddEventFeature extends AbstractAddShapeFeature {
 
-	public AbstractAddEventFeature(IFeatureProvider fp) {
+	public AddEventFeature(IFeatureProvider fp) {
 		super(fp);
 	}
 
@@ -37,12 +37,11 @@ public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
 
 	@Override
 	public boolean canAdd(IAddContext context) {
-		boolean assignable = getEventClass().isAssignableFrom(context.getNewObject().getClass());
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
 		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context);
 		boolean intoParticipant = support.isTargetParticipant(context);
 		boolean intoSubProcess = support.isTargetSubProcess(context);
-		return assignable && (intoDiagram || intoLane || intoParticipant || intoSubProcess);
+		return intoDiagram || intoLane || intoParticipant || intoSubProcess;
 	}
 
 	@Override
@@ -51,7 +50,7 @@ public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
 
 		// TODO here it should get the picture from controller for the element in the given context,
 		// not create it here right away, and use the same controller in AbstractBaseElementUpdateFeature
-		
+
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
 		ContainerShape containerShape = peCreateService.createContainerShape(context.getTargetContainer(), true);
 
@@ -68,9 +67,7 @@ public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
 		gaService.setRenderingStyle(ellipse, gradient);
 		link(ellipseShape, e);
 		decorateEllipse(ellipse);
-		
-		addShapes(containerShape);
-		
+
 		Shape textShape = peCreateService.createShape(containerShape, false);
 		Text text = gaService.createDefaultText(textShape, e.getName());
 		text.setStyle(StyleUtil.getStyleForText(getDiagram()));
@@ -89,16 +86,15 @@ public abstract class AbstractAddEventFeature extends AbstractAddShapeFeature {
 		ChopboxAnchor anchor = peCreateService.createChopboxAnchor(containerShape);
 		anchor.setReferencedGraphicsAlgorithm(ellipse);
 		
+		hook(containerShape);
+		
 		layoutPictogramElement(containerShape);
 		return containerShape;
 	}
 
 	protected void decorateEllipse(Ellipse ellipse) {
-    }
-
-	protected void addShapes(ContainerShape ellipseShape) {
 	}
-
-	protected abstract Class<? extends Event> getEventClass();
 	
+	protected void hook(ContainerShape container) {
+	}
 }

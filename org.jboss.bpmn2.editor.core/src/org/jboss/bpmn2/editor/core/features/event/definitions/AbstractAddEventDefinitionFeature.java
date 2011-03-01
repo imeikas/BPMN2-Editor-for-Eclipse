@@ -1,5 +1,6 @@
 package org.jboss.bpmn2.editor.core.features.event.definitions;
 
+import org.eclipse.bpmn2.CatchEvent;
 import org.eclipse.bpmn2.Event;
 import org.eclipse.bpmn2.EventDefinition;
 import org.eclipse.bpmn2.ThrowEvent;
@@ -54,13 +55,25 @@ public abstract class AbstractAddEventDefinitionFeature extends AbstractAddShape
 	protected abstract DecorationAlgorithm getDecorationAlgorithm(Event event);
 
 	private void drawForEvent(Event event, Shape shape) {
+		if(event instanceof CatchEvent && ((CatchEvent) event).isParallelMultiple()) {
+			drawParallelMultiple(event, shape);
+		} else {
+			drawMultiple(event, shape);
+		}
+	}
+	
+	private void drawMultiple(Event event, Shape shape) {
 		Polygon pentagon = ShapeUtil.createEventPentagon(shape);
 		pentagon.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
-
 		if (event instanceof ThrowEvent) {
 			pentagon.setBackground(manageColor(StyleUtil.CLASS_FOREGROUND));
 		} else {
 			pentagon.setFilled(false);
 		}
+	}
+	
+	private void drawParallelMultiple(Event event, Shape shape) {
+		Polygon cross = ShapeUtil.createEventParallelMultiple(shape);
+		cross.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 	}
 }
