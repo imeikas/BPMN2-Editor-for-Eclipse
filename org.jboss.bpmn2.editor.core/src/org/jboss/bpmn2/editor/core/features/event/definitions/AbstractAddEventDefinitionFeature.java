@@ -1,5 +1,6 @@
 package org.jboss.bpmn2.editor.core.features.event.definitions;
 
+import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.CatchEvent;
 import org.eclipse.bpmn2.Event;
 import org.eclipse.bpmn2.EventDefinition;
@@ -12,6 +13,7 @@ import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
+import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 import org.jboss.bpmn2.editor.core.features.event.definitions.EventDefinitionSupport.EventWithDefinitions;
@@ -26,14 +28,14 @@ public abstract class AbstractAddEventDefinitionFeature extends AbstractAddShape
 
 	@Override
 	public boolean canAdd(IAddContext context) {
-		Object bo = getBusinessObjectForPictogramElement(context.getTargetContainer());
+		Object bo = BusinessObjectUtil.getFirstElementOfType(context.getTargetContainer(), BaseElement.class);
 		return bo != null && bo instanceof Event;
 	}
 
 	@Override
 	public PictogramElement add(IAddContext context) {
 		ContainerShape container = context.getTargetContainer();
-		Event event = (Event) getBusinessObjectForPictogramElement(container);
+		Event event = (Event) BusinessObjectUtil.getFirstElementOfType(container, BaseElement.class);
 
 		EventWithDefinitions definitions = support.create(event);
 		int size = definitions.getEventDefinitions().size();
@@ -55,13 +57,13 @@ public abstract class AbstractAddEventDefinitionFeature extends AbstractAddShape
 	protected abstract DecorationAlgorithm getDecorationAlgorithm(Event event);
 
 	private void drawForEvent(Event event, Shape shape) {
-		if(event instanceof CatchEvent && ((CatchEvent) event).isParallelMultiple()) {
+		if (event instanceof CatchEvent && ((CatchEvent) event).isParallelMultiple()) {
 			drawParallelMultiple(event, shape);
 		} else {
 			drawMultiple(event, shape);
 		}
 	}
-	
+
 	private void drawMultiple(Event event, Shape shape) {
 		Polygon pentagon = ShapeUtil.createEventPentagon(shape);
 		pentagon.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
@@ -71,7 +73,7 @@ public abstract class AbstractAddEventDefinitionFeature extends AbstractAddShape
 			pentagon.setFilled(false);
 		}
 	}
-	
+
 	private void drawParallelMultiple(Event event, Shape shape) {
 		Polygon cross = ShapeUtil.createEventParallelMultiple(shape);
 		cross.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));

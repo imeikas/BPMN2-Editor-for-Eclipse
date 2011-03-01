@@ -25,8 +25,6 @@ import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.Process;
 import org.eclipse.bpmn2.RootElement;
 import org.eclipse.bpmn2.SequenceFlow;
-import org.eclipse.bpmn2.Task;
-import org.eclipse.bpmn2.TextAnnotation;
 import org.eclipse.bpmn2.di.BPMNDiagram;
 import org.eclipse.bpmn2.di.BPMNShape;
 import org.eclipse.bpmn2.util.Bpmn2ResourceImpl;
@@ -101,30 +99,30 @@ public class ModelHandler {
 		process.getArtifacts().add(artifact);
 		return artifact;
 	}
-	
+
 	public <T extends RootElement> T addRootElement(T element) {
 		getDefinitions().getRootElements().add(element);
 		return element;
 	}
-	
+
 	public DataOutput addDataOutput(Object target, DataOutput dataOutput) {
 		getOrCreateIOSpecification(target).getDataOutputs().add(dataOutput);
 		return dataOutput;
 	}
-	
+
 	public DataInput addDataInput(Object target, DataInput dataInput) {
 		getOrCreateIOSpecification(target).getDataInputs().add(dataInput);
 		return dataInput;
 	}
-	
+
 	private InputOutputSpecification getOrCreateIOSpecification(Object target) {
 		Process process = getOrCreateProcess(getParticipant(target));
-		if(process.getIoSpecification() == null) {
+		if (process.getIoSpecification() == null) {
 			process.setIoSpecification(FACTORY.createInputOutputSpecification());
 		}
 		return process.getIoSpecification();
 	}
-	
+
 	public void moveFlowNode(FlowNode node, Object source, Object target) {
 		FlowElementsContainer sourceContainer = getFlowElementContainer(source);
 		FlowElementsContainer targetContainer = getFlowElementContainer(target);
@@ -222,7 +220,7 @@ public class ModelHandler {
 
 	public Association createAssociation(BaseElement source, BaseElement target) {
 		BaseElement e = null;
-		if(getParticipant(source) != null) {
+		if (getParticipant(source) != null) {
 			e = source;
 		} else if (getParticipant(target) != null) {
 			e = target;
@@ -300,11 +298,11 @@ public class ModelHandler {
 		if (o == null || o instanceof Diagram) {
 			return getInternalParticipant();
 		}
-		
+
 		if (o instanceof Participant) {
 			return (Participant) o;
 		}
-		
+
 		Process process = findElementOfType(Process.class, o);
 
 		for (Participant p : getCollaboration().getParticipants()) {
@@ -342,7 +340,7 @@ public class ModelHandler {
 		return l;
 	}
 
-	public BPMNShape findDIElement(Diagram diagram, Task addedTask) {
+	public BPMNShape findDIElement(Diagram diagram, BaseElement addedTask) {
 		List<BPMNDiagram> diagrams = getAll(BPMNDiagram.class);
 
 		for (BPMNDiagram d : diagrams) {

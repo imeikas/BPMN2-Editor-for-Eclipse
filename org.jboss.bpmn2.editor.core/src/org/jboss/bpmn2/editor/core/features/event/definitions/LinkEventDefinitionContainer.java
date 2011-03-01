@@ -15,47 +15,48 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
+import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
 public class LinkEventDefinitionContainer extends EventDefinitionFeatureContainer {
 
 	@Override
-    public boolean canApplyTo(BaseElement element) {
-	    return element instanceof LinkEventDefinition;
-    }
+	public boolean canApplyTo(BaseElement element) {
+		return element instanceof LinkEventDefinition;
+	}
 
 	@Override
-    public ICreateFeature getCreateFeature(IFeatureProvider fp) {
-	    return new CreateLinkEventDefinition(fp);
-    }
+	public ICreateFeature getCreateFeature(IFeatureProvider fp) {
+		return new CreateLinkEventDefinition(fp);
+	}
 
 	@Override
-    protected Shape drawForStart(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    return null; // NOT ALLOWED ACCORDING TO SPEC
-    }
+	protected Shape drawForStart(DecorationAlgorithm algorithm, ContainerShape shape) {
+		return null; // NOT ALLOWED ACCORDING TO SPEC
+	}
 
 	@Override
-    protected Shape drawForEnd(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    return null; // NOT ALLOWED ACCORDING TO SPEC
-    }
+	protected Shape drawForEnd(DecorationAlgorithm algorithm, ContainerShape shape) {
+		return null; // NOT ALLOWED ACCORDING TO SPEC
+	}
 
 	@Override
-    protected Shape drawForThrow(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    return drawFilled(algorithm, shape);
-    }
+	protected Shape drawForThrow(DecorationAlgorithm algorithm, ContainerShape shape) {
+		return drawFilled(algorithm, shape);
+	}
 
 	@Override
-    protected Shape drawForCatch(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    return draw(algorithm, shape);
-    }
-	
+	protected Shape drawForCatch(DecorationAlgorithm algorithm, ContainerShape shape) {
+		return draw(algorithm, shape);
+	}
+
 	@Override
-    protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    // TODO Auto-generated method stub
-	    return null;
-    }
-	
+	protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	private Shape draw(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape linkShape = Graphiti.getPeService().createShape(shape, false);
 		Polygon link = ShapeUtil.createEventLink(linkShape);
@@ -63,7 +64,7 @@ public class LinkEventDefinitionContainer extends EventDefinitionFeatureContaine
 		link.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		return linkShape;
 	}
-	
+
 	private Shape drawFilled(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape linkShape = Graphiti.getPeService().createShape(shape, false);
 		Polygon link = ShapeUtil.createEventLink(linkShape);
@@ -72,7 +73,7 @@ public class LinkEventDefinitionContainer extends EventDefinitionFeatureContaine
 		link.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		return linkShape;
 	}
-	
+
 	public static class CreateLinkEventDefinition extends CreateEventDefinition {
 
 		public CreateLinkEventDefinition(IFeatureProvider fp) {
@@ -81,13 +82,15 @@ public class LinkEventDefinitionContainer extends EventDefinitionFeatureContaine
 
 		@Override
 		public boolean canCreate(ICreateContext context) {
-			if (!super.canCreate(context))
+			if (!super.canCreate(context)) {
 				return false;
+			}
 
-			Event e = (Event) getBusinessObjectForPictogramElement(context.getTargetContainer());
-			
-			if (e instanceof IntermediateCatchEvent || e instanceof IntermediateThrowEvent)
+			Event e = (Event) BusinessObjectUtil.getFirstElementOfType(context.getTargetContainer(), Event.class);
+
+			if (e instanceof IntermediateCatchEvent || e instanceof IntermediateThrowEvent) {
 				return true;
+			}
 
 			return false;
 		}

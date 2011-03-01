@@ -312,7 +312,7 @@ public class DIImport {
 		int y = p.getY() - loc.getY();
 
 		// Apply buffer only when the connector connects to the bottom of the shape
-		if (Math.abs(y) > 5 && (x != 0 && Math.abs(x - ((Shape) elem).getGraphicsAlgorithm().getWidth()) > 3)) {
+		if (Math.abs(y) > 2 && (x != 0 && Math.abs(x - ((Shape) elem).getGraphicsAlgorithm().getWidth()) > 3)) {
 			y -= buffer;
 		}
 

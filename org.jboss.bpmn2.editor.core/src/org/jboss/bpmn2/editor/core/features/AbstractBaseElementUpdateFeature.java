@@ -1,5 +1,6 @@
 package org.jboss.bpmn2.editor.core.features;
 
+import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.IReason;
 import org.eclipse.graphiti.features.context.IUpdateContext;
@@ -15,7 +16,7 @@ public abstract class AbstractBaseElementUpdateFeature extends AbstractUpdateFea
 	protected FeatureSupport support = new FeatureSupport() {
 		@Override
 		public Object getBusinessObject(PictogramElement element) {
-			return getBusinessObjectForPictogramElement(element);
+			return BusinessObjectUtil.getFirstElementOfType(element, BaseElement.class);
 		}
 	};
 
@@ -29,11 +30,11 @@ public abstract class AbstractBaseElementUpdateFeature extends AbstractUpdateFea
 		String businessValue = support.getBusinessValue(context);
 
 		boolean updateNeeded = shapeValue != null && !shapeValue.equals(businessValue);
-		
+
 		if (updateNeeded) {
 			return Reason.createTrueReason("Name out of date");
 		}
-		
+
 		return Reason.createFalseReason();
 	}
 

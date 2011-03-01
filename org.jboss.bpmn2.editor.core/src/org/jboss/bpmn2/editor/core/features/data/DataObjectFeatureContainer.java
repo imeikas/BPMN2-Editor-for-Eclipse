@@ -21,9 +21,10 @@ import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractCreateFlowElementFeature;
+import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 
 public class DataObjectFeatureContainer extends AbstractDataFeatureContainer {
-	
+
 	@Override
 	public boolean canApplyTo(BaseElement element) {
 		return element instanceof DataObject;
@@ -44,41 +45,43 @@ public class DataObjectFeatureContainer extends AbstractDataFeatureContainer {
 		return new AbstractUpdateFeature(fp) {
 
 			@Override
-            public boolean canUpdate(IUpdateContext context) {
-				Object o = getBusinessObjectForPictogramElement(context.getPictogramElement());
-	            return o != null && o instanceof BaseElement && canApplyTo((BaseElement) o);
-            }
+			public boolean canUpdate(IUpdateContext context) {
+				Object o = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(), BaseElement.class);
+				return o != null && o instanceof BaseElement && canApplyTo((BaseElement) o);
+			}
 
 			@Override
-            public IReason updateNeeded(IUpdateContext context) {
+			public IReason updateNeeded(IUpdateContext context) {
 				IPeService peService = Graphiti.getPeService();
 				ContainerShape container = (ContainerShape) context.getPictogramElement();
-	            DataObject data = (DataObject) getBusinessObjectForPictogramElement(container);
-	            boolean isCollection = Boolean.parseBoolean(peService.getPropertyValue(container, COLLECTION_PROPERTY));
-	            return data.isIsCollection() != isCollection ? Reason.createTrueReason() : Reason.createFalseReason();
-            }
+				DataObject data = (DataObject) BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
+						DataObject.class);
+				boolean isCollection = Boolean.parseBoolean(peService.getPropertyValue(container, COLLECTION_PROPERTY));
+				return data.isIsCollection() != isCollection ? Reason.createTrueReason() : Reason.createFalseReason();
+			}
 
 			@Override
-            public boolean update(IUpdateContext context) {
+			public boolean update(IUpdateContext context) {
 				IPeService peService = Graphiti.getPeService();
 				ContainerShape container = (ContainerShape) context.getPictogramElement();
-	            DataObject data = (DataObject) getBusinessObjectForPictogramElement(container);
-	            
-	            boolean drawCollectionMarker = data.isIsCollection();
-	            
-	            Iterator<Shape> iterator = peService.getAllContainedShapes(container).iterator();
-	            while (iterator.hasNext()) {
-	                Shape shape = (Shape) iterator.next();
-	                String prop = peService.getPropertyValue(shape, HIDEABLE_PROPERTY);
-	                if(prop != null && new Boolean(prop)) {
-	                	Polyline line = (Polyline) shape.getGraphicsAlgorithm();
-	                	line.setLineVisible(drawCollectionMarker);
-	                }
-                }
-	            
-	            peService.setPropertyValue(container, COLLECTION_PROPERTY, Boolean.toString(data.isIsCollection()));
-	            return true;
-            }
+				DataObject data = (DataObject) BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
+						DataObject.class);
+
+				boolean drawCollectionMarker = data.isIsCollection();
+
+				Iterator<Shape> iterator = peService.getAllContainedShapes(container).iterator();
+				while (iterator.hasNext()) {
+					Shape shape = iterator.next();
+					String prop = peService.getPropertyValue(shape, HIDEABLE_PROPERTY);
+					if (prop != null && new Boolean(prop)) {
+						Polyline line = (Polyline) shape.getGraphicsAlgorithm();
+						line.setLineVisible(drawCollectionMarker);
+					}
+				}
+
+				peService.setPropertyValue(container, COLLECTION_PROPERTY, Boolean.toString(data.isIsCollection()));
+				return true;
+			}
 		};
 	}
 
@@ -86,7 +89,7 @@ public class DataObjectFeatureContainer extends AbstractDataFeatureContainer {
 
 		public CreateDataObjectFeature(IFeatureProvider fp) {
 			super(fp, "Data Object",
-			        "Provides information about what activities require to be performed or what they produce");
+					"Provides information about what activities require to be performed or what they produce");
 		}
 
 		@Override

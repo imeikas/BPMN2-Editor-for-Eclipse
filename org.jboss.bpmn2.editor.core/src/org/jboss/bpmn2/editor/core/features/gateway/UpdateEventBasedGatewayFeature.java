@@ -13,6 +13,7 @@ import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IPeService;
+import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
@@ -24,8 +25,7 @@ public class UpdateEventBasedGatewayFeature extends AbstractUpdateFeature {
 
 	@Override
 	public boolean canUpdate(IUpdateContext context) {
-		Object o = getBusinessObjectForPictogramElement(context.getPictogramElement());
-		return o != null && o instanceof EventBasedGateway;
+		return BusinessObjectUtil.containsElementOfType(context.getPictogramElement(), EventBasedGateway.class);
 	}
 
 	@Override
@@ -33,12 +33,12 @@ public class UpdateEventBasedGatewayFeature extends AbstractUpdateFeature {
 		IPeService service = Graphiti.getPeService();
 
 		boolean instantiate = Boolean.parseBoolean(service.getPropertyValue(context.getPictogramElement(),
-		        EventBasedGatewayFeatureContainer.INSTANTIATE_PROPERTY));
+				EventBasedGatewayFeatureContainer.INSTANTIATE_PROPERTY));
 		EventBasedGatewayType gatewayType = EventBasedGatewayType.getByName(service.getPropertyValue(
-		        context.getPictogramElement(), EventBasedGatewayFeatureContainer.EVENT_GATEWAY_TYPE_PROPERTY));
+				context.getPictogramElement(), EventBasedGatewayFeatureContainer.EVENT_GATEWAY_TYPE_PROPERTY));
 
-		EventBasedGateway gateway = (EventBasedGateway) getBusinessObjectForPictogramElement(context
-		        .getPictogramElement());
+		EventBasedGateway gateway = (EventBasedGateway) BusinessObjectUtil.getFirstElementOfType(
+				context.getPictogramElement(), EventBasedGateway.class);
 
 		boolean changed = instantiate != gateway.isInstantiate() || gatewayType != gateway.getEventGatewayType();
 		return changed ? Reason.createTrueReason() : Reason.createFalseReason();
@@ -48,8 +48,8 @@ public class UpdateEventBasedGatewayFeature extends AbstractUpdateFeature {
 	public boolean update(IUpdateContext context) {
 		IPeService service = Graphiti.getPeService();
 
-		EventBasedGateway gateway = (EventBasedGateway) getBusinessObjectForPictogramElement(context
-		        .getPictogramElement());
+		EventBasedGateway gateway = (EventBasedGateway) BusinessObjectUtil.getFirstElementOfType(
+				context.getPictogramElement(), EventBasedGateway.class);
 
 		clearGateway(context.getPictogramElement());
 
@@ -64,9 +64,9 @@ public class UpdateEventBasedGatewayFeature extends AbstractUpdateFeature {
 		}
 
 		service.setPropertyValue(context.getPictogramElement(), EventBasedGatewayFeatureContainer.INSTANTIATE_PROPERTY,
-		        Boolean.toString(gateway.isInstantiate()));
+				Boolean.toString(gateway.isInstantiate()));
 		service.setPropertyValue(context.getPictogramElement(),
-		        EventBasedGatewayFeatureContainer.EVENT_GATEWAY_TYPE_PROPERTY, gateway.getEventGatewayType().getName());
+				EventBasedGatewayFeatureContainer.EVENT_GATEWAY_TYPE_PROPERTY, gateway.getEventGatewayType().getName());
 		return true;
 	}
 

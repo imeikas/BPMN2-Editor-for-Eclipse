@@ -8,6 +8,7 @@ import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.jboss.bpmn2.editor.core.features.AbstractBaseElementUpdateFeature;
+import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.MoveFlowNodeFeature;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.activity.AbstractActivityFeatureContainer;
@@ -21,7 +22,7 @@ public abstract class AbstractTaskFeatureContainer extends AbstractActivityFeatu
 
 			@Override
 			public boolean canUpdate(IUpdateContext context) {
-				Object bo = getBusinessObjectForPictogramElement(context.getPictogramElement());
+				Object bo = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(), BaseElement.class);
 				return bo != null && bo instanceof BaseElement && canApplyTo((BaseElement) bo);
 			}
 		};

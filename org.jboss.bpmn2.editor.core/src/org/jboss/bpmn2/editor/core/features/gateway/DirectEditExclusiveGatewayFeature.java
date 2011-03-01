@@ -8,6 +8,7 @@ import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Text;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
+import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 
 public class DirectEditExclusiveGatewayFeature extends AbstractDirectEditingFeature {
 
@@ -23,7 +24,8 @@ public class DirectEditExclusiveGatewayFeature extends AbstractDirectEditingFeat
 	@Override
 	public String getInitialValue(IDirectEditingContext context) {
 		PictogramElement pe = context.getPictogramElement();
-		ExclusiveGateway eClass = (ExclusiveGateway) getBusinessObjectForPictogramElement(pe);
+		ExclusiveGateway eClass = (ExclusiveGateway) BusinessObjectUtil.getFirstElementOfType(pe,
+				ExclusiveGateway.class);
 		return eClass.getName();
 	}
 
@@ -31,7 +33,9 @@ public class DirectEditExclusiveGatewayFeature extends AbstractDirectEditingFeat
 	public void setValue(String value, IDirectEditingContext context) {
 		PictogramElement pe = context.getPictogramElement();
 
-		ExclusiveGateway gateway = (ExclusiveGateway) getBusinessObjectForPictogramElement(pe);
+		ExclusiveGateway gateway = (ExclusiveGateway) BusinessObjectUtil.getFirstElementOfType(pe,
+				ExclusiveGateway.class);
+		;
 		gateway.setName(value);
 
 		updatePictogramElement(((Shape) pe).getContainer());
@@ -39,8 +43,7 @@ public class DirectEditExclusiveGatewayFeature extends AbstractDirectEditingFeat
 
 	@Override
 	public boolean canDirectEdit(IDirectEditingContext context) {
-		PictogramElement pe = context.getPictogramElement();
-		Object bo = getBusinessObjectForPictogramElement(pe);
+		Object bo = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(), ExclusiveGateway.class);
 		GraphicsAlgorithm ga = context.getGraphicsAlgorithm();
 
 		return bo instanceof ExclusiveGateway && ga instanceof Text;

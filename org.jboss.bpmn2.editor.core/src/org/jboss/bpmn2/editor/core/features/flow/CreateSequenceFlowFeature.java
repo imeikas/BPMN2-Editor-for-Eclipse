@@ -2,6 +2,7 @@ package org.jboss.bpmn2.editor.core.features.flow;
 
 import java.io.IOException;
 
+import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -14,12 +15,13 @@ import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
+import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 
 public class CreateSequenceFlowFeature extends AbstractCreateConnectionFeature {
 
 	public CreateSequenceFlowFeature(IFeatureProvider fp) {
 		super(fp, "Sequence Flow",
-		        "A Sequence Flow is used to show the order that Activities will be performed in a Process");
+				"A Sequence Flow is used to show the order that Activities will be performed in a Process");
 	}
 
 	@Override
@@ -32,7 +34,7 @@ public class CreateSequenceFlowFeature extends AbstractCreateConnectionFeature {
 
 	private FlowNode getFlowNode(Anchor anchor) {
 		if (anchor != null) {
-			Object bo = getBusinessObjectForPictogramElement(anchor.getParent());
+			Object bo = BusinessObjectUtil.getFirstElementOfType(anchor.getParent(), BaseElement.class);
 			if (bo instanceof FlowNode) {
 				return (FlowNode) bo;
 			}
@@ -47,11 +49,11 @@ public class CreateSequenceFlowFeature extends AbstractCreateConnectionFeature {
 
 		if (source != null || target != null) {
 			try {
-				ModelHandler mh = ModelHandlerLocator.getModelHandler(getDiagram().eResource()) ;
+				ModelHandler mh = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
 				SequenceFlow flow = mh.createSequenceFlow(source, target);
 
 				AddConnectionContext addContext = new AddConnectionContext(context.getSourceAnchor(),
-				        context.getTargetAnchor());
+						context.getTargetAnchor());
 				addContext.setNewObject(flow);
 
 				return (Connection) getFeatureProvider().addIfPossible(addContext);
@@ -66,14 +68,14 @@ public class CreateSequenceFlowFeature extends AbstractCreateConnectionFeature {
 	public boolean canStartConnection(ICreateConnectionContext context) {
 		return getFlowNode(context.getSourceAnchor()) != null;
 	}
-	
+
 	@Override
 	public String getCreateImageId() {
 		return ImageProvider.IMG_16_SEQUENCE_FLOW;
 	}
-	
+
 	@Override
 	public String getCreateLargeImageId() {
-		return getCreateImageId(); //FIXME
+		return getCreateImageId(); // FIXME
 	}
 }

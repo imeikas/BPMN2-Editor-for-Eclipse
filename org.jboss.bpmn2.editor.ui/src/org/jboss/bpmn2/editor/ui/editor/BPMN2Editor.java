@@ -46,6 +46,7 @@ public class BPMN2Editor extends DiagramEditor {
 			modelPath = URI.createURI(modelsPath);
 
 			ResourceSet resourceSet = getEditingDomain().getResourceSet();
+			resourceSet.getResources().clear();
 			Bpmn2ResourceImpl resource = (Bpmn2ResourceImpl) resourceSet.createResource(modelPath,
 					"org.eclipse.bpmn2.content-type.xml");
 			try {

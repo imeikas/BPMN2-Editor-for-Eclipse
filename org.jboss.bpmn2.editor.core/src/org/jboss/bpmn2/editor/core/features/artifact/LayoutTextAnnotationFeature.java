@@ -16,68 +16,68 @@ import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
+import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 
 public class LayoutTextAnnotationFeature extends AbstractLayoutFeature {
 
 	public LayoutTextAnnotationFeature(IFeatureProvider fp) {
-	    super(fp);
-    }
-
-	@Override
-    public boolean canLayout(ILayoutContext context) {
-		PictogramElement pictoElem = context.getPictogramElement();
-		if(!(pictoElem instanceof ContainerShape)) {
-			return false;
-		}
-		Object bo = getBusinessObjectForPictogramElement(pictoElem);
-	    return bo instanceof TextAnnotation;
+		super(fp);
 	}
 
 	@Override
-    public boolean layout(ILayoutContext context) {
+	public boolean canLayout(ILayoutContext context) {
+		PictogramElement pictoElem = context.getPictogramElement();
+		if (!(pictoElem instanceof ContainerShape)) {
+			return false;
+		}
+		return BusinessObjectUtil.containsElementOfType(pictoElem, TextAnnotation.class);
+	}
+
+	@Override
+	public boolean layout(ILayoutContext context) {
 		boolean changed = false;
-		
+
 		ContainerShape containerShape = (ContainerShape) context.getPictogramElement();
 		GraphicsAlgorithm ga = containerShape.getGraphicsAlgorithm();
 		IGaService gaService = Graphiti.getGaService();
-		
-		if(ga.getWidth() < 100) {
+
+		if (ga.getWidth() < 100) {
 			ga.setWidth(100);
 			changed = true;
 		}
-		
-		if(ga.getHeight() < 50) {
+
+		if (ga.getHeight() < 50) {
 			ga.setHeight(50);
 			changed = true;
 		}
-		
+
 		int containerWidth = ga.getWidth();
 		int containerHeight = ga.getHeight();
 		Iterator<Shape> iterator = containerShape.getChildren().iterator();
 		while (iterator.hasNext()) {
-	        Shape shape = (Shape) iterator.next();
-	        GraphicsAlgorithm shapeGa = shape.getGraphicsAlgorithm();
-	        IDimension size = gaService.calculateSize(shapeGa);
-	        if(containerWidth != size.getWidth() && shapeGa instanceof MultiText) {
-	        	gaService.setWidth(shapeGa, containerWidth - 5);
-	        	changed = true;
-	        }
-	        if(containerHeight != size.getHeight()) {
-	        	if(shapeGa instanceof Polyline) {
-	        		Polyline line = (Polyline) shapeGa;
-	        		line.getPoints().set(2, getNewPoint(line, 2, containerHeight, gaService));
-	        		line.getPoints().set(3, getNewPoint(line, 3, containerHeight, gaService));
-	        		changed = true;
-	        	} else if (shapeGa instanceof MultiText) {
-	        		gaService.setHeight(shapeGa, containerHeight - 5);
-	        		changed = true;
-	        	}
-	        }
-        }
-		
+			Shape shape = iterator.next();
+			GraphicsAlgorithm shapeGa = shape.getGraphicsAlgorithm();
+			IDimension size = gaService.calculateSize(shapeGa);
+			if (containerWidth != size.getWidth() && shapeGa instanceof MultiText) {
+				gaService.setWidth(shapeGa, containerWidth - 5);
+				changed = true;
+			}
+			if (containerHeight != size.getHeight()) {
+				if (shapeGa instanceof Polyline) {
+					Polyline line = (Polyline) shapeGa;
+					line.getPoints().set(2, getNewPoint(line, 2, containerHeight, gaService));
+					line.getPoints().set(3, getNewPoint(line, 3, containerHeight, gaService));
+					changed = true;
+				} else if (shapeGa instanceof MultiText) {
+					gaService.setHeight(shapeGa, containerHeight - 5);
+					changed = true;
+				}
+			}
+		}
+
 		return changed;
 	}
-	
+
 	private Point getNewPoint(Polyline line, int pointIndex, int height, IGaService gaService) {
 		Point p = line.getPoints().get(pointIndex);
 		return gaService.createPoint(p.getX(), height);

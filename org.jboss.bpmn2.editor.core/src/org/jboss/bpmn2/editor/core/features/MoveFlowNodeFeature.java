@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.Participant;
@@ -26,7 +27,7 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 	protected FeatureSupport support = new FeatureSupport() {
 		@Override
 		public Object getBusinessObject(PictogramElement element) {
-			return getBusinessObjectForPictogramElement(element);
+			return BusinessObjectUtil.getFirstElementOfType(element, BaseElement.class);
 		}
 	};
 
@@ -43,7 +44,7 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 
 	@Override
 	public boolean canMoveShape(IMoveShapeContext context) {
-		if (!(getBusinessObjectForPictogramElement(context.getShape()) instanceof FlowNode)) {
+		if (!(BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(), BaseElement.class) instanceof FlowNode)) {
 			return false;
 		}
 
@@ -79,8 +80,8 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 							getTargetBo(context, handler));
 				} else if (object instanceof BPMNShape) {
 					Bounds bounds = ((BPMNShape) object).getBounds();
-					bounds.setX(bounds.getX() - context.getDeltaX());
-					bounds.setY(bounds.getY() - context.getDeltaY());
+					bounds.setX(bounds.getX() + context.getDeltaX());
+					bounds.setY(bounds.getY() + context.getDeltaY());
 				}
 			}
 		} catch (Exception e) {
@@ -90,21 +91,21 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 
 	private Object getSourceBo(IMoveShapeContext context, ModelHandler handler) {
 		return context.getSourceContainer().equals(getDiagram()) ? handler.getInternalParticipant()
-				: getBusinessObjectForPictogramElement(context.getSourceContainer());
+				: BusinessObjectUtil.getFirstElementOfType(context.getSourceContainer(), BaseElement.class);
 	}
 
 	private Object getTargetBo(IMoveShapeContext context, ModelHandler handler) {
 		return context.getTargetContainer().equals(getDiagram()) ? handler.getInternalParticipant()
-				: getBusinessObjectForPictogramElement(context.getTargetContainer());
+				: BusinessObjectUtil.getFirstElementOfType(context.getTargetContainer(), BaseElement.class);
 	}
 
 	private boolean isSourceParticipant(IMoveShapeContext context) {
-		Object bo = getBusinessObjectForPictogramElement(context.getSourceContainer());
+		Object bo = BusinessObjectUtil.getFirstElementOfType(context.getSourceContainer(), BaseElement.class);
 		return context.getSourceContainer().equals(getDiagram()) || (bo != null && bo instanceof Participant);
 	}
 
 	private boolean isSourceLane(IMoveShapeContext context) {
-		Object bo = getBusinessObjectForPictogramElement(context.getSourceContainer());
+		Object bo = BusinessObjectUtil.getFirstElementOfType(context.getSourceContainer(), BaseElement.class);
 		return bo != null && bo instanceof Lane;
 	}
 
@@ -290,7 +291,7 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 
 		@Override
 		public boolean canApplyTo(IMoveShapeContext context) {
-			Object bo = getBusinessObjectForPictogramElement(context.getSourceContainer());
+			Object bo = BusinessObjectUtil.getFirstElementOfType(context.getSourceContainer(), BaseElement.class);
 			return bo != null && bo instanceof SubProcess;
 		}
 
@@ -308,7 +309,7 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 
 		@Override
 		public boolean canApplyTo(IMoveShapeContext context) {
-			Object bo = getBusinessObjectForPictogramElement(context.getTargetContainer());
+			Object bo = BusinessObjectUtil.getFirstElementOfType(context.getTargetContainer(), BaseElement.class);
 			return bo != null && bo instanceof SubProcess;
 		}
 	}
