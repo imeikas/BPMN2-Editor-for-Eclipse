@@ -329,4 +329,17 @@ public class ShapeUtil {
 
 		return envelope;
 	}
+
+	public static Polygon createDataArrow(Polygon p) {
+		int[] points = {4, 8, 
+						14, 8, 
+						14, 4, 
+						18, 10, 
+						14, 16,
+						14, 12,
+						4, 12};
+		Polygon arrow = gaService.createPolygon(p, points);
+		arrow.setLineWidth(1);
+	    return arrow;
+    }
 }

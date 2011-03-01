@@ -10,7 +10,9 @@ import org.eclipse.graphiti.features.IFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.CreateAssociationFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.CreateTextAnnotationFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.GroupFeatureContainer.CreateGroupFeature;
-import org.jboss.bpmn2.editor.core.features.data.DataFeatureContainer.CreateDataObjectFeature;
+import org.jboss.bpmn2.editor.core.features.data.DataObjectFeatureContainer.CreateDataObjectFeature;
+import org.jboss.bpmn2.editor.core.features.data.DataInputFeatureContainer.CreateDataInputFeature;
+import org.jboss.bpmn2.editor.core.features.data.DataOutputFeatureContainer.CreateDataOutputFeature;
 import org.jboss.bpmn2.editor.core.features.data.DataStoreFeatureContainer.CreateDataStoreFeature;
 import org.jboss.bpmn2.editor.core.features.event.BoundaryEventFeatureContainer.CreateBoundaryEvent;
 import org.jboss.bpmn2.editor.core.features.event.EndEventFeatureContainer.CreateEndEventFeature;
@@ -92,6 +94,8 @@ public class FeatureMap {
 		featureMap.put(i.getGroup(), CreateGroupFeature.class);
 		featureMap.put(i.getDataObject(), CreateDataObjectFeature.class);
 		featureMap.put(i.getDataStore(), CreateDataStoreFeature.class);
+		featureMap.put(i.getDataInput(), CreateDataInputFeature.class);
+		featureMap.put(i.getDataOutput(), CreateDataOutputFeature.class);
 		FEATURE_MAP = Collections.unmodifiableMap(featureMap);
 	}
 

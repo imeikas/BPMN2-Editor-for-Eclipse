@@ -7,11 +7,14 @@ import org.eclipse.bpmn2.Association;
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Bpmn2Factory;
 import org.eclipse.bpmn2.Collaboration;
+import org.eclipse.bpmn2.DataInput;
+import org.eclipse.bpmn2.DataOutput;
 import org.eclipse.bpmn2.Definitions;
 import org.eclipse.bpmn2.DocumentRoot;
 import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.bpmn2.FlowElementsContainer;
 import org.eclipse.bpmn2.FlowNode;
+import org.eclipse.bpmn2.InputOutputSpecification;
 import org.eclipse.bpmn2.InteractionNode;
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.LaneSet;
@@ -94,6 +97,24 @@ public class ModelHandler {
 	public <T extends RootElement> T addRootElement(T element) {
 		getDefinitions().getRootElements().add(element);
 		return element;
+	}
+	
+	public DataOutput addDataOutput(Object target, DataOutput dataOutput) {
+		getOrCreateIOSpecification(target).getDataOutputs().add(dataOutput);
+		return dataOutput;
+	}
+	
+	public DataInput addDataInput(Object target, DataInput dataInput) {
+		getOrCreateIOSpecification(target).getDataInputs().add(dataInput);
+		return dataInput;
+	}
+	
+	private InputOutputSpecification getOrCreateIOSpecification(Object target) {
+		Process process = getOrCreateProcess(getParticipant(target));
+		if(process.getIoSpecification() == null) {
+			process.setIoSpecification(FACTORY.createInputOutputSpecification());
+		}
+		return process.getIoSpecification();
 	}
 	
 	public void moveFlowNode(FlowNode node, Object source, Object target) {
@@ -200,7 +221,6 @@ public class ModelHandler {
 		} else {
 			e = getInternalParticipant();
 		}
-		Participant participant = getParticipant(source);
 		Association association = addArtifact(e, FACTORY.createAssociation());
 		association.setSourceRef(source);
 		association.setTargetRef(target);
