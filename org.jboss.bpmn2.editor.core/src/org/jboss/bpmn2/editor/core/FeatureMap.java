@@ -7,6 +7,16 @@ import java.util.Map;
 import org.eclipse.bpmn2.Bpmn2Package;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.graphiti.features.IFeature;
+import org.jboss.bpmn2.editor.core.features.activity.subprocess.SubProcessFeatureContainer.CreateSubProcessFeature;
+import org.jboss.bpmn2.editor.core.features.activity.subprocess.TransactionFeatureContainer.CreateTransactionFeature;
+import org.jboss.bpmn2.editor.core.features.activity.task.BusinessRuleTaskFeatureContainer.CreateBusinessRuleTaskFeature;
+import org.jboss.bpmn2.editor.core.features.activity.task.ManualTaskFeatureContainer.CreateManualTaskFeature;
+import org.jboss.bpmn2.editor.core.features.activity.task.ReceiveTaskFeatureContainer.CreateReceiveTaskFeature;
+import org.jboss.bpmn2.editor.core.features.activity.task.ScriptTaskFeatureContainer.CreateScriptTaskFeature;
+import org.jboss.bpmn2.editor.core.features.activity.task.SendTaskFeatureContainer.CreateSendTaskFeature;
+import org.jboss.bpmn2.editor.core.features.activity.task.ServiceTaskFeatureContainer.CreateServiceTaskFeature;
+import org.jboss.bpmn2.editor.core.features.activity.task.TaskFeatureContainer.CreateTaskFeature;
+import org.jboss.bpmn2.editor.core.features.activity.task.UserTaskFeatureContainer.CreateUserTaskFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.CreateAssociationFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.CreateTextAnnotationFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.GroupFeatureContainer.CreateGroupFeature;
@@ -38,16 +48,6 @@ import org.jboss.bpmn2.editor.core.features.gateway.InclusiveGatewayFeatureConta
 import org.jboss.bpmn2.editor.core.features.gateway.ParallelGatewayFeatureContainer.CreateParallelGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.lane.CreateLaneFeature;
 import org.jboss.bpmn2.editor.core.features.participant.CreateParticipantFeature;
-import org.jboss.bpmn2.editor.core.features.subprocess.SubProcessFeatureContainer.CreateSubProcessFeature;
-import org.jboss.bpmn2.editor.core.features.subprocess.TransactionFeatureContainer.CreateTransactionFeature;
-import org.jboss.bpmn2.editor.core.features.task.BusinessRuleTaskFeatureContainer.CreateBusinessRuleTaskFeature;
-import org.jboss.bpmn2.editor.core.features.task.ManualTaskFeatureContainer.CreateManualTaskFeature;
-import org.jboss.bpmn2.editor.core.features.task.ReceiveTaskFeatureContainer.CreateReceiveTaskFeature;
-import org.jboss.bpmn2.editor.core.features.task.ScriptTaskFeatureContainer.CreateScriptTaskFeature;
-import org.jboss.bpmn2.editor.core.features.task.SendTaskFeatureContainer.CreateSendTaskFeature;
-import org.jboss.bpmn2.editor.core.features.task.ServiceTaskFeatureContainer.CreateServiceTaskFeature;
-import org.jboss.bpmn2.editor.core.features.task.TaskFeatureContainer.CreateTaskFeature;
-import org.jboss.bpmn2.editor.core.features.task.UserTaskFeatureContainer.CreateUserTaskFeature;
 
 public class FeatureMap {
 	public static Map<EClass, Class<? extends IFeature>> FEATURE_MAP;

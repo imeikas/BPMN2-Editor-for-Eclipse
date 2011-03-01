@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.subprocess;
+package org.jboss.bpmn2.editor.core.features.activity.subprocess;
 
 import java.util.Collection;
 

@@ -22,7 +22,7 @@ import org.eclipse.graphiti.palette.impl.PaletteCompartmentEntry;
 import org.eclipse.graphiti.tb.DefaultToolBehaviorProvider;
 import org.jboss.bpmn2.editor.core.Bpmn2Preferences;
 import org.jboss.bpmn2.editor.core.FeatureMap;
-import org.jboss.bpmn2.editor.core.features.ActivitySelectionBehavior;
+import org.jboss.bpmn2.editor.core.features.activity.ActivitySelectionBehavior;
 
 public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implements IFeatureCheckerHolder {
 

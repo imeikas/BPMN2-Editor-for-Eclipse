@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.subprocess;
+package org.jboss.bpmn2.editor.core.features.activity.subprocess;
 
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.SubProcess;
@@ -30,28 +30,38 @@ public class TransactionFeatureContainer extends AbstractSubProcessFeatureContai
 	@Override
 	public IAddFeature getAddFeature(IFeatureProvider fp) {
 		return new AddExpandedSubProcessFeature(fp) {
+
+			final int offset = 3;
+
 			@Override
-			protected void decorateRect(RoundedRectangle rect) {
+			protected void decorateActivityRectangle(RoundedRectangle rect) {
 				IGaService gaService = Graphiti.getGaService();
 				RoundedRectangle innerRect = gaService.createRoundedRectangle(rect, 5, 5);
 				innerRect.setFilled(false);
 				innerRect.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
-				gaService.setLocationAndSize(innerRect, 3, 3, rect.getWidth() - 6, rect.getHeight() - 6);
+				gaService.setLocationAndSize(innerRect, offset, offset, rect.getWidth() - (2 * offset),
+				        rect.getHeight() - (2 * offset));
+			}
+
+			@Override
+			protected int getMarkerContainerOffset() {
+				return offset;
 			}
 		};
 	}
-	
+
 	@Override
 	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
-	    return new LayoutSubProcessFeature(fp) {
-	    	@Override
-	    	protected void layoutInRectangle(RoundedRectangle rect) {
-	    		IGaService gaService = Graphiti.getGaService();
-	    		RoundedRectangle innerRect = (RoundedRectangle) rect.getGraphicsAlgorithmChildren().get(0);
-	    		gaService.setSize(innerRect, rect.getWidth() - 6, rect.getHeight() - 6);
-	    	}
-	    };
+		return new LayoutSubProcessFeature(fp) {
+			@Override
+			protected void layoutInRectangle(RoundedRectangle rect) {
+				IGaService gaService = Graphiti.getGaService();
+				RoundedRectangle innerRect = (RoundedRectangle) rect.getGraphicsAlgorithmChildren().get(0);
+				gaService.setSize(innerRect, rect.getWidth() - 6, rect.getHeight() - 6);
+			}
+		};
 	}
+
 	public static class CreateTransactionFeature extends AbstractCreateSubProcess {
 
 		public CreateTransactionFeature(IFeatureProvider fp) {

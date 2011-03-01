@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.task;
+package org.jboss.bpmn2.editor.core.features.activity.task;
 
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Task;

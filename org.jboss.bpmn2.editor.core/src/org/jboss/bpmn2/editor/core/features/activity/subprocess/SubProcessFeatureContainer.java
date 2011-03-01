@@ -1,14 +1,14 @@
-package org.jboss.bpmn2.editor.core.features.subprocess;
+package org.jboss.bpmn2.editor.core.features.activity.subprocess;
 
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.SubProcess;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
-import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
+import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 
 public class SubProcessFeatureContainer extends AbstractSubProcessFeatureContainer {
 	
@@ -30,8 +30,11 @@ public class SubProcessFeatureContainer extends AbstractSubProcessFeatureContain
 	}
 	
 	@Override
-	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
-	    return new UpdateSubProcessFeature(fp);
+	public MultiUpdateFeature getUpdateFeature(IFeatureProvider fp) {
+		MultiUpdateFeature multiUpdate = super.getUpdateFeature(fp);
+		UpdateSubProcessFeature updateSubProcessFeature = new UpdateSubProcessFeature(fp);
+		multiUpdate.addUpdateFeature(updateSubProcessFeature);
+		return multiUpdate;
 	}
 	
 	public static class CreateSubProcessFeature extends AbstractCreateSubProcess {
