@@ -24,8 +24,9 @@ import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
 // NOT USED CURRENTLY
+@Deprecated
 public class AddSubprocessFeature extends AbstractAddFeature {
-	
+
 	protected FeatureSupport support = new FeatureSupport() {
 		@Override
 		public Object getBusinessObject(PictogramElement element) {
@@ -48,6 +49,10 @@ public class AddSubprocessFeature extends AbstractAddFeature {
 
 	@Override
 	public PictogramElement add(IAddContext context) {
+
+		int width = context.getWidth() > 0 ? context.getWidth() : 100;
+		int height = context.getHeight() > 0 ? context.getHeight() : 100;
+
 		SubProcess subprocess = (SubProcess) context.getNewObject();
 
 		IGaService gaService = Graphiti.getGaService();
@@ -55,14 +60,15 @@ public class AddSubprocessFeature extends AbstractAddFeature {
 
 		ContainerShape containerShape = peService.createContainerShape(context.getTargetContainer(), true);
 		Rectangle invisibleRect = gaService.createInvisibleRectangle(containerShape);
-		gaService.setLocationAndSize(invisibleRect, context.getX(), context.getY(), 100, 100 + 18);
-		
+
+		gaService.setLocationAndSize(invisibleRect, context.getX(), context.getY(), width, height + 18);
+
 		Shape rectShape = peService.createShape(containerShape, false);
 		RoundedRectangle rect = gaService.createRoundedRectangle(rectShape, 5, 5);
 		rect.setStyle(StyleUtil.getStyleForClass(getDiagram()));
 		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
 		gaService.setRenderingStyle(rect, gradient);
-		gaService.setLocationAndSize(rect, 0, 0, 100, 100);
+		gaService.setLocationAndSize(rect, 0, 0, width, height);
 		decorateRect(rect);
 		link(rectShape, subprocess);
 
@@ -71,7 +77,7 @@ public class AddSubprocessFeature extends AbstractAddFeature {
 		box.setFilled(false);
 		box.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 		decorateBox(box);
-		
+
 		Shape textShape = peService.createShape(containerShape, false);
 		MultiText text = gaService.createDefaultMultiText(textShape, subprocess.getName());
 		gaService.setLocationAndSize(text, 10, 10, 80, 80);
@@ -80,26 +86,28 @@ public class AddSubprocessFeature extends AbstractAddFeature {
 		text.setVerticalAlignment(Orientation.ALIGNMENT_TOP);
 		text.getFont().setBold(true);
 		link(textShape, subprocess);
-		
+
 		Polyline lineHorizontal = gaService.createPolyline(box, new int[] { 2, 10, 18, 10 });
 		lineHorizontal.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 
 		Polyline lineVertical = gaService.createPolyline(box, new int[] { 10, 2, 10, 18 });
 		lineVertical.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
-		
+
 		ChopboxAnchor anchor = peService.createChopboxAnchor(containerShape);
 		anchor.setReferencedGraphicsAlgorithm(rect);
-		
+
 		if (subprocess.eResource() == null) {
 			getDiagram().eResource().getContents().add(subprocess);
 		}
-		
+
 		peService.setPropertyValue(containerShape, TRIGGERED_BY_EVENT, "false");
 		link(containerShape, subprocess);
 		return containerShape;
 	}
 
-	protected void decorateRect(RoundedRectangle rect) {}
-	
-	protected void decorateBox(Rectangle box) {}
+	protected void decorateRect(RoundedRectangle rect) {
+	}
+
+	protected void decorateBox(Rectangle box) {
+	}
 }

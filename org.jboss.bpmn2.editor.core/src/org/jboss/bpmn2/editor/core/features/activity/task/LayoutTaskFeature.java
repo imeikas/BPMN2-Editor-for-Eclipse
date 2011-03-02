@@ -4,6 +4,8 @@ import java.util.Iterator;
 
 import org.eclipse.bpmn2.BoundaryEvent;
 import org.eclipse.bpmn2.Task;
+import org.eclipse.bpmn2.di.BPMNShape;
+import org.eclipse.dd.dc.Bounds;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -48,24 +50,31 @@ public class LayoutTaskFeature extends AbstractLayoutFeature {
 		if (containerGa.getHeight() < 25) {
 			containerGa.setHeight(25);
 		}
-		
+
 		int newWidth = containerGa.getWidth();
 		int newHeight = containerGa.getHeight() - ShapeUtil.ACTIVITY_BOTTOM_PADDING;
-		
+
 		Iterator<Shape> iterator = Graphiti.getPeService().getAllContainedShapes(containerShape).iterator();
-		
+
 		RoundedRectangle rect = (RoundedRectangle) iterator.next().getGraphicsAlgorithm();
 		gaService.setSize(rect, newWidth, newHeight);
-		
+
 		Text text = (Text) iterator.next().getGraphicsAlgorithm();
 		gaService.setSize(text, newWidth, text.getHeight());
-		
+
 		while (iterator.hasNext()) {
-			Shape shape = (Shape) iterator.next();
-			Object bo = getBusinessObjectForPictogramElement(shape);
-			if (bo != null && bo instanceof BoundaryEvent) {
-				layoutPictogramElement(shape);
+			Shape shape = iterator.next();
+			Object[] objects = getAllBusinessObjectsForPictogramElement(shape);
+			for (Object bo : objects) {
+				if (bo instanceof BPMNShape) {
+					Bounds bounds = ((BPMNShape) bo).getBounds();
+					bounds.setWidth(newWidth);
+					bounds.setHeight(newHeight);
+				} else if (bo instanceof BoundaryEvent) {
+					layoutPictogramElement(shape);
+				}
 			}
+
 		}
 
 		return true;

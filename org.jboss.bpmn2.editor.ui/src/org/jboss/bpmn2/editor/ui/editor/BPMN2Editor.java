@@ -15,6 +15,7 @@ import org.eclipse.graphiti.ui.editor.DiagramEditorInput;
 import org.eclipse.ui.IEditorInput;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
+import org.jboss.bpmn2.editor.core.di.DIImport;
 import org.jboss.bpmn2.editor.ui.Activator;
 import org.jboss.bpmn2.editor.ui.util.ErrorUtils;
 
@@ -46,18 +47,29 @@ public class BPMN2Editor extends DiagramEditor {
 
 			ResourceSet resourceSet = getEditingDomain().getResourceSet();
 			Bpmn2ResourceImpl resource = (Bpmn2ResourceImpl) resourceSet.createResource(modelPath,
-			        "org.eclipse.bpmn2.content-type.xml");
+					"org.eclipse.bpmn2.content-type.xml");
 			try {
 				File file = new File(modelsPath);
-				if (file.exists())
+				if (file.exists()) {
 					resource.load(null);
+				}
 			} catch (IOException e) {
 				Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e);
 				ErrorUtils.showErrorWithLogging(status);
 			}
 			modelHandler = ModelHandlerLocator.createModelHandler(modelPath, resource);
+			importDiagram();
 			((BasicCommandStack) getEditingDomain().getCommandStack()).saveIsDone();
 		}
+	}
+
+	private void importDiagram() {
+		DIImport di = new DIImport();
+		di.setDiagram(getDiagramTypeProvider().getDiagram());
+		di.setDomain(getEditingDomain());
+		di.setModelHandler(modelHandler);
+		di.setFeatureProvider(getDiagramTypeProvider().getFeatureProvider());
+		di.generateFromDI();
 	}
 
 	@Override

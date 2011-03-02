@@ -5,7 +5,6 @@ import static org.jboss.bpmn2.editor.core.features.activity.ActivityLoopAndMulti
 import org.eclipse.bpmn2.Activity;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
-import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
 import org.eclipse.graphiti.mm.algorithms.Rectangle;
 import org.eclipse.graphiti.mm.algorithms.RoundedRectangle;
 import org.eclipse.graphiti.mm.algorithms.styles.AdaptedGradientColoredAreas;
@@ -17,11 +16,12 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
+import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
-public abstract class AbstractAddActivityFeature extends AbstractAddShapeFeature {
+public abstract class AbstractAddActivityFeature extends AbstractBpmnAddFeature {
 
 	protected FeatureSupport support = new FeatureSupport() {
 		@Override
@@ -78,7 +78,7 @@ public abstract class AbstractAddActivityFeature extends AbstractAddShapeFeature
 		ChopboxAnchor anchor = peService.createChopboxAnchor(containerShape);
 		anchor.setReferencedGraphicsAlgorithm(rect);
 
-		link(containerShape, activity);
+		createDIShape(containerShape, activity);
 
 		if (activity.eResource() == null) {
 			getDiagram().eResource().getContents().add(activity);

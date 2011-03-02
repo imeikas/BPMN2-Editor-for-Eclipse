@@ -5,13 +5,10 @@ Bundle-SymbolicName: org.jboss.bpmn2.editor.core;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-Activator: org.jboss.bpmn2.editor.core.Activator
 Bundle-Vendor: JBOSS
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.emf.transaction,
+Require-Bundle: org.eclipse.emf.transaction,
  org.eclipse.graphiti.ui,
  org.eclipse.graphiti,
- org.eclipse.bpmn2,
- org.eclipse.bpmn2.edit,
- org.eclipse.emf.query;bundle-version="1.2.100"
+ org.eclipse.bpmn2.edit
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.jboss.bpmn2.editor.core;
@@ -25,6 +22,7 @@ Export-Package: org.jboss.bpmn2.editor.core;
    org.eclipse.bpmn2.util,
    org.eclipse.core.resources,
    org.osgi.framework",
+ org.jboss.bpmn2.editor.core.di,
  org.jboss.bpmn2.editor.core.diagram;
   uses:="org.eclipse.graphiti.features,
    org.eclipse.graphiti.features.context,
