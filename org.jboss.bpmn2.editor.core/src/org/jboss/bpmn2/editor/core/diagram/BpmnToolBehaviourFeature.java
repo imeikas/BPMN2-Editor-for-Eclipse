@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.graphiti.dt.IDiagramTypeProvider;
 import org.eclipse.graphiti.features.FeatureCheckerAdapter;
 import org.eclipse.graphiti.features.ICreateConnectionFeature;
@@ -33,8 +35,17 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 	@Override
 	public IPaletteCompartmentEntry[] getPalette() {
 
-		String projectName = getDiagramTypeProvider().getDiagram().eResource().getURI().segment(1);
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+		EList<Resource> resources = getDiagramTypeProvider().getDiagram().eResource().getResourceSet().getResources();
+		IProject project = null;
+		for (Resource resource : resources) {
+			if (resource.getURI().segmentCount() > 1) {
+				String projectName = resource.getURI().segment(1);
+				project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+				if (project != null) {
+					break;
+				}
+			}
+		}
 
 		Bpmn2Preferences pref = Bpmn2Preferences.getPreferences(project);
 
@@ -45,14 +56,14 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 		// add new compartment at the end of the existing compartments
 		PaletteCompartmentEntry compartmentEntry = new PaletteCompartmentEntry("Flow Objects", null);
 		ret.add(compartmentEntry);
-		
+
 		// add all create-features to the new stack-entry
 		IFeatureProvider featureProvider = getFeatureProvider();
 		ICreateFeature[] createFeatures = featureProvider.getCreateFeatures();
 		for (ICreateFeature cf : createFeatures) {
 			if (pref.isEnabled(FeatureMap.getElement(cf))) {
 				ObjectCreationToolEntry objectCreationToolEntry = new ObjectCreationToolEntry(cf.getCreateName(),
-				        cf.getCreateDescription(), cf.getCreateImageId(), cf.getCreateLargeImageId(), cf);
+						cf.getCreateDescription(), cf.getCreateImageId(), cf.getCreateLargeImageId(), cf);
 				compartmentEntry.addToolEntry(objectCreationToolEntry);
 			}
 		}
@@ -64,8 +75,8 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 		for (ICreateConnectionFeature cf : createConnectionFeatures) {
 			if (pref.isEnabled(FeatureMap.getElement(cf))) {
 				ConnectionCreationToolEntry connectionCreationToolEntry = new ConnectionCreationToolEntry(
-				        cf.getCreateName(), cf.getCreateDescription(), cf.getCreateImageId(),
-				        cf.getCreateLargeImageId());
+						cf.getCreateName(), cf.getCreateDescription(), cf.getCreateImageId(),
+						cf.getCreateLargeImageId());
 				connectionCreationToolEntry.addCreateConnectionFeature(cf);
 				compartmentEntry.addToolEntry(connectionCreationToolEntry);
 			}
@@ -87,20 +98,20 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 			}
 		};
 	}
-	
+
 	@Override
 	public GraphicsAlgorithm[] getClickArea(PictogramElement pe) {
-	    if(ActivitySelectionBehavior.canApplyTo(pe)) {
-	    	return ActivitySelectionBehavior.getClickArea(pe);
-	    }
-	    return super.getClickArea(pe);
+		if (ActivitySelectionBehavior.canApplyTo(pe)) {
+			return ActivitySelectionBehavior.getClickArea(pe);
+		}
+		return super.getClickArea(pe);
 	}
-	
+
 	@Override
 	public GraphicsAlgorithm getSelectionBorder(PictogramElement pe) {
-	    if(ActivitySelectionBehavior.canApplyTo(pe)) {
-	    	return ActivitySelectionBehavior.getSelectionBorder(pe);
-	    }
-	    return super.getSelectionBorder(pe);
+		if (ActivitySelectionBehavior.canApplyTo(pe)) {
+			return ActivitySelectionBehavior.getSelectionBorder(pe);
+		}
+		return super.getSelectionBorder(pe);
 	}
 }
