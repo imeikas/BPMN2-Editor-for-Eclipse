@@ -282,15 +282,11 @@ public class DIImport {
 				setAnchorLocation(targetElement, targetAnchor, waypoint.get(size));
 
 				for (int i = 1; i < size; i++) {
-					addBendPoint(freeForm, waypoint.get(i));
+					DIUtils.addBendPoint(freeForm, waypoint.get(i));
 				}
 			}
 			featureProvider.link(connection, new Object[] { bpmnEdge.getBpmnElement(), bpmnEdge });
 		}
-	}
-
-	private void addBendPoint(FreeFormConnectionImpl freeForm, Point point) {
-		freeForm.getBendpoints().add(gaService.createPoint((int) point.getX(), (int) point.getY()));
 	}
 
 	private FixPointAnchor createAnchor(PictogramElement elem) {
