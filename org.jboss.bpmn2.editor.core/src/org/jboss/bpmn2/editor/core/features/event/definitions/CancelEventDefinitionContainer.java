@@ -16,64 +16,63 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
-import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
 public class CancelEventDefinitionContainer extends EventDefinitionFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof CancelEventDefinition;
-	}
+    public boolean canApplyTo(BaseElement element) {
+	    return element instanceof CancelEventDefinition;
+    }
 
 	@Override
-	public ICreateFeature getCreateFeature(IFeatureProvider fp) {
-		return new CreateCancelEventDefinition(fp);
-	}
+    public ICreateFeature getCreateFeature(IFeatureProvider fp) {
+	    return new CreateCancelEventDefinition(fp);
+    }
 
 	@Override
-	protected Shape drawForStart(DecorationAlgorithm algorithm, ContainerShape shape) {
+    protected Shape drawForStart(DecorationAlgorithm algorithm, ContainerShape shape) {
 		return null; // NOT ALLOWED ACCORDING TO SPEC
 	}
 
 	@Override
-	protected Shape drawForEnd(DecorationAlgorithm algorithm, ContainerShape shape) {
+    protected Shape drawForEnd(DecorationAlgorithm algorithm, ContainerShape shape) {
 		return drawFilled(algorithm, shape);
-	}
+    }
 
 	@Override
-	protected Shape drawForThrow(DecorationAlgorithm algorithm, ContainerShape shape) {
+    protected Shape drawForThrow(DecorationAlgorithm algorithm, ContainerShape shape) {
 		return null; // NOT ALLOWED ACCORDING TO SPEC
-	}
+    }
 
 	@Override
-	protected Shape drawForCatch(DecorationAlgorithm algorithm, ContainerShape shape) {
+    protected Shape drawForCatch(DecorationAlgorithm algorithm, ContainerShape shape) {
 		return null; // NOT ALLOWED ACCORDING TO SPEC
-	}
-
+    }
+	
 	@Override
-	protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
-		return draw(algorithm, shape);
-	}
-
+    protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
+	    return draw(algorithm, shape);
+    }
+	
 	private Shape draw(DecorationAlgorithm algorithm, ContainerShape shape) {
-		Shape cancelShape = Graphiti.getPeService().createShape(shape, false);
+	    Shape cancelShape = Graphiti.getPeService().createShape(shape, false);
 		Polygon link = ShapeUtil.createEventCancel(cancelShape);
 		link.setFilled(false);
 		link.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		return cancelShape;
-	}
-
+    }
+	
 	private Shape drawFilled(DecorationAlgorithm algorithm, ContainerShape shape) {
-		Shape cancelShape = Graphiti.getPeService().createShape(shape, false);
+	    Shape cancelShape = Graphiti.getPeService().createShape(shape, false);
 		Polygon link = ShapeUtil.createEventCancel(cancelShape);
 		link.setFilled(true);
 		link.setBackground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		link.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		return cancelShape;
-	}
-
+    }
+	
 	public static class CreateCancelEventDefinition extends CreateEventDefinition {
 
 		public CreateCancelEventDefinition(IFeatureProvider fp) {
@@ -82,21 +81,19 @@ public class CancelEventDefinitionContainer extends EventDefinitionFeatureContai
 
 		@Override
 		public boolean canCreate(ICreateContext context) {
-			if (!super.canCreate(context)) {
+			if (!super.canCreate(context))
 				return false;
-			}
 
-			Event e = (Event) BusinessObjectUtil.getFirstElementOfType(context.getTargetContainer(), Event.class);
-
-			if (e instanceof BoundaryEvent) {
+			Event e = (Event) getBusinessObjectForPictogramElement(context.getTargetContainer());
+			
+			if(e instanceof BoundaryEvent) {
 				BoundaryEvent be = (BoundaryEvent) e;
 				return be.isCancelActivity();
 			}
 
-			if (e instanceof CatchEvent || e instanceof IntermediateThrowEvent) {
+			if (e instanceof CatchEvent || e instanceof IntermediateThrowEvent)
 				return false;
-			}
-
+			
 			return true;
 		}
 

@@ -26,6 +26,7 @@ import org.eclipse.graphiti.features.context.ILayoutContext;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.features.context.IUpdateContext;
+import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
 import org.eclipse.graphiti.features.impl.AbstractCreateFeature;
 import org.eclipse.graphiti.features.impl.AbstractLayoutFeature;
 import org.eclipse.graphiti.features.impl.AbstractMoveShapeFeature;
@@ -49,18 +50,16 @@ import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
-import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
-import org.jboss.bpmn2.editor.core.features.task.AbstractBpmnAddFeature;
 
 public class BoundaryEventFeatureContainer implements FeatureContainer {
 
 	private static String cancelKey = "cancel.activity";
 	private static String boundaryDistance = "boundary.distance";
-
+	
 	@Override
 	public boolean canApplyTo(BaseElement element) {
 		return element instanceof BoundaryEvent;
@@ -83,18 +82,18 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 			@Override
 			public IReason updateNeeded(IUpdateContext context) {
 				Property cancelProperty = Graphiti.getPeService().getProperty(context.getPictogramElement(), cancelKey);
-				BoundaryEvent event = (BoundaryEvent) BusinessObjectUtil.getFirstElementOfType(
-						context.getPictogramElement(), BoundaryEvent.class);
+				BoundaryEvent event = (BoundaryEvent) getBusinessObjectForPictogramElement(context
+				        .getPictogramElement());
 				boolean changed = Boolean.parseBoolean(cancelProperty.getValue()) != event.isCancelActivity();
 				IReason reason = changed ? Reason.createTrueReason("Boundary type changed") : Reason
-						.createFalseReason();
+				        .createFalseReason();
 				return reason;
 			}
 
 			@Override
 			public boolean update(IUpdateContext context) {
-				BoundaryEvent event = (BoundaryEvent) BusinessObjectUtil.getFirstElementOfType(
-						context.getPictogramElement(), BoundaryEvent.class);
+				BoundaryEvent event = (BoundaryEvent) getBusinessObjectForPictogramElement(context
+				        .getPictogramElement());
 
 				boolean canUpdate = true;
 
@@ -103,19 +102,18 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 				if (event.isCancelActivity() == false) {
 					for (EventDefinition d : definitions) {
 						if (d instanceof ErrorEventDefinition || d instanceof CancelEventDefinition
-								|| d instanceof CompensateEventDefinition) {
+						        || d instanceof CompensateEventDefinition) {
 							canUpdate = false;
 							break;
 						}
 					}
 				}
 
-				if (canUpdate == false) {
+				if (canUpdate == false)
 					return false;
-				}
 
 				Graphiti.getPeService().setPropertyValue(context.getPictogramElement(), cancelKey,
-						Boolean.toString(event.isCancelActivity()));
+				        Boolean.toString(event.isCancelActivity()));
 
 				Ellipse ellipse = (Ellipse) context.getPictogramElement().getGraphicsAlgorithm();
 				Ellipse innerEllipse = (Ellipse) ellipse.getGraphicsAlgorithmChildren().get(0);
@@ -129,7 +127,7 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 
 			@Override
 			public boolean canUpdate(IUpdateContext context) {
-				return BusinessObjectUtil.containsElementOfType(context.getPictogramElement(), BoundaryEvent.class);
+				return getBusinessObjectForPictogramElement(context.getPictogramElement()) instanceof BoundaryEvent;
 			}
 		};
 	}
@@ -139,7 +137,7 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 		protected FeatureSupport support = new FeatureSupport() {
 			@Override
 			public Object getBusinessObject(PictogramElement element) {
-				return BusinessObjectUtil.getFirstElementOfType(element, BaseElement.class);
+				return getBusinessObjectForPictogramElement(element);
 			}
 		};
 
@@ -149,23 +147,21 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 
 		@Override
 		public boolean canCreate(ICreateContext context) {
-			return BusinessObjectUtil.containsElementOfType(context.getTargetContainer(), BoundaryEvent.class);
+			Object o = getBusinessObjectForPictogramElement(context.getTargetContainer());
+			return o != null && o instanceof Activity;
 		}
 
 		@Override
 		public Object[] create(ICreateContext context) {
 			BoundaryEvent event = null;
 			try {
-				Activity activity = (Activity) BusinessObjectUtil.getFirstElementOfType(context.getTargetContainer(),
-						Activity.class);
+				Activity activity = (Activity) getBusinessObjectForPictogramElement(context.getTargetContainer());
 				ModelHandler handler = support.getModelHanderInstance(getDiagram());
 				event = ModelHandler.FACTORY.createBoundaryEvent();
 				event.setAttachedToRef(activity);
 				event.setName("Boundary event");
 				event.setCancelActivity(true); // by default is interrupting
-				handler.addFlowElement(
-						BusinessObjectUtil.getFirstElementOfType(context.getTargetContainer(), BaseElement.class),
-						event);
+				handler.addFlowElement(getBusinessObjectForPictogramElement(context.getTargetContainer()), event);
 			} catch (IOException e) {
 				Activator.logError(e);
 			}
@@ -184,7 +180,7 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 		}
 	}
 
-	private class AddBoundaryEvent extends AbstractBpmnAddFeature {
+	private class AddBoundaryEvent extends AbstractAddShapeFeature {
 
 		public AddBoundaryEvent(IFeatureProvider fp) {
 			super(fp);
@@ -192,10 +188,9 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 
 		@Override
 		public boolean canAdd(IAddContext context) {
-			if (!(context.getNewObject() instanceof BoundaryEvent)) {
+			if (!(context.getNewObject() instanceof BoundaryEvent))
 				return false;
-			}
-			Object bo = BusinessObjectUtil.getFirstElementOfType(context.getTargetContainer(), BaseElement.class);
+			Object bo = getBusinessObjectForPictogramElement(context.getTargetContainer());
 			return bo != null && bo instanceof Activity;
 		}
 
@@ -210,21 +205,20 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 			BoundaryEvent event = (BoundaryEvent) context.getNewObject();
 
 			ContainerShape containerShape = peService.createContainerShape(context.getTargetContainer(), true);
-
+			
 			String distanceProp = peService.getPropertyValue(context.getTargetContainer(), boundaryDistance);
 			int x = 5;
-			if (distanceProp != null) {
+			if(distanceProp != null) {
 				x = Integer.parseInt(distanceProp);
 			}
-
+			
 			int y = ga.getHeight() - ShapeUtil.EVENT_SIZE / 2;
 
 			Ellipse ellipse = gaService.createEllipse(containerShape);
 			gaService.setLocationAndSize(ellipse, x, y, ShapeUtil.EVENT_SIZE, ShapeUtil.EVENT_SIZE);
 
-			peService.setPropertyValue(context.getTargetContainer(), boundaryDistance,
-					Integer.toString(x + ShapeUtil.EVENT_SIZE + 5));
-
+			peService.setPropertyValue(context.getTargetContainer(), boundaryDistance, Integer.toString(x + ShapeUtil.EVENT_SIZE + 5));
+			
 			Style style = StyleUtil.getStyleForClass(getDiagram());
 			ellipse.setStyle(style);
 
@@ -234,7 +228,7 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 			Ellipse circle = ShapeUtil.createIntermediateEventCircle(ellipse);
 			circle.setStyle(style);
 
-			createDIShape(containerShape, event, ShapeUtil.EVENT_SIZE, ShapeUtil.EVENT_SIZE, x, y);
+			link(containerShape, event);
 
 			ChopboxAnchor anchor = peService.createChopboxAnchor(containerShape);
 			anchor.setReferencedGraphicsAlgorithm(ellipse);
@@ -257,12 +251,12 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 	@Override
 	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
 		return new AbstractLayoutFeature(fp) {
-
+			
 			@Override
 			public boolean canLayout(ILayoutContext context) {
 				return true;
 			}
-
+			
 			@Override
 			public boolean layout(ILayoutContext context) {
 				PictogramElement element = context.getPictogramElement();
@@ -270,14 +264,14 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 
 				ContainerShape parentContainer = (ContainerShape) element.eContainer();
 				GraphicsAlgorithm parentGa = parentContainer.getGraphicsAlgorithm();
-
+				
 				int y = parentGa.getHeight() - ShapeUtil.EVENT_SIZE;
-
-				if (ga.getY() != y) {
+				
+				if(ga.getY() != y) {
 					Graphiti.getGaService().setLocation(ga, ga.getX(), y);
 					return true;
 				}
-
+				
 				return false;
 			}
 		};

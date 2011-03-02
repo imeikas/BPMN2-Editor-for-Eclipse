@@ -2,7 +2,6 @@ package org.jboss.bpmn2.editor.core.features.artifact;
 
 import java.io.IOException;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.TextAnnotation;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
@@ -12,15 +11,14 @@ import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
-import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 
 public class CreateTextAnnotationFeature extends AbstractCreateFeature {
 
-	private final FeatureSupport support = new FeatureSupport() {
+	private FeatureSupport support = new FeatureSupport() {
 		@Override
 		public Object getBusinessObject(PictogramElement element) {
-			return BusinessObjectUtil.getFirstElementOfType(element, BaseElement.class);
+			return getBusinessObjectForPictogramElement(element);
 		}
 	};
 
@@ -42,7 +40,7 @@ public class CreateTextAnnotationFeature extends AbstractCreateFeature {
 		try {
 			ModelHandler mh = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
 			annotation = mh.addArtifact(support.getTargetParticipant(context, mh),
-					ModelHandler.FACTORY.createTextAnnotation());
+			        ModelHandler.FACTORY.createTextAnnotation());
 			annotation.setText("Enter your comment here");
 		} catch (IOException e) {
 			Activator.logError(e);

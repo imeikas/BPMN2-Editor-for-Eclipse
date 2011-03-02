@@ -20,7 +20,6 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
-import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 
 public class StartEventFeatureContainer extends AbstractEventFeatureContainer {
@@ -84,23 +83,23 @@ public class StartEventFeatureContainer extends AbstractEventFeatureContainer {
 
 		@Override
 		public boolean canUpdate(IUpdateContext context) {
-			return BusinessObjectUtil.containsElementOfType(context.getPictogramElement(), StartEvent.class);
+			Object o = getBusinessObjectForPictogramElement(context.getPictogramElement());
+			return o != null && o instanceof StartEvent;
 		}
 
 		@Override
 		public IReason updateNeeded(IUpdateContext context) {
 			IPeService peService = Graphiti.getPeService();
 			PictogramElement element = context.getPictogramElement();
-
+			
 			String prop = peService.getPropertyValue(element, INTERRUPTING);
-			if (prop == null) {
+			if(prop == null) {
 				return Reason.createFalseReason();
 			}
-
-			StartEvent event = (StartEvent) BusinessObjectUtil.getFirstElementOfType(element, StartEvent.class);
+			
+			StartEvent event = (StartEvent) getBusinessObjectForPictogramElement(element);
 			boolean interrupting = Boolean.parseBoolean(prop);
-			IReason reason = event.isIsInterrupting() == interrupting ? Reason.createFalseReason() : Reason
-					.createTrueReason();
+			IReason reason = event.isIsInterrupting() == interrupting ? Reason.createFalseReason() : Reason.createTrueReason();
 			return reason;
 		}
 
@@ -108,11 +107,10 @@ public class StartEventFeatureContainer extends AbstractEventFeatureContainer {
 		public boolean update(IUpdateContext context) {
 			IPeService peService = Graphiti.getPeService();
 			ContainerShape container = (ContainerShape) context.getPictogramElement();
-			StartEvent event = (StartEvent) BusinessObjectUtil.getFirstElementOfType(container, StartEvent.class);
-			;
+			StartEvent event = (StartEvent) getBusinessObjectForPictogramElement(container);
 
 			Ellipse ellipse = (Ellipse) peService.getAllContainedShapes(container).iterator().next()
-					.getGraphicsAlgorithm();
+			        .getGraphicsAlgorithm();
 			LineStyle style = event.isIsInterrupting() ? LineStyle.SOLID : LineStyle.DASH;
 			ellipse.setLineStyle(style);
 

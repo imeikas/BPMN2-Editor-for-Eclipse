@@ -11,7 +11,6 @@ import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
 import org.jboss.bpmn2.editor.core.features.AbstractBaseElementUpdateFeature;
-import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.DirectEditFlowElementFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.MoveFlowNodeFeature;
@@ -24,7 +23,7 @@ public abstract class AbstractEventFeatureContainer implements FeatureContainer 
 
 			@Override
 			public boolean canUpdate(IUpdateContext context) {
-				Object o = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(), BaseElement.class);
+				Object o = getBusinessObjectForPictogramElement(context.getPictogramElement());
 				return o != null && o instanceof BaseElement && canApplyTo((BaseElement) o);
 			}
 		};

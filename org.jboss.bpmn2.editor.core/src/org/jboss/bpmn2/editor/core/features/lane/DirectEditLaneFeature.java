@@ -8,34 +8,33 @@ import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Text;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
-import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 
 public class DirectEditLaneFeature extends AbstractDirectEditingFeature {
 
 	public DirectEditLaneFeature(IFeatureProvider fp) {
-		super(fp);
-	}
+	    super(fp);
+    }
 
 	@Override
-	public int getEditingType() {
+    public int getEditingType() {
 		return TYPE_TEXT;
-	}
+    }
 
 	@Override
-	public String getInitialValue(IDirectEditingContext context) {
+    public String getInitialValue(IDirectEditingContext context) {
 		PictogramElement pe = context.getPictogramElement();
-		Lane lane = (Lane) BusinessObjectUtil.getFirstElementOfType(pe, Lane.class);
+		Lane lane = (Lane) getBusinessObjectForPictogramElement(pe);
 		return lane.getName();
-	}
+    }
 
 	@Override
-	public void setValue(String value, IDirectEditingContext context) {
+    public void setValue(String value, IDirectEditingContext context) {
 		PictogramElement pe = context.getPictogramElement();
-		Lane lane = (Lane) BusinessObjectUtil.getFirstElementOfType(pe, Lane.class);
+		Lane lane = (Lane) getBusinessObjectForPictogramElement(pe);
 		lane.setName(value);
 		updatePictogramElement(((Shape) pe).getContainer());
-	}
-
+    }
+	
 	@Override
 	public String checkValueValid(String value, IDirectEditingContext context) {
 		if (value.length() < 1) {
@@ -49,9 +48,10 @@ public class DirectEditLaneFeature extends AbstractDirectEditingFeature {
 	@Override
 	public boolean canDirectEdit(IDirectEditingContext context) {
 		PictogramElement pe = context.getPictogramElement();
-		Object bo = BusinessObjectUtil.getFirstElementOfType(pe, Lane.class);
+		Object bo = getBusinessObjectForPictogramElement(pe);
 		GraphicsAlgorithm ga = context.getGraphicsAlgorithm();
 		return bo instanceof Lane && ga instanceof Text;
 	}
-
+	
+	
 }

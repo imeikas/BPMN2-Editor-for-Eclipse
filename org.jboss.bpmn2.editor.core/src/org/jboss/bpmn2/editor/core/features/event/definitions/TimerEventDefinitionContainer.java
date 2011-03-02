@@ -13,7 +13,6 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
-import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 
 public class TimerEventDefinitionContainer extends EventDefinitionFeatureContainer {
@@ -37,21 +36,21 @@ public class TimerEventDefinitionContainer extends EventDefinitionFeatureContain
 	protected Shape drawForEnd(DecorationAlgorithm algorithm, ContainerShape shape) {
 		return draw(shape);
 	}
+	
+	@Override
+    protected Shape drawForThrow(DecorationAlgorithm decorationAlgorithm, ContainerShape shape) {
+	    return null; // NOT ALLOWED ACCORDING TO SPEC
+    }
 
 	@Override
-	protected Shape drawForThrow(DecorationAlgorithm decorationAlgorithm, ContainerShape shape) {
-		return null; // NOT ALLOWED ACCORDING TO SPEC
-	}
-
+    protected Shape drawForCatch(DecorationAlgorithm decorationAlgorithm, ContainerShape shape) {
+	    return draw(shape);
+    }
+	
 	@Override
-	protected Shape drawForCatch(DecorationAlgorithm decorationAlgorithm, ContainerShape shape) {
-		return draw(shape);
-	}
-
-	@Override
-	protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
-		return draw(shape);
-	}
+    protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
+	    return draw(shape);
+    }
 
 	private Shape draw(ContainerShape shape) {
 		Shape timerShape = Graphiti.getPeService().createShape(shape, false);
@@ -64,17 +63,15 @@ public class TimerEventDefinitionContainer extends EventDefinitionFeatureContain
 		public CreateTimerEventDefinition(IFeatureProvider fp) {
 			super(fp, "Timer Definition", "Adds time condition to event");
 		}
-
+		
 		@Override
 		public boolean canCreate(ICreateContext context) {
-			if (!super.canCreate(context)) {
+			if (!super.canCreate(context))
 				return false;
-			}
-
-			Event e = (Event) BusinessObjectUtil.getFirstElementOfType(context.getTargetContainer(), Event.class);
-			if (e instanceof ThrowEvent) {
+			
+			Event e = (Event) getBusinessObjectForPictogramElement(context.getTargetContainer());
+			if (e instanceof ThrowEvent)
 				return false;
-			}
 
 			return true;
 		}

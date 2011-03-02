@@ -6,6 +6,8 @@ import org.eclipse.bpmn2.BoundaryEvent;
 import org.eclipse.bpmn2.Task;
 import org.eclipse.bpmn2.di.BPMNShape;
 import org.eclipse.dd.dc.Bounds;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ILayoutContext;
 import org.eclipse.graphiti.features.impl.AbstractLayoutFeature;
@@ -18,7 +20,6 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
-import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 
 public class LayoutTaskFeature extends AbstractLayoutFeature {
 
@@ -32,7 +33,8 @@ public class LayoutTaskFeature extends AbstractLayoutFeature {
 		if (!(pictoElem instanceof ContainerShape)) {
 			return false;
 		}
-		return BusinessObjectUtil.containsElementOfType(pictoElem, Task.class);
+		EList<EObject> businessObjs = pictoElem.getLink().getBusinessObjects();
+		return businessObjs.size() == 1 && businessObjs.get(0) instanceof Task;
 	}
 
 	@Override
@@ -69,7 +71,7 @@ public class LayoutTaskFeature extends AbstractLayoutFeature {
 					bounds.setWidth(newWidth);
 					bounds.setHeight(newHeight);
 				} else if (bo instanceof BoundaryEvent) {
-					layoutPictogramElement(shape);
+					// layoutPictogramElement(shape);
 				}
 			}
 

@@ -3,7 +3,6 @@ package org.jboss.bpmn2.editor.core.features.lane;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.LaneSet;
@@ -18,7 +17,6 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
-import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 
 public class MoveFromDiagramToLaneFeature extends MoveLaneFeature {
 
@@ -34,9 +32,8 @@ public class MoveFromDiagramToLaneFeature extends MoveLaneFeature {
 		Lane targetLane = getTargetLane(context);
 		boolean targetHasFlowNodeRefs = targetLane.getFlowNodeRefs().size() > 0;
 
-		if (!moveableHasFlowNodes && !targetHasFlowNodeRefs) {
+		if (!moveableHasFlowNodes && !targetHasFlowNodeRefs)
 			return true;
-		}
 
 		return moveableHasFlowNodes ^ targetHasFlowNodeRefs;
 	}
@@ -99,7 +96,7 @@ public class MoveFromDiagramToLaneFeature extends MoveLaneFeature {
 		List<FlowNode> nodes = lane.getFlowNodeRefs();
 		List<Shape> shapes = new ArrayList<Shape>();
 		for (Shape s : context.getTargetContainer().getChildren()) {
-			Object bo = BusinessObjectUtil.getFirstElementOfType(s, BaseElement.class);
+			Object bo = getBusinessObjectForPictogramElement(s);
 			if (bo != null && nodes.contains(bo)) {
 				shapes.add(s);
 			}
@@ -109,12 +106,12 @@ public class MoveFromDiagramToLaneFeature extends MoveLaneFeature {
 
 	private int getNumberOfLanes(ITargetContext context) {
 		ContainerShape targetContainer = context.getTargetContainer();
-		Lane lane = (Lane) BusinessObjectUtil.getFirstElementOfType(targetContainer, Lane.class);
+		Lane lane = (Lane) getBusinessObjectForPictogramElement(targetContainer);
 		return lane.getChildLaneSet().getLanes().size();
 	}
 
 	private Lane getTargetLane(IMoveShapeContext context) {
 		ContainerShape targetContainer = context.getTargetContainer();
-		return (Lane) BusinessObjectUtil.getFirstElementOfType(targetContainer, Lane.class);
+		return (Lane) getBusinessObjectForPictogramElement(targetContainer);
 	}
 }

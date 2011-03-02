@@ -15,12 +15,10 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.mm.algorithms.Polygon;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
-import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
-import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
@@ -86,11 +84,10 @@ public class ErrorEventDefinitionContainer extends EventDefinitionFeatureContain
 
 		@Override
 		public boolean canCreate(ICreateContext context) {
-			if (!super.canCreate(context)) {
+			if (!super.canCreate(context))
 				return false;
-			}
 
-			Event e = (Event) BusinessObjectUtil.getFirstElementOfType(context.getTargetContainer(), Event.class);
+			Event e = (Event) getBusinessObjectForPictogramElement(context.getTargetContainer());
 
 			if (e instanceof BoundaryEvent) {
 				BoundaryEvent be = (BoundaryEvent) e;
@@ -104,16 +101,15 @@ public class ErrorEventDefinitionContainer extends EventDefinitionFeatureContain
 
 				EObject container = context.getTargetContainer().eContainer();
 				if (container instanceof Shape) {
-					Object o = BusinessObjectUtil.getFirstElementOfType((PictogramElement) container, Event.class);
+					Object o = getBusinessObjectForPictogramElement((Shape) container);
 					return o != null && o instanceof SubProcess;
 				}
 
 				return false;
 			}
 
-			if (e instanceof CatchEvent || e instanceof IntermediateThrowEvent) {
+			if (e instanceof CatchEvent || e instanceof IntermediateThrowEvent)
 				return false;
-			}
 
 			return true;
 		}

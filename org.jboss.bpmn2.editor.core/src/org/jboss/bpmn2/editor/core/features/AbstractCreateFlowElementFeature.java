@@ -2,7 +2,6 @@ package org.jboss.bpmn2.editor.core.features;
 
 import java.io.IOException;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.Lane;
@@ -18,7 +17,7 @@ public abstract class AbstractCreateFlowElementFeature<T extends FlowElement> ex
 	protected FeatureSupport support = new FeatureSupport() {
 		@Override
 		public Object getBusinessObject(PictogramElement element) {
-			return BusinessObjectUtil.getFirstElementOfType(element, FlowElement.class);
+			return getBusinessObjectForPictogramElement(element);
 		}
 	};
 
@@ -41,14 +40,13 @@ public abstract class AbstractCreateFlowElementFeature<T extends FlowElement> ex
 		try {
 			ModelHandler handler = support.getModelHanderInstance(getDiagram());
 			element = createFlowElement(context);
-
+			
 			if (support.isTargetLane(context) && element instanceof FlowNode) {
 				((FlowNode) element).getLanes().add(
-						(Lane) BusinessObjectUtil.getFirstElementOfType(context.getTargetContainer(), Lane.class));
+				        (Lane) getBusinessObjectForPictogramElement(context.getTargetContainer()));
 			}
-
-			handler.addFlowElement(
-					BusinessObjectUtil.getFirstElementOfType(context.getTargetContainer(), BaseElement.class), element);
+			
+			handler.addFlowElement(getBusinessObjectForPictogramElement(context.getTargetContainer()), element);
 		} catch (IOException e) {
 			Activator.logError(e);
 		}

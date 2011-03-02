@@ -14,7 +14,6 @@ import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
-import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 
 public class CreateAssociationFeature extends AbstractCreateConnectionFeature {
 
@@ -33,13 +32,13 @@ public class CreateAssociationFeature extends AbstractCreateConnectionFeature {
 	public Connection create(ICreateConnectionContext context) {
 		BaseElement source = getBaseElement(context.getSourceAnchor());
 		BaseElement target = getBaseElement(context.getTargetAnchor());
-
+		
 		if (source != null && target != null) {
 			try {
 				ModelHandler mh = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
 				Association association = mh.createAssociation(source, target);
 				AddConnectionContext addContext = new AddConnectionContext(context.getSourceAnchor(),
-						context.getTargetAnchor());
+				        context.getTargetAnchor());
 				addContext.setNewObject(association);
 				return (Connection) getFeatureProvider().addIfPossible(addContext);
 			} catch (IOException e) {
@@ -56,21 +55,21 @@ public class CreateAssociationFeature extends AbstractCreateConnectionFeature {
 
 	private BaseElement getBaseElement(Anchor anchor) {
 		if (anchor != null) {
-			Object o = BusinessObjectUtil.getFirstElementOfType(anchor.getParent(), BaseElement.class);
+			Object o = getBusinessObjectForPictogramElement(anchor.getParent());
 			if (o instanceof BaseElement) {
 				return (BaseElement) o;
 			}
 		}
 		return null;
 	}
-
+	
 	@Override
 	public String getCreateImageId() {
-		return ImageProvider.IMG_16_ASSOCIATION;
+	    return ImageProvider.IMG_16_ASSOCIATION;
 	}
-
+	
 	@Override
 	public String getCreateLargeImageId() {
-		return getCreateImageId(); // FIXME
+	    return getCreateImageId(); // FIXME
 	}
 }

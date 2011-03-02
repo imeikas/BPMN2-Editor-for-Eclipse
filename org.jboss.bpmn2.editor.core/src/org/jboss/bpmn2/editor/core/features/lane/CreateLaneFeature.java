@@ -2,7 +2,6 @@ package org.jboss.bpmn2.editor.core.features.lane;
 
 import java.io.IOException;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
@@ -12,17 +11,16 @@ import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
-import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 
 public class CreateLaneFeature extends AbstractCreateFeature {
 
 	private static int index = 1;
 
-	private final FeatureSupport support = new FeatureSupport() {
+	private FeatureSupport support = new FeatureSupport() {
 		@Override
 		public Object getBusinessObject(PictogramElement element) {
-			return BusinessObjectUtil.getFirstElementOfType(element, BaseElement.class);
+			return getBusinessObjectForPictogramElement(element);
 		}
 	};
 
@@ -44,7 +42,7 @@ public class CreateLaneFeature extends AbstractCreateFeature {
 		Lane lane = null;
 		try {
 			ModelHandler mh = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
-			Object o = BusinessObjectUtil.getFirstElementOfType(context.getTargetContainer(), BaseElement.class);
+			Object o = getBusinessObjectForPictogramElement(context.getTargetContainer());
 			if (support.isTargetLane(context)) {
 				Lane targetLane = (Lane) o;
 				lane = mh.createLane(targetLane);

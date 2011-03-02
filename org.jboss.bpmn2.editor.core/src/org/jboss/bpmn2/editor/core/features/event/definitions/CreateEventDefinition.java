@@ -5,7 +5,6 @@ import org.eclipse.bpmn2.EventDefinition;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.features.impl.AbstractCreateFeature;
-import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.event.definitions.EventDefinitionSupport.EventWithDefinitions;
 
 public abstract class CreateEventDefinition extends AbstractCreateFeature {
@@ -18,12 +17,13 @@ public abstract class CreateEventDefinition extends AbstractCreateFeature {
 
 	@Override
 	public boolean canCreate(ICreateContext context) {
-		return BusinessObjectUtil.containsElementOfType(context.getTargetContainer(), Event.class);
+		Object bo = getBusinessObjectForPictogramElement(context.getTargetContainer());
+		return bo != null && bo instanceof Event;
 	}
 
 	@Override
 	public Object[] create(ICreateContext context) {
-		Event e = (Event) BusinessObjectUtil.getFirstElementOfType(context.getTargetContainer(), Event.class);
+		Event e = (Event) getBusinessObjectForPictogramElement(context.getTargetContainer());
 		EventWithDefinitions event = support.create(e);
 		EventDefinition definition = createEventDefinition(context);
 		event.getEventDefinitions().add(definition);
