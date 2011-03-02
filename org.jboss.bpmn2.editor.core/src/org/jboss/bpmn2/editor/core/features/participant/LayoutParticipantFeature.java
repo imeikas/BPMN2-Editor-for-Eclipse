@@ -2,9 +2,8 @@ package org.jboss.bpmn2.editor.core.features.participant;
 
 import java.util.Iterator;
 
+import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Participant;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.datatypes.IDimension;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ILayoutContext;
@@ -13,11 +12,11 @@ import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.eclipse.graphiti.mm.algorithms.styles.Point;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
-import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.di.DIUtils;
+import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 
 public class LayoutParticipantFeature extends AbstractLayoutFeature {
 
@@ -27,12 +26,8 @@ public class LayoutParticipantFeature extends AbstractLayoutFeature {
 
 	@Override
 	public boolean canLayout(ILayoutContext context) {
-		PictogramElement pictoElem = context.getPictogramElement();
-		if (!(pictoElem instanceof ContainerShape)) {
-			return false;
-		}
-		EList<EObject> businessObjs = pictoElem.getLink().getBusinessObjects();
-		return businessObjs.size() == 1 && businessObjs.get(0) instanceof Participant;
+		Object bo = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(), BaseElement.class);
+		return bo != null && bo instanceof Participant;
 	}
 
 	@Override
