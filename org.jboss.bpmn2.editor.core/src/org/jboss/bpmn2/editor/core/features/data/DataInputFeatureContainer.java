@@ -2,6 +2,7 @@ package org.jboss.bpmn2.editor.core.features.data;
 
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.DataInput;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -30,7 +31,7 @@ public class DataInputFeatureContainer extends AbstractDataFeatureContainer {
 			protected boolean isSupportCollectionMarkers() {
 				return false;
 			}
-			
+
 			@Override
 			protected void decorate(Polygon p) {
 				Polygon arrow = ShapeUtil.createDataArrow(p);
@@ -50,6 +51,7 @@ public class DataInputFeatureContainer extends AbstractDataFeatureContainer {
 		@Override
 		DataInput add(Object target, ModelHandler handler) {
 			DataInput dataInput = ModelHandler.FACTORY.createDataInput();
+			dataInput.setId(EcoreUtil.generateUUID());
 			dataInput.setName("Data Input");
 			return handler.addDataInput(target, dataInput);
 		}

@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.DataStore;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IDirectEditingFeature;
@@ -71,7 +72,7 @@ public class DataStoreFeatureContainer implements FeatureContainer {
 				gaService.setLocationAndSize(invisibleRect, context.getX(), context.getY(), width, height);
 
 				int whalf = width / 2;
-				
+
 				int[] xy = { 0, 10, whalf, 20, width, 10, width, height - 10, whalf, height, 0, height - 10 };
 				int[] bend = { 0, 0, whalf, whalf, 0, 0, 0, 0, whalf, whalf, 0, 0 };
 				Polygon polygon = gaService.createPolygon(invisibleRect, xy, bend);
@@ -79,20 +80,20 @@ public class DataStoreFeatureContainer implements FeatureContainer {
 				polygon.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 				AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
 				gaService.setRenderingStyle(polygon, gradient);
-				
-				xy = new int[] {0, 14, whalf, 24, width, 14};
-				bend = new int[] {0, 0, whalf, whalf, 0, 0};
+
+				xy = new int[] { 0, 14, whalf, 24, width, 14 };
+				bend = new int[] { 0, 0, whalf, whalf, 0, 0 };
 				Polyline line1 = gaService.createPolyline(invisibleRect, xy, bend);
 				line1.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
-				
-				xy = new int[] {0, 18, whalf, 28, width, 18};
+
+				xy = new int[] { 0, 18, whalf, 28, width, 18 };
 				Polyline line2 = gaService.createPolyline(invisibleRect, xy, bend);
 				line2.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
-				
-				xy = new int[] {0, 11, whalf, 0, width, 11};
+
+				xy = new int[] { 0, 11, whalf, 0, width, 11 };
 				Polyline lineTop = gaService.createPolyline(invisibleRect, xy, bend);
 				lineTop.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
-				
+
 				ChopboxAnchor anchor = peService.createChopboxAnchor(container);
 				anchor.setReferencedGraphicsAlgorithm(invisibleRect);
 
@@ -152,7 +153,9 @@ public class DataStoreFeatureContainer implements FeatureContainer {
 			DataStore store = null;
 			try {
 				ModelHandler handler = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
-				store = handler.addRootElement(ModelHandler.FACTORY.createDataStore());
+				DataStore dataStore = ModelHandler.FACTORY.createDataStore();
+				dataStore.setId(EcoreUtil.generateUUID());
+				store = handler.addRootElement(dataStore);
 				store.setName("Data Store");
 			} catch (IOException e) {
 				Activator.logError(e);
