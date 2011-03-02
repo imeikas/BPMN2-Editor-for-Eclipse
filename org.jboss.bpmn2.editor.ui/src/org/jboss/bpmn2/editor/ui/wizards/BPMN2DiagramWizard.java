@@ -40,6 +40,7 @@ public class BPMN2DiagramWizard extends Wizard implements INewWizard {
 	 * Adding the page to the wizard.
 	 */
 
+	@Override
 	public void addPages() {
 		page = new BPMN2DiagramWizardPage(selection);
 		addPage(page);
@@ -49,29 +50,29 @@ public class BPMN2DiagramWizard extends Wizard implements INewWizard {
 	 * This method is called when 'Finish' button is pressed in the wizard. We will create an operation and run it using
 	 * wizard as execution context.
 	 */
+	@Override
 	public boolean performFinish() {
 		final String fileName = page.getFileName();
 		final IResource container = page.getDiagramContainer();
 
 		IRunnableWithProgress op = new IRunnableWithProgress() {
+			@Override
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
 					IProject project = container.getProject();
 					IPath path = container.getProjectRelativePath();
 					IFolder folder = null;
 					BPMN2DiagramCreator factory = new BPMN2DiagramCreator();
-					if (!path.isEmpty()){
+					if (!path.isEmpty()) {
 						folder = project.getFolder(path);
 						factory.setDiagramFile(folder.getFile(fileName));
-					}else
-					{
+					} else {
 						factory.setDiagramFile(project.getFile(fileName));
 					}
 
-					factory.setProject(project);
 					factory.setDiagramFolder(folder);
 
-					factory.createExample();
+					factory.createDiagram();
 
 				} catch (CoreException e) {
 					throw new InvocationTargetException(e);
@@ -97,6 +98,7 @@ public class BPMN2DiagramWizard extends Wizard implements INewWizard {
 	 * 
 	 * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
 	 */
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		this.selection = selection;
 	}
