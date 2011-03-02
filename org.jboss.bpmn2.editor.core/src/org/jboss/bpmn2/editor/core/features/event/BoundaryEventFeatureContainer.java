@@ -273,7 +273,7 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 
 				int y = parentGa.getHeight() - ShapeUtil.EVENT_SIZE;
 
-				DIUtils.moveDIShape(getDiagram(), element, BoundaryEvent.class);
+				DIUtils.updateDIShape(getDiagram(), element, BoundaryEvent.class);
 
 				if (ga.getY() != y) {
 					Graphiti.getGaService().setLocation(ga, ga.getX(), y);

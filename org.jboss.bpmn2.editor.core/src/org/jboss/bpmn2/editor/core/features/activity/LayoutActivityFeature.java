@@ -16,6 +16,7 @@ import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
+import org.jboss.bpmn2.editor.core.di.DIUtils;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 
@@ -38,9 +39,11 @@ public class LayoutActivityFeature extends AbstractLayoutFeature {
 		ContainerShape containerShape = (ContainerShape) context.getPictogramElement();
 		GraphicsAlgorithm parentGa = containerShape.getGraphicsAlgorithm();
 
+		DIUtils.updateDIShape(getDiagram(), containerShape, Activity.class);
+
 		Iterator<Shape> iterator = Graphiti.getPeService().getAllContainedShapes(containerShape).iterator();
 		while (iterator.hasNext()) {
-			Shape shape = (Shape) iterator.next();
+			Shape shape = iterator.next();
 			GraphicsAlgorithm ga = shape.getGraphicsAlgorithm();
 			IGaService gaService = Graphiti.getGaService();
 
@@ -48,7 +51,7 @@ public class LayoutActivityFeature extends AbstractLayoutFeature {
 			int newHeight = parentGa.getHeight() - ShapeUtil.ACTIVITY_BOTTOM_PADDING;
 
 			String markerProperty = Graphiti.getPeService()
-			        .getPropertyValue(shape, ShapeUtil.ACTIVITY_MARKER_CONTAINER);
+					.getPropertyValue(shape, ShapeUtil.ACTIVITY_MARKER_CONTAINER);
 			if (markerProperty != null && new Boolean(markerProperty)) {
 				int x = (newWidth / 2) - (ga.getWidth() / 2);
 				int y = newHeight - ga.getHeight() - 3 - getMarkerContainerOffset();
