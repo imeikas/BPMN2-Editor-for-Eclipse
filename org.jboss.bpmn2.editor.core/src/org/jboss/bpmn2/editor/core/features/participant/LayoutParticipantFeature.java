@@ -17,52 +17,55 @@ import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
+import org.jboss.bpmn2.editor.core.di.DIUtils;
 
 public class LayoutParticipantFeature extends AbstractLayoutFeature {
 
 	public LayoutParticipantFeature(IFeatureProvider fp) {
-	    super(fp);
-    }
-
-	@Override
-    public boolean canLayout(ILayoutContext context) {
-		PictogramElement pictoElem = context.getPictogramElement();
-		if(!(pictoElem instanceof ContainerShape)) {
-			return false;
-		}
-		EList<EObject> businessObjs = pictoElem.getLink().getBusinessObjects();
-	    return businessObjs.size() == 1 && businessObjs.get(0) instanceof Participant;
+		super(fp);
 	}
 
 	@Override
-    public boolean layout(ILayoutContext context) {
+	public boolean canLayout(ILayoutContext context) {
+		PictogramElement pictoElem = context.getPictogramElement();
+		if (!(pictoElem instanceof ContainerShape)) {
+			return false;
+		}
+		EList<EObject> businessObjs = pictoElem.getLink().getBusinessObjects();
+		return businessObjs.size() == 1 && businessObjs.get(0) instanceof Participant;
+	}
+
+	@Override
+	public boolean layout(ILayoutContext context) {
 		boolean changed = false;
-		
+
 		ContainerShape containerShape = (ContainerShape) context.getPictogramElement();
+		DIUtils.updateDIShape(getDiagram(), containerShape, Participant.class);
+
 		GraphicsAlgorithm containerGa = containerShape.getGraphicsAlgorithm();
 		IGaService gaService = Graphiti.getGaService();
-		
+
 		int containerHeight = containerGa.getHeight();
 		Iterator<Shape> iterator = containerShape.getChildren().iterator();
 		while (iterator.hasNext()) {
-	        Shape shape = (Shape) iterator.next();
-	        GraphicsAlgorithm ga = shape.getGraphicsAlgorithm();
-	        IDimension size = gaService.calculateSize(ga);
-	        if(containerHeight != size.getHeight()) {
-	        	if(ga instanceof Polyline) {
-	        		Polyline line = (Polyline) ga;
-	        		Point firstPoint = line.getPoints().get(0);
-	        		Point newPoint = gaService.createPoint(firstPoint.getX(), containerHeight);
-	        		line.getPoints().set(1, newPoint);
-	        		changed = true;
-	        	} else {
-	        		gaService.setHeight(ga, containerHeight);
-	        		changed = true;
-	        	}
-	        }
+			Shape shape = iterator.next();
+			GraphicsAlgorithm ga = shape.getGraphicsAlgorithm();
+			IDimension size = gaService.calculateSize(ga);
+			if (containerHeight != size.getHeight()) {
+				if (ga instanceof Polyline) {
+					Polyline line = (Polyline) ga;
+					Point firstPoint = line.getPoints().get(0);
+					Point newPoint = gaService.createPoint(firstPoint.getX(), containerHeight);
+					line.getPoints().set(1, newPoint);
+					changed = true;
+				} else {
+					gaService.setHeight(ga, containerHeight);
+					changed = true;
+				}
+			}
 		}
-		
-	    return changed;
-    }
+
+		return changed;
+	}
 
 }

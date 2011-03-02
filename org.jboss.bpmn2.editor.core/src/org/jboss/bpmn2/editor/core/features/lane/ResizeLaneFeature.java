@@ -7,11 +7,12 @@ import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
+import org.jboss.bpmn2.editor.core.di.DIUtils;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 
 public class ResizeLaneFeature extends DefaultResizeShapeFeature {
 
-	private FeatureSupport support = new FeatureSupport() {
+	private final FeatureSupport support = new FeatureSupport() {
 		@Override
 		public Object getBusinessObject(PictogramElement element) {
 			return getBusinessObjectForPictogramElement(element);
@@ -25,37 +26,49 @@ public class ResizeLaneFeature extends DefaultResizeShapeFeature {
 	@Override
 	public boolean canResizeShape(IResizeShapeContext context) {
 		boolean isLane = support.isLane(context.getPictogramElement());
-		if (!isLane)
+		if (!isLane) {
 			return false;
-
+		}
 
 		boolean isParentLane = support.isLane(((ContainerShape) context.getPictogramElement()).getContainer());
-		if (!isParentLane)
+		if (!isParentLane) {
 			return true;
+		}
 
-		if (context.getHeight() == -1 && context.getWidth() == -1)
+		if (context.getHeight() == -1 && context.getWidth() == -1) {
 			return true;
+		}
 
 		GraphicsAlgorithm ga = ((ContainerShape) context.getPictogramElement()).getGraphicsAlgorithm();
 
 		int i = compare(ga.getHeight(), ga.getWidth(), context.getHeight(), context.getWidth());
 
 		Lane lane = (Lane) support.getBusinessObject(context.getPictogramElement());
-		
-		if (i < 0 && lane.getFlowNodeRefs().size() == 0)
+
+		if (i < 0 && lane.getFlowNodeRefs().size() == 0) {
 			return true;
-		
-		if (i > 0)
+		}
+
+		if (i > 0) {
 			return true;
+		}
 
 		return true;
 	}
 
 	private int compare(int heightBefore, int widthBefore, int heightAfter, int widthAfter) {
-		if (heightAfter > heightBefore || widthAfter > widthBefore)
+		if (heightAfter > heightBefore || widthAfter > widthBefore) {
 			return 1;
-		if (heightAfter < heightBefore || widthAfter < widthBefore)
+		}
+		if (heightAfter < heightBefore || widthAfter < widthBefore) {
 			return -1;
+		}
 		return 0;
+	}
+
+	@Override
+	public void resizeShape(IResizeShapeContext context) {
+		super.resizeShape(context);
+		DIUtils.updateDIShape(getDiagram(), context.getPictogramElement(), Lane.class);
 	}
 }

@@ -30,12 +30,12 @@ import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
 public abstract class FeatureSupport {
 
 	public abstract Object getBusinessObject(PictogramElement element);
-	
+
 	public boolean isTargetSubProcess(ITargetContext context) {
 		Object bo = getBusinessObject(context.getTargetContainer());
 		return bo != null && bo instanceof SubProcess;
 	}
-	
+
 	public boolean isTargetLane(ITargetContext context) {
 		return isLane(context.getTargetContainer());
 	}
@@ -121,9 +121,9 @@ public abstract class FeatureSupport {
 					s.getGraphicsAlgorithm().setHeight(newHeight);
 				} else if (childGa instanceof Polyline) {
 					Polyline line = (Polyline) childGa;
-	        		Point firstPoint = line.getPoints().get(0);
-	        		Point newPoint = service.createPoint(firstPoint.getX(), newHeight);
-	        		line.getPoints().set(1, newPoint);
+					Point firstPoint = line.getPoints().get(0);
+					Point newPoint = service.createPoint(firstPoint.getX(), newHeight);
+					line.getPoints().set(1, newPoint);
 				}
 			}
 
@@ -156,9 +156,9 @@ public abstract class FeatureSupport {
 					s.getGraphicsAlgorithm().setHeight(ga.getHeight());
 				} else if (childGa instanceof Polyline) {
 					Polyline line = (Polyline) childGa;
-	        		Point firstPoint = line.getPoints().get(0);
-	        		Point newPoint = service.createPoint(firstPoint.getX(), ga.getHeight());
-	        		line.getPoints().set(1, newPoint);
+					Point firstPoint = line.getPoints().get(0);
+					Point newPoint = service.createPoint(firstPoint.getX(), ga.getHeight());
+					line.getPoints().set(1, newPoint);
 				}
 			}
 			return new Dimension(ga.getWidth(), ga.getHeight());
@@ -172,12 +172,15 @@ public abstract class FeatureSupport {
 	}
 
 	private boolean checkForResize(BaseElement currentBo, Shape s, Object bo) {
-		if (!(s instanceof ContainerShape))
+		if (!(s instanceof ContainerShape)) {
 			return false;
-		if (bo == null)
+		}
+		if (bo == null) {
 			return false;
-		if (!(bo instanceof Lane || bo instanceof Participant))
+		}
+		if (!(bo instanceof Lane || bo instanceof Participant)) {
 			return false;
+		}
 		return !bo.equals(currentBo);
 	}
 
@@ -248,13 +251,15 @@ public abstract class FeatureSupport {
 	}
 
 	public Participant getTargetParticipant(ITargetContext context, ModelHandler handler) {
-		if (context.getTargetContainer() instanceof Diagram)
+		if (context.getTargetContainer() instanceof Diagram) {
 			return handler.getInternalParticipant();
+		}
 
 		Object bo = getBusinessObject(context.getTargetContainer());
 
-		if (bo instanceof Participant)
+		if (bo instanceof Participant) {
 			return (Participant) bo;
+		}
 
 		return handler.getParticipant(bo);
 	}

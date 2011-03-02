@@ -18,7 +18,7 @@ import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 
 public class DIUtils {
-	public static void moveDIShape(Diagram diagram, PictogramElement element, Class clazz) {
+	public static void updateDIShape(Diagram diagram, PictogramElement element, Class clazz) {
 		try {
 			ModelHandler modelHandler = ModelHandlerLocator.getModelHandler(element.getLink().getBusinessObjects()
 					.get(0).eResource());
