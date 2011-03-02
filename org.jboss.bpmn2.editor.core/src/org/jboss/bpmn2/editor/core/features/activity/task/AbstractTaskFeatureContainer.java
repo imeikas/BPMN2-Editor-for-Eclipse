@@ -6,6 +6,7 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
+import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.jboss.bpmn2.editor.core.features.AbstractBaseElementUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.MoveFlowNodeFeature;
@@ -41,7 +42,13 @@ public abstract class AbstractTaskFeatureContainer extends AbstractActivityFeatu
 
 	@Override
 	public IMoveShapeFeature getMoveFeature(IFeatureProvider fp) {
-		return new MoveFlowNodeFeature(fp);
+		return new MoveFlowNodeFeature(fp) {
+			@Override
+			protected void internalMove(IMoveShapeContext context) {
+				super.internalMove(context);
+				layoutPictogramElement(context.getPictogramElement());
+			}
+		};
 	}
 
 	@Override

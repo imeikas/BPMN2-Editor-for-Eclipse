@@ -53,7 +53,7 @@ public class LayoutTaskFeature extends AbstractLayoutFeature {
 
 		int newWidth = containerGa.getWidth();
 		int newHeight = containerGa.getHeight() - ShapeUtil.ACTIVITY_BOTTOM_PADDING;
-		
+
 		Iterator<Shape> iterator = Graphiti.getPeService().getAllContainedShapes(containerShape).iterator();
 
 		RoundedRectangle rect = (RoundedRectangle) iterator.next().getGraphicsAlgorithm();
@@ -71,7 +71,7 @@ public class LayoutTaskFeature extends AbstractLayoutFeature {
 					bounds.setWidth(newWidth);
 					bounds.setHeight(newHeight);
 				} else if (bo instanceof BoundaryEvent) {
-					// layoutPictogramElement(shape);
+					layoutPictogramElement(shape);
 				}
 			}
 

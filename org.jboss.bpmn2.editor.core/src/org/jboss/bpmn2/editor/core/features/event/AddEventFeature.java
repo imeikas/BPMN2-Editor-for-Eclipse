@@ -3,7 +3,6 @@ package org.jboss.bpmn2.editor.core.features.event;
 import org.eclipse.bpmn2.Event;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
-import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
 import org.eclipse.graphiti.mm.algorithms.Ellipse;
 import org.eclipse.graphiti.mm.algorithms.Rectangle;
 import org.eclipse.graphiti.mm.algorithms.Text;
@@ -18,17 +17,18 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeCreateService;
 import org.eclipse.graphiti.util.IColorConstant;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
+import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
-public class AddEventFeature extends AbstractAddShapeFeature {
+public class AddEventFeature extends AbstractBpmnAddFeature {
 
 	public AddEventFeature(IFeatureProvider fp) {
 		super(fp);
 	}
 
-	private FeatureSupport support = new FeatureSupport() {
+	private final FeatureSupport support = new FeatureSupport() {
 		@Override
 		public Object getBusinessObject(PictogramElement element) {
 			return getBusinessObjectForPictogramElement(element);
@@ -58,7 +58,7 @@ public class AddEventFeature extends AbstractAddShapeFeature {
 
 		Rectangle invisibleRect = gaService.createInvisibleRectangle(containerShape);
 		gaService.setLocationAndSize(invisibleRect, context.getX(), context.getY(), ShapeUtil.EVENT_SIZE,
-		        ShapeUtil.EVENT_SIZE + ShapeUtil.EVENT_TEXT_AREA);
+				ShapeUtil.EVENT_SIZE + ShapeUtil.EVENT_TEXT_AREA);
 
 		Shape ellipseShape = peCreateService.createShape(containerShape, false);
 		Ellipse ellipse = ShapeUtil.createEventShape(ellipseShape);
@@ -81,20 +81,20 @@ public class AddEventFeature extends AbstractAddShapeFeature {
 			getDiagram().eResource().getContents().add(e);
 		}
 
-		link(containerShape, e);
+		createDIShape(containerShape, e);
 
 		ChopboxAnchor anchor = peCreateService.createChopboxAnchor(containerShape);
 		anchor.setReferencedGraphicsAlgorithm(ellipse);
-		
+
 		hook(containerShape);
-		
+
 		layoutPictogramElement(containerShape);
 		return containerShape;
 	}
 
 	protected void decorateEllipse(Ellipse ellipse) {
 	}
-	
+
 	protected void hook(ContainerShape container) {
 	}
 }

@@ -1,14 +1,13 @@
 package org.jboss.bpmn2.editor.core.features.event;
 
 import org.eclipse.bpmn2.Event;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ILayoutContext;
 import org.eclipse.graphiti.features.impl.AbstractLayoutFeature;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
+import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 
 public class LayoutEventFeature extends AbstractLayoutFeature {
@@ -23,8 +22,7 @@ public class LayoutEventFeature extends AbstractLayoutFeature {
 		if (!(pictoElem instanceof ContainerShape)) {
 			return false;
 		}
-		EList<EObject> businessObjs = pictoElem.getLink().getBusinessObjects();
-		return businessObjs.size() == 1 && businessObjs.get(0) instanceof Event;
+		return BusinessObjectUtil.containsElementOfType(pictoElem, Event.class);
 	}
 
 	@Override

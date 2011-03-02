@@ -79,8 +79,8 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 							getTargetBo(context, handler));
 				} else if (object instanceof BPMNShape) {
 					Bounds bounds = ((BPMNShape) object).getBounds();
-					bounds.setX(bounds.getX() - context.getDeltaX());
-					bounds.setY(bounds.getY() - context.getDeltaY());
+					bounds.setX(bounds.getX() + context.getDeltaX());
+					bounds.setY(bounds.getY() + context.getDeltaY());
 				}
 			}
 		} catch (Exception e) {
