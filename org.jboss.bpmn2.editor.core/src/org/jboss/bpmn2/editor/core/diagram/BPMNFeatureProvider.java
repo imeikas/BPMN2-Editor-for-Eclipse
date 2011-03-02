@@ -22,6 +22,7 @@ import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.FeatureResolver;
+import org.jboss.bpmn2.editor.core.features.activity.subprocess.AdHocSubProcessFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.activity.subprocess.SubProcessFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.activity.subprocess.TransactionFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.activity.task.BusinessRuleTaskFeatureContainer;
@@ -112,6 +113,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers.add(new ParallelGatewayFeatureContainer());
 		containers.add(new EventBasedGatewayFeatureContainer());
 		containers.add(new ComplexGatewayFeatureContainer());
+		containers.add(new AdHocSubProcessFeatureContainer());
 		containers.add(new TransactionFeatureContainer());
 		containers.add(new SubProcessFeatureContainer());
 		containers.add(new ConditionalEventDefinitionContainer());

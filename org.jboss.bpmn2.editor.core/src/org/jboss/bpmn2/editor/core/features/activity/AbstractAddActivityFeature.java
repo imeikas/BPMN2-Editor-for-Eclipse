@@ -66,15 +66,15 @@ public abstract class AbstractAddActivityFeature extends AbstractBpmnAddFeature 
 		link(rectShape, activity);
 		decorateActivityRectangle(rect);
 
-		hook(activity, containerShape, context, width, height); // hook for subclasses to inject extra code
-
 		ContainerShape markerContainer = peService.createContainerShape(containerShape, false);
 		Rectangle markerInvisibleRect = gaService.createInvisibleRectangle(markerContainer);
 		int h = 10;
 		int y = height - paddingBottom - h - 3 - getMarkerContainerOffset();
 		gaService.setLocationAndSize(markerInvisibleRect, 0, y, invisibleRect.getWidth(), h);
 		peService.setPropertyValue(markerContainer, ShapeUtil.ACTIVITY_MARKER_CONTAINER, Boolean.toString(true));
-
+		
+		hook(activity, containerShape, context, width, height); // hook for subclasses to inject extra code
+		
 		ChopboxAnchor anchor = peService.createChopboxAnchor(containerShape);
 		anchor.setReferencedGraphicsAlgorithm(rect);
 

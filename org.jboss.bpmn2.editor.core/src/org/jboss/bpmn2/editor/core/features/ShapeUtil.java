@@ -366,6 +366,7 @@ public class ShapeUtil {
 	public static final String ACTIVITY_MARKER_CONTAINER = "activity.marker.container";
 	public static final String ACTIVITY_MARKER_COMPENSATE = "activity.marker.compensate";
 	public static final String ACTIVITY_MARKER_LOOP_CHARACTERISTIC = "activity.marker.loop.characteristic";
+	public static final String ACTIVITY_MARKER_AD_HOC = "activity.marker.adhoc";
 
 	public static Compensation createActivityMarkerCompensate(ContainerShape markerContainer) {
 		GraphicsAlgorithmContainer algorithmContainer = createActivityMarkerGaContainer(markerContainer, ACTIVITY_MARKER_COMPENSATE);
@@ -401,6 +402,13 @@ public class ShapeUtil {
 		multiInstance.line2 = gaService.createPolyline(algorithmContainer, new int[] {0, 5, MARKER_WIDTH, 5});
 		multiInstance.line3 = gaService.createPolyline(algorithmContainer, new int[] {0, 8, MARKER_WIDTH, 8});
 	    return multiInstance;
+    }
+	
+	public static Polyline createActivityMarkerAdHoc(ContainerShape markerContainer) {
+		GraphicsAlgorithmContainer algorithmContainer = createActivityMarkerGaContainer(markerContainer, ACTIVITY_MARKER_AD_HOC);
+		int[] xy = {0, 8, 3, 2, 7, 8, 10, 2};
+		int[] bend = {0, 3, 3, 3, 3, 3, 3, 0};
+		return gaService.createPolyline(algorithmContainer, xy, bend);
     }
 	
 	public static void clearActivityMarker(ContainerShape markerContainer, String property) {
