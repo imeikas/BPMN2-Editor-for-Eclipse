@@ -6,6 +6,7 @@ import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.jboss.bpmn2.editor.core.features.activity.AbstractActivityFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.activity.LayoutActivityFeature;
 
 public abstract class AbstractSubProcessFeatureContainer extends AbstractActivityFeatureContainer {
 
@@ -15,7 +16,7 @@ public abstract class AbstractSubProcessFeatureContainer extends AbstractActivit
     }
 
     public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
-	    return new LayoutSubProcessFeature(fp);
+	    return new LayoutActivityFeature(fp);
     }
 
 	@Override

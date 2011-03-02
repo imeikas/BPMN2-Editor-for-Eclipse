@@ -5,7 +5,8 @@ import java.util.Iterator;
 import org.eclipse.bpmn2.Activity;
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.BoundaryEvent;
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.bpmn2.di.BPMNShape;
+import org.eclipse.dd.dc.Bounds;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ILayoutContext;
 import org.eclipse.graphiti.features.impl.AbstractLayoutFeature;
@@ -18,7 +19,7 @@ import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 
-public abstract class LayoutActivityFeature extends AbstractLayoutFeature {
+public class LayoutActivityFeature extends AbstractLayoutFeature {
 
 	public LayoutActivityFeature(IFeatureProvider fp) {
 		super(fp);
@@ -42,35 +43,55 @@ public abstract class LayoutActivityFeature extends AbstractLayoutFeature {
 			Shape shape = (Shape) iterator.next();
 			GraphicsAlgorithm ga = shape.getGraphicsAlgorithm();
 			IGaService gaService = Graphiti.getGaService();
-			
+
+			int newWidth = parentGa.getWidth();
+			int newHeight = parentGa.getHeight() - ShapeUtil.ACTIVITY_BOTTOM_PADDING;
+
 			String markerProperty = Graphiti.getPeService()
 			        .getPropertyValue(shape, ShapeUtil.ACTIVITY_MARKER_CONTAINER);
 			if (markerProperty != null && new Boolean(markerProperty)) {
-				gaService.setLocation(ga, (parentGa.getWidth() / 2) - (ga.getWidth() / 2), 0);
+				int x = (newWidth / 2) - (ga.getWidth() / 2);
+				int y = newHeight - ga.getHeight() - 3 - getMarkerContainerOffset();
+				gaService.setLocation(ga, x, y);
 				changed = true;
 				continue;
 			}
 
-			EObject bo = BusinessObjectUtil.getFirstElementOfType(shape, BaseElement.class);
-
-			if (bo != null && bo instanceof BoundaryEvent) {
-				layoutPictogramElement(shape);
-				changed = true;
-				continue;
-			}
-
-			if (bo != null && bo instanceof Activity && ga instanceof RoundedRectangle) {
-				changed = true;
-				continue;
-			}
-
-			if (layoutHook(shape, ga, parentGa, bo)) {
-				changed = true;
+			Object[] objects = getAllBusinessObjectsForPictogramElement(shape);
+			for (Object bo : objects) {
+				if (bo instanceof BPMNShape) {
+					Bounds bounds = ((BPMNShape) bo).getBounds();
+					bounds.setWidth(newWidth);
+					bounds.setHeight(newHeight);
+					changed = true;
+					continue;
+				} else if (bo instanceof BoundaryEvent) {
+					layoutPictogramElement(shape);
+					changed = true;
+					continue;
+				} else if (bo instanceof Activity && ga instanceof RoundedRectangle) {
+					gaService.setSize(ga, newWidth, newHeight);
+					layoutInRectangle((RoundedRectangle) ga);
+					changed = true;
+					continue;
+				}
+				if (layoutHook(shape, ga, bo, newWidth, newHeight)) {
+					changed = true;
+				}
 			}
 		}
 
 		return changed;
 	}
 
-	protected abstract boolean layoutHook(Shape shape, GraphicsAlgorithm ga, GraphicsAlgorithm parentGa, EObject bo);
+	protected int getMarkerContainerOffset() {
+		return 0;
+	}
+
+	protected void layoutInRectangle(RoundedRectangle rect) {
+	}
+
+	protected boolean layoutHook(Shape shape, GraphicsAlgorithm ga, Object bo, int newWidth, int newHeight) {
+		return false;
+	}
 }
