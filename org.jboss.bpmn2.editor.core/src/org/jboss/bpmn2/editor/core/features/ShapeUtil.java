@@ -59,6 +59,12 @@ public class ShapeUtil {
 		public Polyline circle;
 		public Polyline arrow;
 	}
+	
+	public static class Expand {
+		public Rectangle rect;
+		public Polyline horizontal;
+		public Polyline vertical;
+	}
 
 	/* GATEWAY */
 
@@ -354,7 +360,7 @@ public class ShapeUtil {
 
 	// ACTIVITY
 
-	public static final int TASK_DEFAULT_WIDTH = 100;
+	public static final int TASK_DEFAULT_WIDTH = 110;
 	public static final int TASK_DEFAULT_HEIGHT = 50;
 
 	public static final int SUB_PROCEESS_DEFAULT_WIDTH = 300;
@@ -369,6 +375,7 @@ public class ShapeUtil {
 	public static final String ACTIVITY_MARKER_COMPENSATE = "activity.marker.compensate";
 	public static final String ACTIVITY_MARKER_LOOP_CHARACTERISTIC = "activity.marker.loop.characteristic";
 	public static final String ACTIVITY_MARKER_AD_HOC = "activity.marker.adhoc";
+	public static final String ACTIVITY_MARKER_EXPAND = "activity.marker.expand";
 
 	public static Compensation createActivityMarkerCompensate(ContainerShape markerContainer) {
 		GraphicsAlgorithmContainer algorithmContainer = createActivityMarkerGaContainer(markerContainer,
@@ -416,6 +423,20 @@ public class ShapeUtil {
 		int[] bend = {0, 3, 3, 3, 3, 3, 3, 0};
 		return gaService.createPolyline(algorithmContainer, xy, bend);
     }
+	
+	public static Expand createActivityMarkerExpand(ContainerShape markerContainer) {
+		GraphicsAlgorithmContainer algorithmContainer = createActivityMarkerGaContainer(markerContainer, ACTIVITY_MARKER_EXPAND);
+		
+		Rectangle rect = gaService.createRectangle(algorithmContainer);
+		rect.setFilled(false);
+		gaService.setLocationAndSize(rect, 0, 0, 10, 10);
+		
+		Expand expand = new Expand();
+		expand.rect = rect;
+		expand.horizontal = gaService.createPolyline(algorithmContainer, new int[] {0, 5, 10, 5});
+		expand.vertical = gaService.createPolyline(algorithmContainer, new int[] {5, 0, 5, 10});
+		return expand;
+	}
 	
 	public static void clearActivityMarker(ContainerShape markerContainer, String property) {
 

@@ -18,6 +18,7 @@ public class AddExpandedSubProcessFeature extends AbstractAddActivityFeature {
 
 	@Override
 	protected void hook(Activity activity, ContainerShape container, IAddContext context, int width, int height) {
+		super.hook(activity, container, context, width, height);
 		Graphiti.getPeService().setPropertyValue(container, TRIGGERED_BY_EVENT, "false");
 	}
 	

@@ -8,6 +8,7 @@ import org.eclipse.bpmn2.Bpmn2Package;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.graphiti.features.IFeature;
 import org.jboss.bpmn2.editor.core.features.activity.subprocess.AdHocSubProcessFeatureContainer.CreateAdHocSubProcessFeature;
+import org.jboss.bpmn2.editor.core.features.activity.subprocess.CallActivityFeatureContainer.CreateCallActivityFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.activity.subprocess.SubProcessFeatureContainer.CreateSubProcessFeature;
 import org.jboss.bpmn2.editor.core.features.activity.subprocess.TransactionFeatureContainer.CreateTransactionFeature;
 import org.jboss.bpmn2.editor.core.features.activity.task.BusinessRuleTaskFeatureContainer.CreateBusinessRuleTaskFeature;
@@ -98,6 +99,7 @@ public class FeatureMap {
 		featureMap.put(i.getDataInput(), CreateDataInputFeature.class);
 		featureMap.put(i.getDataOutput(), CreateDataOutputFeature.class);
 		featureMap.put(i.getAdHocSubProcess(), CreateAdHocSubProcessFeature.class);
+		featureMap.put(i.getCallActivity(), CreateCallActivityFeatureContainer.class);
 		FEATURE_MAP = Collections.unmodifiableMap(featureMap);
 	}
 

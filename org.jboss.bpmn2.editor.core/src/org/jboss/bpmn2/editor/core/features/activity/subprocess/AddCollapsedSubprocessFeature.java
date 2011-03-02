@@ -23,9 +23,8 @@ import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
-// NOT USED CURRENTLY
 @Deprecated
-public class AddSubprocessFeature extends AbstractAddFeature {
+public class AddCollapsedSubprocessFeature extends AbstractAddFeature {
 
 	protected FeatureSupport support = new FeatureSupport() {
 		@Override
@@ -34,7 +33,7 @@ public class AddSubprocessFeature extends AbstractAddFeature {
 		}
 	};
 
-	public AddSubprocessFeature(IFeatureProvider fp) {
+	public AddCollapsedSubprocessFeature(IFeatureProvider fp) {
 		super(fp);
 	}
 

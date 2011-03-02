@@ -4,6 +4,7 @@ import org.eclipse.bpmn2.AdHocSubProcess;
 import org.eclipse.bpmn2.Association;
 import org.eclipse.bpmn2.BoundaryEvent;
 import org.eclipse.bpmn2.BusinessRuleTask;
+import org.eclipse.bpmn2.CallActivity;
 import org.eclipse.bpmn2.CancelEventDefinition;
 import org.eclipse.bpmn2.CompensateEventDefinition;
 import org.eclipse.bpmn2.ComplexGateway;
@@ -95,6 +96,7 @@ public class ImageProvider extends AbstractImageProvider {
 	public static final String IMG_16_DATA_STORE = PREFIX + DataStore.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_DATA_INPUT = PREFIX + DataInput.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_DATA_OUTPUT = PREFIX + DataOutput.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_CALL_ACTIVITY = PREFIX + CallActivity.class.getSimpleName().toLowerCase() + dot16;
 	
 	public static final String IMG_20_CONDITION = PREFIX + ConditionalEventDefinition.class.getSimpleName().toLowerCase() + dot20;
 	public static final String IMG_20_TIMER = PREFIX + TimerEventDefinition.class.getSimpleName().toLowerCase() + dot20;
@@ -144,6 +146,7 @@ public class ImageProvider extends AbstractImageProvider {
 		addImageFilePath(IMG_16_DATA_STORE, ICONS_16 + "DataStore.png");
 		addImageFilePath(IMG_16_DATA_INPUT, ICONS_16 + "DataInput.png");
 		addImageFilePath(IMG_16_DATA_OUTPUT, ICONS_16 + "DataOutput.png");
+		addImageFilePath(IMG_16_CALL_ACTIVITY, ICONS_16 + "CallActivity.png");
 		
 		addImageFilePath(IMG_20_CONDITION, ICONS_20 + "Condition.png");
 		addImageFilePath(IMG_20_TIMER, ICONS_20 + "Timer.png");
