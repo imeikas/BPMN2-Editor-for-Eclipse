@@ -10,9 +10,11 @@ public abstract class AbstractActivityFeatureContainer implements FeatureContain
     public MultiUpdateFeature getUpdateFeature(IFeatureProvider fp) {
 		ActivityCompensateMarkerUpdateFeature compensateMarkerUpdateFeature = 
 			new ActivityCompensateMarkerUpdateFeature(fp);
-
+		ActivityLoopAndMultiInstanceMarkerUpdateFeature loopAndMultiInstanceUpdateFeature = 
+			new ActivityLoopAndMultiInstanceMarkerUpdateFeature(fp);
 		MultiUpdateFeature multiUpdate = new MultiUpdateFeature(fp);
 		multiUpdate.addUpdateFeature(compensateMarkerUpdateFeature);
+		multiUpdate.addUpdateFeature(loopAndMultiInstanceUpdateFeature);
 	    return multiUpdate;
     }
 }

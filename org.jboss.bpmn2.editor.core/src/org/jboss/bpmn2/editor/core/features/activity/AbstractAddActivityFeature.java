@@ -1,5 +1,7 @@
 package org.jboss.bpmn2.editor.core.features.activity;
 
+import static org.jboss.bpmn2.editor.core.features.activity.ActivityCompensateMarkerUpdateFeature.*;
+import static org.jboss.bpmn2.editor.core.features.activity.ActivityLoopAndMultiInstanceMarkerUpdateFeature.*;
 import org.eclipse.bpmn2.Activity;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
@@ -69,7 +71,7 @@ public abstract class AbstractAddActivityFeature extends AbstractAddShapeFeature
 		ContainerShape markerContainer = peService.createContainerShape(containerShape, false);
 		Rectangle markerInvisibleRect = gaService.createInvisibleRectangle(markerContainer);
 		int h = 10;
-		int y = height - paddingBottom - h - getMarkerContainerOffset();
+		int y = height - paddingBottom - h - 3 - getMarkerContainerOffset();
 		gaService.setLocationAndSize(markerInvisibleRect, 0, y, invisibleRect.getWidth(), h);
 		peService.setPropertyValue(markerContainer, ShapeUtil.ACTIVITY_MARKER_CONTAINER, Boolean.toString(true));
 
@@ -82,9 +84,9 @@ public abstract class AbstractAddActivityFeature extends AbstractAddShapeFeature
 			getDiagram().eResource().getContents().add(activity);
 		}
 
-		Graphiti.getPeService().setPropertyValue(containerShape,
-		        ActivityCompensateMarkerUpdateFeature.IS_COMPENSATE_PROPERTY, Boolean.toString(false));
-
+		Graphiti.getPeService().setPropertyValue(containerShape, IS_COMPENSATE_PROPERTY, Boolean.toString(false));
+		Graphiti.getPeService().setPropertyValue(containerShape, IS_LOOP_OR_MULTI_INSTANCE,
+		        getLoopCharacteristicsValue(activity).getName());
 		layoutPictogramElement(containerShape);
 
 		return containerShape;
