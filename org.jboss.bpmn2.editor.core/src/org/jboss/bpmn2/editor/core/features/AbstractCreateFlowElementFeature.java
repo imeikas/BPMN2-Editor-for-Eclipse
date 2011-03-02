@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.Lane;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.features.impl.AbstractCreateFeature;
@@ -40,12 +41,12 @@ public abstract class AbstractCreateFlowElementFeature<T extends FlowElement> ex
 		try {
 			ModelHandler handler = support.getModelHanderInstance(getDiagram());
 			element = createFlowElement(context);
-			
+			element.setId(EcoreUtil.generateUUID());
 			if (support.isTargetLane(context) && element instanceof FlowNode) {
 				((FlowNode) element).getLanes().add(
-				        (Lane) getBusinessObjectForPictogramElement(context.getTargetContainer()));
+						(Lane) getBusinessObjectForPictogramElement(context.getTargetContainer()));
 			}
-			
+
 			handler.addFlowElement(getBusinessObjectForPictogramElement(context.getTargetContainer()), element);
 		} catch (IOException e) {
 			Activator.logError(e);

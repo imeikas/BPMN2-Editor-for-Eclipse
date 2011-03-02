@@ -32,6 +32,7 @@ import org.eclipse.dd.di.DiagramElement;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -54,8 +55,11 @@ public class ModelHandler {
 			if (domain != null) {
 				final DocumentRoot docRoot = FACTORY.createDocumentRoot();
 				final Definitions definitions = FACTORY.createDefinitions();
+				definitions.setId(EcoreUtil.generateUUID());
 				Collaboration collaboration = FACTORY.createCollaboration();
+				collaboration.setId(EcoreUtil.generateUUID());
 				Participant participant = FACTORY.createParticipant();
+				participant.setId(EcoreUtil.generateUUID());
 				participant.setName("Internal");
 				collaboration.getParticipants().add(participant);
 				definitions.getRootElements().add(collaboration);
@@ -118,7 +122,9 @@ public class ModelHandler {
 	private InputOutputSpecification getOrCreateIOSpecification(Object target) {
 		Process process = getOrCreateProcess(getParticipant(target));
 		if (process.getIoSpecification() == null) {
-			process.setIoSpecification(FACTORY.createInputOutputSpecification());
+			InputOutputSpecification ioSpec = FACTORY.createInputOutputSpecification();
+			ioSpec.setId(EcoreUtil.generateUUID());
+			process.setIoSpecification(ioSpec);
 		}
 		return process.getIoSpecification();
 	}
@@ -137,6 +143,7 @@ public class ModelHandler {
 	public Participant addParticipant() {
 		Collaboration collaboration = getCollaboration();
 		Participant participant = FACTORY.createParticipant();
+		participant.setId(EcoreUtil.generateUUID());
 		collaboration.getParticipants().add(participant);
 		return participant;
 	}
@@ -163,6 +170,7 @@ public class ModelHandler {
 	private Process getOrCreateProcess(Participant participant) {
 		if (participant.getProcessRef() == null) {
 			Process process = FACTORY.createProcess();
+			process.setId(EcoreUtil.generateUUID());
 			process.setName("Process for " + participant.getName());
 			getDefinitions().getRootElements().add(process);
 			participant.setProcessRef(process);
@@ -172,6 +180,7 @@ public class ModelHandler {
 
 	public Lane createLane(Lane targetLane) {
 		Lane lane = FACTORY.createLane();
+		lane.setId(EcoreUtil.generateUUID());
 
 		if (targetLane.getChildLaneSet() == null) {
 			targetLane.setChildLaneSet(ModelHandler.FACTORY.createLaneSet());
@@ -188,9 +197,12 @@ public class ModelHandler {
 
 	public Lane createLane(Object target) {
 		Lane lane = FACTORY.createLane();
+		lane.setId(EcoreUtil.generateUUID());
 		FlowElementsContainer container = getFlowElementContainer(target);
 		if (container.getLaneSets().isEmpty()) {
-			container.getLaneSets().add(FACTORY.createLaneSet());
+			LaneSet laneSet = FACTORY.createLaneSet();
+			laneSet.setId(EcoreUtil.generateUUID());
+			container.getLaneSets().add(laneSet);
 		}
 		container.getLaneSets().get(0).getLanes().add(lane);
 		return lane;
@@ -198,13 +210,17 @@ public class ModelHandler {
 
 	public void laneToTop(Lane lane) {
 		LaneSet laneSet = FACTORY.createLaneSet();
+		laneSet.setId(EcoreUtil.generateUUID());
 		laneSet.getLanes().add(lane);
 		Process process = getOrCreateProcess(getInternalParticipant());
 		process.getLaneSets().add(laneSet);
 	}
 
 	public SequenceFlow createSequenceFlow(FlowNode source, FlowNode target) {
-		SequenceFlow flow = addFlowElement(source, FACTORY.createSequenceFlow());
+		SequenceFlow sequenceFlow = FACTORY.createSequenceFlow();
+		sequenceFlow.setId(EcoreUtil.generateUUID());
+
+		SequenceFlow flow = addFlowElement(source, sequenceFlow);
 		flow.setSourceRef(source);
 		flow.setTargetRef(target);
 		return flow;
@@ -212,6 +228,7 @@ public class ModelHandler {
 
 	public MessageFlow createMessageFlow(InteractionNode source, InteractionNode target) {
 		MessageFlow messageFlow = FACTORY.createMessageFlow();
+		messageFlow.setId(EcoreUtil.generateUUID());
 		messageFlow.setSourceRef(source);
 		messageFlow.setTargetRef(target);
 		getCollaboration().getMessageFlows().add(messageFlow);
@@ -227,7 +244,9 @@ public class ModelHandler {
 		} else {
 			e = getInternalParticipant();
 		}
-		Association association = addArtifact(e, FACTORY.createAssociation());
+		Association createAssociation = FACTORY.createAssociation();
+		Association association = addArtifact(e, createAssociation);
+		association.setId(EcoreUtil.generateUUID());
 		association.setSourceRef(source);
 		association.setTargetRef(target);
 		return association;

@@ -8,6 +8,7 @@ import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.LaneSet;
 import org.eclipse.bpmn2.Process;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.eclipse.graphiti.features.context.ITargetContext;
@@ -32,8 +33,9 @@ public class MoveFromDiagramToLaneFeature extends MoveLaneFeature {
 		Lane targetLane = getTargetLane(context);
 		boolean targetHasFlowNodeRefs = targetLane.getFlowNodeRefs().size() > 0;
 
-		if (!moveableHasFlowNodes && !targetHasFlowNodeRefs)
+		if (!moveableHasFlowNodes && !targetHasFlowNodeRefs) {
 			return true;
+		}
 
 		return moveableHasFlowNodes ^ targetHasFlowNodeRefs;
 	}
@@ -77,7 +79,9 @@ public class MoveFromDiagramToLaneFeature extends MoveLaneFeature {
 		}
 
 		if (targetLane.getChildLaneSet() == null) {
-			targetLane.setChildLaneSet(ModelHandler.FACTORY.createLaneSet());
+			LaneSet createLaneSet = ModelHandler.FACTORY.createLaneSet();
+			createLaneSet.setId(EcoreUtil.generateUUID());
+			targetLane.setChildLaneSet(createLaneSet);
 		}
 
 		List<Lane> lanes = targetLane.getChildLaneSet().getLanes();

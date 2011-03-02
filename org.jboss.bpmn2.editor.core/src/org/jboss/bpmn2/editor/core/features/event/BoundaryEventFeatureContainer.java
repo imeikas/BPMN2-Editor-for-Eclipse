@@ -11,9 +11,7 @@ import org.eclipse.bpmn2.CancelEventDefinition;
 import org.eclipse.bpmn2.CompensateEventDefinition;
 import org.eclipse.bpmn2.ErrorEventDefinition;
 import org.eclipse.bpmn2.EventDefinition;
-import org.eclipse.bpmn2.di.BPMNShape;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.graphiti.datatypes.ILocation;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IDirectEditingFeature;
@@ -52,9 +50,8 @@ import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
-import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
+import org.jboss.bpmn2.editor.core.di.DIUtils;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
-import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
@@ -164,6 +161,7 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 				Activity activity = (Activity) getBusinessObjectForPictogramElement(context.getTargetContainer());
 				ModelHandler handler = support.getModelHanderInstance(getDiagram());
 				event = ModelHandler.FACTORY.createBoundaryEvent();
+				event.setId(EcoreUtil.generateUUID());
 				event.setAttachedToRef(activity);
 				event.setName("Boundary event");
 				event.setCancelActivity(true); // by default is interrupting
@@ -275,7 +273,7 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 
 				int y = parentGa.getHeight() - ShapeUtil.EVENT_SIZE;
 
-				moveDIShape(element);
+				DIUtils.moveDIShape(getDiagram(), element, BoundaryEvent.class);
 
 				if (ga.getY() != y) {
 					Graphiti.getGaService().setLocation(ga, ga.getX(), y);
@@ -285,19 +283,6 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 				return false;
 			}
 
-			private void moveDIShape(PictogramElement element) {
-				try {
-					ModelHandler modelHandler = ModelHandlerLocator.getModelHandler(element.getLink()
-							.getBusinessObjects().get(0).eResource());
-					EObject be = BusinessObjectUtil.getFirstElementOfType(element, BoundaryEvent.class);
-					BPMNShape shape = modelHandler.findDIElement(getDiagram(), (BaseElement) be);
-					ILocation loc = Graphiti.getLayoutService().getLocationRelativeToDiagram((ContainerShape) element);
-					shape.getBounds().setX(loc.getX());
-					shape.getBounds().setY(loc.getY());
-				} catch (IOException e) {
-					Activator.logError(e);
-				}
-			}
 		};
 	}
 

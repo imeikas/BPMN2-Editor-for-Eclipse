@@ -6,6 +6,7 @@ import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.InputOutputSpecification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.swt.SWT;
@@ -91,6 +92,7 @@ public class IOSpecificationComposite extends AbstractBpmn2PropertiesComposite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				spec = ModelHandler.FACTORY.createInputOutputSpecification();
+				spec.setId(EcoreUtil.generateUUID());
 				TransactionalEditingDomain domain = bpmn2Editor.getEditingDomain();
 				domain.getCommandStack().execute(new RecordingCommand(domain) {
 					@Override

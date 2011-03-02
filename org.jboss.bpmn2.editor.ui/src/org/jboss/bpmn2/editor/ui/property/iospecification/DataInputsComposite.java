@@ -1,6 +1,8 @@
 package org.jboss.bpmn2.editor.ui.property.iospecification;
 
 import org.eclipse.bpmn2.BaseElement;
+import org.eclipse.bpmn2.DataInput;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.widgets.Composite;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 
@@ -12,7 +14,9 @@ public class DataInputsComposite extends NamedElementComposite {
 
 	@Override
 	public BaseElement getNewElement() {
-		return ModelHandler.FACTORY.createDataInput();
+		DataInput dataInput = ModelHandler.FACTORY.createDataInput();
+		dataInput.setId(EcoreUtil.generateUUID());
+		return dataInput;
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package org.jboss.bpmn2.editor.core.features.artifact;
 import org.eclipse.bpmn2.Artifact;
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Group;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IDirectEditingFeature;
@@ -52,10 +53,10 @@ public class GroupFeatureContainer implements FeatureContainer {
 				IGaService gaService = Graphiti.getGaService();
 				IPeService peService = Graphiti.getPeService();
 				Group group = (Group) context.getNewObject();
-				
+
 				int width = context.getWidth() > 0 ? context.getWidth() : 400;
 				int height = context.getHeight() > 0 ? context.getHeight() : 400;
-				
+
 				ContainerShape container = peService.createContainerShape(context.getTargetContainer(), true);
 				RoundedRectangle rect = gaService.createRoundedRectangle(container, 5, 5);
 				rect.setFilled(false);
@@ -67,7 +68,7 @@ public class GroupFeatureContainer implements FeatureContainer {
 				if (group.eResource() == null) {
 					getDiagram().eResource().getContents().add(group);
 				}
-				
+
 				link(container, group);
 				return container;
 			}
@@ -112,12 +113,14 @@ public class GroupFeatureContainer implements FeatureContainer {
 
 		@Override
 		Artifact createArtifact(ICreateContext context) {
-			return ModelHandler.FACTORY.createGroup();
+			Group group = ModelHandler.FACTORY.createGroup();
+			group.setId(EcoreUtil.generateUUID());
+			return group;
 		}
 
 		@Override
-        String getStencilImageId() {
+		String getStencilImageId() {
 			return ImageProvider.IMG_16_GROUP;
-        }
+		}
 	}
 }
