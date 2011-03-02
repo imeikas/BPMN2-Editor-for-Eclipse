@@ -48,6 +48,17 @@ public class ShapeUtil {
 		public Polyline vertical;
 		public Polyline horizontal;
 	}
+	
+	public static class MultiInstance {
+		public Polyline line1;
+		public Polyline line2;
+		public Polyline line3;
+	}
+	
+	public static class Loop {
+		public Polyline circle;
+		public Polyline arrow;
+	}
 
 	/* GATEWAY */
 
@@ -349,34 +360,102 @@ public class ShapeUtil {
 	
 	public static final int ACTIVITY_BOTTOM_PADDING = EVENT_SIZE / 2;
 	
+	public static final int MARKER_WIDTH = 10;
+	public static final int MARKER_HEIGHT = 10;
+	
 	public static final String ACTIVITY_MARKER_CONTAINER = "activity.marker.container";
 	public static final String ACTIVITY_MARKER_COMPENSATE = "activity.marker.compensate";
+	public static final String ACTIVITY_MARKER_LOOP_CHARACTERISTIC = "activity.marker.loop.characteristic";
 
-	public static Compensation createActivityMarkerCompensate(ContainerShape container) {
-		GraphicsAlgorithm ga = container.getGraphicsAlgorithm();
-		Shape shape = peService.createShape(container, false);
-		peService.setPropertyValue(shape, ACTIVITY_MARKER_COMPENSATE, Boolean.toString(true));
-
-		int w = 10;
-		int h = 10;
-
-		Rectangle invisibleRect = gaService.createInvisibleRectangle(shape);
-		gaService.setLocationAndSize(invisibleRect, (ga.getWidth() / 2) - (w / 2), ga.getHeight() - h, w, h);
-
-		return createCompensation(invisibleRect, w, h);
+	public static Compensation createActivityMarkerCompensate(ContainerShape markerContainer) {
+		GraphicsAlgorithmContainer algorithmContainer = createActivityMarkerGaContainer(markerContainer, ACTIVITY_MARKER_COMPENSATE);
+		return createCompensation(algorithmContainer, MARKER_WIDTH, MARKER_HEIGHT);
 	}
-
-	public static void removerActivityMarker(ContainerShape container, String property) {
-		Iterator<Shape> iterator = peService.getAllContainedShapes(container).iterator();
+	
+	public static Loop createActivityMarkerStandardLoop(ContainerShape markerContainer) {
+		GraphicsAlgorithmContainer algorithmContainer = createActivityMarkerGaContainer(markerContainer, ACTIVITY_MARKER_LOOP_CHARACTERISTIC);
+		
+		int[] xy = {8, 10, 10, 5, 5, 0, 0, 5, 3, 10};
+		int[] bend = {0, 0, 3, 4, 4, 4, 4, 3, 3, 0};
+		Polyline circle = gaService.createPolyline(algorithmContainer, xy, bend);
+		
+		Loop loop = new Loop();
+		loop.circle = circle;
+		loop.arrow = gaService.createPolyline(algorithmContainer, new int[] {5, 5, 5, 10, 0, 10});
+	    return loop;
+    }
+	
+	public static MultiInstance createActivityMarkerMultiParallel(ContainerShape markerContainer) {
+		GraphicsAlgorithmContainer algorithmContainer = createActivityMarkerGaContainer(markerContainer, ACTIVITY_MARKER_LOOP_CHARACTERISTIC);
+		MultiInstance multiInstance = new MultiInstance();
+		multiInstance.line1 = gaService.createPolyline(algorithmContainer, new int[] {2, 0, 2, MARKER_HEIGHT});
+		multiInstance.line2 = gaService.createPolyline(algorithmContainer, new int[] {5, 0, 5, MARKER_HEIGHT});
+		multiInstance.line3 = gaService.createPolyline(algorithmContainer, new int[] {8, 0, 8, MARKER_HEIGHT});
+	    return multiInstance;
+    }
+	
+	public static MultiInstance createActivityMarkerMultiSequential(ContainerShape markerContainer) {
+		GraphicsAlgorithmContainer algorithmContainer = createActivityMarkerGaContainer(markerContainer, ACTIVITY_MARKER_LOOP_CHARACTERISTIC);
+		MultiInstance multiInstance = new MultiInstance();
+		multiInstance.line1 = gaService.createPolyline(algorithmContainer, new int[] {0, 2, MARKER_WIDTH, 2});
+		multiInstance.line2 = gaService.createPolyline(algorithmContainer, new int[] {0, 5, MARKER_WIDTH, 5});
+		multiInstance.line3 = gaService.createPolyline(algorithmContainer, new int[] {0, 8, MARKER_WIDTH, 8});
+	    return multiInstance;
+    }
+	
+	public static void clearActivityMarker(ContainerShape markerContainer, String property) {
+		
+		int totalWidth = 0;
+		int parentW = ((ContainerShape) markerContainer.eContainer()).getGraphicsAlgorithm().getWidth();
+		int lastX = -1;
+		
+		Iterator<Shape> iterator = peService.getAllContainedShapes(markerContainer).iterator();
 		while (iterator.hasNext()) {
 			Shape shape = (Shape) iterator.next();
 			String value = peService.getPropertyValue(shape, property);
+			GraphicsAlgorithm ga = shape.getGraphicsAlgorithm();
 			if (value != null && new Boolean(value)) {
+				lastX = ga.getX();
 				peService.deletePictogramElement(shape);
+			} else {
+				totalWidth += ga.getWidth();
+				if(lastX != -1) {
+					gaService.setLocation(ga, lastX, ga.getY());
+					lastX = ga.getX() + ga.getWidth();
+				}
 			}
 		}
+		
+		totalWidth = totalWidth == 0 ? 10 : totalWidth;
+		GraphicsAlgorithm ga = markerContainer.getGraphicsAlgorithm();
+		gaService.setLocationAndSize(ga, (parentW / 2) - (totalWidth / 2), ga.getY(), totalWidth, MARKER_HEIGHT);
 	}
-
+	
+	private static GraphicsAlgorithmContainer createActivityMarkerGaContainer(ContainerShape markerContainer, String property) {
+		GraphicsAlgorithm ga = markerContainer.getGraphicsAlgorithm();
+		
+		int totalWidth = MARKER_WIDTH;
+		int parentW = ((ContainerShape) markerContainer.eContainer()).getGraphicsAlgorithm().getWidth();
+		int lastX = 0;
+		
+		Iterator<Shape> iterator = peService.getAllContainedShapes(markerContainer).iterator();
+		while (iterator.hasNext()) {
+	        Shape containedShape = (Shape) iterator.next();
+	        GraphicsAlgorithm containedGa = containedShape.getGraphicsAlgorithm();
+			totalWidth += containedGa.getWidth();
+	        lastX = containedGa.getX() + containedGa.getWidth();
+        }
+		
+		gaService.setLocationAndSize(ga, (parentW / 2) - (totalWidth / 2), ga.getY(), totalWidth, MARKER_HEIGHT);
+		
+		Shape shape = peService.createShape(markerContainer, false);
+		peService.setPropertyValue(shape, property, Boolean.toString(true));
+		Rectangle invisibleRect = gaService.createInvisibleRectangle(shape);
+		gaService.setLocationAndSize(invisibleRect, lastX, 0, MARKER_WIDTH, MARKER_HEIGHT);
+		
+		return invisibleRect;
+	}
+	
 	private static Compensation createCompensation(GraphicsAlgorithmContainer container, int w, int h) {
 		int[] xy = { 0, h / 2, w / 2, 0, w / 2, h };
 		Polygon arrow1 = gaService.createPolygon(container, xy);

@@ -14,9 +14,12 @@ import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
+import org.jboss.bpmn2.editor.core.features.activity.LayoutActivityFeature;
 
 public class TransactionFeatureContainer extends AbstractSubProcessFeatureContainer {
-
+	
+	private static final int offset = 3;
+	
 	@Override
 	public boolean canApplyTo(BaseElement element) {
 		return element instanceof Transaction;
@@ -30,8 +33,6 @@ public class TransactionFeatureContainer extends AbstractSubProcessFeatureContai
 	@Override
 	public IAddFeature getAddFeature(IFeatureProvider fp) {
 		return new AddExpandedSubProcessFeature(fp) {
-
-			final int offset = 3;
 
 			@Override
 			protected void decorateActivityRectangle(RoundedRectangle rect) {
@@ -52,12 +53,17 @@ public class TransactionFeatureContainer extends AbstractSubProcessFeatureContai
 
 	@Override
 	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
-		return new LayoutSubProcessFeature(fp) {
+		return new LayoutActivityFeature(fp) {
 			@Override
 			protected void layoutInRectangle(RoundedRectangle rect) {
 				IGaService gaService = Graphiti.getGaService();
 				RoundedRectangle innerRect = (RoundedRectangle) rect.getGraphicsAlgorithmChildren().get(0);
 				gaService.setSize(innerRect, rect.getWidth() - 6, rect.getHeight() - 6);
+			}
+			
+			@Override
+			protected int getMarkerContainerOffset() {
+			    return offset;
 			}
 		};
 	}
