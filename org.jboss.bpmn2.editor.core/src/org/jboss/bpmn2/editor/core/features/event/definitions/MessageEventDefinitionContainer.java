@@ -56,7 +56,6 @@ public class MessageEventDefinitionContainer extends EventDefinitionFeatureConta
 	private Shape drawEnvleope(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape envelopeShape = Graphiti.getPeService().createShape(shape, false);
 		Envelope env = ShapeUtil.createEventEnvelope(envelopeShape);
-		env.rect.setFilled(false);
 		env.rect.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		env.line.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		return envelopeShape;

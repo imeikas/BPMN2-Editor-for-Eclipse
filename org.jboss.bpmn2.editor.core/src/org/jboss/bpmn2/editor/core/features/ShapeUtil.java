@@ -21,6 +21,7 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
+import org.jboss.bpmn2.editor.core.features.ShapeUtil.Envelope;
 
 public class ShapeUtil {
 
@@ -339,9 +340,11 @@ public class ShapeUtil {
 
 	/* OTHER */
 
-	private static Envelope createEnvelope(Shape shape, int x, int y, int w, int h) {
-		Rectangle rect = gaService.createRectangle(shape);
+	public static Envelope createEnvelope(GraphicsAlgorithmContainer gaContainer, int x, int y, int w, int h) {
+		Rectangle rect = gaService.createRectangle(gaContainer);
 		gaService.setLocationAndSize(rect, x, y, w, h);
+		rect.setFilled(false);
+		
 		Polyline line = gaService.createPolyline(rect, new int[] { 0, 0, w / 2, h / 2, w, 0 });
 
 		Envelope envelope = new Envelope();

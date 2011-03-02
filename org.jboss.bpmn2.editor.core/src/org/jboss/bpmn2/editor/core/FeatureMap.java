@@ -26,6 +26,7 @@ import org.jboss.bpmn2.editor.core.features.data.DataObjectFeatureContainer.Crea
 import org.jboss.bpmn2.editor.core.features.data.DataInputFeatureContainer.CreateDataInputFeature;
 import org.jboss.bpmn2.editor.core.features.data.DataOutputFeatureContainer.CreateDataOutputFeature;
 import org.jboss.bpmn2.editor.core.features.data.DataStoreFeatureContainer.CreateDataStoreFeature;
+import org.jboss.bpmn2.editor.core.features.data.MessageFeatureContainer.CreateMessageFeature;
 import org.jboss.bpmn2.editor.core.features.event.BoundaryEventFeatureContainer.CreateBoundaryEvent;
 import org.jboss.bpmn2.editor.core.features.event.EndEventFeatureContainer.CreateEndEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.IntermediateCatchEventFeatureContainer.CreateIntermediateCatchEventFeature;
@@ -100,6 +101,7 @@ public class FeatureMap {
 		featureMap.put(i.getDataOutput(), CreateDataOutputFeature.class);
 		featureMap.put(i.getAdHocSubProcess(), CreateAdHocSubProcessFeature.class);
 		featureMap.put(i.getCallActivity(), CreateCallActivityFeatureContainer.class);
+		featureMap.put(i.getMessage(), CreateMessageFeature.class);
 		FEATURE_MAP = Collections.unmodifiableMap(featureMap);
 	}
 

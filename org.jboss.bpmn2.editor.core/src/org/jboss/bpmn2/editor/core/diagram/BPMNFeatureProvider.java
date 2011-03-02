@@ -40,6 +40,7 @@ import org.jboss.bpmn2.editor.core.features.data.DataObjectFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.data.DataInputFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.data.DataOutputFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.data.DataStoreFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.data.MessageFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.event.BoundaryEventFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.event.EndEventFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.event.IntermediateCatchEventFeatureContainer;
@@ -96,6 +97,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers.add(new DataStoreFeatureContainer());
 		containers.add(new DataInputFeatureContainer());
 		containers.add(new DataOutputFeatureContainer());
+		containers.add(new MessageFeatureContainer());
 		containers.add(new StartEventFeatureContainer());
 		containers.add(new EndEventFeatureContainer());
 		containers.add(new IntermediateCatchEventFeatureContainer());
