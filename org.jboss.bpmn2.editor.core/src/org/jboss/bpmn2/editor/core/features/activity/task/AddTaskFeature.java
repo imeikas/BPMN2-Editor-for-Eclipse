@@ -10,6 +10,7 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
+import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 import org.jboss.bpmn2.editor.core.features.activity.AbstractAddActivityFeature;
@@ -22,7 +23,7 @@ public class AddTaskFeature extends AbstractAddActivityFeature {
 	
 	@Override
 	public boolean canAdd(IAddContext context) {
-	    return super.canAdd(context) || support.isTargetSubProcess(context);
+	    return super.canAdd(context) || FeatureSupport.isTargetSubProcess(context);
 	}
 	
 	@Override

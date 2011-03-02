@@ -12,21 +12,14 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 
 public abstract class AbstractBaseElementUpdateFeature extends AbstractUpdateFeature {
 
-	protected FeatureSupport support = new FeatureSupport() {
-		@Override
-		public Object getBusinessObject(PictogramElement element) {
-			return getBusinessObjectForPictogramElement(element);
-		}
-	};
-
 	public AbstractBaseElementUpdateFeature(IFeatureProvider fp) {
 		super(fp);
 	}
 
 	@Override
 	public IReason updateNeeded(IUpdateContext context) {
-		String shapeValue = support.getShapeValue(context);
-		String businessValue = support.getBusinessValue(context);
+		String shapeValue = FeatureSupport.getShapeValue(context);
+		String businessValue = FeatureSupport.getBusinessValue(context);
 
 		boolean updateNeeded = shapeValue != null && !shapeValue.equals(businessValue);
 		
@@ -47,7 +40,7 @@ public abstract class AbstractBaseElementUpdateFeature extends AbstractUpdateFea
 			for (Shape shape : cs.getChildren()) {
 				if (shape.getGraphicsAlgorithm() instanceof AbstractText) {
 					AbstractText text = (AbstractText) shape.getGraphicsAlgorithm();
-					text.setValue(support.getBusinessValue(context));
+					text.setValue(FeatureSupport.getBusinessValue(context));
 					return true;
 				}
 			}

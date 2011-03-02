@@ -28,19 +28,12 @@ public class AddEventFeature extends AbstractBpmnAddFeature {
 		super(fp);
 	}
 
-	private final FeatureSupport support = new FeatureSupport() {
-		@Override
-		public Object getBusinessObject(PictogramElement element) {
-			return getBusinessObjectForPictogramElement(element);
-		}
-	};
-
 	@Override
 	public boolean canAdd(IAddContext context) {
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
-		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context);
-		boolean intoParticipant = support.isTargetParticipant(context);
-		boolean intoSubProcess = support.isTargetSubProcess(context);
+		boolean intoLane = FeatureSupport.isTargetLane(context) && FeatureSupport.isTargetLaneOnTop(context);
+		boolean intoParticipant = FeatureSupport.isTargetParticipant(context);
+		boolean intoSubProcess = FeatureSupport.isTargetSubProcess(context);
 		return intoDiagram || intoLane || intoParticipant || intoSubProcess;
 	}
 

@@ -6,7 +6,6 @@ import org.eclipse.bpmn2.Lane;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.features.impl.AbstractCreateFeature;
-import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
@@ -17,13 +16,6 @@ public class CreateLaneFeature extends AbstractCreateFeature {
 
 	private static int index = 1;
 
-	private FeatureSupport support = new FeatureSupport() {
-		@Override
-		public Object getBusinessObject(PictogramElement element) {
-			return getBusinessObjectForPictogramElement(element);
-		}
-	};
-
 	public CreateLaneFeature(IFeatureProvider fp) {
 		super(fp, "Lane", "A sub-partition in a process that helps to organize and categorize activities");
 	}
@@ -31,9 +23,9 @@ public class CreateLaneFeature extends AbstractCreateFeature {
 	@Override
 	public boolean canCreate(ICreateContext context) {
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
-		boolean intoLane = support.isTargetLane(context);
-		boolean intoParticipant = support.isTargetParticipant(context);
-		boolean intoSubProcess = support.isTargetSubProcess(context);
+		boolean intoLane = FeatureSupport.isTargetLane(context);
+		boolean intoParticipant = FeatureSupport.isTargetParticipant(context);
+		boolean intoSubProcess = FeatureSupport.isTargetSubProcess(context);
 		return intoDiagram || intoLane || intoParticipant || intoSubProcess;
 	}
 
@@ -43,7 +35,7 @@ public class CreateLaneFeature extends AbstractCreateFeature {
 		try {
 			ModelHandler mh = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
 			Object o = getBusinessObjectForPictogramElement(context.getTargetContainer());
-			if (support.isTargetLane(context)) {
+			if (FeatureSupport.isTargetLane(context)) {
 				Lane targetLane = (Lane) o;
 				lane = mh.createLane(targetLane);
 			} else {

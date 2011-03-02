@@ -26,13 +26,6 @@ import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
 public class AddLaneFeature extends AbstractBpmnAddFeature {
 
-	private final FeatureSupport support = new FeatureSupport() {
-		@Override
-		public Object getBusinessObject(PictogramElement element) {
-			return getBusinessObjectForPictogramElement(element);
-		}
-	};
-
 	public AddLaneFeature(IFeatureProvider fp) {
 		super(fp);
 	}
@@ -41,8 +34,8 @@ public class AddLaneFeature extends AbstractBpmnAddFeature {
 	public boolean canAdd(IAddContext context) {
 		boolean isLane = context.getNewObject() instanceof Lane;
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
-		boolean intoLane = support.isTargetLane(context);
-		boolean intoParticipant = support.isTargetParticipant(context);
+		boolean intoLane = FeatureSupport.isTargetLane(context);
+		boolean intoParticipant = FeatureSupport.isTargetParticipant(context);
 		return isLane && (intoDiagram || intoLane || intoParticipant);
 	}
 
@@ -62,7 +55,7 @@ public class AddLaneFeature extends AbstractBpmnAddFeature {
 		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
 		gaService.setRenderingStyle(rect, gradient);
 
-		if (support.isTargetLane(context)) {
+		if (FeatureSupport.isTargetLane(context)) {
 			GraphicsAlgorithm ga = context.getTargetContainer().getGraphicsAlgorithm();
 
 			if (getNumberOfLanes(context) == 1) {
@@ -93,8 +86,8 @@ public class AddLaneFeature extends AbstractBpmnAddFeature {
 		peCreateService.createChopboxAnchor(containerShape);
 		layoutPictogramElement(containerShape);
 
-		if (support.isTargetLane(context)) {
-			support.redraw(context.getTargetContainer());
+		if (FeatureSupport.isTargetLane(context)) {
+			FeatureSupport.redraw(context.getTargetContainer());
 		}
 		return containerShape;
 	}

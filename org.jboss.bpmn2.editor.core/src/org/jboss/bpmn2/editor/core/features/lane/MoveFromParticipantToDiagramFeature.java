@@ -11,6 +11,7 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
+import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 
 public class MoveFromParticipantToDiagramFeature extends MoveLaneFeature {
 
@@ -26,7 +27,7 @@ public class MoveFromParticipantToDiagramFeature extends MoveLaneFeature {
 	@Override
 	protected void internalMove(IMoveShapeContext context) {
 		modifyModelStructure(context);
-		support.redraw(context.getSourceContainer());
+		FeatureSupport.redraw(context.getSourceContainer());
 	}
 
 	private void modifyModelStructure(IMoveShapeContext context) {
@@ -35,7 +36,7 @@ public class MoveFromParticipantToDiagramFeature extends MoveLaneFeature {
 		Participant internalParticipant = null;
 
 		try {
-			ModelHandler handler = support.getModelHanderInstance(getDiagram());
+			ModelHandler handler = FeatureSupport.getModelHanderInstance(getDiagram());
 			internalParticipant = handler.getInternalParticipant();
 			handler.moveLane(movedLane, internalParticipant);
 		} catch (IOException e) {

@@ -26,13 +26,6 @@ import org.jboss.bpmn2.editor.core.features.StyleUtil;
 @Deprecated
 public class AddCollapsedSubprocessFeature extends AbstractAddFeature {
 
-	protected FeatureSupport support = new FeatureSupport() {
-		@Override
-		public Object getBusinessObject(PictogramElement element) {
-			return getBusinessObjectForPictogramElement(element);
-		}
-	};
-
 	public AddCollapsedSubprocessFeature(IFeatureProvider fp) {
 		super(fp);
 	}
@@ -41,8 +34,8 @@ public class AddCollapsedSubprocessFeature extends AbstractAddFeature {
 	public boolean canAdd(IAddContext context) {
 		boolean isSubProcess = context.getNewObject() instanceof SubProcess;
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
-		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context);
-		boolean intoParticipant = support.isTargetParticipant(context);
+		boolean intoLane = FeatureSupport.isTargetLane(context) && FeatureSupport.isTargetLaneOnTop(context);
+		boolean intoParticipant = FeatureSupport.isTargetParticipant(context);
 		return isSubProcess && (intoDiagram || intoLane || intoParticipant);
 	}
 

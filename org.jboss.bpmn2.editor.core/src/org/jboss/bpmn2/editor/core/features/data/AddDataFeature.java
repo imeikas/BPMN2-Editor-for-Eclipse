@@ -24,13 +24,6 @@ import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
 public class AddDataFeature<T extends BaseElement> extends AbstractBpmnAddFeature {
 
-	protected FeatureSupport support = new FeatureSupport() {
-		@Override
-		public Object getBusinessObject(PictogramElement element) {
-			return getBusinessObjectForPictogramElement(element);
-		}
-	};
-
 	public AddDataFeature(IFeatureProvider fp) {
 		super(fp);
 	}
@@ -38,9 +31,9 @@ public class AddDataFeature<T extends BaseElement> extends AbstractBpmnAddFeatur
 	@Override
 	public boolean canAdd(IAddContext context) {
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
-		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context);
-		boolean intoParticipant = support.isTargetParticipant(context);
-		boolean intoSubProcess = support.isTargetSubProcess(context);
+		boolean intoLane = FeatureSupport.isTargetLane(context) && FeatureSupport.isTargetLaneOnTop(context);
+		boolean intoParticipant = FeatureSupport.isTargetParticipant(context);
+		boolean intoSubProcess = FeatureSupport.isTargetSubProcess(context);
 		return intoDiagram || intoLane || intoParticipant || intoSubProcess;
 	}
 

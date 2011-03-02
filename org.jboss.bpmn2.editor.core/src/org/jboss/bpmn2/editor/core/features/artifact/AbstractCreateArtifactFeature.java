@@ -6,19 +6,11 @@ import org.eclipse.bpmn2.Artifact;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.features.impl.AbstractCreateFeature;
-import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 
 public abstract class AbstractCreateArtifactFeature extends AbstractCreateFeature {
-	
-	protected FeatureSupport support = new FeatureSupport() {
-		@Override
-		public Object getBusinessObject(PictogramElement element) {
-			return getBusinessObjectForPictogramElement(element);
-		}
-	};
 	
 	public AbstractCreateArtifactFeature(IFeatureProvider fp, String name, String description) {
 	    super(fp, name, description);
@@ -27,8 +19,8 @@ public abstract class AbstractCreateArtifactFeature extends AbstractCreateFeatur
 	@Override
     public boolean canCreate(ICreateContext context) {
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
-		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context);
-		boolean intoParticipant = support.isTargetParticipant(context);
+		boolean intoLane = FeatureSupport.isTargetLane(context) && FeatureSupport.isTargetLaneOnTop(context);
+		boolean intoParticipant = FeatureSupport.isTargetParticipant(context);
 		return intoDiagram || intoLane || intoParticipant;
     }
 
@@ -36,9 +28,9 @@ public abstract class AbstractCreateArtifactFeature extends AbstractCreateFeatur
     public Object[] create(ICreateContext context) {
 		Artifact artifact = null;
 		try {
-			ModelHandler handler = support.getModelHanderInstance(getDiagram());
+			ModelHandler handler = FeatureSupport.getModelHanderInstance(getDiagram());
 			artifact = createArtifact(context);
-			handler.addArtifact(support.getTargetParticipant(context, handler), artifact);
+			handler.addArtifact(FeatureSupport.getTargetParticipant(context, handler), artifact);
 		} catch (IOException e) {
 			Activator.logError(e);
 		}

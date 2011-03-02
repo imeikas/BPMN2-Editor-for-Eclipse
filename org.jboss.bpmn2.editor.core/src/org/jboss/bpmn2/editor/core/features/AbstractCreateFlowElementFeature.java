@@ -9,18 +9,10 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.features.impl.AbstractCreateFeature;
-import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 
 public abstract class AbstractCreateFlowElementFeature<T extends FlowElement> extends AbstractCreateFeature {
-
-	protected FeatureSupport support = new FeatureSupport() {
-		@Override
-		public Object getBusinessObject(PictogramElement element) {
-			return getBusinessObjectForPictogramElement(element);
-		}
-	};
 
 	public AbstractCreateFlowElementFeature(IFeatureProvider fp, String name, String description) {
 		super(fp, name, description);
@@ -29,9 +21,9 @@ public abstract class AbstractCreateFlowElementFeature<T extends FlowElement> ex
 	@Override
 	public boolean canCreate(ICreateContext context) {
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
-		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context);
-		boolean intoParticipant = support.isTargetParticipant(context);
-		boolean intoSubProcess = support.isTargetSubProcess(context);
+		boolean intoLane = FeatureSupport.isTargetLane(context) && FeatureSupport.isTargetLaneOnTop(context);
+		boolean intoParticipant = FeatureSupport.isTargetParticipant(context);
+		boolean intoSubProcess = FeatureSupport.isTargetSubProcess(context);
 		return intoDiagram || intoLane || intoParticipant || intoSubProcess;
 	}
 
@@ -39,10 +31,10 @@ public abstract class AbstractCreateFlowElementFeature<T extends FlowElement> ex
 	public Object[] create(ICreateContext context) {
 		T element = null;
 		try {
-			ModelHandler handler = support.getModelHanderInstance(getDiagram());
+			ModelHandler handler = FeatureSupport.getModelHanderInstance(getDiagram());
 			element = createFlowElement(context);
 			element.setId(EcoreUtil.generateUUID());
-			if (support.isTargetLane(context) && element instanceof FlowNode) {
+			if (FeatureSupport.isTargetLane(context) && element instanceof FlowNode) {
 				((FlowNode) element).getLanes().add(
 						(Lane) getBusinessObjectForPictogramElement(context.getTargetContainer()));
 			}

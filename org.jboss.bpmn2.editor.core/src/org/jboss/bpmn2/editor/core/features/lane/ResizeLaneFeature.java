@@ -8,16 +8,10 @@ import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.jboss.bpmn2.editor.core.di.DIUtils;
+import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 
 public class ResizeLaneFeature extends DefaultResizeShapeFeature {
-
-	private final FeatureSupport support = new FeatureSupport() {
-		@Override
-		public Object getBusinessObject(PictogramElement element) {
-			return getBusinessObjectForPictogramElement(element);
-		}
-	};
 
 	public ResizeLaneFeature(IFeatureProvider fp) {
 		super(fp);
@@ -25,12 +19,12 @@ public class ResizeLaneFeature extends DefaultResizeShapeFeature {
 
 	@Override
 	public boolean canResizeShape(IResizeShapeContext context) {
-		boolean isLane = support.isLane(context.getPictogramElement());
+		boolean isLane = FeatureSupport.isLane(context.getPictogramElement());
 		if (!isLane) {
 			return false;
 		}
 
-		boolean isParentLane = support.isLane(((ContainerShape) context.getPictogramElement()).getContainer());
+		boolean isParentLane = FeatureSupport.isLane(((ContainerShape) context.getPictogramElement()).getContainer());
 		if (!isParentLane) {
 			return true;
 		}
@@ -43,7 +37,7 @@ public class ResizeLaneFeature extends DefaultResizeShapeFeature {
 
 		int i = compare(ga.getHeight(), ga.getWidth(), context.getHeight(), context.getWidth());
 
-		Lane lane = (Lane) support.getBusinessObject(context.getPictogramElement());
+		Lane lane = (Lane) BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(), Lane.class);
 
 		if (i < 0 && lane.getFlowNodeRefs().size() == 0) {
 			return true;

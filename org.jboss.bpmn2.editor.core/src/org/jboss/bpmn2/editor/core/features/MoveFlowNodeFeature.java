@@ -13,7 +13,6 @@ import org.eclipse.dd.dc.Bounds;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.eclipse.graphiti.features.impl.DefaultMoveShapeFeature;
-import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 
@@ -22,13 +21,6 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 	private final List<Algorithm> algorithms;
 
 	private AlgorithmContainer algorithmContainer;
-
-	protected FeatureSupport support = new FeatureSupport() {
-		@Override
-		public Object getBusinessObject(PictogramElement element) {
-			return getBusinessObjectForPictogramElement(element);
-		}
-	};
 
 	public MoveFlowNodeFeature(IFeatureProvider fp) {
 		super(fp);
@@ -48,7 +40,7 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 		}
 
 		try {
-			ModelHandler handler = support.getModelHanderInstance(getDiagram());
+			ModelHandler handler = FeatureSupport.getModelHanderInstance(getDiagram());
 
 			algorithmContainer = getAlgorithmContainer(context);
 
@@ -71,7 +63,7 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 			return;
 		}
 		try {
-			ModelHandler handler = support.getModelHanderInstance(getDiagram());
+			ModelHandler handler = FeatureSupport.getModelHanderInstance(getDiagram());
 			Object[] node = getAllBusinessObjectsForPictogramElement(context.getShape());
 			for (Object object : node) {
 				if (object instanceof FlowNode) {
@@ -176,7 +168,7 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 		@Override
 		public void move(FlowNode node, Object source, Object target) {
 			try {
-				ModelHandler handler = support.getModelHanderInstance(getDiagram());
+				ModelHandler handler = FeatureSupport.getModelHanderInstance(getDiagram());
 				handler.moveFlowNode(node, source, target);
 			} catch (IOException e) {
 				Activator.logError(e);
@@ -213,7 +205,7 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 
 		@Override
 		public boolean canApplyTo(IMoveShapeContext context) {
-			return support.isTargetLane(context);
+			return FeatureSupport.isTargetLane(context);
 		}
 
 		@Override
@@ -258,14 +250,14 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 
 		@Override
 		public boolean canApplyTo(IMoveShapeContext context) {
-			return context.getTargetContainer().equals(getDiagram()) || support.isTargetParticipant(context);
+			return context.getTargetContainer().equals(getDiagram()) || FeatureSupport.isTargetParticipant(context);
 		}
 
 		@Override
 		public boolean isMoveAllowed(Object source, Object target) {
 			try {
 				Participant p = (Participant) target;
-				if (p.equals(support.getModelHanderInstance(getDiagram()).getInternalParticipant())) {
+				if (p.equals(FeatureSupport.getModelHanderInstance(getDiagram()).getInternalParticipant())) {
 					return true;
 				}
 				if (p.getProcessRef() == null) {
