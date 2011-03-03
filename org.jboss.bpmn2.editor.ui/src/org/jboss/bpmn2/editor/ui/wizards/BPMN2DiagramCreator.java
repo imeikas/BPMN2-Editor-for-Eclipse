@@ -42,20 +42,6 @@ public class BPMN2DiagramCreator {
 
 		// FIXME: rewrite domain creation so we can drop dependency to Graphiti Example project
 		TransactionalEditingDomain domain = FileService.createEmfFileForDiagram(uri, diagram);
-		// final TransactionalEditingDomain domain = DiagramEditorFactory.createResourceSetAndEditingDomain();
-		// final ResourceSet resourceSet = domain.getResourceSet();
-		// // Create a resource for this file.
-		// final Resource resource = resourceSet.createResource(URI.createURI("bpmn:/" + uri.devicePath()));
-		// final CommandStack commandStack = domain.getCommandStack();
-		// commandStack.execute(new RecordingCommand(domain) {
-		//
-		// @Override
-		// protected void doExecute() {
-		// resource.setTrackingModification(true);
-		// resource.getContents().add(diagram);
-		//
-		// }
-		// });
 
 		String providerId = GraphitiUi.getExtensionManager().getDiagramTypeProviderId(diagram.getDiagramTypeId());
 		final DiagramEditorInput editorInput = new DiagramEditorInput(EcoreUtil.getURI(diagram), domain, providerId);

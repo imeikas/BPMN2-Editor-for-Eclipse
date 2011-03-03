@@ -129,12 +129,12 @@ public class BPMN2Editor extends DiagramEditor {
 	public void dispose() {
 		super.dispose();
 		ModelHandlerLocator.releaseModel(modelPath);
-		if (diagramFile.exists()) {
-			// try {
-			// // diagramFile.delete(true, null);
-			// } catch (CoreException e) {
-			// Activator.showErrorWithLogging(e);
-			// }
+		if (diagramFile != null && diagramFile.exists()) {
+			try {
+				diagramFile.delete(true, null);
+			} catch (CoreException e) {
+				Activator.showErrorWithLogging(e);
+			}
 		}
 	}
 }
