@@ -3,7 +3,6 @@ package org.jboss.bpmn2.editor.core.features.artifact;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.bpmn2.Association;
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.TextAnnotation;
 import org.eclipse.graphiti.features.IAddFeature;
@@ -21,9 +20,7 @@ public class ArtifactFeatureResolver implements FeatureResolver {
 
 	@Override
 	public List<ICreateConnectionFeature> getCreateConnectionFeatures(IFeatureProvider fp) {
-		List<ICreateConnectionFeature> list = new ArrayList<ICreateConnectionFeature>();
-		list.add(new CreateAssociationFeature(fp));
-		return list;
+		return new ArrayList<ICreateConnectionFeature>();
 	}
 
 	@Override
@@ -37,8 +34,6 @@ public class ArtifactFeatureResolver implements FeatureResolver {
 	public IAddFeature getAddFeature(IFeatureProvider fp, BaseElement e) {
 		if (e instanceof TextAnnotation)
 			return new AddTextAnnotationFeature(fp);
-		if (e instanceof Association)
-			return new AddAssociationFeature(fp);
 		return null;
 	}
 
