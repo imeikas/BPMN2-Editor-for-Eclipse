@@ -34,8 +34,8 @@ public class BPMN2Editor extends DiagramEditor {
 	public static String EDITOR_ID = "org.jboss.bpmn2.editor.ui.bpmn2editor";
 
 	private ModelHandler modelHandler;
-	private URI modelPath;
-	private URI diagramPath;
+	private URI modelUri;
+	private URI diagramUri;
 
 	private IFile modelFile;
 	private IFile diagramFile;
@@ -48,7 +48,7 @@ public class BPMN2Editor extends DiagramEditor {
 
 				modelFile = ((IFileEditorInput) input).getFile();
 				IPath fullPath = modelFile.getFullPath();
-				modelPath = URI.createPlatformResourceURI(fullPath.toString(), true);
+				modelUri = URI.createPlatformResourceURI(fullPath.toString(), true);
 
 				IFolder folder = getTempFolder(fullPath);
 				diagramFile = getTempFile(fullPath, folder);
@@ -57,7 +57,7 @@ public class BPMN2Editor extends DiagramEditor {
 				creator.setDiagramFile(diagramFile);
 				input = creator.createDiagram(false);
 
-				diagramPath = creator.getUri();
+				diagramUri = creator.getUri();
 			} else if (input instanceof DiagramEditorInput) {
 				String uriString = ((DiagramEditorInput) input).getUriString();
 				System.out.println(uriString);
@@ -98,7 +98,7 @@ public class BPMN2Editor extends DiagramEditor {
 		if (input instanceof DiagramEditorInput) {
 
 			ResourceSet resourceSet = getEditingDomain().getResourceSet();
-			Bpmn2ResourceImpl bpmnResource = (Bpmn2ResourceImpl) resourceSet.createResource(modelPath,
+			Bpmn2ResourceImpl bpmnResource = (Bpmn2ResourceImpl) resourceSet.createResource(modelUri,
 					"org.eclipse.bpmn2.content-type.xml");
 			try {
 				if (modelFile.exists()) {
@@ -108,8 +108,8 @@ public class BPMN2Editor extends DiagramEditor {
 				Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e);
 				ErrorUtils.showErrorWithLogging(status);
 			}
-			modelHandler = ModelHandlerLocator.createModelHandler(modelPath, bpmnResource);
-			ModelHandlerLocator.put(diagramPath, modelHandler);
+			modelHandler = ModelHandlerLocator.createModelHandler(modelUri, bpmnResource);
+			ModelHandlerLocator.put(diagramUri, modelHandler);
 			importDiagram();
 			((BasicCommandStack) getEditingDomain().getCommandStack()).saveIsDone();
 		}
@@ -127,7 +127,7 @@ public class BPMN2Editor extends DiagramEditor {
 	@Override
 	public void dispose() {
 		super.dispose();
-		ModelHandlerLocator.releaseModel(modelPath);
+		ModelHandlerLocator.releaseModel(modelUri);
 		if (diagramFile != null && diagramFile.exists()) {
 			try {
 				diagramFile.delete(true, null);
