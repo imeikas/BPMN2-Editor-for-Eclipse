@@ -37,6 +37,8 @@ public class Bpmn2Preferences {
 
 	private static HashSet<EClass> elementSet = new HashSet<EClass>();
 
+	// FIXME: Move to extension point
+
 	private static final EStructuralFeature taskName;
 	private final static EStructuralFeature waitFor;
 	private static final EStructuralFeature independent;
@@ -63,6 +65,7 @@ public class Bpmn2Preferences {
 		elementSet.add(i.getAssociation());
 		elementSet.add(i.getTextAnnotation());
 
+		// FIXME: Move to extension point
 		ExtendedMetaData emd = new BasicExtendedMetaData();
 		taskName = emd.demandFeature(DROOLS_NAMESPACE, "taskName", false);
 		waitFor = emd.demandFeature(DROOLS_NAMESPACE, "waitForCompletion", false);
@@ -103,6 +106,7 @@ public class Bpmn2Preferences {
 				}
 			}
 
+			// FIXME: create an extension
 			ArrayList<EStructuralFeature> customAttributes = getAttributes(e);
 			for (EStructuralFeature a : customAttributes) {
 				attribs.add((EAttribute) a);

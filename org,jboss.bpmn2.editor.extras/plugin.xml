@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.jboss.bpmn2.editor.custom_task">
+      <task
+            createFeature="org.jboss.bpmn2.editor.extras.EmailTaskFeatureContainer"
+            name="Email Task"
+            taskName="send">
+      </task>
+      <task
+            createFeature="org.jboss.bpmn2.editor.extras.LogTaskFeatureContainer"
+            name="Log Task"
+            taskName="send">
+      </task>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
+      <propertyTabs
+            contributorId="BPMN2.PropertyContributor">
+         <propertyTab
+               afterTab="bpmn2.advanced.tab"
+               category="BPMN2"
+               id="bpmn2.jbpm.tab"
+               label="jBPM">
+         </propertyTab>
+      </propertyTabs>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertySections">
+      <propertySections
+            contributorId="BPMN2.PropertyContributor">
+         <propertySection
+               class="org.jboss.bpmn2.editor.ui.property.JbpmPropertySection"
+               filter="org.jboss.bpmn2.editor.ui.property.Bpmn2PropertyFilter"
+               id="bpmn2.jbpm.tab"
+               tab="bpmn2.jbpm.tab">
+         </propertySection>
+      </propertySections>
+   </extension>
+
+</plugin>
