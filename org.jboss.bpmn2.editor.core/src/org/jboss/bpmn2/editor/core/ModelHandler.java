@@ -26,6 +26,7 @@ import org.eclipse.bpmn2.Process;
 import org.eclipse.bpmn2.RootElement;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.di.BPMNDiagram;
+import org.eclipse.bpmn2.di.BPMNEdge;
 import org.eclipse.bpmn2.di.BPMNShape;
 import org.eclipse.bpmn2.util.Bpmn2ResourceImpl;
 import org.eclipse.dd.di.DiagramElement;
@@ -359,7 +360,7 @@ public class ModelHandler {
 		return l;
 	}
 
-	public BPMNShape findDIElement(Diagram diagram, BaseElement element) {
+	public DiagramElement findDIElement(Diagram diagram, BaseElement element) {
 		List<BPMNDiagram> diagrams = getAll(BPMNDiagram.class);
 
 		for (BPMNDiagram d : diagrams) {
@@ -368,7 +369,10 @@ public class ModelHandler {
 			for (DiagramElement elem : planeElement) {
 				if (elem instanceof BPMNShape && element.getId() != null
 						&& element.getId().equals(((BPMNShape) elem).getBpmnElement().getId())) {
-					return ((BPMNShape) elem);
+					return (elem);
+				} else if (elem instanceof BPMNEdge && element.getId() != null
+						&& element.getId().equals(((BPMNEdge) elem).getBpmnElement().getId())) {
+					return (elem);
 				}
 			}
 		}

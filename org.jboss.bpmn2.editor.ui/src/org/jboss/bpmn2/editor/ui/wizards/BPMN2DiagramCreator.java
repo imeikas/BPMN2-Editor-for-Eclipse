@@ -2,7 +2,6 @@ package org.jboss.bpmn2.editor.ui.wizards;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -19,32 +18,48 @@ import org.eclipse.ui.PlatformUI;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.ui.editor.BPMN2Editor;
 import org.jboss.bpmn2.editor.ui.util.ErrorUtils;
+
 /**
  * 
  */
 public class BPMN2DiagramCreator {
 
-	private IProject project;
 	private IFolder diagramFolder;
 	private IFile diagramFile;
+	private URI uri;
 
-	public void createExample() throws CoreException {
-		if (diagramFolder != null && !diagramFolder.exists())
+	public void createDiagram() throws CoreException {
+		final DiagramEditorInput editorInput = createDiagram(true);
+	}
+
+	public DiagramEditorInput createDiagram(boolean openEditor) throws CoreException {
+		if (diagramFolder != null && !diagramFolder.exists()) {
 			diagramFolder.create(false, true, null);
+		}
 
-		Diagram diagram = Graphiti.getPeCreateService().createDiagram("BPMN2", diagramFile.getName(), true);
-		URI uri = URI.createPlatformResourceURI(diagramFile.getFullPath().toString(), true);
-		
-		//FIXME: rewrite domain creation so we can drop dependency to Graphiti Example project
+		final Diagram diagram = Graphiti.getPeCreateService().createDiagram("BPMN2", diagramFile.getName(), true);
+		uri = URI.createPlatformResourceURI(diagramFile.getFullPath().toString(), true);
+
+		// FIXME: rewrite domain creation so we can drop dependency to Graphiti Example project
 		TransactionalEditingDomain domain = FileService.createEmfFileForDiagram(uri, diagram);
-		
+
 		String providerId = GraphitiUi.getExtensionManager().getDiagramTypeProviderId(diagram.getDiagramTypeId());
 		final DiagramEditorInput editorInput = new DiagramEditorInput(EcoreUtil.getURI(diagram), domain, providerId);
 
+		if (openEditor) {
+			openEditor(editorInput);
+		}
+
+		return editorInput;
+	}
+
+	private void openEditor(final DiagramEditorInput editorInput) {
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				try {
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editorInput, BPMN2Editor.EDITOR_ID);
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+							.openEditor(editorInput, BPMN2Editor.EDITOR_ID);
 
 				} catch (PartInitException e) {
 					String error = "Error while opening diagram editor";
@@ -53,14 +68,6 @@ public class BPMN2DiagramCreator {
 				}
 			}
 		});
-	}
-
-	public IProject getProject() {
-		return project;
-	}
-
-	public void setProject(IProject project) {
-		this.project = project;
 	}
 
 	public IFolder getDiagramFolder() {
@@ -77,6 +84,10 @@ public class BPMN2DiagramCreator {
 
 	public void setDiagramFile(IFile diagramFile) {
 		this.diagramFile = diagramFile;
+	}
+
+	public URI getUri() {
+		return uri;
 	}
 
 }

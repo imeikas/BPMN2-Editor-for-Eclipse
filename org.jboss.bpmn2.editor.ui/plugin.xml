@@ -23,7 +23,7 @@
     <editor
           class="org.jboss.bpmn2.editor.ui.editor.BPMN2Editor"
           default="true"
-          extensions="bpmn2d"
+          extensions="bpmn2"
           id="org.jboss.bpmn2.editor.ui.bpmn2editor"
           name="BPMN2 Editor">
     </editor>

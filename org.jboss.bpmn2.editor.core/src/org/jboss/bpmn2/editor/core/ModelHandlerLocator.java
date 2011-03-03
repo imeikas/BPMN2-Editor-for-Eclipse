@@ -13,19 +13,29 @@ import org.eclipse.emf.ecore.resource.Resource;
 public class ModelHandlerLocator {
 
 	private static HashMap<URI, ModelHandler> map = new HashMap<URI, ModelHandler>();
+	private static HashMap<URI, ModelHandler> diagramMap = new HashMap<URI, ModelHandler>();
 
 	public static ModelHandler getModelHandler(Resource eResource) throws IOException {
 		URI uri = eResource.getURI();
+		String[] segments = uri.segments();
 
-		uri = uri.trimFragment();
-		uri = uri.trimFileExtension();
-		uri = uri.appendFileExtension("bpmn2");
+		// uri = uri.trimFragment();
+		// uri = uri.trimFileExtension();
+		// uri = uri.appendFileExtension("bpmn2");
 
 		return getModelHandler(uri);
 	}
 
 	public static ModelHandler getModelHandler(URI path) throws IOException {
-		return map.get(path);
+		ModelHandler modelHandler = map.get(path);
+		if (modelHandler == null) {
+			return diagramMap.get(path);
+		}
+		return modelHandler;
+	}
+
+	public static void put(URI diagramPath, ModelHandler mh) {
+		diagramMap.put(diagramPath, mh);
 	}
 
 	public static void releaseModel(URI path) {
@@ -51,17 +61,17 @@ public class ModelHandlerLocator {
 			String platformString = uri.toPlatformString(true);
 
 			// platformString is null if file is outside of workspace
-			if ((platformString == null || workspace.getRoot().getFile(new Path(platformString)).exists()) && !resource.isLoaded()) {
+			if ((platformString == null || workspace.getRoot().getFile(new Path(platformString)).exists())
+					&& !resource.isLoaded()) {
 				handler.loadResource();
 			}
 		} catch (IllegalStateException e) {
-			
+
 			// Workspace is not initialized so we must be running tests!
-			if(!resource.isLoaded()) {
+			if (!resource.isLoaded()) {
 				handler.loadResource();
 			}
 		}
-
 
 		handler.createDefinitionsIfMissing();
 		return handler;

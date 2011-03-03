@@ -4,7 +4,6 @@ import org.eclipse.bpmn2.MessageFlow;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddConnectionContext;
 import org.eclipse.graphiti.features.context.IAddContext;
-import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
 import org.eclipse.graphiti.mm.GraphicsAlgorithmContainer;
 import org.eclipse.graphiti.mm.algorithms.Ellipse;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
@@ -17,13 +16,14 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeCreateService;
 import org.eclipse.graphiti.util.ColorConstant;
 import org.eclipse.graphiti.util.IColorConstant;
+import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
 
-public class AddMessageFlowFeature extends AbstractAddShapeFeature {
-	
+public class AddMessageFlowFeature extends AbstractBpmnAddFeature {
+
 	private static final int WIDTH = 5;
 	private static final int LENGTH = 15;
 	private static final IColorConstant CLASS_FOREGROUND = new ColorConstant(146, 146, 208);
-	
+
 	public AddMessageFlowFeature(IFeatureProvider fp) {
 		super(fp);
 	}
@@ -54,20 +54,21 @@ public class AddMessageFlowFeature extends AbstractAddShapeFeature {
 			getDiagram().eResource().getContents().add(flow);
 		}
 
-		link(connection, flow);
+		createDIEdge(connection, flow);
 
 		ConnectionDecorator endDecorator = peCreateService.createConnectionDecorator(connection, false, 1.0, true);
 		createArrow(endDecorator);
-		
+
 		ConnectionDecorator startDecorator = peCreateService.createConnectionDecorator(connection, false, 0, true);
 		createEllipse(startDecorator);
-		
+
 		return connection;
 	}
-	
+
 	private Polyline createArrow(GraphicsAlgorithmContainer gaContainer) {
 		IGaService gaService = Graphiti.getGaService();
-		Polyline polyline = gaService.createPolygon(gaContainer, new int[] { -LENGTH, WIDTH, 0, 0, -LENGTH, -WIDTH, -LENGTH, WIDTH });
+		Polyline polyline = gaService.createPolygon(gaContainer, new int[] { -LENGTH, WIDTH, 0, 0, -LENGTH, -WIDTH,
+				-LENGTH, WIDTH });
 		polyline.setForeground(manageColor(CLASS_FOREGROUND));
 		polyline.setBackground(manageColor(IColorConstant.WHITE));
 		polyline.setFilled(true);
@@ -75,7 +76,7 @@ public class AddMessageFlowFeature extends AbstractAddShapeFeature {
 
 		return polyline;
 	}
-	
+
 	private Ellipse createEllipse(GraphicsAlgorithmContainer gaContainer) {
 		IGaService gaService = Graphiti.getGaService();
 		Ellipse ellipse = gaService.createEllipse(gaContainer);
