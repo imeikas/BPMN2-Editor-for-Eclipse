@@ -28,31 +28,35 @@ public abstract class AbstractAddFlowFeature extends AbstractBpmnAddFeature {
 	@Override
 	public PictogramElement add(IAddContext context) {
 		IPeService peService = Graphiti.getPeService();
-		
+
 		BaseElement element = (BaseElement) context.getNewObject();
 		IAddConnectionContext addConContext = (IAddConnectionContext) context;
-		
+
 		Connection connection = peService.createFreeFormConnection(getDiagram());
 		connection.setStart(addConContext.getSourceAnchor());
 		connection.setEnd(addConContext.getTargetAnchor());
-		
+
 		IGaService gaService = Graphiti.getGaService();
 		Polyline connectionLine = gaService.createPolyline(connection);
 		connectionLine.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 		decorateConnectionLine(connectionLine);
-		
+
 		if (element.eResource() == null) {
 			getDiagram().eResource().getContents().add(element);
 		}
-		
+
+		createDIEdge(connection, element);
 		link(connection, element);
-		
 		createConnectionDecorators(connection);
+		hook(addConContext, connection, element);
 		return connection;
 	}
 
 	abstract Class<? extends BaseElement> getBoClass();
-	
+
+	void hook(IAddContext context, Connection connection, BaseElement element) {
+	}
+
 	void decorateConnectionLine(Polyline connectionLine) {
 	}
 

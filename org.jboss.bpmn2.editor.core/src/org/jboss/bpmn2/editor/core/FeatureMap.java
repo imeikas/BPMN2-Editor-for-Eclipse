@@ -19,7 +19,6 @@ import org.jboss.bpmn2.editor.core.features.activity.task.SendTaskFeatureContain
 import org.jboss.bpmn2.editor.core.features.activity.task.ServiceTaskFeatureContainer.CreateServiceTaskFeature;
 import org.jboss.bpmn2.editor.core.features.activity.task.TaskFeatureContainer.CreateTaskFeature;
 import org.jboss.bpmn2.editor.core.features.activity.task.UserTaskFeatureContainer.CreateUserTaskFeature;
-import org.jboss.bpmn2.editor.core.features.artifact.CreateAssociationFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.CreateTextAnnotationFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.GroupFeatureContainer.CreateGroupFeature;
 import org.jboss.bpmn2.editor.core.features.data.DataInputFeatureContainer.CreateDataInputFeature;
@@ -42,6 +41,8 @@ import org.jboss.bpmn2.editor.core.features.event.definitions.MessageEventDefini
 import org.jboss.bpmn2.editor.core.features.event.definitions.SignalEventDefinitionContainer.CreateSignalEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.TerminateEventDefinitionFeatureContainer.CreateTerminateEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.TimerEventDefinitionContainer.CreateTimerEventDefinition;
+import org.jboss.bpmn2.editor.core.features.flow.AssociationFeatureContainer.CreateAssociationFeature;
+import org.jboss.bpmn2.editor.core.features.flow.MessageFlowFeatureContainer.CreateMessageFlowFeature;
 import org.jboss.bpmn2.editor.core.features.flow.SequenceFlowFeatureContainer.CreateSequenceFlowFeature;
 import org.jboss.bpmn2.editor.core.features.gateway.ComplexGatewayFeatureContainer.CreateComplexGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.gateway.EventBasedGatewayFeatureContainer.CreateEventBasedGatewayFeature;
@@ -70,7 +71,7 @@ public class FeatureMap {
 		featureMap.put(i.getTextAnnotation(), CreateTextAnnotationFeature.class);
 		featureMap.put(i.getEventBasedGateway(), CreateEventBasedGatewayFeature.class);
 		featureMap.put(i.getComplexGateway(), CreateComplexGatewayFeature.class);
-		//featureMap.put(i.getMessageFlow(), CreateMessageFlowFeature.class);
+		featureMap.put(i.getMessageFlow(), CreateMessageFlowFeature.class);
 		featureMap.put(i.getIntermediateThrowEvent(), CreateIntermediateThrowEventFeature.class);
 		featureMap.put(i.getIntermediateCatchEvent(), CreateIntermediateCatchEventFeature.class);
 		featureMap.put(i.getManualTask(), CreateManualTaskFeature.class);

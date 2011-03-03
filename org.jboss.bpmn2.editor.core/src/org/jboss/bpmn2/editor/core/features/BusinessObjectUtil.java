@@ -5,7 +5,12 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 
 public class BusinessObjectUtil {
+	
+	@SuppressWarnings("rawtypes")
 	public static boolean containsElementOfType(PictogramElement elem, Class clazz) {
+		if(elem.getLink() == null) {
+			return false;
+		}
 		EList<EObject> businessObjs = elem.getLink().getBusinessObjects();
 		for (EObject eObject : businessObjs) {
 			if (clazz.isInstance(eObject)) {
@@ -15,7 +20,8 @@ public class BusinessObjectUtil {
 		return false;
 	}
 
-	public static EObject getFirstElementOfType(PictogramElement elem, Class clazz) {
+	@SuppressWarnings("rawtypes")
+    public static EObject getFirstElementOfType(PictogramElement elem, Class clazz) {
 		if (elem.getLink() == null) {
 			return null;
 		}

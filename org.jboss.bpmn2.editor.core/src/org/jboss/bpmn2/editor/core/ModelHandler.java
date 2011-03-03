@@ -142,7 +142,7 @@ public class ModelHandler {
 	}
 
 	public Participant addParticipant() {
-		Collaboration collaboration = getCollaboration();
+		Collaboration collaboration = getOrCreateCollaboration();
 		Participant participant = FACTORY.createParticipant();
 		participant.setId(EcoreUtil.generateUUID());
 		collaboration.getParticipants().add(participant);
@@ -232,7 +232,7 @@ public class ModelHandler {
 		messageFlow.setId(EcoreUtil.generateUUID());
 		messageFlow.setSourceRef(source);
 		messageFlow.setTargetRef(target);
-		getCollaboration().getMessageFlows().add(messageFlow);
+		getOrCreateCollaboration().getMessageFlows().add(messageFlow);
 		return messageFlow;
 	}
 
@@ -253,13 +253,31 @@ public class ModelHandler {
 		return association;
 	}
 
-	public Collaboration getCollaboration() {
-		for (RootElement element : getDefinitions().getRootElements()) {
+	private Collaboration getOrCreateCollaboration() {
+		List<RootElement> rootElements = getDefinitions().getRootElements();
+		
+		for (RootElement element : rootElements) {
 			if (element instanceof Collaboration) {
 				return (Collaboration) element;
 			}
 		}
-		return null;
+		
+		Collaboration collaboration = FACTORY.createCollaboration();
+		collaboration.setId(EcoreUtil.generateUUID());
+		
+		Participant participant = FACTORY.createParticipant();
+		participant.setId(EcoreUtil.generateUUID());
+		participant.setName("Internal");
+		for (RootElement element : rootElements) {
+			if(element instanceof Process) {
+				participant.setProcessRef((Process) element);
+				break;
+			}
+		}
+		collaboration.getParticipants().add(participant);
+		rootElements.add(collaboration);
+		
+		return collaboration;
 	}
 
 	public Bpmn2ResourceImpl getResource() {
@@ -301,7 +319,7 @@ public class ModelHandler {
 	}
 
 	public Participant getInternalParticipant() {
-		return getCollaboration().getParticipants().get(0);
+		return getOrCreateCollaboration().getParticipants().get(0);
 	}
 
 	public FlowElementsContainer getFlowElementContainer(Object o) {
@@ -324,8 +342,8 @@ public class ModelHandler {
 		}
 
 		Process process = findElementOfType(Process.class, o);
-
-		for (Participant p : getCollaboration().getParticipants()) {
+		
+		for (Participant p : getOrCreateCollaboration().getParticipants()) {
 			if (p.getProcessRef().equals(process)) {
 				return p;
 			}
@@ -347,8 +365,8 @@ public class ModelHandler {
 		return findElementOfType(clazz, ((BaseElement) from).eContainer());
 	}
 
-	@SuppressWarnings("rawtypes")
-	public <T> List<T> getAll(final Class<T> class1) {
+	@SuppressWarnings("unchecked")
+    public <T> List<T> getAll(final Class<T> class1) {
 		ArrayList<T> l = new ArrayList<T>();
 		TreeIterator<EObject> contents = resource.getAllContents();
 		for (; contents.hasNext();) {

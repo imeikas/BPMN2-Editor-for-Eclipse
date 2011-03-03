@@ -57,6 +57,8 @@ import org.jboss.bpmn2.editor.core.features.event.definitions.MessageEventDefini
 import org.jboss.bpmn2.editor.core.features.event.definitions.SignalEventDefinitionContainer;
 import org.jboss.bpmn2.editor.core.features.event.definitions.TerminateEventDefinitionFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.event.definitions.TimerEventDefinitionContainer;
+import org.jboss.bpmn2.editor.core.features.flow.AssociationFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.flow.MessageFlowFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.flow.SequenceFlowFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.gateway.ComplexGatewayFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.gateway.EventBasedGatewayFeatureContainer;
@@ -131,6 +133,8 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers.add(new CancelEventDefinitionContainer());
 		containers.add(new TerminateEventDefinitionFeatureContainer());
 		containers.add(new SequenceFlowFeatureContainer());
+		containers.add(new MessageFlowFeatureContainer());
+		containers.add(new AssociationFeatureContainer());
 
 		List<ICreateFeature> createFeaturesList = new ArrayList<ICreateFeature>();
 
@@ -139,27 +143,25 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		}
 
 		for (FeatureContainer container : containers) {
-			createFeaturesList.add(container.getCreateFeature(this));
+			ICreateFeature createFeature = container.getCreateFeature(this);
+			if (createFeature != null) {
+				createFeaturesList.add(createFeature);
+			}
 		}
 
 		createFeatures = createFeaturesList.toArray(new ICreateFeature[createFeaturesList.size()]);
 
 		List<ICreateConnectionFeature> createConnectionFeatureList = new ArrayList<ICreateConnectionFeature>();
-		
-		for (FeatureResolver r : resolvers) {
-			createConnectionFeatureList.addAll(r.getCreateConnectionFeatures(this));
-		}
-		
+
 		for (FeatureContainer c : containers) {
-			if(c instanceof ConnectionFeatureContainer) {
-				ConnectionFeatureContainer connectionFeatureContainer = (ConnectionFeatureContainer) c; 
+			if (c instanceof ConnectionFeatureContainer) {
+				ConnectionFeatureContainer connectionFeatureContainer = (ConnectionFeatureContainer) c;
 				createConnectionFeatureList.add(connectionFeatureContainer.getCreateConnectionFeature(this));
 			}
 		}
 
 		createConnectionFeatures = createConnectionFeatureList
 		        .toArray(new ICreateConnectionFeature[createConnectionFeatureList.size()]);
-
 	}
 
 	@Override
@@ -351,7 +353,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 		return super.getResizeShapeFeature(context);
 	}
-
+		
 	private boolean isNotBaseElement(Object o) {
 		return !(o instanceof BaseElement);
 	}
