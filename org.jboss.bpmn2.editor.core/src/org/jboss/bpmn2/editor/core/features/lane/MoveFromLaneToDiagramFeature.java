@@ -7,6 +7,7 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
+import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 
 public class MoveFromLaneToDiagramFeature extends MoveLaneFeature {
 	
@@ -22,7 +23,7 @@ public class MoveFromLaneToDiagramFeature extends MoveLaneFeature {
 	@Override
 	protected void internalMove(IMoveShapeContext context) {
 		modifyModelStructure(context);
-		support.redraw(context.getSourceContainer());
+		FeatureSupport.redraw(context.getSourceContainer());
 	}
 
 	private void modifyModelStructure(IMoveShapeContext context) {
@@ -30,7 +31,7 @@ public class MoveFromLaneToDiagramFeature extends MoveLaneFeature {
 		Lane movedLane = (Lane) getBusinessObjectForPictogramElement(context.getShape());
 		parentLane.getChildLaneSet().getLanes().remove(movedLane);
         try {
-        	ModelHandler mh = support.getModelHanderInstance(getDiagram());
+        	ModelHandler mh = FeatureSupport.getModelHanderInstance(getDiagram());
 	        mh.laneToTop(movedLane);
         } catch (IOException e) {
         	Activator.logError(e);

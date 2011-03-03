@@ -59,6 +59,12 @@ public class ShapeUtil {
 		public Polyline circle;
 		public Polyline arrow;
 	}
+	
+	public static class Expand {
+		public Rectangle rect;
+		public Polyline horizontal;
+		public Polyline vertical;
+	}
 
 	/* GATEWAY */
 
@@ -333,9 +339,11 @@ public class ShapeUtil {
 
 	/* OTHER */
 
-	private static Envelope createEnvelope(Shape shape, int x, int y, int w, int h) {
-		Rectangle rect = gaService.createRectangle(shape);
+	public static Envelope createEnvelope(GraphicsAlgorithmContainer gaContainer, int x, int y, int w, int h) {
+		Rectangle rect = gaService.createRectangle(gaContainer);
 		gaService.setLocationAndSize(rect, x, y, w, h);
+		rect.setFilled(false);
+		
 		Polyline line = gaService.createPolyline(rect, new int[] { 0, 0, w / 2, h / 2, w, 0 });
 
 		Envelope envelope = new Envelope();
@@ -354,7 +362,7 @@ public class ShapeUtil {
 
 	// ACTIVITY
 
-	public static final int TASK_DEFAULT_WIDTH = 100;
+	public static final int TASK_DEFAULT_WIDTH = 110;
 	public static final int TASK_DEFAULT_HEIGHT = 50;
 
 	public static final int SUB_PROCEESS_DEFAULT_WIDTH = 300;
@@ -368,6 +376,8 @@ public class ShapeUtil {
 	public static final String ACTIVITY_MARKER_CONTAINER = "activity.marker.container";
 	public static final String ACTIVITY_MARKER_COMPENSATE = "activity.marker.compensate";
 	public static final String ACTIVITY_MARKER_LOOP_CHARACTERISTIC = "activity.marker.loop.characteristic";
+	public static final String ACTIVITY_MARKER_AD_HOC = "activity.marker.adhoc";
+	public static final String ACTIVITY_MARKER_EXPAND = "activity.marker.expand";
 
 	public static Compensation createActivityMarkerCompensate(ContainerShape markerContainer) {
 		GraphicsAlgorithmContainer algorithmContainer = createActivityMarkerGaContainer(markerContainer,
@@ -403,12 +413,33 @@ public class ShapeUtil {
 		GraphicsAlgorithmContainer algorithmContainer = createActivityMarkerGaContainer(markerContainer,
 				ACTIVITY_MARKER_LOOP_CHARACTERISTIC);
 		MultiInstance multiInstance = new MultiInstance();
-		multiInstance.line1 = gaService.createPolyline(algorithmContainer, new int[] { 0, 2, MARKER_WIDTH, 2 });
-		multiInstance.line2 = gaService.createPolyline(algorithmContainer, new int[] { 0, 5, MARKER_WIDTH, 5 });
-		multiInstance.line3 = gaService.createPolyline(algorithmContainer, new int[] { 0, 8, MARKER_WIDTH, 8 });
-		return multiInstance;
+		multiInstance.line1 = gaService.createPolyline(algorithmContainer, new int[] {0, 2, MARKER_WIDTH, 2});
+		multiInstance.line2 = gaService.createPolyline(algorithmContainer, new int[] {0, 5, MARKER_WIDTH, 5});
+		multiInstance.line3 = gaService.createPolyline(algorithmContainer, new int[] {0, 8, MARKER_WIDTH, 8});
+	    return multiInstance;
+    }
+	
+	public static Polyline createActivityMarkerAdHoc(ContainerShape markerContainer) {
+		GraphicsAlgorithmContainer algorithmContainer = createActivityMarkerGaContainer(markerContainer, ACTIVITY_MARKER_AD_HOC);
+		int[] xy = {0, 8, 3, 2, 7, 8, 10, 2};
+		int[] bend = {0, 3, 3, 3, 3, 3, 3, 0};
+		return gaService.createPolyline(algorithmContainer, xy, bend);
+    }
+	
+	public static Expand createActivityMarkerExpand(ContainerShape markerContainer) {
+		GraphicsAlgorithmContainer algorithmContainer = createActivityMarkerGaContainer(markerContainer, ACTIVITY_MARKER_EXPAND);
+		
+		Rectangle rect = gaService.createRectangle(algorithmContainer);
+		rect.setFilled(false);
+		gaService.setLocationAndSize(rect, 0, 0, 10, 10);
+		
+		Expand expand = new Expand();
+		expand.rect = rect;
+		expand.horizontal = gaService.createPolyline(algorithmContainer, new int[] {0, 5, 10, 5});
+		expand.vertical = gaService.createPolyline(algorithmContainer, new int[] {5, 0, 5, 10});
+		return expand;
 	}
-
+	
 	public static void clearActivityMarker(ContainerShape markerContainer, String property) {
 
 		int totalWidth = 0;
@@ -447,8 +478,8 @@ public class ShapeUtil {
 
 		Iterator<Shape> iterator = peService.getAllContainedShapes(markerContainer).iterator();
 		while (iterator.hasNext()) {
-			Shape containedShape = iterator.next();
-			GraphicsAlgorithm containedGa = containedShape.getGraphicsAlgorithm();
+	        Shape containedShape = (Shape) iterator.next();
+	        GraphicsAlgorithm containedGa = containedShape.getGraphicsAlgorithm();
 			totalWidth += containedGa.getWidth();
 			lastX = containedGa.getX() + containedGa.getWidth();
 		}

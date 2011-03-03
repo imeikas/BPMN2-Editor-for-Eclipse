@@ -20,13 +20,6 @@ public class DefaultAddGatewayFeature extends AbstractBpmnAddFeature {
 
 	public static final int RADIUS = 25;
 
-	protected FeatureSupport support = new FeatureSupport() {
-		@Override
-		public Object getBusinessObject(PictogramElement element) {
-			return getBusinessObjectForPictogramElement(element);
-		}
-	};
-
 	public DefaultAddGatewayFeature(IFeatureProvider fp) {
 		super(fp);
 	}
@@ -34,9 +27,9 @@ public class DefaultAddGatewayFeature extends AbstractBpmnAddFeature {
 	@Override
 	public boolean canAdd(IAddContext context) {
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
-		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context);
-		boolean intoParticipant = support.isTargetParticipant(context);
-		boolean intoSubProcess = support.isTargetSubProcess(context);
+		boolean intoLane = FeatureSupport.isTargetLane(context) && FeatureSupport.isTargetLaneOnTop(context);
+		boolean intoParticipant = FeatureSupport.isTargetParticipant(context);
+		boolean intoSubProcess = FeatureSupport.isTargetSubProcess(context);
 		return intoDiagram || intoLane || intoParticipant || intoSubProcess;
 	}
 

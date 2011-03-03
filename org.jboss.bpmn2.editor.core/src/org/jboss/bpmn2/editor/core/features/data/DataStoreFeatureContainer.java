@@ -1,10 +1,8 @@
 package org.jboss.bpmn2.editor.core.features.data;
 
-import java.io.IOException;
-
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.DataStore;
-import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.bpmn2.RootElement;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IDirectEditingFeature;
@@ -14,10 +12,8 @@ import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.IAddContext;
-import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
-import org.eclipse.graphiti.features.impl.AbstractCreateFeature;
 import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
 import org.eclipse.graphiti.mm.algorithms.Polygon;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
@@ -30,10 +26,8 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
-import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
-import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
@@ -137,42 +131,22 @@ public class DataStoreFeatureContainer implements FeatureContainer {
 		};
 	}
 
-	public static class CreateDataStoreFeature extends AbstractCreateFeature {
+	public static class CreateDataStoreFeature extends AbstractCreateRootElementFeature {
 
 		public CreateDataStoreFeature(IFeatureProvider fp) {
 			super(fp, "Data Store", "Persist information that is beyond the scope of the process");
 		}
 
 		@Override
-		public boolean canCreate(ICreateContext context) {
-			return true;
-		}
+        RootElement createRootElement() {
+			DataStore dataStore = ModelHandler.FACTORY.createDataStore();
+			dataStore.setName("Data Store");
+	        return dataStore;
+        }
 
 		@Override
-		public Object[] create(ICreateContext context) {
-			DataStore store = null;
-			try {
-				ModelHandler handler = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
-				DataStore dataStore = ModelHandler.FACTORY.createDataStore();
-				dataStore.setId(EcoreUtil.generateUUID());
-				store = handler.addRootElement(dataStore);
-				store.setName("Data Store");
-			} catch (IOException e) {
-				Activator.logError(e);
-			}
-
-			addGraphicalRepresentation(context, store);
-			return new Object[] { store };
-		}
-
-		@Override
-		public String getCreateImageId() {
-			return ImageProvider.IMG_16_DATA_STORE;
-		}
-
-		@Override
-		public String getCreateLargeImageId() {
-			return getCreateImageId();
-		}
+        String getStencilImageId() {
+	        return ImageProvider.IMG_16_DATA_STORE;
+        }
 	}
 }

@@ -11,6 +11,7 @@ import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.SubProcess;
 import org.eclipse.bpmn2.TextAnnotation;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.features.context.IPictogramElementContext;
 import org.eclipse.graphiti.features.context.ITargetContext;
 import org.eclipse.graphiti.mm.algorithms.AbstractText;
@@ -27,73 +28,64 @@ import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
 
-public abstract class FeatureSupport {
+public class FeatureSupport {
 
-	public abstract Object getBusinessObject(PictogramElement element);
-
-	public boolean isTargetSubProcess(ITargetContext context) {
-		Object bo = getBusinessObject(context.getTargetContainer());
-		return bo != null && bo instanceof SubProcess;
+	public static boolean isTargetSubProcess(ITargetContext context) {
+		return BusinessObjectUtil.containsElementOfType(context.getTargetContainer(), SubProcess.class);
 	}
 
-	public boolean isTargetLane(ITargetContext context) {
+	public static boolean isTargetLane(ITargetContext context) {
 		return isLane(context.getTargetContainer());
 	}
 
-	public boolean isLane(PictogramElement element) {
-		Object bo = getBusinessObject(element);
-		return bo != null && bo instanceof Lane;
+	public static boolean isLane(PictogramElement element) {
+		return BusinessObjectUtil.containsElementOfType(element, Lane.class);
 	}
 
-	public boolean isTargetParticipant(ITargetContext context) {
+	public static boolean isTargetParticipant(ITargetContext context) {
 		return isParticipant(context.getTargetContainer());
 	}
 
-	public boolean isParticipant(PictogramElement element) {
-		Object bo = getBusinessObject(element);
-		return bo != null && bo instanceof Participant;
+	public static boolean isParticipant(PictogramElement element) {
+		return BusinessObjectUtil.containsElementOfType(element, Participant.class);
 	}
 
-	public boolean isLaneOnTop(Lane lane) {
+	public static boolean isLaneOnTop(Lane lane) {
 		return lane.getChildLaneSet() == null || lane.getChildLaneSet().getLanes().isEmpty();
 	}
 
-	public boolean isTargetLaneOnTop(ITargetContext context) {
-		Lane lane = (Lane) getBusinessObject(context.getTargetContainer());
+	public static boolean isTargetLaneOnTop(ITargetContext context) {
+		Lane lane = (Lane) BusinessObjectUtil.getFirstElementOfType(context.getTargetContainer(), Lane.class);
 		return lane.getChildLaneSet() == null || lane.getChildLaneSet().getLanes().isEmpty();
 	}
 
-	public ModelHandler getModelHanderInstance(Diagram diagram) throws IOException {
+	public static ModelHandler getModelHanderInstance(Diagram diagram) throws IOException {
 		return ModelHandlerLocator.getModelHandler(diagram.eResource());
 	}
 
-	public boolean isTopLane(Lane lane) {
-		return lane.getChildLaneSet() == null || lane.getChildLaneSet().getLanes().isEmpty();
-	}
-
-	public void redraw(ContainerShape container) {
+	public static void redraw(ContainerShape container) {
 		ContainerShape root = getRootContainer(container);
 		resizeRecursively(root);
 		postResizeFixLenghts(root);
 	}
 
-	private ContainerShape getRootContainer(ContainerShape container) {
+	private static ContainerShape getRootContainer(ContainerShape container) {
 		ContainerShape parent = container.getContainer();
-		Object bo = getBusinessObject(parent);
+		EObject bo = BusinessObjectUtil.getFirstElementOfType(parent, BaseElement.class);
 		if (bo != null && (bo instanceof Lane || bo instanceof Participant)) {
 			return getRootContainer(parent);
 		}
 		return container;
 	}
 
-	private Dimension resize(ContainerShape container) {
-		BaseElement elem = (BaseElement) getBusinessObject(container);
+	private static Dimension resize(ContainerShape container) {
+		EObject elem = BusinessObjectUtil.getFirstElementOfType(container, BaseElement.class);
 		IGaService service = Graphiti.getGaService();
 		int height = 0;
 		int width = container.getGraphicsAlgorithm().getWidth() - 15;
 
 		for (Shape s : container.getChildren()) {
-			Object bo = getBusinessObject(s);
+			Object bo = BusinessObjectUtil.getFirstElementOfType(s, BaseElement.class);
 			if (bo != null && (bo instanceof Lane || bo instanceof Participant) && !bo.equals(elem)) {
 				GraphicsAlgorithm ga = s.getGraphicsAlgorithm();
 				service.setLocation(ga, 15, height);
@@ -131,14 +123,14 @@ public abstract class FeatureSupport {
 		}
 	}
 
-	private Dimension resizeRecursively(ContainerShape root) {
-		BaseElement elem = (BaseElement) getBusinessObject(root);
+	private static Dimension resizeRecursively(ContainerShape root) {
+		BaseElement elem = (BaseElement) BusinessObjectUtil.getFirstElementOfType(root, BaseElement.class);
 		List<Dimension> dimensions = new ArrayList<Dimension>();
 		IGaService service = Graphiti.getGaService();
 		int foundContainers = 0;
 
 		for (Shape s : root.getChildren()) {
-			Object bo = getBusinessObject(s);
+			Object bo = BusinessObjectUtil.getFirstElementOfType(s, BaseElement.class);
 			if (checkForResize(elem, s, bo)) {
 				foundContainers += 1;
 				Dimension d = resizeRecursively((ContainerShape) s);
@@ -171,7 +163,7 @@ public abstract class FeatureSupport {
 		return getMaxDimension(dimensions);
 	}
 
-	private boolean checkForResize(BaseElement currentBo, Shape s, Object bo) {
+	private static boolean checkForResize(BaseElement currentBo, Shape s, Object bo) {
 		if (!(s instanceof ContainerShape)) {
 			return false;
 		}
@@ -184,7 +176,7 @@ public abstract class FeatureSupport {
 		return !bo.equals(currentBo);
 	}
 
-	private Dimension getMaxDimension(List<Dimension> dimensions) {
+	private static Dimension getMaxDimension(List<Dimension> dimensions) {
 		if (dimensions.isEmpty()) {
 			return null;
 		}
@@ -201,13 +193,13 @@ public abstract class FeatureSupport {
 		return new Dimension(width, height);
 	}
 
-	private void postResizeFixLenghts(ContainerShape root) {
+	private static void postResizeFixLenghts(ContainerShape root) {
 		IGaService service = Graphiti.getGaService();
-		BaseElement elem = (BaseElement) getBusinessObject(root);
+		BaseElement elem = (BaseElement) BusinessObjectUtil.getFirstElementOfType(root, BaseElement.class);
 		int width = root.getGraphicsAlgorithm().getWidth() - 15;
 
 		for (Shape s : root.getChildren()) {
-			Object o = getBusinessObject(s);
+			Object o = BusinessObjectUtil.getFirstElementOfType(s, BaseElement.class);
 			if (checkForResize(elem, s, o)) {
 				GraphicsAlgorithm ga = s.getGraphicsAlgorithm();
 				service.setSize(ga, width, ga.getHeight());
@@ -216,7 +208,7 @@ public abstract class FeatureSupport {
 		}
 	}
 
-	public String getShapeValue(IPictogramElementContext context) {
+	public static String getShapeValue(IPictogramElementContext context) {
 		String value = null;
 
 		PictogramElement pe = context.getPictogramElement();
@@ -232,8 +224,8 @@ public abstract class FeatureSupport {
 		return value;
 	}
 
-	public String getBusinessValue(IPictogramElementContext context) {
-		Object o = getBusinessObject(context.getPictogramElement());
+	public static String getBusinessValue(IPictogramElementContext context) {
+		Object o = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(), BaseElement.class);
 		if (o instanceof FlowElement) {
 			FlowElement e = (FlowElement) o;
 			return e.getName();
@@ -250,12 +242,12 @@ public abstract class FeatureSupport {
 		return null;
 	}
 
-	public Participant getTargetParticipant(ITargetContext context, ModelHandler handler) {
+	public static Participant getTargetParticipant(ITargetContext context, ModelHandler handler) {
 		if (context.getTargetContainer() instanceof Diagram) {
 			return handler.getInternalParticipant();
 		}
 
-		Object bo = getBusinessObject(context.getTargetContainer());
+		Object bo = BusinessObjectUtil.getFirstElementOfType(context.getTargetContainer(), BaseElement.class);
 
 		if (bo instanceof Participant) {
 			return (Participant) bo;

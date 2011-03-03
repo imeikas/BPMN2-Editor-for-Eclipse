@@ -7,6 +7,8 @@ import java.util.Map;
 import org.eclipse.bpmn2.Bpmn2Package;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.graphiti.features.IFeature;
+import org.jboss.bpmn2.editor.core.features.activity.subprocess.AdHocSubProcessFeatureContainer.CreateAdHocSubProcessFeature;
+import org.jboss.bpmn2.editor.core.features.activity.subprocess.CallActivityFeatureContainer.CreateCallActivityFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.activity.subprocess.SubProcessFeatureContainer.CreateSubProcessFeature;
 import org.jboss.bpmn2.editor.core.features.activity.subprocess.TransactionFeatureContainer.CreateTransactionFeature;
 import org.jboss.bpmn2.editor.core.features.activity.task.BusinessRuleTaskFeatureContainer.CreateBusinessRuleTaskFeature;
@@ -24,6 +26,7 @@ import org.jboss.bpmn2.editor.core.features.data.DataObjectFeatureContainer.Crea
 import org.jboss.bpmn2.editor.core.features.data.DataInputFeatureContainer.CreateDataInputFeature;
 import org.jboss.bpmn2.editor.core.features.data.DataOutputFeatureContainer.CreateDataOutputFeature;
 import org.jboss.bpmn2.editor.core.features.data.DataStoreFeatureContainer.CreateDataStoreFeature;
+import org.jboss.bpmn2.editor.core.features.data.MessageFeatureContainer.CreateMessageFeature;
 import org.jboss.bpmn2.editor.core.features.event.BoundaryEventFeatureContainer.CreateBoundaryEvent;
 import org.jboss.bpmn2.editor.core.features.event.EndEventFeatureContainer.CreateEndEventFeature;
 import org.jboss.bpmn2.editor.core.features.event.IntermediateCatchEventFeatureContainer.CreateIntermediateCatchEventFeature;
@@ -96,6 +99,9 @@ public class FeatureMap {
 		featureMap.put(i.getDataStore(), CreateDataStoreFeature.class);
 		featureMap.put(i.getDataInput(), CreateDataInputFeature.class);
 		featureMap.put(i.getDataOutput(), CreateDataOutputFeature.class);
+		featureMap.put(i.getAdHocSubProcess(), CreateAdHocSubProcessFeature.class);
+		featureMap.put(i.getCallActivity(), CreateCallActivityFeatureContainer.class);
+		featureMap.put(i.getMessage(), CreateMessageFeature.class);
 		FEATURE_MAP = Collections.unmodifiableMap(featureMap);
 	}
 

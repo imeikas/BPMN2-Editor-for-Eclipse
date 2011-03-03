@@ -7,7 +7,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.features.impl.AbstractCreateFeature;
-import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
@@ -16,13 +15,6 @@ import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 
 public class CreateTextAnnotationFeature extends AbstractCreateFeature {
 
-	private final FeatureSupport support = new FeatureSupport() {
-		@Override
-		public Object getBusinessObject(PictogramElement element) {
-			return getBusinessObjectForPictogramElement(element);
-		}
-	};
-
 	public CreateTextAnnotationFeature(IFeatureProvider fp) {
 		super(fp, "Annotation", "Provide additional information");
 	}
@@ -30,7 +22,7 @@ public class CreateTextAnnotationFeature extends AbstractCreateFeature {
 	@Override
 	public boolean canCreate(ICreateContext context) {
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
-		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context);
+		boolean intoLane = FeatureSupport.isTargetLane(context) && FeatureSupport.isTargetLaneOnTop(context);
 		return intoDiagram || intoLane;
 	}
 
@@ -42,7 +34,7 @@ public class CreateTextAnnotationFeature extends AbstractCreateFeature {
 			ModelHandler mh = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
 			TextAnnotation ta = ModelHandler.FACTORY.createTextAnnotation();
 			ta.setId(EcoreUtil.generateUUID());
-			annotation = mh.addArtifact(support.getTargetParticipant(context, mh), ta);
+			annotation = mh.addArtifact(FeatureSupport.getTargetParticipant(context, mh), ta);
 			annotation.setText("Enter your comment here");
 		} catch (IOException e) {
 			Activator.logError(e);

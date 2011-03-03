@@ -1,8 +1,10 @@
 package org.jboss.bpmn2.editor.core;
 
+import org.eclipse.bpmn2.AdHocSubProcess;
 import org.eclipse.bpmn2.Association;
 import org.eclipse.bpmn2.BoundaryEvent;
 import org.eclipse.bpmn2.BusinessRuleTask;
+import org.eclipse.bpmn2.CallActivity;
 import org.eclipse.bpmn2.CancelEventDefinition;
 import org.eclipse.bpmn2.CompensateEventDefinition;
 import org.eclipse.bpmn2.ComplexGateway;
@@ -86,6 +88,7 @@ public class ImageProvider extends AbstractImageProvider {
 	public static final String IMG_16_CANCEL = PREFIX + CancelEventDefinition.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_BOUNDARY_EVENT = PREFIX + BoundaryEvent.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_SUB_PROCESS = PREFIX + SubProcess.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_AD_HOC_SUB_PROCESS = PREFIX + AdHocSubProcess.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_TRANSACTION = PREFIX + Transaction.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_GROUP = PREFIX + Group.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_DATA_OBJECT = PREFIX + DataObject.class.getSimpleName().toLowerCase() + dot16;
@@ -93,6 +96,7 @@ public class ImageProvider extends AbstractImageProvider {
 	public static final String IMG_16_DATA_STORE = PREFIX + DataStore.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_DATA_INPUT = PREFIX + DataInput.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_DATA_OUTPUT = PREFIX + DataOutput.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_CALL_ACTIVITY = PREFIX + CallActivity.class.getSimpleName().toLowerCase() + dot16;
 	
 	public static final String IMG_20_CONDITION = PREFIX + ConditionalEventDefinition.class.getSimpleName().toLowerCase() + dot20;
 	public static final String IMG_20_TIMER = PREFIX + TimerEventDefinition.class.getSimpleName().toLowerCase() + dot20;
@@ -134,6 +138,7 @@ public class ImageProvider extends AbstractImageProvider {
 		addImageFilePath(IMG_16_CANCEL, ICONS_16 + "Cancel.png");
 		addImageFilePath(IMG_16_BOUNDARY_EVENT, ICONS_16 + "BoundaryEvent.png");
 		addImageFilePath(IMG_16_SUB_PROCESS, ICONS_16 + "SubProcess.png");
+		addImageFilePath(IMG_16_AD_HOC_SUB_PROCESS, ICONS_16 + "AdHocSubProcess.png");
 		addImageFilePath(IMG_16_TRANSACTION, ICONS_16 + "Transaction.png");
 		addImageFilePath(IMG_16_GROUP, ICONS_16 + "Group.png");
 		addImageFilePath(IMG_16_DATA_OBJECT, ICONS_16 + "DataObject.png");
@@ -141,6 +146,7 @@ public class ImageProvider extends AbstractImageProvider {
 		addImageFilePath(IMG_16_DATA_STORE, ICONS_16 + "DataStore.png");
 		addImageFilePath(IMG_16_DATA_INPUT, ICONS_16 + "DataInput.png");
 		addImageFilePath(IMG_16_DATA_OUTPUT, ICONS_16 + "DataOutput.png");
+		addImageFilePath(IMG_16_CALL_ACTIVITY, ICONS_16 + "CallActivity.png");
 		
 		addImageFilePath(IMG_20_CONDITION, ICONS_20 + "Condition.png");
 		addImageFilePath(IMG_20_TIMER, ICONS_20 + "Timer.png");

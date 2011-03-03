@@ -137,13 +137,6 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 
 	public static class CreateBoundaryEvent extends AbstractCreateFeature {
 
-		protected FeatureSupport support = new FeatureSupport() {
-			@Override
-			public Object getBusinessObject(PictogramElement element) {
-				return getBusinessObjectForPictogramElement(element);
-			}
-		};
-
 		public CreateBoundaryEvent(IFeatureProvider fp) {
 			super(fp, "Boundary Event", "Adds boundary event to activity, defaults to interrupting");
 		}
@@ -159,7 +152,7 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 			BoundaryEvent event = null;
 			try {
 				Activity activity = (Activity) getBusinessObjectForPictogramElement(context.getTargetContainer());
-				ModelHandler handler = support.getModelHanderInstance(getDiagram());
+				ModelHandler handler = FeatureSupport.getModelHanderInstance(getDiagram());
 				event = ModelHandler.FACTORY.createBoundaryEvent();
 				event.setId(EcoreUtil.generateUUID());
 				event.setAttachedToRef(activity);

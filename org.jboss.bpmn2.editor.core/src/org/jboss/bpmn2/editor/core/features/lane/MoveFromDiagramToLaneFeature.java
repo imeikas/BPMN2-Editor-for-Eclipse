@@ -18,6 +18,7 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
+import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 
 public class MoveFromDiagramToLaneFeature extends MoveLaneFeature {
 
@@ -63,7 +64,7 @@ public class MoveFromDiagramToLaneFeature extends MoveLaneFeature {
 			gaService.setLocationAndSize(laneGa, 15, tga.getHeight() - 1, tga.getWidth() - 15, laneGa.getHeight() + 1);
 		}
 
-		support.redraw(context.getTargetContainer());
+		FeatureSupport.redraw(context.getTargetContainer());
 	}
 
 	private void modifyModelStructure(Lane targetLane, Lane lane) {

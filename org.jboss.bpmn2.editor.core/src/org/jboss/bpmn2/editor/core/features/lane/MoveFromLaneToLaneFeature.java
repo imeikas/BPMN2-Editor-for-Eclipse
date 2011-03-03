@@ -12,6 +12,7 @@ import org.eclipse.graphiti.features.context.ITargetContext;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
+import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 
 public class MoveFromLaneToLaneFeature extends MoveLaneFeature {
 
@@ -44,8 +45,8 @@ public class MoveFromLaneToLaneFeature extends MoveLaneFeature {
 
 		modifyModelStructure(sourceLane, targetLane, movedLane);
 
-		support.redraw(context.getSourceContainer());
-		support.redraw(context.getTargetContainer());
+		FeatureSupport.redraw(context.getSourceContainer());
+		FeatureSupport.redraw(context.getTargetContainer());
 	}
 
 	private void modifyModelStructure(Lane sourceLane, Lane targetLane, Lane movedLane) {
@@ -56,7 +57,7 @@ public class MoveFromLaneToLaneFeature extends MoveLaneFeature {
 		}
 
 		try {
-			ModelHandler handler = support.getModelHanderInstance(getDiagram());
+			ModelHandler handler = FeatureSupport.getModelHanderInstance(getDiagram());
 			Participant sourceParticipant = handler.getParticipant(sourceLane);
 			Participant targetParticipant = handler.getParticipant(targetLane);
 			if (!sourceParticipant.equals(targetParticipant)) {

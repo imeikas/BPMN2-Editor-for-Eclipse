@@ -33,7 +33,7 @@ public class UserTaskFeatureContainer extends AbstractTaskFeatureContainer {
 			protected void decorateActivityRectangle(RoundedRectangle rect) {
 				IGaService service = Graphiti.getGaService();
 				Image img = service.createImage(rect, ImageProvider.IMG_16_USER_TASK);
-				service.setLocationAndSize(img, 0, 0, 16, 16);
+				service.setLocationAndSize(img, 2, 2, 16, 16);
 			}
 		};
 	}

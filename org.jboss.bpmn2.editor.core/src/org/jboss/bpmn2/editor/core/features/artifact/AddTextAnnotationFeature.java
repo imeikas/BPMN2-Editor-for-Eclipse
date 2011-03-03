@@ -20,13 +20,6 @@ import org.jboss.bpmn2.editor.core.features.StyleUtil;
 
 public class AddTextAnnotationFeature extends AbstractBpmnAddFeature {
 
-	private final FeatureSupport support = new FeatureSupport() {
-		@Override
-		public Object getBusinessObject(PictogramElement element) {
-			return getBusinessObjectForPictogramElement(element);
-		}
-	};
-
 	public AddTextAnnotationFeature(IFeatureProvider fp) {
 		super(fp);
 	}
@@ -35,8 +28,8 @@ public class AddTextAnnotationFeature extends AbstractBpmnAddFeature {
 	public boolean canAdd(IAddContext context) {
 		boolean isAnnotation = context.getNewObject() instanceof TextAnnotation;
 		boolean intoDiagram = context.getTargetContainer() instanceof Diagram;
-		boolean intoLane = support.isTargetLane(context) && support.isTargetLaneOnTop(context);
-		boolean intoSubProcess = support.isTargetSubProcess(context);
+		boolean intoLane = FeatureSupport.isTargetLane(context) && FeatureSupport.isTargetLaneOnTop(context);
+		boolean intoSubProcess = FeatureSupport.isTargetSubProcess(context);
 		return isAnnotation && (intoDiagram || intoLane || intoSubProcess);
 	}
 
