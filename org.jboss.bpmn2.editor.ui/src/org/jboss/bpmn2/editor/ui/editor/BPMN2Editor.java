@@ -44,21 +44,20 @@ public class BPMN2Editor extends DiagramEditor {
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		try {
 			if (input instanceof IFileEditorInput) {
-				modelFile = ((IFileEditorInput) input).getFile();
 				BPMN2DiagramCreator creator = new BPMN2DiagramCreator();
 
-				// platform:/resource/asd/.bpmn2/new_file.bpmn2
+				modelFile = ((IFileEditorInput) input).getFile();
 				IPath fullPath = modelFile.getFullPath();
 				modelPath = URI.createPlatformResourceURI(fullPath.toString(), true);
 
 				IFolder folder = getTempFolder(fullPath);
-				IFile tempFile = getTempFile(fullPath, folder);
+				diagramFile = getTempFile(fullPath, folder);
 
-				diagramFile = tempFile;
-				creator.setDiagramFile(tempFile);
+				// Create new temporary diagram file
+				creator.setDiagramFile(diagramFile);
 				input = creator.createDiagram(false);
-				diagramPath = creator.getUri();
 
+				diagramPath = creator.getUri();
 			} else if (input instanceof DiagramEditorInput) {
 				String uriString = ((DiagramEditorInput) input).getUriString();
 				System.out.println(uriString);
