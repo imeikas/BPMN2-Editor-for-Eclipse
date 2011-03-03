@@ -22,8 +22,8 @@ import org.jboss.bpmn2.editor.core.features.activity.task.UserTaskFeatureContain
 import org.jboss.bpmn2.editor.core.features.artifact.CreateAssociationFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.CreateTextAnnotationFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.GroupFeatureContainer.CreateGroupFeature;
-import org.jboss.bpmn2.editor.core.features.data.DataObjectFeatureContainer.CreateDataObjectFeature;
 import org.jboss.bpmn2.editor.core.features.data.DataInputFeatureContainer.CreateDataInputFeature;
+import org.jboss.bpmn2.editor.core.features.data.DataObjectFeatureContainer.CreateDataObjectFeature;
 import org.jboss.bpmn2.editor.core.features.data.DataOutputFeatureContainer.CreateDataOutputFeature;
 import org.jboss.bpmn2.editor.core.features.data.DataStoreFeatureContainer.CreateDataStoreFeature;
 import org.jboss.bpmn2.editor.core.features.data.MessageFeatureContainer.CreateMessageFeature;
@@ -42,8 +42,7 @@ import org.jboss.bpmn2.editor.core.features.event.definitions.MessageEventDefini
 import org.jboss.bpmn2.editor.core.features.event.definitions.SignalEventDefinitionContainer.CreateSignalEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.TerminateEventDefinitionFeatureContainer.CreateTerminateEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.TimerEventDefinitionContainer.CreateTimerEventDefinition;
-import org.jboss.bpmn2.editor.core.features.flow.CreateMessageFlowFeature;
-import org.jboss.bpmn2.editor.core.features.flow.CreateSequenceFlowFeature;
+import org.jboss.bpmn2.editor.core.features.flow.SequenceFlowFeatureContainer.CreateSequenceFlowFeature;
 import org.jboss.bpmn2.editor.core.features.gateway.ComplexGatewayFeatureContainer.CreateComplexGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.gateway.EventBasedGatewayFeatureContainer.CreateEventBasedGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.gateway.ExclusiveGatewayFeatureContainer.CreateExclusiveGatewayFeature;
@@ -71,7 +70,7 @@ public class FeatureMap {
 		featureMap.put(i.getTextAnnotation(), CreateTextAnnotationFeature.class);
 		featureMap.put(i.getEventBasedGateway(), CreateEventBasedGatewayFeature.class);
 		featureMap.put(i.getComplexGateway(), CreateComplexGatewayFeature.class);
-		featureMap.put(i.getMessageFlow(), CreateMessageFlowFeature.class);
+		//featureMap.put(i.getMessageFlow(), CreateMessageFlowFeature.class);
 		featureMap.put(i.getIntermediateThrowEvent(), CreateIntermediateThrowEventFeature.class);
 		featureMap.put(i.getIntermediateCatchEvent(), CreateIntermediateCatchEventFeature.class);
 		featureMap.put(i.getManualTask(), CreateManualTaskFeature.class);

@@ -20,6 +20,7 @@ import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
+import org.jboss.bpmn2.editor.core.features.ConnectionFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.FeatureResolver;
 import org.jboss.bpmn2.editor.core.features.activity.subprocess.AdHocSubProcessFeatureContainer;
@@ -56,7 +57,7 @@ import org.jboss.bpmn2.editor.core.features.event.definitions.MessageEventDefini
 import org.jboss.bpmn2.editor.core.features.event.definitions.SignalEventDefinitionContainer;
 import org.jboss.bpmn2.editor.core.features.event.definitions.TerminateEventDefinitionFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.event.definitions.TimerEventDefinitionContainer;
-import org.jboss.bpmn2.editor.core.features.flow.FlowFeatureResolver;
+import org.jboss.bpmn2.editor.core.features.flow.SequenceFlowFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.gateway.ComplexGatewayFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.gateway.EventBasedGatewayFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.gateway.ExclusiveGatewayFeatureContainer;
@@ -86,7 +87,6 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 		// TODO convert resolvers to containers, provides better decoupling
 		resolvers = new ArrayList<FeatureResolver>();
-		resolvers.add(new FlowFeatureResolver());
 		resolvers.add(new LaneFeatureResolver());
 		resolvers.add(new ParticipantFeatureResolver());
 		resolvers.add(new ArtifactFeatureResolver());
@@ -130,6 +130,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers.add(new ErrorEventDefinitionContainer());
 		containers.add(new CancelEventDefinitionContainer());
 		containers.add(new TerminateEventDefinitionFeatureContainer());
+		containers.add(new SequenceFlowFeatureContainer());
 
 		List<ICreateFeature> createFeaturesList = new ArrayList<ICreateFeature>();
 
@@ -144,8 +145,16 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		createFeatures = createFeaturesList.toArray(new ICreateFeature[createFeaturesList.size()]);
 
 		List<ICreateConnectionFeature> createConnectionFeatureList = new ArrayList<ICreateConnectionFeature>();
+		
 		for (FeatureResolver r : resolvers) {
 			createConnectionFeatureList.addAll(r.getCreateConnectionFeatures(this));
+		}
+		
+		for (FeatureContainer c : containers) {
+			if(c instanceof ConnectionFeatureContainer) {
+				ConnectionFeatureContainer connectionFeatureContainer = (ConnectionFeatureContainer) c; 
+				createConnectionFeatureList.add(connectionFeatureContainer.getCreateConnectionFeature(this));
+			}
 		}
 
 		createConnectionFeatures = createConnectionFeatureList
