@@ -5,18 +5,24 @@ import java.util.List;
 
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.graphiti.dt.IDiagramTypeProvider;
+import org.eclipse.graphiti.features.IAddBendpointFeature;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateConnectionFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.ILayoutFeature;
+import org.eclipse.graphiti.features.IMoveBendpointFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
+import org.eclipse.graphiti.features.IRemoveBendpointFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
+import org.eclipse.graphiti.features.context.IAddBendpointContext;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.features.context.IDirectEditingContext;
 import org.eclipse.graphiti.features.context.ILayoutContext;
+import org.eclipse.graphiti.features.context.IMoveBendpointContext;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
+import org.eclipse.graphiti.features.context.IRemoveBendpointContext;
 import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
@@ -37,6 +43,9 @@ import org.jboss.bpmn2.editor.core.features.activity.task.TaskFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.activity.task.UserTaskFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.artifact.ArtifactFeatureResolver;
 import org.jboss.bpmn2.editor.core.features.artifact.GroupFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.bendpoint.AddBendpointFeature;
+import org.jboss.bpmn2.editor.core.features.bendpoint.MoveBendpointFeature;
+import org.jboss.bpmn2.editor.core.features.bendpoint.RemoveBendpointFeature;
 import org.jboss.bpmn2.editor.core.features.data.DataObjectFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.data.DataInputFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.data.DataOutputFeatureContainer;
@@ -353,7 +362,22 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 		return super.getResizeShapeFeature(context);
 	}
-		
+	
+	@Override
+	public IAddBendpointFeature getAddBendpointFeature(IAddBendpointContext context) {
+	    return new AddBendpointFeature(this);
+	}
+	
+	@Override
+	public IMoveBendpointFeature getMoveBendpointFeature(IMoveBendpointContext context) {
+	    return new MoveBendpointFeature(this);
+	}
+	
+	@Override
+	public IRemoveBendpointFeature getRemoveBendpointFeature(IRemoveBendpointContext context) {
+	    return new RemoveBendpointFeature(this);
+	}
+	
 	private boolean isNotBaseElement(Object o) {
 		return !(o instanceof BaseElement);
 	}
