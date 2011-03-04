@@ -13,13 +13,14 @@ import org.jboss.bpmn2.editor.ui.editor.BPMN2Editor;
 
 public class AdvancedPropertySection extends GFPropertySection implements ITabbedPropertyConstants {
 
-	private AdvancedPropertiesComposite composite;
+	private ImprovedAdvancedPropertiesComposite composite;
 
 	@Override
 	public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		super.createControls(parent, aTabbedPropertySheetPage);
 		parent.setLayout(new FillLayout());
-		composite = new AdvancedPropertiesComposite(parent, SWT.None);
+
+		composite = new ImprovedAdvancedPropertiesComposite(parent, SWT.BORDER);
 		composite.setSheetPage(aTabbedPropertySheetPage);
 	}
 
@@ -30,5 +31,10 @@ public class AdvancedPropertySection extends GFPropertySection implements ITabbe
 			BaseElement be = (BaseElement) Graphiti.getLinkService().getBusinessObjectForLinkedPictogramElement(pe);
 			composite.setBaseElement((BPMN2Editor) getDiagramEditor(), be);
 		}
+	}
+
+	@Override
+	public boolean shouldUseExtraSpace() {
+		return true;
 	}
 }

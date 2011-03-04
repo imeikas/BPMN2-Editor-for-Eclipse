@@ -2,7 +2,7 @@ package org.jboss.bpmn2.editor.ui.property.iospecification;
 
 import java.util.List;
 
-import org.eclipse.bpmn2.BaseElement;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.swt.SWT;
@@ -47,9 +47,9 @@ public abstract class NamedElementComposite extends AbstractPropertyComposite {
 
 	}
 
-	protected void createNameDetailsComposite(final List<BaseElement> list, final BaseElement value) {
+	protected void createNameDetailsComposite(final List<EObject> list, final EObject value) {
 		final NameDetailsComposite c = new NameDetailsComposite(this, SWT.NONE);
-		c.setBaseElement(bpmn2Editor, value);
+		c.setEObject(bpmn2Editor, value);
 		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		toolkit.adapt(c);
 		toolkit.paintBordersFor(c);
@@ -81,7 +81,7 @@ public abstract class NamedElementComposite extends AbstractPropertyComposite {
 		widgets.add(button);
 	}
 
-	public void setContent(final List<BaseElement> list) {
+	public void setContent(final List<EObject> list) {
 		cleanWidgets();
 
 		if (list == null) {
@@ -96,7 +96,7 @@ public abstract class NamedElementComposite extends AbstractPropertyComposite {
 			@SuppressWarnings("restriction")
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				final BaseElement dataOutput = getNewElement();
+				final EObject dataOutput = getNewElement();
 				TransactionalEditingDomain domain = bpmn2Editor.getEditingDomain();
 				domain.getCommandStack().execute(new RecordingCommand(domain) {
 					@Override
@@ -115,13 +115,13 @@ public abstract class NamedElementComposite extends AbstractPropertyComposite {
 		};
 		btnAddNew.addSelectionListener(listener);
 
-		for (BaseElement value : list) {
+		for (EObject value : list) {
 			createNameDetailsComposite(list, value);
 		}
 		relayout();
 	}
 
-	public abstract BaseElement getNewElement();
+	public abstract EObject getNewElement();
 
 	public abstract String getNewButtonText();
 

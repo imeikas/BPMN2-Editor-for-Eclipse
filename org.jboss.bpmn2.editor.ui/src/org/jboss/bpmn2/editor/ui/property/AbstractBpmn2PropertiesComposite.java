@@ -2,7 +2,6 @@ package org.jboss.bpmn2.editor.ui.property;
 
 import java.util.ArrayList;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.di.provider.BpmnDiItemProviderAdapterFactory;
 import org.eclipse.bpmn2.provider.Bpmn2ItemProviderAdapterFactory;
 import org.eclipse.core.databinding.Binding;
@@ -17,6 +16,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dd.dc.provider.DcItemProviderAdapterFactory;
 import org.eclipse.dd.di.provider.DiItemProviderAdapterFactory;
 import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
@@ -40,7 +40,7 @@ import org.jboss.bpmn2.editor.ui.editor.BPMN2Editor;
 public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 
 	public final static ComposedAdapterFactory ADAPTER_FACTORY;
-	protected BaseElement be;
+	protected EObject be;
 	protected BPMN2Editor bpmn2Editor;
 	protected final DataBindingContext bindingContext;
 	protected final ArrayList<Widget> widgets = new ArrayList<Widget>();
@@ -61,7 +61,7 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 	}
 
 	/**
-	 * NB! Must call setBaseElement for updating contents and rebuild the UI.
+	 * NB! Must call setEObject for updating contents and rebuild the UI.
 	 * 
 	 * @param parent
 	 * @param style
@@ -82,30 +82,30 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 
 	}
 
-	public final void setBaseElement(BPMN2Editor bpmn2Editor, final BaseElement be) {
+	public final void setEObject(BPMN2Editor bpmn2Editor, final EObject be) {
 		String projectName = bpmn2Editor.getDiagramTypeProvider().getDiagram().eResource().getURI().segment(1);
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 		setDiagramEditor(bpmn2Editor);
-		setBaseElement(be);
+		setEObject(be);
 	}
 
 	private final void setDiagramEditor(BPMN2Editor bpmn2Editor) {
 		this.bpmn2Editor = bpmn2Editor;
 	}
 
-	private final void setBaseElement(final BaseElement be) {
+	private final void setEObject(final EObject be) {
 		this.be = be;
 		cleanBindings();
 		if (be != null) {
 			createBindings();
 		}
 		layout(true, true);
-		parent.setSize(parent.computeSize(parent.getSize().x, SWT.DEFAULT, true));
+		// parent.setSize(parent.computeSize(parent.getSize().x, SWT.DEFAULT, true));
 
 	}
 
 	/**
-	 * This method is called when setBaseElement is called and this should recreate all bindings and widgets for the
+	 * This method is called when setEObject is called and this should recreate all bindings and widgets for the
 	 * component.
 	 */
 	public abstract void createBindings();

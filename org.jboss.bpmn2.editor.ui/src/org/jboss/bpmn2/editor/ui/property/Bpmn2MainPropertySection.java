@@ -1,6 +1,6 @@
 package org.jboss.bpmn2.editor.ui.property;
 
-import org.eclipse.bpmn2.BaseElement;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.ui.platform.GFPropertySection;
@@ -26,8 +26,8 @@ public class Bpmn2MainPropertySection extends GFPropertySection implements ITabb
 	public void refresh() {
 		PictogramElement pe = getSelectedPictogramElement();
 		if (pe != null) {
-			BaseElement be = (BaseElement) Graphiti.getLinkService().getBusinessObjectForLinkedPictogramElement(pe);
-			composite.setBaseElement((BPMN2Editor) getDiagramEditor(), be);
+			EObject be = Graphiti.getLinkService().getBusinessObjectForLinkedPictogramElement(pe);
+			composite.setEObject((BPMN2Editor) getDiagramEditor(), be);
 		}
 	}
 }

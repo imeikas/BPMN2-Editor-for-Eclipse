@@ -47,7 +47,7 @@ public class AdvancedPropertiesComposite extends AbstractBpmn2PropertiesComposit
 				ioSpecificationComposite = new IOSpecificationComposite(ioGroup, SWT.NONE);
 			}
 			ioGroup.setVisible(true);
-			ioSpecificationComposite.setBaseElement(bpmn2Editor, be);
+			ioSpecificationComposite.setEObject(bpmn2Editor, be);
 		}
 	}
 

@@ -2,8 +2,8 @@ package org.jboss.bpmn2.editor.ui.property.iospecification;
 
 import java.util.List;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edit.ui.celleditor.FeatureEditorDialog;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -23,7 +23,7 @@ import org.jboss.bpmn2.editor.ui.property.AbstractBpmn2PropertiesComposite;
 
 public abstract class AbstractSetsComposite extends AbstractPropertyComposite {
 	private SelectionListener editListener;
-	private List<BaseElement> list;
+	private List<EObject> list;
 	private final Button btnAddInputSet;
 	private SelectionListener listener;
 
@@ -69,7 +69,7 @@ public abstract class AbstractSetsComposite extends AbstractPropertyComposite {
 		}
 
 		public void bindReference(final EReference reference) {
-			final List<BaseElement> refs = (List<BaseElement>) be.eGet(reference);
+			final List<EObject> refs = (List<EObject>) be.eGet(reference);
 			updateTextField(refs);
 
 			if (editListener != null) {
@@ -80,23 +80,23 @@ public abstract class AbstractSetsComposite extends AbstractPropertyComposite {
 
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					List<BaseElement> l = null;
+					List<EObject> l = null;
 
 					if (modelHandler != null) {
-						l = (List<BaseElement>) modelHandler.getAll(getElementClass());
+						l = (List<EObject>) modelHandler.getAll(getElementClass());
 					}
 
 					FeatureEditorDialog featureEditorDialog = new FeatureEditorDialog(getShell(), LABEL_PROVIDER, be,
 							reference, "Select elements", l);
 					featureEditorDialog.open();
 
-					final EList<BaseElement> result = (EList<BaseElement>) featureEditorDialog.getResult();
+					final EList<EObject> result = (EList<EObject>) featureEditorDialog.getResult();
 
-					updateBaseElement(refs, result);
+					updateEObject(refs, result);
 					updateTextField(refs);
 				}
 
-				public void updateBaseElement(final List<BaseElement> refs, final EList<BaseElement> result) {
+				public void updateEObject(final List<EObject> refs, final EList<EObject> result) {
 					TransactionalEditingDomain domain = bpmn2Editor.getEditingDomain();
 					domain.getCommandStack().execute(new RecordingCommand(domain) {
 						@Override
@@ -106,7 +106,7 @@ public abstract class AbstractSetsComposite extends AbstractPropertyComposite {
 							if (result == null) {
 								return;
 							}
-							for (BaseElement di : result) {
+							for (EObject di : result) {
 								if (!refs.contains(di)) {
 									refs.add(di);
 								}
@@ -118,7 +118,7 @@ public abstract class AbstractSetsComposite extends AbstractPropertyComposite {
 			editButton.addSelectionListener(editListener);
 		}
 
-		private void updateTextField(final List<BaseElement> refs) {
+		private void updateTextField(final List<EObject> refs) {
 			String listText = "";
 			for (int i = 0; i < refs.size() - 1; i++) {
 				listText += LABEL_PROVIDER.getText(refs.get(i)) + ", ";
@@ -164,7 +164,7 @@ public abstract class AbstractSetsComposite extends AbstractPropertyComposite {
 		toolkit.adapt(label_1, true, true);
 	}
 
-	public void setSets(final List<BaseElement> list) {
+	public void setSets(final List<EObject> list) {
 		this.list = list;
 		cleanWidgets();
 
@@ -179,7 +179,7 @@ public abstract class AbstractSetsComposite extends AbstractPropertyComposite {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				final BaseElement newElem = getNewElement();
+				final EObject newElem = getNewElement();
 				TransactionalEditingDomain domain = bpmn2Editor.getEditingDomain();
 				domain.getCommandStack().execute(new RecordingCommand(domain) {
 					@Override
@@ -198,7 +198,7 @@ public abstract class AbstractSetsComposite extends AbstractPropertyComposite {
 		};
 		btnAddInputSet.addSelectionListener(listener);
 
-		for (BaseElement value : list) {
+		for (EObject value : list) {
 			createInputSetComposite(value);
 		}
 
@@ -206,9 +206,9 @@ public abstract class AbstractSetsComposite extends AbstractPropertyComposite {
 
 	}
 
-	private void createInputSetComposite(final BaseElement value) {
+	private void createInputSetComposite(final EObject value) {
 		final SetsDetailsComposite c = new SetsDetailsComposite(this, SWT.NONE);
-		c.setBaseElement(bpmn2Editor, value);
+		c.setEObject(bpmn2Editor, value);
 		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		toolkit.adapt(c);
 		toolkit.paintBordersFor(c);
@@ -239,7 +239,7 @@ public abstract class AbstractSetsComposite extends AbstractPropertyComposite {
 		widgets.add(button);
 	}
 
-	public abstract BaseElement getNewElement();
+	public abstract EObject getNewElement();
 
 	public abstract String getNewButtonText();
 
@@ -249,6 +249,6 @@ public abstract class AbstractSetsComposite extends AbstractPropertyComposite {
 
 	public abstract String getReferenceName();
 
-	public abstract Class<? extends BaseElement> getElementClass();
+	public abstract Class<? extends EObject> getElementClass();
 
 }
