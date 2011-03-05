@@ -22,7 +22,8 @@ import org.eclipse.graphiti.services.IPeCreateService;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
-import org.jboss.bpmn2.editor.core.features.StyleUtil;
+import org.jboss.bpmn2.editor.utils.AnchorUtil;
+import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class AddLaneFeature extends AbstractBpmnAddFeature {
 
@@ -84,8 +85,8 @@ public class AddLaneFeature extends AbstractBpmnAddFeature {
 		link(textShape, lane);
 
 		peCreateService.createChopboxAnchor(containerShape);
-		layoutPictogramElement(containerShape);
-
+		AnchorUtil.addFixedPointAnchors(containerShape, rect);
+		
 		if (FeatureSupport.isTargetLane(context)) {
 			FeatureSupport.redraw(context.getTargetContainer());
 		}

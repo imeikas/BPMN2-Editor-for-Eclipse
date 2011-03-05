@@ -1,13 +1,11 @@
 package org.jboss.bpmn2.editor.core.features.artifact;
 
-import org.eclipse.bpmn2.TextAnnotation;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
-import org.eclipse.graphiti.features.impl.DefaultMoveShapeFeature;
-import org.jboss.bpmn2.editor.core.di.DIUtils;
+import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 
-public class MoveTextAnnotationFeature extends DefaultMoveShapeFeature {
+public class MoveTextAnnotationFeature extends DefaultBpmnMoveFeature {
 
 	public MoveTextAnnotationFeature(IFeatureProvider fp) {
 		super(fp);
@@ -23,6 +21,6 @@ public class MoveTextAnnotationFeature extends DefaultMoveShapeFeature {
 	@Override
 	protected void internalMove(IMoveShapeContext context) {
 		super.internalMove(context);
-		DIUtils.updateDIShape(getDiagram(), context.getPictogramElement(), TextAnnotation.class);
+		//DIUtils.updateDIShape(getDiagram(), context.getPictogramElement(), TextAnnotation.class);
 	}
 }

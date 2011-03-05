@@ -10,7 +10,6 @@ import org.eclipse.graphiti.mm.algorithms.Polygon;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.eclipse.graphiti.mm.algorithms.Rectangle;
 import org.eclipse.graphiti.mm.algorithms.styles.AdaptedGradientColoredAreas;
-import org.eclipse.graphiti.mm.pictograms.ChopboxAnchor;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
@@ -20,7 +19,8 @@ import org.eclipse.graphiti.services.IPeService;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
-import org.jboss.bpmn2.editor.core.features.StyleUtil;
+import org.jboss.bpmn2.editor.utils.AnchorUtil;
+import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class AddDataFeature<T extends BaseElement> extends AbstractBpmnAddFeature {
 
@@ -76,8 +76,8 @@ public class AddDataFeature<T extends BaseElement> extends AbstractBpmnAddFeatur
 			Graphiti.getPeService().setPropertyValue(container, COLLECTION_PROPERTY, Boolean.toString(false));
 		}
 
-		ChopboxAnchor anchor = peService.createChopboxAnchor(container);
-		anchor.setReferencedGraphicsAlgorithm(rect);
+		peService.createChopboxAnchor(container);
+		AnchorUtil.addFixedPointAnchors(container, invisibleRect);
 
 		if (t.eResource() == null) {
 			getDiagram().eResource().getContents().add(t);

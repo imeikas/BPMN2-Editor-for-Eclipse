@@ -17,7 +17,8 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeCreateService;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
-import org.jboss.bpmn2.editor.core.features.StyleUtil;
+import org.jboss.bpmn2.editor.utils.AnchorUtil;
+import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class AddParticipantFeature extends AbstractBpmnAddFeature {
 
@@ -66,7 +67,8 @@ public class AddParticipantFeature extends AbstractBpmnAddFeature {
 		link(textShape, p);
 
 		peCreateService.createChopboxAnchor(containerShape);
-		layoutPictogramElement(containerShape);
+		AnchorUtil.addFixedPointAnchors(containerShape, rect);
+		
 		return containerShape;
 	}
 }

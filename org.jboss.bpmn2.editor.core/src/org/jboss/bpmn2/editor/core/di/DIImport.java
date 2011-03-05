@@ -49,7 +49,9 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 
 @SuppressWarnings("restriction")
 public class DIImport {
-
+	
+	public static final String IMPORT_PROPERTY = DIImport.class.getSimpleName().concat(".import");
+	
 	private Diagram diagram;
 	private TransactionalEditingDomain domain;
 	private ModelHandler modelHandler;
@@ -270,6 +272,7 @@ public class DIImport {
 
 		IAddFeature addFeature = featureProvider.getAddFeature(context);
 		if (addFeature.canAdd(context)) {
+			context.putProperty(IMPORT_PROPERTY, true);
 			Connection connection = (Connection) addFeature.add(context);
 
 			if (connection instanceof FreeFormConnectionImpl) {
@@ -301,31 +304,14 @@ public class DIImport {
 		org.eclipse.graphiti.mm.algorithms.styles.Point p = gaService.createPoint((int) point.getX(),
 				(int) point.getY());
 
-		int buffer = getBufferSize(elem, (Shape) elem);
 		ILocation loc = Graphiti.getPeLayoutService().getLocationRelativeToDiagram((Shape) elem);
 
 		int x = p.getX() - loc.getX();
 		int y = p.getY() - loc.getY();
 
-		// Apply buffer only when the connector connects to the bottom of the shape
-		if (Math.abs(y) > 5 && (x != 0 && Math.abs(x - ((Shape) elem).getGraphicsAlgorithm().getWidth()) > 3)) {
-			y -= buffer;
-		}
-
 		p.setX(x);
 		p.setY(y);
 
 		anchor.setLocation(p);
-	}
-
-	private int getBufferSize(PictogramElement te, Shape container) {
-		int buffer = 0;
-
-		if (!te.getGraphicsAlgorithm().getFilled() && !te.getGraphicsAlgorithm().getLineVisible()) {
-			buffer = container.getGraphicsAlgorithm().getHeight()
-					- peService.getAllContainedShapes((ContainerShape) te).iterator().next().getGraphicsAlgorithm()
-							.getHeight();
-		}
-		return buffer;
 	}
 }

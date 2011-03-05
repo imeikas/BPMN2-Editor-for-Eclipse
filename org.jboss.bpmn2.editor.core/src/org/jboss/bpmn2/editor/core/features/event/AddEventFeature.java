@@ -8,7 +8,6 @@ import org.eclipse.graphiti.mm.algorithms.Rectangle;
 import org.eclipse.graphiti.mm.algorithms.Text;
 import org.eclipse.graphiti.mm.algorithms.styles.AdaptedGradientColoredAreas;
 import org.eclipse.graphiti.mm.algorithms.styles.Orientation;
-import org.eclipse.graphiti.mm.pictograms.ChopboxAnchor;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
@@ -19,8 +18,9 @@ import org.eclipse.graphiti.util.IColorConstant;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
-import org.jboss.bpmn2.editor.core.features.ShapeUtil;
-import org.jboss.bpmn2.editor.core.features.StyleUtil;
+import org.jboss.bpmn2.editor.utils.AnchorUtil;
+import org.jboss.bpmn2.editor.utils.ShapeUtil;
+import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class AddEventFeature extends AbstractBpmnAddFeature {
 
@@ -40,9 +40,6 @@ public class AddEventFeature extends AbstractBpmnAddFeature {
 	@Override
 	public PictogramElement add(IAddContext context) {
 		Event e = (Event) context.getNewObject();
-
-		// TODO here it should get the picture from controller for the element in the given context,
-		// not create it here right away, and use the same controller in AbstractBaseElementUpdateFeature
 
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
 		ContainerShape containerShape = peCreateService.createContainerShape(context.getTargetContainer(), true);
@@ -76,8 +73,8 @@ public class AddEventFeature extends AbstractBpmnAddFeature {
 
 		createDIShape(containerShape, e);
 
-		ChopboxAnchor anchor = peCreateService.createChopboxAnchor(containerShape);
-		anchor.setReferencedGraphicsAlgorithm(ellipse);
+		peCreateService.createChopboxAnchor(containerShape);
+		AnchorUtil.addFixedPointAnchors(containerShape, ellipse);
 
 		hook(containerShape);
 

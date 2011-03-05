@@ -8,15 +8,12 @@ import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.SubProcess;
-import org.eclipse.bpmn2.di.BPMNShape;
-import org.eclipse.dd.dc.Bounds;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
-import org.eclipse.graphiti.features.impl.DefaultMoveShapeFeature;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 
-public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
+public class MoveFlowNodeFeature extends DefaultBpmnMoveFeature {
 
 	private final List<Algorithm> algorithms;
 
@@ -58,36 +55,29 @@ public class MoveFlowNodeFeature extends DefaultMoveShapeFeature {
 
 	@Override
 	protected void postMoveShape(IMoveShapeContext context) {
-		if (algorithmContainer == null) {
-			super.postMoveShape(context);
-			return;
-		}
 		try {
 			ModelHandler handler = FeatureSupport.getModelHanderInstance(getDiagram());
 			Object[] node = getAllBusinessObjectsForPictogramElement(context.getShape());
 			for (Object object : node) {
 				if (object instanceof FlowNode) {
 					algorithmContainer.move(((FlowNode) object), getSourceBo(context, handler),
-							getTargetBo(context, handler));
-				} else if (object instanceof BPMNShape) {
-					Bounds bounds = ((BPMNShape) object).getBounds();
-					bounds.setX(bounds.getX() + context.getDeltaX());
-					bounds.setY(bounds.getY() + context.getDeltaY());
+					        getTargetBo(context, handler));
 				}
 			}
 		} catch (Exception e) {
 			Activator.logError(e);
 		}
+		super.postMoveShape(context);
 	}
 
 	private Object getSourceBo(IMoveShapeContext context, ModelHandler handler) {
 		return context.getSourceContainer().equals(getDiagram()) ? handler.getInternalParticipant()
-				: getBusinessObjectForPictogramElement(context.getSourceContainer());
+		        : getBusinessObjectForPictogramElement(context.getSourceContainer());
 	}
 
 	private Object getTargetBo(IMoveShapeContext context, ModelHandler handler) {
 		return context.getTargetContainer().equals(getDiagram()) ? handler.getInternalParticipant()
-				: getBusinessObjectForPictogramElement(context.getTargetContainer());
+		        : getBusinessObjectForPictogramElement(context.getTargetContainer());
 	}
 
 	private boolean isSourceParticipant(IMoveShapeContext context) {

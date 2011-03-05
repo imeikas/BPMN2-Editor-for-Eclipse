@@ -20,7 +20,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.datatypes.ILocation;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
-import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.services.Graphiti;
@@ -38,10 +37,10 @@ public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 		try {
 			ILocation loc = Graphiti.getLayoutService().getLocationRelativeToDiagram(containerShape);
 			BPMNShape shape = (BPMNShape) ModelHandlerLocator.getModelHandler(getDiagram().eResource()).findDIElement(
-					getDiagram(), elem);
+			        getDiagram(), elem);
 			if (shape == null) {
 				EList<EObject> businessObjects = Graphiti.getLinkService().getLinkForPictogramElement(getDiagram())
-						.getBusinessObjects();
+				        .getBusinessObjects();
 				for (EObject eObject : businessObjects) {
 					if (eObject instanceof BPMNDiagram) {
 						BPMNDiagram bpmnDiagram = (BPMNDiagram) eObject;
@@ -77,7 +76,7 @@ public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 			BPMNEdge edge = (BPMNEdge) modelHandler.findDIElement(getDiagram(), conElement);
 			if (edge == null) {
 				EList<EObject> businessObjects = Graphiti.getLinkService().getLinkForPictogramElement(getDiagram())
-						.getBusinessObjects();
+				        .getBusinessObjects();
 				for (EObject eObject : businessObjects) {
 					if (eObject instanceof BPMNDiagram) {
 						BPMNDiagram bpmnDiagram = (BPMNDiagram) eObject;
@@ -86,42 +85,32 @@ public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 						edge.setBpmnElement(conElement);
 						if (conElement instanceof Association) {
 							edge.setSourceElement(modelHandler.findDIElement(getDiagram(),
-									((Association) conElement).getSourceRef()));
+							        ((Association) conElement).getSourceRef()));
 							edge.setTargetElement(modelHandler.findDIElement(getDiagram(),
-									((Association) conElement).getTargetRef()));
+							        ((Association) conElement).getTargetRef()));
 						} else if (conElement instanceof MessageFlow) {
 							edge.setSourceElement(modelHandler.findDIElement(getDiagram(),
-									(BaseElement) ((MessageFlow) conElement).getSourceRef()));
+							        (BaseElement) ((MessageFlow) conElement).getSourceRef()));
 							edge.setTargetElement(modelHandler.findDIElement(getDiagram(),
-									(BaseElement) ((MessageFlow) conElement).getTargetRef()));
+							        (BaseElement) ((MessageFlow) conElement).getTargetRef()));
 						} else if (conElement instanceof SequenceFlow) {
 							edge.setSourceElement(modelHandler.findDIElement(getDiagram(),
-									((SequenceFlow) conElement).getSourceRef()));
+							        ((SequenceFlow) conElement).getSourceRef()));
 							edge.setTargetElement(modelHandler.findDIElement(getDiagram(),
-									((SequenceFlow) conElement).getTargetRef()));
+							        ((SequenceFlow) conElement).getTargetRef()));
 						}
 
+						ILocation sourceLoc = Graphiti.getPeService().getLocationRelativeToDiagram(connection.getStart());
+						ILocation targetLoc = Graphiti.getPeService().getLocationRelativeToDiagram(connection.getEnd());
+
 						Point point = DcFactory.eINSTANCE.createPoint();
-						GraphicsAlgorithm graphicsAlgorithm = connection.getStart().getGraphicsAlgorithm();
-						// FIXME connections must create anchors!!!
-						if (graphicsAlgorithm != null) {
-							point.setX(graphicsAlgorithm.getX());
-							point.setY(graphicsAlgorithm.getY());
-						} else {
-							point.setX(connection.getStart().getParent().getGraphicsAlgorithm().getX());
-							point.setY(connection.getStart().getParent().getGraphicsAlgorithm().getY());
-						}
+						point.setX(sourceLoc.getX());
+						point.setY(sourceLoc.getY());
 						edge.getWaypoint().add(point);
 
 						point = DcFactory.eINSTANCE.createPoint();
-						graphicsAlgorithm = connection.getEnd().getGraphicsAlgorithm();
-						if (graphicsAlgorithm != null) {
-							point.setX(graphicsAlgorithm.getX());
-							point.setY(graphicsAlgorithm.getY());
-						} else {
-							point.setX(connection.getEnd().getParent().getGraphicsAlgorithm().getX());
-							point.setY(connection.getEnd().getParent().getGraphicsAlgorithm().getY());
-						}
+						point.setX(targetLoc.getX());
+						point.setY(targetLoc.getY());
 						edge.getWaypoint().add(point);
 
 						addShape(edge, bpmnDiagram);

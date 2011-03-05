@@ -14,6 +14,7 @@ import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
+import org.jboss.bpmn2.editor.core.features.DefaultBPMNResizeFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureResolver;
 
 public class ArtifactFeatureResolver implements FeatureResolver {
@@ -67,7 +68,9 @@ public class ArtifactFeatureResolver implements FeatureResolver {
 
 	@Override
 	public IResizeShapeFeature getResizeFeature(IFeatureProvider fp, BaseElement e) {
-		return null; // NOT YET SUPPORTED
+		if (e instanceof TextAnnotation)
+			return new DefaultBPMNResizeFeature(fp);
+		return null;
 	}
 
 }
