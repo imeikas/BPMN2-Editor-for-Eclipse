@@ -88,6 +88,7 @@ public class JbpmPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 				}
 			}
 		}
+		parent.setSize(parent.computeSize(parent.getSize().x, SWT.DEFAULT, true));
 	}
 
 	/**

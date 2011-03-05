@@ -100,7 +100,6 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 			createBindings();
 		}
 		layout(true, true);
-		parent.setSize(parent.computeSize(parent.getSize().x, SWT.DEFAULT, true));
 	}
 
 	/**
