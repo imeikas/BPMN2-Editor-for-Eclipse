@@ -78,7 +78,7 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 		});
 		toolkit.adapt(this);
 		toolkit.paintBordersFor(this);
-		setLayout(new GridLayout(2, false));
+		setLayout(new GridLayout(3, false));
 
 	}
 
@@ -114,7 +114,7 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 		createLabel(name);
 
 		Text text = new Text(this, SWT.BORDER);
-		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		toolkit.adapt(text, true, true);
 		widgets.add(text);
 
@@ -125,7 +125,7 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 		createLabel(name);
 
 		Text text = new Text(this, SWT.BORDER);
-		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		toolkit.adapt(text, true, true);
 		widgets.add(text);
 		return text;
@@ -135,6 +135,7 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 		createLabel(name);
 
 		Button button = new Button(this, SWT.CHECK);
+		button.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		toolkit.adapt(button, true, true);
 		widgets.add(button);
 		return button;

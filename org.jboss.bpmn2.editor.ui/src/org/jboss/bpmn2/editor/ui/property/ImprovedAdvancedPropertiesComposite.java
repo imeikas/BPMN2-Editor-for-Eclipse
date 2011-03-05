@@ -1,13 +1,16 @@
 package org.jboss.bpmn2.editor.ui.property;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.bpmn2.BaseElement;
-import org.eclipse.bpmn2.Bpmn2Factory;
+import org.eclipse.bpmn2.provider.Bpmn2ItemProviderAdapterFactory;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.edit.command.CommandParameter;
+import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -21,10 +24,8 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeEvent;
@@ -43,14 +44,15 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.jboss.bpmn2.editor.ui.editor.BPMN2Editor;
 
+@SuppressWarnings("unchecked")
 public class ImprovedAdvancedPropertiesComposite extends Composite {
 
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
 	private BaseElement be;
-	private TreeViewer treeViewer;
+	private final TreeViewer treeViewer;
 	private TabbedPropertySheetPage aTabbedPropertySheetPage;
 	private BPMN2Editor diagramEditor;
-	private MainPropertiesComposite mainPropertiesComposite;
+	private final MainPropertiesComposite mainPropertiesComposite;
 
 	/**
 	 * Create the composite.
@@ -97,48 +99,11 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				mainPropertiesComposite.setEObject(diagramEditor, getSelectedBaseElement());
+				aTabbedPropertySheetPage.resizeScrolledComposite();
 			}
 		});
 
-		treeViewer.setContentProvider(new ITreeContentProvider() {
-
-			@Override
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-
-			}
-
-			@Override
-			public void dispose() {
-
-			}
-
-			@Override
-			public boolean hasChildren(Object element) {
-				if (element instanceof BaseElement) {
-					return !((BaseElement) element).eContents().isEmpty();
-				}
-				return false;
-			}
-
-			@Override
-			public Object getParent(Object element) {
-				return null;
-			}
-
-			@Override
-			public Object[] getElements(Object inputElement) {
-				return be.eContents().toArray();
-			}
-
-			@Override
-			public Object[] getChildren(Object parentElement) {
-				if (parentElement instanceof BaseElement) {
-					return ((BaseElement) parentElement).eContents().toArray();
-				}
-				return null;
-			}
-
-		});
+		treeViewer.setContentProvider(new PropertyTreeContentProvider(this));
 		treeViewer.setLabelProvider(new AdapterFactoryLabelProvider(AbstractBpmn2PropertiesComposite.ADAPTER_FACTORY));
 
 		Section sctnEditors = toolkit.createSection(sashForm, ExpandableComposite.TITLE_BAR);
@@ -146,9 +111,9 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 		sctnEditors.setText("Attributes");
 
 		mainPropertiesComposite = new MainPropertiesComposite(sctnEditors, SWT.NONE);
+		sctnEditors.setClient(mainPropertiesComposite);
 		toolkit.adapt(mainPropertiesComposite);
 		toolkit.paintBordersFor(mainPropertiesComposite);
-		sctnEditors.setClient(mainPropertiesComposite);
 		sashForm.setWeights(new int[] { 1, 1 });
 
 	}
@@ -161,22 +126,25 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 
 	public void setSheetPage(TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		this.aTabbedPropertySheetPage = aTabbedPropertySheetPage;
+
 		MenuManager manager = new MenuManager("#PropertiesMenu");
 		manager.setRemoveAllWhenShown(true);
 		manager.addMenuListener(new IMenuListener() {
 
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
-				ImprovedAdvancedPropertiesComposite.this.buildMenu(manager);
+				ImprovedAdvancedPropertiesComposite.this.buildMenu((MenuManager) manager);
 			}
 		});
+
 		Tree tree = treeViewer.getTree();
 		Menu menu = manager.createContextMenu(tree);
 		tree.setMenu(menu);
 		aTabbedPropertySheetPage.getSite().registerContextMenu("#PropertiesMenu", manager, treeViewer);
 	}
 
-	protected void buildMenu(IMenuManager manager) {
+	protected void buildMenu(MenuManager manager) {
+
 		EObject selectedElem = getSelectedBaseElement();
 		createElementProperties(manager, selectedElem);
 
@@ -190,33 +158,44 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 		createRootProperties(manager);
 	}
 
-	private void createRootProperties(IMenuManager manager) {
-		MenuManager menuManager = new MenuManager("Add Root Property");
-		manager.add(menuManager);
-		EList<EReference> eAllContainments = be.eClass().getEAllContainments();
-		for (EReference eReference : eAllContainments) {
-			Object value = be.eGet(eReference);
-			Action item = createMenuItemFor("", be, eReference);
-			item.setEnabled(value == null || value instanceof EList);
-			menuManager.add(item);
+	private void createRootProperties(MenuManager menuManager) {
+		MenuManager manager = new MenuManager("Add Root Property");
+		menuManager.add(manager);
+		createMenuItems(manager, "", be);
+	}
+
+	private void createElementProperties(MenuManager manager, EObject baseElement) {
+		if (baseElement != null) {
+			createMenuItems(manager, "Add ", baseElement);
 		}
 	}
 
-	private void createElementProperties(IMenuManager manager, EObject baseElement) {
-		EList<EReference> eAllContainments;
-		if (baseElement != null) {
-			eAllContainments = baseElement.eClass().getEAllContainments();
-			for (EReference eReference : eAllContainments) {
-				Object value = baseElement.eGet(eReference);
-				Action item = createMenuItemFor("Add ", baseElement, eReference);
+	private void createMenuItems(MenuManager manager, String prefix, EObject baseElement) {
+		ItemProviderAdapter itemProviderAdapter = (ItemProviderAdapter) new Bpmn2ItemProviderAdapterFactory().adapt(
+				baseElement, ItemProviderAdapter.class);
+		Collection<CommandParameter> desc = (Collection<CommandParameter>) itemProviderAdapter.getNewChildDescriptors(
+				baseElement, diagramEditor.getEditingDomain(), null);
+
+		EList<EReference> eAllContainments = baseElement.eClass().getEAllContainments();
+
+		for (CommandParameter command : desc) {
+			EStructuralFeature feature = (EStructuralFeature) command.feature;
+
+			if (eAllContainments.contains(feature) && !"flowElements".equals(feature.getName())) {
+				Object value = baseElement.eGet(feature);
+
+				String name = PropertyUtil.deCamelCase(((EObject) command.value).eClass().getName());
+				Action item = createMenuItemFor(prefix + name, baseElement, (EReference) feature, command.value);
+
 				item.setEnabled(value == null || value instanceof EList);
 				manager.add(item);
 			}
 		}
 	}
 
-	private Action createMenuItemFor(String prefix, final EObject baseElement, final EReference eReference) {
-		return new Action(prefix + eReference.getName()) {
+	private Action createMenuItemFor(String prefix, final EObject baseElement, final EReference eReference,
+			final Object value) {
+		return new Action(prefix) {
 			@Override
 			public void run() {
 				TransactionalEditingDomain domain = diagramEditor.getEditingDomain();
@@ -227,12 +206,11 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 					}
 
 					private void createNewProperty(final EObject baseElement, final EReference eReference) {
-						EObject created = Bpmn2Factory.eINSTANCE.create((EClass) eReference.getEType());
 						Object eGet = baseElement.eGet(eReference);
 						if (eGet instanceof EList) {
-							((EList) eGet).add(created);
+							((EList) eGet).add(value);
 						} else {
-							baseElement.eSet(eReference, created);
+							baseElement.eSet(eReference, value);
 						}
 						treeViewer.refresh(true);
 					}
@@ -242,15 +220,11 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 	}
 
 	private EObject getSelectedBaseElement() {
-		System.out.println("startedSelection");
 		ISelection selection = treeViewer.getSelection();
-		System.out.println(selection);
 		EObject baseElement = null;
 		if (selection instanceof IStructuredSelection) {
-			System.out.println("structured selection");
 			Object firstElement = ((IStructuredSelection) selection).getFirstElement();
 			if (firstElement instanceof EObject) {
-				System.out.println("baseElement");
 				baseElement = (EObject) firstElement;
 			}
 		}
@@ -259,6 +233,7 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 
 	private Action createRemoveAction(final EObject baseElement) {
 		return new Action("Remove") {
+			@SuppressWarnings("restriction")
 			@Override
 			public void run() {
 
@@ -270,7 +245,9 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 				final EObject container = baseElement.eContainer();
 				final Object eGet = container.eGet(baseElement.eContainingFeature());
 				TransactionalEditingDomain domain = diagramEditor.getEditingDomain();
+
 				domain.getCommandStack().execute(new RecordingCommand(domain) {
+					@SuppressWarnings("rawtypes")
 					@Override
 					protected void doExecute() {
 						List<PictogramElement> pictogramElements = GraphitiUi.getLinkService().getPictogramElements(
@@ -293,7 +270,6 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 							// }
 							pictogramElement.getLink().getBusinessObjects().clear();
 						}
-						EList<EObject> eCrossReferences = baseElement.eCrossReferences();
 						treeViewer.refresh(true);
 					}
 				});

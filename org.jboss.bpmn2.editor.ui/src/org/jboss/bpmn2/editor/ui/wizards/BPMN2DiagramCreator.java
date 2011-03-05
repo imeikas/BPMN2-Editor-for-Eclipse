@@ -37,7 +37,8 @@ public class BPMN2DiagramCreator {
 			diagramFolder.create(false, true, null);
 		}
 
-		final Diagram diagram = Graphiti.getPeCreateService().createDiagram("BPMN2", diagramFile.getName(), true);
+		final Diagram diagram = Graphiti.getPeCreateService().createDiagram("BPMN2",
+				diagramFile.getFullPath().removeFileExtension().lastSegment(), true);
 		uri = URI.createPlatformResourceURI(diagramFile.getFullPath().toString(), true);
 
 		// FIXME: rewrite domain creation so we can drop dependency to Graphiti Example project
