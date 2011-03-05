@@ -175,4 +175,8 @@ public class BPMN2Editor extends DiagramEditor {
 		super.dispose();
 		ModelHandlerLocator.releaseModel(modelUri);
 	}
+
+	public IFile getModelFile() {
+		return modelFile;
+	}
 }

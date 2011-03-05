@@ -41,6 +41,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.jboss.bpmn2.editor.core.Bpmn2Preferences;
 import org.jboss.bpmn2.editor.ui.editor.BPMN2Editor;
 
 @SuppressWarnings("unchecked")
@@ -52,6 +53,7 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 	private TabbedPropertySheetPage aTabbedPropertySheetPage;
 	private BPMN2Editor diagramEditor;
 	private final MainPropertiesComposite mainPropertiesComposite;
+	private Bpmn2Preferences prefs;
 
 	/**
 	 * Create the composite.
@@ -121,6 +123,7 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 		this.diagramEditor = diagramEditor;
 		this.be = be;
 		treeViewer.setInput(be);
+		prefs = Bpmn2Preferences.getPreferences(diagramEditor.getModelFile().getProject());
 	}
 
 	public void setSheetPage(TabbedPropertySheetPage aTabbedPropertySheetPage) {
@@ -180,7 +183,8 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 		for (CommandParameter command : desc) {
 			EStructuralFeature feature = (EStructuralFeature) command.feature;
 
-			if (eAllContainments.contains(feature) && !"flowElements".equals(feature.getName())) {
+			if (eAllContainments.contains(feature) && !"flowElements".equals(feature.getName())
+					&& prefs.isEnabled(baseElement.eClass(), feature)) {
 				Object value = baseElement.eGet(feature);
 
 				String name = PropertyUtil.deCamelCase(((EObject) command.value).eClass().getName());
