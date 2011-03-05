@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+import org.eclipse.bpmn2.Task;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
@@ -25,14 +26,17 @@ import org.jboss.bpmn2.editor.core.Bpmn2Preferences;
 public class JbpmPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 
 	private ArrayList<EStructuralFeature> attributes;
+	private Button customEditorButton;
+	private GridData buttonGridData;
 
 	public JbpmPropertiesComposite(Composite parent, int none) {
 		super(parent, none);
-		Button b = new Button(this, SWT.None);
-		b.setText("Open Custom Editor");
-		b.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		toolkit.adapt(b, true, true);
-		b.addSelectionListener(new SelectionListener() {
+		customEditorButton = new Button(this, SWT.None);
+		customEditorButton.setText("Open Custom Editor");
+		buttonGridData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1);
+		customEditorButton.setLayoutData(buttonGridData);
+		toolkit.adapt(customEditorButton, true, true);
+		customEditorButton.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -52,6 +56,10 @@ public class JbpmPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 
 	@Override
 	public void createBindings() {
+		boolean showCustomButton = be.eClass().getInstanceClass().equals(Task.class);
+		customEditorButton.setVisible(showCustomButton);
+		buttonGridData.exclude = !showCustomButton;
+		
 		EList<EAttribute> eAllAttributes = be.eClass().getEAllAttributes();
 
 		for (EAttribute attrib : eAllAttributes) {
@@ -73,13 +81,14 @@ public class JbpmPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 
 				for (EStructuralFeature a : attributes) {
 					if (Object.class.equals(a.getEType().getInstanceClass())) {
-						Text t = createTextInput(a.getName());
+						Text t = createTextInput(a.getName(),false);
 						Binding bind = bind(a, t);
 						bindings.add(bind);
 					}
 				}
 			}
 		}
+		parent.setSize(parent.computeSize(parent.getSize().x, SWT.DEFAULT, true));
 	}
 
 	/**

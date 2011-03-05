@@ -22,6 +22,7 @@
        point="org.eclipse.ui.editors">
     <editor
           class="org.jboss.bpmn2.editor.ui.editor.BPMN2Editor"
+          contributorClass="org.eclipse.graphiti.ui.editor.DiagramEditorActionBarContributor"
           default="true"
           extensions="bpmn2"
           id="org.jboss.bpmn2.editor.ui.bpmn2editor"

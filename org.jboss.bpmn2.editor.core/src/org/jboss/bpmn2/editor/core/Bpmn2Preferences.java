@@ -86,7 +86,6 @@ public class Bpmn2Preferences {
 	}
 
 	public List<ToolEnablement> getAllElements() {
-		HashSet<EAttribute> attribs = new HashSet<EAttribute>();
 		ArrayList<ToolEnablement> ret = new ArrayList<ToolEnablement>();
 
 		for (EClass e : elementSet) {
@@ -95,35 +94,46 @@ public class Bpmn2Preferences {
 			tool.setTool(e);
 			tool.setEnabled(isEnabled(e));
 			ret.add(tool);
+
+			HashSet<EStructuralFeature> possibleFeatures = new HashSet<EStructuralFeature>();
+
 			ArrayList<ToolEnablement> children = new ArrayList<ToolEnablement>();
 
 			for (EAttribute a : e.getEAllAttributes()) {
-				attribs.add(a);
 				if (!("id".equals(a.getName()) || "anyAttribute".equals(a.getName()))) {
-					ToolEnablement toolEnablement = new ToolEnablement(a, tool);
-					toolEnablement.setEnabled(isEnabled(e, a));
-					children.add(toolEnablement);
+					possibleFeatures.add(a);
 				}
 			}
 
 			// FIXME: create an extension
 			ArrayList<EStructuralFeature> customAttributes = getAttributes(e);
 			for (EStructuralFeature a : customAttributes) {
-				attribs.add((EAttribute) a);
 				if (!("id".equals(a.getName()) || "anyAttribute".equals(a.getName()))) {
-					ToolEnablement toolEnablement = new ToolEnablement(a, tool);
-					toolEnablement.setEnabled(isEnabled(e, a));
-					children.add(toolEnablement);
+					possibleFeatures.add(a);
 				}
 			}
 
 			for (EReference a : e.getEAllContainments()) {
-				ToolEnablement toolEnablement = new ToolEnablement(a, tool);
-				toolEnablement.setEnabled(isEnabled(e, a));
+				possibleFeatures.add(a);
+			}
+
+			for (EReference a : e.getEAllReferences()) {
+				possibleFeatures.add(a);
+			}
+
+			for (EStructuralFeature feature : possibleFeatures) {
+				ToolEnablement toolEnablement = new ToolEnablement(feature, tool);
+				toolEnablement.setEnabled(isEnabled(e, feature));
 				children.add(toolEnablement);
 			}
+			sortTools(children);
 			tool.setChildren(children);
 		}
+		sortTools(ret);
+		return ret;
+	}
+
+	private void sortTools(ArrayList<ToolEnablement> ret) {
 		Collections.sort(ret, new Comparator<ToolEnablement>() {
 
 			@Override
@@ -132,7 +142,6 @@ public class Bpmn2Preferences {
 			}
 
 		});
-		return ret;
 	}
 
 	public boolean isEnabled(EClass element) {

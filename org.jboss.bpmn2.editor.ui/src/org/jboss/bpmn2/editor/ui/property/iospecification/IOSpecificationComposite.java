@@ -2,9 +2,9 @@ package org.jboss.bpmn2.editor.ui.property.iospecification;
 
 import java.util.List;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.InputOutputSpecification;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.RecordingCommand;
@@ -123,18 +123,18 @@ public class IOSpecificationComposite extends AbstractBpmn2PropertiesComposite {
 		for (EReference sRef : specContainments) {
 			if ("dataInputs".equals(sRef.getName())) {
 				dataInputs.setDiagramEditor(bpmn2Editor);
-				dataInputs.setContent((List<BaseElement>) spec.eGet(sRef));
+				dataInputs.setContent((List<EObject>) spec.eGet(sRef));
 				toolkit.adapt(dataInputs);
 			} else if ("dataOutputs".equals(sRef.getName())) {
 				dataOutputs.setDiagramEditor(bpmn2Editor);
-				dataOutputs.setContent((List<BaseElement>) spec.eGet(sRef));
+				dataOutputs.setContent((List<EObject>) spec.eGet(sRef));
 				toolkit.adapt(dataOutputs);
 			} else if ("inputSets".equals(sRef.getName())) {
-				List<BaseElement> sets = (List<BaseElement>) spec.eGet(sRef);
+				List<EObject> sets = (List<EObject>) spec.eGet(sRef);
 				inputSets.setDiagramEditor(bpmn2Editor);
 				inputSets.setSets(sets);
 			} else if ("outputSets".equals(sRef.getName())) {
-				List<BaseElement> sets = (List<BaseElement>) spec.eGet(sRef);
+				List<EObject> sets = (List<EObject>) spec.eGet(sRef);
 				outputSets.setDiagramEditor(bpmn2Editor);
 				outputSets.setSets(sets);
 			}
