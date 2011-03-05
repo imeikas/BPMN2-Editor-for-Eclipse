@@ -13,13 +13,9 @@ Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.ui.views.properties.tabbed;bundle-version="3.5.100",
  org.eclipse.gef;bundle-version="3.6.1",
  org.eclipse.bpmn2.edit,
- org.eclipse.graphiti.examples.common,
- org.eclipse.core.databinding.beans,
  org.eclipse.jface.databinding,
  org.eclipse.emf.databinding,
- org.eclipse.emf.edit.ui;bundle-version="2.6.0",
- org.eclipse.core.databinding.property,
- com.ibm.icu
+ org.eclipse.emf.edit.ui;bundle-version="2.6.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.jboss.bpmn2.editor.ui,

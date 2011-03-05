@@ -48,6 +48,7 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 	protected final Composite parent;
 	protected final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
 	protected IProject project;
+	private Text text_1;
 
 	static {
 		ADAPTER_FACTORY = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
@@ -79,7 +80,6 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 		toolkit.adapt(this);
 		toolkit.paintBordersFor(this);
 		setLayout(new GridLayout(3, false));
-
 	}
 
 	public final void setEObject(BPMN2Editor bpmn2Editor, final EObject be) {
@@ -100,8 +100,7 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 			createBindings();
 		}
 		layout(true, true);
-		// parent.setSize(parent.computeSize(parent.getSize().x, SWT.DEFAULT, true));
-
+		parent.setSize(parent.computeSize(parent.getSize().x, SWT.DEFAULT, true));
 	}
 
 	/**
@@ -110,11 +109,19 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 	 */
 	public abstract void createBindings();
 
-	protected Text createTextInput(String name) {
+	protected Text createTextInput(String name, boolean multiLine) {
 		createLabel(name);
 
-		Text text = new Text(this, SWT.BORDER);
-		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		int flag = SWT.BORDER;
+		if (multiLine) {
+			flag |= SWT.BORDER | SWT.WRAP | SWT.MULTI;
+		}
+		Text text = new Text(this, flag);
+		GridData data = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
+		if (multiLine) {
+			data.heightHint = 50;
+		}
+		text.setLayoutData(data);
 		toolkit.adapt(text, true, true);
 		widgets.add(text);
 

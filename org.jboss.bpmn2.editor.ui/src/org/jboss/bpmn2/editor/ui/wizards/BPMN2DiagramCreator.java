@@ -8,7 +8,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.graphiti.examples.common.FileService;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.ui.editor.DiagramEditorInput;
@@ -41,7 +40,6 @@ public class BPMN2DiagramCreator {
 				diagramFile.getFullPath().removeFileExtension().lastSegment(), true);
 		uri = URI.createPlatformResourceURI(diagramFile.getFullPath().toString(), true);
 
-		// FIXME: rewrite domain creation so we can drop dependency to Graphiti Example project
 		TransactionalEditingDomain domain = FileService.createEmfFileForDiagram(uri, diagram);
 
 		String providerId = GraphitiUi.getExtensionManager().getDiagramTypeProviderId(diagram.getDiagramTypeId());

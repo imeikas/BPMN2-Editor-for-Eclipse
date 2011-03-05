@@ -33,7 +33,7 @@ public class JbpmPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 		super(parent, none);
 		customEditorButton = new Button(this, SWT.None);
 		customEditorButton.setText("Open Custom Editor");
-		buttonGridData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
+		buttonGridData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1);
 		customEditorButton.setLayoutData(buttonGridData);
 		toolkit.adapt(customEditorButton, true, true);
 		customEditorButton.addSelectionListener(new SelectionListener() {
@@ -81,7 +81,7 @@ public class JbpmPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 
 				for (EStructuralFeature a : attributes) {
 					if (Object.class.equals(a.getEType().getInstanceClass())) {
-						Text t = createTextInput(a.getName());
+						Text t = createTextInput(a.getName(),false);
 						Binding bind = bind(a, t);
 						bindings.add(bind);
 					}

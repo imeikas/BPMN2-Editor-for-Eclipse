@@ -3,7 +3,6 @@ package org.jboss.bpmn2.editor.ui.property;
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.provider.Bpmn2ItemProviderAdapterFactory;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -48,7 +47,7 @@ import org.jboss.bpmn2.editor.ui.editor.BPMN2Editor;
 public class ImprovedAdvancedPropertiesComposite extends Composite {
 
 	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
-	private BaseElement be;
+	private EObject be;
 	private final TreeViewer treeViewer;
 	private TabbedPropertySheetPage aTabbedPropertySheetPage;
 	private BPMN2Editor diagramEditor;
@@ -118,7 +117,7 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 
 	}
 
-	public void setBaseElement(BPMN2Editor diagramEditor, BaseElement be) {
+	public void setEObject(BPMN2Editor diagramEditor, EObject be) {
 		this.diagramEditor = diagramEditor;
 		this.be = be;
 		treeViewer.setInput(be);
@@ -222,8 +221,10 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 	private EObject getSelectedBaseElement() {
 		ISelection selection = treeViewer.getSelection();
 		EObject baseElement = null;
+
 		if (selection instanceof IStructuredSelection) {
 			Object firstElement = ((IStructuredSelection) selection).getFirstElement();
+
 			if (firstElement instanceof EObject) {
 				baseElement = (EObject) firstElement;
 			}

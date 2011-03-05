@@ -16,7 +16,7 @@ public class NameDetailsComposite extends AbstractBpmn2PropertiesComposite {
 		EList<EAttribute> eAllAttributes = be.eClass().getEAllAttributes();
 		for (EAttribute a : eAllAttributes) {
 			if ("name".equals(a.getName())) {
-				bind(a, createTextInput("Name"));
+				bind(a, createTextInput("Name", false));
 			}
 		}
 	}
