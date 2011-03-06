@@ -55,9 +55,9 @@ public abstract class AbstractAddActivityFeature extends AbstractBpmnAddFeature 
 
 		Shape rectShape = peService.createShape(containerShape, false);
 		RoundedRectangle rect = gaService.createRoundedRectangle(rectShape, 5, 5);
-		rect.setStyle(StyleUtil.getStyleForClass(getDiagram()));
-		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
-		gaService.setRenderingStyle(rect, gradient);
+
+		StyleUtil.applyBGStyle(rect, this);
+
 		gaService.setLocationAndSize(rect, 0, 0, width, height - paddingBottom);
 		link(rectShape, activity);
 		decorateActivityRectangle(rect);

@@ -68,9 +68,9 @@ public class MessageFeatureContainer implements FeatureContainer {
 				
 				Envelope envelope = ShapeUtil.createEnvelope(invisibleRect, 0, 0, width, height);
 				envelope.rect.setFilled(true);
-				envelope.rect.setStyle(StyleUtil.getStyleForClass(getDiagram()));
-				AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
-				gaService.setRenderingStyle(envelope.rect, gradient);
+				
+				StyleUtil.applyBGStyle(envelope.rect, this);
+				
 				envelope.line.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 				
 				peService.createChopboxAnchor(container);

@@ -57,9 +57,9 @@ public class AddCollapsedSubprocessFeature extends AbstractAddFeature {
 
 		Shape rectShape = peService.createShape(containerShape, false);
 		RoundedRectangle rect = gaService.createRoundedRectangle(rectShape, 5, 5);
-		rect.setStyle(StyleUtil.getStyleForClass(getDiagram()));
-		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
-		gaService.setRenderingStyle(rect, gradient);
+				
+		StyleUtil.applyBGStyle(rect, this);		
+
 		gaService.setLocationAndSize(rect, 0, 0, width, height);
 		decorateRect(rect);
 		link(rectShape, subprocess);

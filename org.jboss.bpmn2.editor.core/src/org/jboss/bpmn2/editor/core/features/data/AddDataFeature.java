@@ -56,9 +56,8 @@ public class AddDataFeature<T extends BaseElement> extends AbstractBpmnAddFeatur
 		Polygon rect = gaService.createPolygon(rectShape, new int[] { 0, 0, width - e, 0, width, e, width, height, 0,
 				height });
 		rect.setLineWidth(1);
-		rect.setStyle(StyleUtil.getStyleForClass(getDiagram()));
-		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
-		gaService.setRenderingStyle(rect, gradient);
+		
+		StyleUtil.applyBGStyle(rect, this);
 
 		decorate(rect);
 

@@ -43,11 +43,8 @@ public class DefaultAddGatewayFeature extends AbstractBpmnAddFeature {
 		ContainerShape containerShape = peService.createContainerShape(context.getTargetContainer(), true);
 
 		Polygon gateway = ShapeUtil.createGateway(containerShape);
-		gateway.setStyle(StyleUtil.getStyleForClass(getDiagram()));
-
-		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
-		gaService.setRenderingStyle(gateway, gradient);
-
+		StyleUtil.applyBGStyle(gateway, this);
+				
 		gaService.setLocationAndSize(gateway, context.getX(), context.getY(), 2 * RADIUS, 2 * RADIUS);
 
 		decorateGateway(containerShape);
