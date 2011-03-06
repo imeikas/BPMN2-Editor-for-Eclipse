@@ -163,16 +163,16 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 	private void createRootProperties(MenuManager menuManager) {
 		MenuManager manager = new MenuManager("Add Root Property");
 		menuManager.add(manager);
-		createMenuItems(manager, "", be);
+		createMenuItems(manager, "", be, true);
 	}
 
 	private void createElementProperties(MenuManager manager, EObject baseElement) {
 		if (baseElement != null) {
-			createMenuItems(manager, "Add ", baseElement);
+			createMenuItems(manager, "Add ", baseElement, false);
 		}
 	}
 
-	private void createMenuItems(MenuManager manager, String prefix, EObject baseElement) {
+	private void createMenuItems(MenuManager manager, String prefix, EObject baseElement, boolean root) {
 		ItemProviderAdapter itemProviderAdapter = (ItemProviderAdapter) new Bpmn2ItemProviderAdapterFactory().adapt(
 				baseElement, ItemProviderAdapter.class);
 		Collection<CommandParameter> desc = (Collection<CommandParameter>) itemProviderAdapter.getNewChildDescriptors(
@@ -183,15 +183,28 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 		for (CommandParameter command : desc) {
 			EStructuralFeature feature = (EStructuralFeature) command.feature;
 
-			if (eAllContainments.contains(feature) // && !"flowElements".equals(feature.getName())
-					&& prefs.isEnabled(baseElement.eClass(), feature)) {
-				Object value = baseElement.eGet(feature);
+			EObject commandValue = (EObject) command.value;
+			if (root) {
+				if (eAllContainments.contains(feature) && prefs.isEnabled(commandValue.eClass())
+						&& prefs.isEnabled(commandValue.eClass(), feature)) {
+					Object value = baseElement.eGet(feature);
 
-				String name = PropertyUtil.deCamelCase(((EObject) command.value).eClass().getName());
-				Action item = createMenuItemFor(prefix + name, baseElement, (EReference) feature, command.value);
+					String name = PropertyUtil.deCamelCase(commandValue.eClass().getName());
+					Action item = createMenuItemFor(prefix + name, baseElement, (EReference) feature, command.value);
 
-				item.setEnabled(value == null || value instanceof EList);
-				manager.add(item);
+					item.setEnabled(value == null || value instanceof EList);
+					manager.add(item);
+				}
+			} else {
+				if (eAllContainments.contains(feature) && prefs.isEnabled(baseElement.eClass(), feature)) {
+					Object value = baseElement.eGet(feature);
+
+					String name = PropertyUtil.deCamelCase(commandValue.eClass().getName());
+					Action item = createMenuItemFor(prefix + name, baseElement, (EReference) feature, command.value);
+
+					item.setEnabled(value == null || value instanceof EList);
+					manager.add(item);
+				}
 			}
 		}
 	}
