@@ -2,7 +2,10 @@ package org.jboss.bpmn2.editor.ui.wizards;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
@@ -14,7 +17,7 @@ import org.eclipse.graphiti.ui.editor.DiagramEditorInput;
 import org.eclipse.graphiti.ui.services.GraphitiUi;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.jboss.bpmn2.editor.core.Activator;
+import org.jboss.bpmn2.editor.ui.Activator;
 import org.jboss.bpmn2.editor.ui.editor.BPMN2Editor;
 import org.jboss.bpmn2.editor.ui.util.ErrorUtils;
 
@@ -87,6 +90,38 @@ public class BPMN2DiagramCreator {
 
 	public URI getUri() {
 		return uri;
+	}
+
+	public static IFolder getTempFolder(IPath fullPath) throws CoreException {
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+
+		IFolder folder = root.getProject(fullPath.segment(0)).getFolder(".bpmn2");
+		if (!folder.exists()) {
+			folder.create(true, true, null);
+		}
+		String[] segments = fullPath.segments();
+		for (int i = 1; i < segments.length - 1; i++) {
+			String segment = segments[i];
+			folder = folder.getFolder(segment);
+			if (!folder.exists()) {
+				folder.create(true, true, null);
+			}
+		}
+		return folder;
+	}
+
+	public static IFile getTempFile(IPath fullPath, IFolder folder) {
+		IFile tempFile = folder.getFile(fullPath.lastSegment());
+
+		// We don't need anything from that file and to be sure there are no side effects we delete the file
+		if (tempFile.exists()) {
+			try {
+				tempFile.delete(true, null);
+			} catch (CoreException e) {
+				Activator.showErrorWithLogging(e);
+			}
+		}
+		return tempFile;
 	}
 
 }

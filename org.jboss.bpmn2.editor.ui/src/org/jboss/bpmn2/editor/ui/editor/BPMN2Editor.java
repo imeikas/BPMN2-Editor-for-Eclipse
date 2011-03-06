@@ -55,6 +55,7 @@ public class BPMN2Editor extends DiagramEditor {
 
 			} else if (input instanceof DiagramEditorInput) {
 				getModelPathFromInput((DiagramEditorInput) input);
+
 				// This was incorrectly constructed input, we ditch the old one and make a new and clean one instead
 				input = createNewDiagramEditorInput();
 			}
@@ -87,8 +88,9 @@ public class BPMN2Editor extends DiagramEditor {
 		IPath fullPath = modelFile.getFullPath();
 		modelUri = URI.createPlatformResourceURI(fullPath.toString(), true);
 
-		IFolder folder = getTempFolder(fullPath);
-		diagramFile = getTempFile(fullPath.removeFileExtension().addFileExtension("bpmn2d"), folder);
+		IFolder folder = BPMN2DiagramCreator.getTempFolder(fullPath);
+		diagramFile = BPMN2DiagramCreator
+				.getTempFile(fullPath.removeFileExtension().addFileExtension("bpmn2d"), folder);
 
 		// Create new temporary diagram file
 		creator.setDiagramFile(diagramFile);
@@ -96,38 +98,6 @@ public class BPMN2Editor extends DiagramEditor {
 
 		diagramUri = creator.getUri();
 		return input;
-	}
-
-	private IFile getTempFile(IPath fullPath, IFolder folder) {
-		IFile tempFile = folder.getFile(fullPath.lastSegment());
-
-		// We don't need anything from that file and to be sure there are no side effects we delete the file
-		if (tempFile.exists()) {
-			try {
-				tempFile.delete(true, null);
-			} catch (CoreException e) {
-				Activator.showErrorWithLogging(e);
-			}
-		}
-		return tempFile;
-	}
-
-	private IFolder getTempFolder(IPath fullPath) throws CoreException {
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-
-		IFolder folder = root.getProject(fullPath.segment(0)).getFolder(".bpmn2");
-		if (!folder.exists()) {
-			folder.create(true, true, null);
-		}
-		String[] segments = fullPath.segments();
-		for (int i = 1; i < segments.length - 1; i++) {
-			String segment = segments[i];
-			folder = folder.getFolder(segment);
-			if (!folder.exists()) {
-				folder.create(true, true, null);
-			}
-		}
-		return folder;
 	}
 
 	@Override

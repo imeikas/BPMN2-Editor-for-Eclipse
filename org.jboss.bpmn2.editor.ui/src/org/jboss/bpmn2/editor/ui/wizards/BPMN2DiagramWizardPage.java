@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -22,9 +23,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 
 /**
- * The "New" wizard page allows setting the diagramContainer for the new file as well
- * as the file name. The page will only accept file name without the extension
- * OR with the extension that matches the expected one (bpmn2d).
+ * The "New" wizard page allows setting the diagramContainer for the new file as well as the file name. The page will
+ * only accept file name without the extension OR with the extension that matches the expected one (bpmn2d).
  */
 
 public class BPMN2DiagramWizardPage extends WizardPage {
@@ -32,7 +32,7 @@ public class BPMN2DiagramWizardPage extends WizardPage {
 
 	private Text fileText;
 
-	private ISelection selection;
+	private final ISelection selection;
 
 	private IResource diagramContainer;
 
@@ -44,13 +44,14 @@ public class BPMN2DiagramWizardPage extends WizardPage {
 	public BPMN2DiagramWizardPage(ISelection selection) {
 		super("wizardPage");
 		setTitle("Multi-page Editor File");
-		setDescription("This wizard creates a new file with *.bpmn2d extension that can be opened by a multi-page editor.");
+		setDescription("This wizard creates a new file with *.bpmn2 extension that can be opened by a diagram editor.");
 		this.selection = selection;
 	}
 
 	/**
 	 * @see IDialogPage#createControl(Composite)
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout();
@@ -64,6 +65,7 @@ public class BPMN2DiagramWizardPage extends WizardPage {
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		containerText.setLayoutData(gd);
 		containerText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				dialogChanged();
 			}
@@ -72,6 +74,7 @@ public class BPMN2DiagramWizardPage extends WizardPage {
 		Button button = new Button(container, SWT.PUSH);
 		button.setText("Browse...");
 		button.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				handleBrowse();
 			}
@@ -83,6 +86,7 @@ public class BPMN2DiagramWizardPage extends WizardPage {
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		fileText.setLayoutData(gd);
 		fileText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				dialogChanged();
 			}
@@ -97,34 +101,33 @@ public class BPMN2DiagramWizardPage extends WizardPage {
 	 */
 
 	private void initialize() {
-		if (selection != null && selection.isEmpty() == false
-				&& selection instanceof IStructuredSelection) {
+		if (selection != null && selection.isEmpty() == false && selection instanceof IStructuredSelection) {
 			IStructuredSelection ssel = (IStructuredSelection) selection;
-			if (ssel.size() > 1)
+			if (ssel.size() > 1) {
 				return;
+			}
 			Object obj = ssel.getFirstElement();
 			if (obj instanceof IResource) {
 				IContainer container;
-				if (obj instanceof IContainer)
+				if (obj instanceof IContainer) {
 					container = (IContainer) obj;
-				else
+				} else {
 					container = ((IResource) obj).getParent();
+				}
 				containerText.setText(container.getFullPath().toString());
 			}
 		}
-		fileText.setText("new_file.bpmn2d");
+		fileText.setText("new_file.bpmn2");
 	}
 
 	/**
-	 * Uses the standard diagramContainer selection dialog to choose the new value for
-	 * the diagramContainer field.
+	 * Uses the standard diagramContainer selection dialog to choose the new value for the diagramContainer field.
 	 */
 
 	private void handleBrowse() {
-		ContainerSelectionDialog dialog = new ContainerSelectionDialog(
-				getShell(), ResourcesPlugin.getWorkspace().getRoot(), false,
-				"Select new file diagramContainer");
-		if (dialog.open() == ContainerSelectionDialog.OK) {
+		ContainerSelectionDialog dialog = new ContainerSelectionDialog(getShell(), ResourcesPlugin.getWorkspace()
+				.getRoot(), false, "Select new file diagramContainer");
+		if (dialog.open() == Window.OK) {
 			Object[] result = dialog.getResult();
 			if (result.length == 1) {
 				containerText.setText(((Path) result[0]).toString());
@@ -137,16 +140,14 @@ public class BPMN2DiagramWizardPage extends WizardPage {
 	 */
 
 	private void dialogChanged() {
-		diagramContainer = ResourcesPlugin.getWorkspace().getRoot()
-				.findMember(new Path(getContainerName()));
+		diagramContainer = ResourcesPlugin.getWorkspace().getRoot().findMember(new Path(getContainerName()));
 		String fileName = getFileName();
 
 		if (getContainerName().length() == 0) {
 			updateStatus("File diagramContainer must be specified");
 			return;
 		}
-		if (diagramContainer == null
-				|| (diagramContainer.getType() & (IResource.PROJECT | IResource.FOLDER)) == 0) {
+		if (diagramContainer == null || (diagramContainer.getType() & (IResource.PROJECT | IResource.FOLDER)) == 0) {
 			updateStatus("File diagramContainer must exist");
 			return;
 		}
@@ -165,8 +166,8 @@ public class BPMN2DiagramWizardPage extends WizardPage {
 		int dotLoc = fileName.lastIndexOf('.');
 		if (dotLoc != -1) {
 			String ext = fileName.substring(dotLoc + 1);
-			if (ext.equalsIgnoreCase("bpmn2d") == false) {
-				updateStatus("File extension must be \"bpmn2d\"");
+			if (ext.equalsIgnoreCase("bpmn2") == false) {
+				updateStatus("File extension must be \"bpmn2\"");
 				return;
 			}
 		}
