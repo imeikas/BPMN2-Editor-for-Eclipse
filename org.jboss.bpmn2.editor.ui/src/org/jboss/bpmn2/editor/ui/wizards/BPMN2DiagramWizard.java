@@ -53,7 +53,7 @@ public class BPMN2DiagramWizard extends Wizard implements INewWizard {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
 					IProject project = container.getProject();
-					IPath path = container.getFullPath();
+					IPath path = container.getFullPath().append(fileName);
 					IFolder folder = null;
 					BPMN2DiagramCreator factory = new BPMN2DiagramCreator();
 
