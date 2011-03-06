@@ -5,9 +5,10 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.eclipse.graphiti.features.impl.DefaultMoveShapeFeature;
 import org.jboss.bpmn2.editor.core.di.DIUtils;
+import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 
-public class MoveLaneFeature extends DefaultMoveShapeFeature {
+public class MoveLaneFeature extends DefaultBpmnMoveFeature {
 
 	private MoveLaneFeature moveStrategy;
 

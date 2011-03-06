@@ -41,7 +41,7 @@ public class AssociationFeatureContainer extends ConnectionFeatureContainer {
     public ICreateConnectionFeature getCreateConnectionFeature(IFeatureProvider fp) {
 	    return new CreateAssociationFeature(fp);
     }
-	
+		
 	public static class CreateAssociationFeature extends AbstractCreateFlowFeature<BaseElement> {
 
 

@@ -13,7 +13,7 @@ import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IPeService;
-import org.jboss.bpmn2.editor.core.features.ShapeUtil;
+import org.jboss.bpmn2.editor.utils.ShapeUtil;
 
 public abstract class AbstractMarkerUpdateFeature extends AbstractUpdateFeature {
 

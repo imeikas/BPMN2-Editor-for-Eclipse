@@ -25,7 +25,7 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.ConnectionFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
-import org.jboss.bpmn2.editor.core.features.StyleUtil;
+import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class MessageFlowFeatureContainer extends ConnectionFeatureContainer {
 
@@ -79,7 +79,7 @@ public class MessageFlowFeatureContainer extends ConnectionFeatureContainer {
 	public ICreateConnectionFeature getCreateConnectionFeature(IFeatureProvider fp) {
 		return new CreateMessageFlowFeature(fp);
 	}
-
+	
 	public static class CreateMessageFlowFeature extends AbstractCreateFlowFeature<InteractionNode> {
 
 		public CreateMessageFlowFeature(IFeatureProvider fp) {

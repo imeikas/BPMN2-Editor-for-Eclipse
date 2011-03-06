@@ -3,15 +3,13 @@ package org.jboss.bpmn2.editor.core.features.lane;
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IResizeShapeContext;
-import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
-import org.eclipse.graphiti.mm.pictograms.PictogramElement;
-import org.jboss.bpmn2.editor.core.di.DIUtils;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
+import org.jboss.bpmn2.editor.core.features.DefaultBPMNResizeFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 
-public class ResizeLaneFeature extends DefaultResizeShapeFeature {
+public class ResizeLaneFeature extends DefaultBPMNResizeFeature {
 
 	public ResizeLaneFeature(IFeatureProvider fp) {
 		super(fp);
@@ -58,11 +56,5 @@ public class ResizeLaneFeature extends DefaultResizeShapeFeature {
 			return -1;
 		}
 		return 0;
-	}
-
-	@Override
-	public void resizeShape(IResizeShapeContext context) {
-		super.resizeShape(context);
-		DIUtils.updateDIShape(getDiagram(), context.getPictogramElement(), Lane.class);
 	}
 }

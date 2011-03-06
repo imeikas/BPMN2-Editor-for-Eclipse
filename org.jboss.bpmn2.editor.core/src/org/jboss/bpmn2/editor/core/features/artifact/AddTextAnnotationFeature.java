@@ -16,7 +16,8 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeCreateService;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
-import org.jboss.bpmn2.editor.core.features.StyleUtil;
+import org.jboss.bpmn2.editor.utils.AnchorUtil;
+import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class AddTextAnnotationFeature extends AbstractBpmnAddFeature {
 
@@ -66,6 +67,8 @@ public class AddTextAnnotationFeature extends AbstractBpmnAddFeature {
 		link(textShape, annotation);
 
 		peCreateService.createChopboxAnchor(containerShape);
+		AnchorUtil.addFixedPointAnchors(containerShape, rect);
+		
 		layoutPictogramElement(containerShape);
 		return containerShape;
 	}

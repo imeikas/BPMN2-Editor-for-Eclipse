@@ -8,7 +8,7 @@ import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
-import org.jboss.bpmn2.editor.core.features.ShapeUtil;
+import org.jboss.bpmn2.editor.utils.ShapeUtil;
 
 public class LayoutEventFeature extends AbstractLayoutFeature {
 

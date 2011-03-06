@@ -54,8 +54,8 @@ import org.jboss.bpmn2.editor.core.di.DIUtils;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
-import org.jboss.bpmn2.editor.core.features.ShapeUtil;
-import org.jboss.bpmn2.editor.core.features.StyleUtil;
+import org.jboss.bpmn2.editor.utils.ShapeUtil;
+import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class BoundaryEventFeatureContainer implements FeatureContainer {
 

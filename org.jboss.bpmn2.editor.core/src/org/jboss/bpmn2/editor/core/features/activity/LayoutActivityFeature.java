@@ -18,7 +18,7 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.di.DIUtils;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
-import org.jboss.bpmn2.editor.core.features.ShapeUtil;
+import org.jboss.bpmn2.editor.utils.ShapeUtil;
 
 public class LayoutActivityFeature extends AbstractLayoutFeature {
 
@@ -62,13 +62,7 @@ public class LayoutActivityFeature extends AbstractLayoutFeature {
 
 			Object[] objects = getAllBusinessObjectsForPictogramElement(shape);
 			for (Object bo : objects) {
-				if (bo instanceof BPMNShape) {
-					Bounds bounds = ((BPMNShape) bo).getBounds();
-					bounds.setWidth(newWidth);
-					bounds.setHeight(newHeight);
-					changed = true;
-					continue;
-				} else if (bo instanceof BoundaryEvent) {
+				if (bo instanceof BoundaryEvent) {
 					layoutPictogramElement(shape);
 					changed = true;
 					continue;

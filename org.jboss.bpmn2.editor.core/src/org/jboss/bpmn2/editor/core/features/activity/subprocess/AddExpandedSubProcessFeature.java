@@ -7,8 +7,8 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.services.Graphiti;
-import org.jboss.bpmn2.editor.core.features.ShapeUtil;
 import org.jboss.bpmn2.editor.core.features.activity.AbstractAddActivityFeature;
+import org.jboss.bpmn2.editor.utils.ShapeUtil;
 
 public class AddExpandedSubProcessFeature extends AbstractAddActivityFeature {
 

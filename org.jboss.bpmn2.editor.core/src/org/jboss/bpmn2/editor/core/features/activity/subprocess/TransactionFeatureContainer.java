@@ -13,8 +13,8 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
-import org.jboss.bpmn2.editor.core.features.StyleUtil;
 import org.jboss.bpmn2.editor.core.features.activity.LayoutActivityFeature;
+import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class TransactionFeatureContainer extends AbstractSubProcessFeatureContainer {
 	

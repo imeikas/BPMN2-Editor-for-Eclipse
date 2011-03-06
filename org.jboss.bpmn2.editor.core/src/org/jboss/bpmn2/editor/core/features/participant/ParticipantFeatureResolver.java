@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.bpmn2.BaseElement;
+import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.Participant;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateConnectionFeature;
@@ -14,6 +15,8 @@ import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
+import org.jboss.bpmn2.editor.core.features.DefaultBPMNResizeFeature;
+import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureResolver;
 
 public class ParticipantFeatureResolver implements FeatureResolver {
@@ -60,12 +63,15 @@ public class ParticipantFeatureResolver implements FeatureResolver {
 
 	@Override
 	public IMoveShapeFeature getMoveFeature(IFeatureProvider fp, BaseElement e) {
-		return null; // NOT YET SUPPORTED
+		if (e instanceof Participant)
+			return new DefaultBpmnMoveFeature(fp);
+		return null;
 	}
 
 	@Override
 	public IResizeShapeFeature getResizeFeature(IFeatureProvider fp, BaseElement e) {
-		return null; // NOT YET SUPPORTED
+		if (e instanceof Participant)
+			return new DefaultBPMNResizeFeature(fp);
+		return null;
 	}
-
 }

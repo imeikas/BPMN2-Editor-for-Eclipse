@@ -16,7 +16,6 @@ import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
 import org.eclipse.graphiti.mm.algorithms.Rectangle;
 import org.eclipse.graphiti.mm.algorithms.styles.AdaptedGradientColoredAreas;
-import org.eclipse.graphiti.mm.pictograms.ChopboxAnchor;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.services.Graphiti;
@@ -26,10 +25,12 @@ import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
+import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
-import org.jboss.bpmn2.editor.core.features.ShapeUtil;
-import org.jboss.bpmn2.editor.core.features.ShapeUtil.Envelope;
-import org.jboss.bpmn2.editor.core.features.StyleUtil;
+import org.jboss.bpmn2.editor.utils.AnchorUtil;
+import org.jboss.bpmn2.editor.utils.ShapeUtil;
+import org.jboss.bpmn2.editor.utils.StyleUtil;
+import org.jboss.bpmn2.editor.utils.ShapeUtil.Envelope;
 
 public class MessageFeatureContainer implements FeatureContainer {
 
@@ -72,14 +73,15 @@ public class MessageFeatureContainer implements FeatureContainer {
 				gaService.setRenderingStyle(envelope.rect, gradient);
 				envelope.line.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 				
-				ChopboxAnchor anchor = peService.createChopboxAnchor(container);
-				anchor.setReferencedGraphicsAlgorithm(invisibleRect);
+				peService.createChopboxAnchor(container);
+				AnchorUtil.addFixedPointAnchors(container, invisibleRect);
 				
 				if (msg.eResource() == null) {
 					getDiagram().eResource().getContents().add(msg);
 				}
 
 				link(container, msg);
+				createDIShape(container, msg);
 				return container;
 			}
 		};
@@ -102,7 +104,7 @@ public class MessageFeatureContainer implements FeatureContainer {
 
 	@Override
     public IMoveShapeFeature getMoveFeature(IFeatureProvider fp) {
-	    return null;
+	    return new DefaultBpmnMoveFeature(fp);
     }
 
 	@Override

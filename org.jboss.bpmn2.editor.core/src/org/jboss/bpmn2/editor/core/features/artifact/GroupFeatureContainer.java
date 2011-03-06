@@ -14,7 +14,6 @@ import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.features.context.ICreateContext;
-import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
 import org.eclipse.graphiti.mm.algorithms.RoundedRectangle;
 import org.eclipse.graphiti.mm.algorithms.styles.LineStyle;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
@@ -24,8 +23,12 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
+import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
+import org.jboss.bpmn2.editor.core.features.DefaultBPMNResizeFeature;
+import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
-import org.jboss.bpmn2.editor.core.features.StyleUtil;
+import org.jboss.bpmn2.editor.utils.AnchorUtil;
+import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class GroupFeatureContainer implements FeatureContainer {
 
@@ -41,7 +44,7 @@ public class GroupFeatureContainer implements FeatureContainer {
 
 	@Override
 	public IAddFeature getAddFeature(IFeatureProvider fp) {
-		return new AbstractAddShapeFeature(fp) {
+		return new AbstractBpmnAddFeature(fp) {
 
 			@Override
 			public boolean canAdd(IAddContext context) {
@@ -68,8 +71,12 @@ public class GroupFeatureContainer implements FeatureContainer {
 				if (group.eResource() == null) {
 					getDiagram().eResource().getContents().add(group);
 				}
-
+				
+				peService.createChopboxAnchor(container);
+				AnchorUtil.addFixedPointAnchors(container, rect);
+				
 				link(container, group);
+				createDIShape(container, group);
 				return container;
 			}
 		};
@@ -92,12 +99,12 @@ public class GroupFeatureContainer implements FeatureContainer {
 
 	@Override
 	public IMoveShapeFeature getMoveFeature(IFeatureProvider fp) {
-		return null;
+		return new DefaultBpmnMoveFeature(fp);
 	}
 
 	@Override
 	public IResizeShapeFeature getResizeFeature(IFeatureProvider fp) {
-		return null;
+		return new DefaultBPMNResizeFeature(fp);
 	}
 
 	public static class CreateGroupFeature extends AbstractCreateArtifactFeature {

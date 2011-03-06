@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features;
+package org.jboss.bpmn2.editor.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;

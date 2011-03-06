@@ -13,8 +13,9 @@ import org.eclipse.graphiti.services.IPeService;
 import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
-import org.jboss.bpmn2.editor.core.features.ShapeUtil;
-import org.jboss.bpmn2.editor.core.features.StyleUtil;
+import org.jboss.bpmn2.editor.utils.AnchorUtil;
+import org.jboss.bpmn2.editor.utils.ShapeUtil;
+import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class DefaultAddGatewayFeature extends AbstractBpmnAddFeature {
 
@@ -58,6 +59,8 @@ public class DefaultAddGatewayFeature extends AbstractBpmnAddFeature {
 		createDIShape(containerShape, addedGateway);
 
 		peService.createChopboxAnchor(containerShape);
+		AnchorUtil.addFixedPointAnchors(containerShape, gateway);
+		
 		return containerShape;
 	}
 

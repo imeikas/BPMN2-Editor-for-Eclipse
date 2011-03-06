@@ -65,9 +65,4 @@ public abstract class AbstractTaskFeatureContainer extends AbstractActivityFeatu
 			}
 		};
 	}
-
-	@Override
-	public IResizeShapeFeature getResizeFeature(IFeatureProvider fp) {
-		return null;
-	}
 }

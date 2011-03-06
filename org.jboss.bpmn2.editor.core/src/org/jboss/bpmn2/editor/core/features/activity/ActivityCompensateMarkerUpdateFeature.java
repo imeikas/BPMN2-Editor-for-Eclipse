@@ -3,9 +3,9 @@ package org.jboss.bpmn2.editor.core.features.activity;
 import org.eclipse.bpmn2.Activity;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
-import org.jboss.bpmn2.editor.core.features.ShapeUtil;
-import org.jboss.bpmn2.editor.core.features.ShapeUtil.Compensation;
-import org.jboss.bpmn2.editor.core.features.StyleUtil;
+import org.jboss.bpmn2.editor.utils.ShapeUtil;
+import org.jboss.bpmn2.editor.utils.StyleUtil;
+import org.jboss.bpmn2.editor.utils.ShapeUtil.Compensation;
 
 public class ActivityCompensateMarkerUpdateFeature extends AbstractMarkerUpdateFeature {
 	
