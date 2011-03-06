@@ -21,7 +21,8 @@ public class StyleUtil {
 	public static final IColorConstant CLASS_TEXT_FOREGROUND = IColorConstant.BLACK;
 	//public static final IColorConstant CLASS_FOREGROUND = new ColorConstant(146, 146, 208);
 	//public static final IColorConstant CLASS_FOREGROUND = new ColorConstant(102, 175, 232);
-	public static final IColorConstant CLASS_FOREGROUND = new ColorConstant(163, 202, 232);
+	//public static final IColorConstant CLASS_FOREGROUND = new ColorConstant(163, 202, 232);
+	public static final IColorConstant CLASS_FOREGROUND = new ColorConstant(116, 143, 165);
 	
 	//public static final IColorConstant CLASS_BACKGROUND = new ColorConstant(220, 220, 255);
 	public static final IColorConstant CLASS_BACKGROUND = new ColorConstant(220, 233, 255);
