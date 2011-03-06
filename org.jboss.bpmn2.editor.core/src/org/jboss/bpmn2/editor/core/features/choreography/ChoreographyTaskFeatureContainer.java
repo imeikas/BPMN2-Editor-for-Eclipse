@@ -51,6 +51,7 @@ public class ChoreographyTaskFeatureContainer implements FeatureContainer {
 		MultiUpdateFeature updateFeature = new MultiUpdateFeature(fp);
 		updateFeature.addUpdateFeature(new UpdateChoreographyNameFeature(fp));
 		updateFeature.addUpdateFeature(new UpdateChoreographyParticipantRefsFeature(fp));
+		updateFeature.addUpdateFeature(new UpdateInitiatingParticipantFeature(fp));
 	    return updateFeature;
     }
 

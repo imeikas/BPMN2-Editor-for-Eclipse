@@ -207,7 +207,7 @@ public class MainPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 				ISelection selection = combo.getSelection();
 				if (selection instanceof StructuredSelection) {
 					Object firstElement = ((StructuredSelection) selection).getFirstElement();
-					if (firstElement instanceof Object) {
+					if (firstElement instanceof EObject) {
 						updateEObject(firstElement);
 					} else {
 						updateEObject(null);

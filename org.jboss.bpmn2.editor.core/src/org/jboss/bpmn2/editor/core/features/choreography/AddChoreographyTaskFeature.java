@@ -76,7 +76,8 @@ public class AddChoreographyTaskFeature extends AbstractBpmnAddFeature {
 		createText(containerShape, "Task Name", 0, rectH - 5, width, height - (2 * rectH) + 10, BODY_BAND_TEXT);
 
 		peService.setPropertyValue(containerShape, PARTICIPANT_REF_NUM, Integer.toString(0));
-
+		peService.setPropertyValue(containerShape, INITIATING_PARTICIPANT_REF, Boolean.toString(false));
+		
 		link(containerShape, task);
 		peService.createChopboxAnchor(containerShape);
 		AnchorUtil.addFixedPointAnchors(containerShape, invisibleRect);
