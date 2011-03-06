@@ -76,10 +76,6 @@ public class MessageFeatureContainer implements FeatureContainer {
 				peService.createChopboxAnchor(container);
 				AnchorUtil.addFixedPointAnchors(container, invisibleRect);
 				
-				if (msg.eResource() == null) {
-					getDiagram().eResource().getContents().add(msg);
-				}
-
 				link(container, msg);
 				createDIShape(container, msg);
 				return container;

@@ -20,7 +20,6 @@ import org.eclipse.graphiti.features.impl.AbstractUpdateFeature;
 import org.eclipse.graphiti.features.impl.Reason;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
-import org.eclipse.graphiti.mm.pictograms.Anchor;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.graphiti.mm.pictograms.ConnectionDecorator;
 import org.eclipse.graphiti.services.Graphiti;
@@ -52,12 +51,12 @@ public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
 	public IAddFeature getAddFeature(IFeatureProvider fp) {
 		return new AbstractAddFlowFeature(fp) {
 			@Override
-			Class<? extends BaseElement> getBoClass() {
+			protected Class<? extends BaseElement> getBoClass() {
 				return SequenceFlow.class;
 			}
 
 			@Override
-			void createConnectionDecorators(Connection connection) {
+			protected void createConnectionDecorators(Connection connection) {
 				int w = 3;
 				int l = 8;
 
@@ -72,7 +71,7 @@ public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
 			}
 
 			@Override
-			void hook(IAddContext context, Connection connection, BaseElement element) {
+			protected void hook(IAddContext context, Connection connection, BaseElement element) {
 				IPeService peService = Graphiti.getPeService();
 				peService.setPropertyValue(connection, IS_DEFAULT_FLOW_PROPERTY, Boolean.toString(false));
 				peService.setPropertyValue(connection, IS_CONDITIONAL_FLOW_PROPERTY, Boolean.toString(false));
@@ -92,32 +91,34 @@ public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
 		multiUpdate.addUpdateFeature(new UpdateConditionalSequenceFlowFeature(fp));
 		return multiUpdate;
 	}
-	
-	public static class CreateSequenceFlowFeature extends AbstractCreateFlowFeature<FlowNode> {
+
+	public static class CreateSequenceFlowFeature extends AbstractCreateFlowFeature<FlowNode, FlowNode> {
 
 		public CreateSequenceFlowFeature(IFeatureProvider fp) {
 			super(fp, "Sequence Flow",
 			        "A Sequence Flow is used to show the order that Activities will be performed in a Process");
 		}
-		
+
 		@Override
-		BaseElement createFlow(ModelHandler mh, FlowNode source, FlowNode target) {
+		protected String getStencilImageId() {
+			return ImageProvider.IMG_16_SEQUENCE_FLOW;
+		}
+
+		@Override
+		protected BaseElement createFlow(ModelHandler mh, FlowNode source, FlowNode target) {
 			SequenceFlow flow = mh.createSequenceFlow(source, target);
 			flow.setName("Sequence Flow");
 			return flow;
 		}
 
 		@Override
-		FlowNode getFlowNode(Anchor anchor) {
-			if (anchor != null) {
-				return (FlowNode) BusinessObjectUtil.getFirstElementOfType(anchor.getParent(), FlowNode.class);
-			}
-			return null;
+		protected Class<FlowNode> getSourceClass() {
+			return FlowNode.class;
 		}
 
 		@Override
-		String getStencilImageId() {
-			return ImageProvider.IMG_16_SEQUENCE_FLOW;
+		protected Class<FlowNode> getTargetClass() {
+			return FlowNode.class;
 		}
 	}
 
@@ -161,7 +162,7 @@ public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
 			Tuple<ConnectionDecorator, ConnectionDecorator> decorators = getConnectionDecorators(connection);
 			ConnectionDecorator def = decorators.getFirst();
 			ConnectionDecorator cond = decorators.getSecond();
-			
+
 			if (isDefault) {
 				if (cond != null) {
 					peService.deletePictogramElement(cond);
@@ -220,12 +221,12 @@ public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
 			IPeService peService = Graphiti.getPeService();
 			Connection connection = (Connection) context.getPictogramElement();
 			SequenceFlow flow = (SequenceFlow) BusinessObjectUtil.getFirstElementOfType(connection, SequenceFlow.class);
-			
+
 			Tuple<ConnectionDecorator, ConnectionDecorator> decorators = getConnectionDecorators(connection);
 			ConnectionDecorator def = decorators.getFirst();
 			ConnectionDecorator cond = decorators.getSecond();
-			
-			if(flow.getConditionExpression() != null && flow.getSourceRef() instanceof Activity && def == null) {
+
+			if (flow.getConditionExpression() != null && flow.getSourceRef() instanceof Activity && def == null) {
 				ConnectionDecorator decorator = createConditionalConnectionDecorator(connection);
 				GraphicsAlgorithm ga = decorator.getGraphicsAlgorithm();
 				ga.setFilled(true);
@@ -234,7 +235,7 @@ public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
 			} else if (cond != null) {
 				peService.deletePictogramElement(cond);
 			}
-			
+
 			peService.setPropertyValue(context.getPictogramElement(), IS_CONDITIONAL_FLOW_PROPERTY,
 			        Boolean.toString(flow.getConditionExpression() != null));
 			return true;

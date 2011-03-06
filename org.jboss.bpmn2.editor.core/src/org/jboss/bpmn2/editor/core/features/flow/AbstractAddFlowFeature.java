@@ -59,10 +59,6 @@ public abstract class AbstractAddFlowFeature extends AbstractBpmnAddFeature {
 
 		decorateConnectionLine(connectionLine);
 
-		if (element.eResource() == null) {
-			getDiagram().eResource().getContents().add(element);
-		}
-		
 		createDIEdge(connection, element);
 		link(connection, element);
 		createConnectionDecorators(connection);
@@ -71,14 +67,14 @@ public abstract class AbstractAddFlowFeature extends AbstractBpmnAddFeature {
 		return connection;
 	}
 
-	abstract Class<? extends BaseElement> getBoClass();
+	protected abstract Class<? extends BaseElement> getBoClass();
 
-	void hook(IAddContext context, Connection connection, BaseElement element) {
+	protected void hook(IAddContext context, Connection connection, BaseElement element) {
 	}
 
-	void decorateConnectionLine(Polyline connectionLine) {
+	protected void decorateConnectionLine(Polyline connectionLine) {
 	}
 
-	void createConnectionDecorators(Connection connection) {
+	protected void createConnectionDecorators(Connection connection) {
 	}
 }

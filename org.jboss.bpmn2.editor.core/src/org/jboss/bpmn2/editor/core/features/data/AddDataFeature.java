@@ -78,10 +78,6 @@ public class AddDataFeature<T extends BaseElement> extends AbstractBpmnAddFeatur
 		peService.createChopboxAnchor(container);
 		AnchorUtil.addFixedPointAnchors(container, invisibleRect);
 
-		if (t.eResource() == null) {
-			getDiagram().eResource().getContents().add(t);
-		}
-
 		createDIShape(container, t);
 		return container;
 	}

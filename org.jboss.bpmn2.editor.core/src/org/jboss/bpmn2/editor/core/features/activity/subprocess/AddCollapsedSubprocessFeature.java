@@ -88,10 +88,6 @@ public class AddCollapsedSubprocessFeature extends AbstractAddFeature {
 		ChopboxAnchor anchor = peService.createChopboxAnchor(containerShape);
 		anchor.setReferencedGraphicsAlgorithm(rect);
 
-		if (subprocess.eResource() == null) {
-			getDiagram().eResource().getContents().add(subprocess);
-		}
-
 		peService.setPropertyValue(containerShape, TRIGGERED_BY_EVENT, "false");
 		link(containerShape, subprocess);
 		return containerShape;

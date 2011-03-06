@@ -12,7 +12,6 @@ import org.eclipse.graphiti.features.context.ICreateConnectionContext;
 import org.eclipse.graphiti.mm.algorithms.Ellipse;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.eclipse.graphiti.mm.algorithms.styles.LineStyle;
-import org.eclipse.graphiti.mm.pictograms.Anchor;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.graphiti.mm.pictograms.ConnectionDecorator;
 import org.eclipse.graphiti.services.Graphiti;
@@ -22,7 +21,6 @@ import org.eclipse.graphiti.util.IColorConstant;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
-import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.ConnectionFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.utils.StyleUtil;
@@ -39,12 +37,12 @@ public class MessageFlowFeatureContainer extends ConnectionFeatureContainer {
 		return new AbstractAddFlowFeature(fp) {
 
 			@Override
-			void decorateConnectionLine(Polyline connectionLine) {
+			protected void decorateConnectionLine(Polyline connectionLine) {
 				connectionLine.setLineStyle(LineStyle.DASH);
 			}
 
 			@Override
-			void createConnectionDecorators(Connection connection) {
+			protected void createConnectionDecorators(Connection connection) {
 				IPeService peService = Graphiti.getPeService();
 				IGaService gaService = Graphiti.getGaService();
 
@@ -69,7 +67,7 @@ public class MessageFlowFeatureContainer extends ConnectionFeatureContainer {
 			}
 
 			@Override
-			Class<? extends BaseElement> getBoClass() {
+			protected Class<? extends BaseElement> getBoClass() {
 				return MessageFlow.class;
 			}
 		};
@@ -79,8 +77,8 @@ public class MessageFlowFeatureContainer extends ConnectionFeatureContainer {
 	public ICreateConnectionFeature getCreateConnectionFeature(IFeatureProvider fp) {
 		return new CreateMessageFlowFeature(fp);
 	}
-	
-	public static class CreateMessageFlowFeature extends AbstractCreateFlowFeature<InteractionNode> {
+
+	public static class CreateMessageFlowFeature extends AbstractCreateFlowFeature<InteractionNode, InteractionNode> {
 
 		public CreateMessageFlowFeature(IFeatureProvider fp) {
 			super(fp, "Message Flow", "Represents message between two participants");
@@ -88,30 +86,31 @@ public class MessageFlowFeatureContainer extends ConnectionFeatureContainer {
 
 		@Override
 		public boolean canCreate(ICreateConnectionContext context) {
-			InteractionNode source = getFlowNode(context.getSourceAnchor());
-			InteractionNode target = getFlowNode(context.getTargetAnchor());
+			InteractionNode source = getSourceBo(context);
+			InteractionNode target = getTargetBo(context);
 			return super.canCreate(context) && isDifferentParticipants(source, target);
 		}
 
 		@Override
-		BaseElement createFlow(ModelHandler mh, InteractionNode source, InteractionNode target) {
+		protected String getStencilImageId() {
+			return ImageProvider.IMG_16_MESSAGE_FLOW;
+		}
+
+		@Override
+		protected BaseElement createFlow(ModelHandler mh, InteractionNode source, InteractionNode target) {
 			MessageFlow flow = mh.createMessageFlow(source, target);
 			flow.setName("Message Flow");
 			return flow;
 		}
 
 		@Override
-		InteractionNode getFlowNode(Anchor anchor) {
-			if (anchor != null) {
-				return (InteractionNode) BusinessObjectUtil.getFirstElementOfType(anchor.getParent(),
-				        InteractionNode.class);
-			}
-			return null;
+		protected Class<InteractionNode> getSourceClass() {
+			return InteractionNode.class;
 		}
 
 		@Override
-		String getStencilImageId() {
-			return ImageProvider.IMG_16_MESSAGE_FLOW;
+		protected Class<InteractionNode> getTargetClass() {
+			return InteractionNode.class;
 		}
 
 		private boolean isDifferentParticipants(InteractionNode source, InteractionNode target) {

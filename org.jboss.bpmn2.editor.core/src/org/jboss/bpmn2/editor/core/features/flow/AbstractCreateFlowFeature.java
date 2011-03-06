@@ -9,32 +9,34 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateConnectionContext;
 import org.eclipse.graphiti.features.context.impl.AddConnectionContext;
 import org.eclipse.graphiti.features.impl.AbstractCreateConnectionFeature;
-import org.eclipse.graphiti.mm.pictograms.Anchor;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
+import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 
-public abstract class AbstractCreateFlowFeature<T extends EObject> extends AbstractCreateConnectionFeature {
+public abstract class AbstractCreateFlowFeature<A extends EObject, B extends EObject> extends
+        AbstractCreateConnectionFeature {
 
 	public AbstractCreateFlowFeature(IFeatureProvider fp, String name, String description) {
-	    super(fp, name, description);
-    }
+		super(fp, name, description);
+	}
 
 	@Override
-    public boolean canCreate(ICreateConnectionContext context) {
-		T source = getFlowNode(context.getSourceAnchor());
-		T target = getFlowNode(context.getTargetAnchor());
+	public boolean canCreate(ICreateConnectionContext context) {
+		A source = getSourceBo(context);
+		B target = getTargetBo(context);
 		return source != null && target != null;
-    }
+	}
 
 	@Override
-    public Connection create(ICreateConnectionContext context) {
+	public Connection create(ICreateConnectionContext context) {
 		try {
-			T source = getFlowNode(context.getSourceAnchor());
-			T target = getFlowNode(context.getTargetAnchor());
+			A source = getSourceBo(context);
+			B target = getTargetBo(context);
 			ModelHandler mh = FeatureSupport.getModelHanderInstance(getDiagram());
-			AddConnectionContext addContext = new AddConnectionContext(context.getSourceAnchor(), context.getTargetAnchor());
+			AddConnectionContext addContext = new AddConnectionContext(context.getSourceAnchor(),
+			        context.getTargetAnchor());
 			BaseElement flow = createFlow(mh, source, target);
 			flow.setId(EcoreUtil.generateUUID());
 			addContext.setNewObject(flow);
@@ -42,27 +44,47 @@ public abstract class AbstractCreateFlowFeature<T extends EObject> extends Abstr
 		} catch (IOException e) {
 			Activator.logError(e);
 		}
-	    return null;
-    }
-	
+		return null;
+	}
+
 	@Override
 	public boolean canStartConnection(ICreateConnectionContext context) {
-		return getFlowNode(context.getSourceAnchor()) != null;
+		return getSourceBo(context) != null;
 	}
-	
+
 	@Override
 	public String getCreateImageId() {
 		return getStencilImageId();
 	}
-	
+
 	@Override
 	public String getCreateLargeImageId() {
-	    return getStencilImageId();
+		return getStencilImageId();
 	}
-	
-	abstract String getStencilImageId();
-	
-	abstract BaseElement createFlow(ModelHandler mh, T source, T target);
-	
-	abstract T getFlowNode(Anchor anchor);
+
+	protected abstract String getStencilImageId();
+
+	protected abstract BaseElement createFlow(ModelHandler mh, A source, B target);
+
+	@SuppressWarnings("unchecked")
+	protected A getSourceBo(ICreateConnectionContext context) {
+		if (context.getSourceAnchor() != null) {
+			return (A) BusinessObjectUtil
+			        .getFirstElementOfType(context.getSourceAnchor().getParent(), getSourceClass());
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected B getTargetBo(ICreateConnectionContext context) {
+		if (context.getTargetAnchor() != null) {
+			return (B) BusinessObjectUtil
+			        .getFirstElementOfType(context.getTargetAnchor().getParent(), getTargetClass());
+		}
+		return null;
+	}
+
+	protected abstract Class<A> getSourceClass();
+
+	protected abstract Class<B> getTargetClass();
 }
