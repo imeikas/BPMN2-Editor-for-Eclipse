@@ -76,10 +76,6 @@ public abstract class AbstractAddActivityFeature extends AbstractBpmnAddFeature 
 		
 		createDIShape(containerShape, activity);
 
-		if (activity.eResource() == null) {
-			getDiagram().eResource().getContents().add(activity);
-		}
-
 		Graphiti.getPeService().setPropertyValue(containerShape, IS_COMPENSATE_PROPERTY, Boolean.toString(false));
 		Graphiti.getPeService().setPropertyValue(containerShape, IS_LOOP_OR_MULTI_INSTANCE,
 		        getLoopCharacteristicsValue(activity).getName());

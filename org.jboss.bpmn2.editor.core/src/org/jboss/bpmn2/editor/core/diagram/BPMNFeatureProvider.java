@@ -47,6 +47,7 @@ import org.jboss.bpmn2.editor.core.features.bendpoint.AddBendpointFeature;
 import org.jboss.bpmn2.editor.core.features.bendpoint.MoveBendpointFeature;
 import org.jboss.bpmn2.editor.core.features.bendpoint.RemoveBendpointFeature;
 import org.jboss.bpmn2.editor.core.features.conversation.ConversationFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.conversation.ConversationLinkFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.data.DataObjectFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.data.DataInputFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.data.DataOutputFeatureContainer;
@@ -146,6 +147,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers.add(new MessageFlowFeatureContainer());
 		containers.add(new AssociationFeatureContainer());
 		containers.add(new ConversationFeatureContainer());
+		containers.add(new ConversationLinkFeatureContainer());
 
 		List<ICreateFeature> createFeaturesList = new ArrayList<ICreateFeature>();
 

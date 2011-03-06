@@ -68,10 +68,6 @@ public class GroupFeatureContainer implements FeatureContainer {
 				rect.setLineStyle(LineStyle.DASHDOT);
 				gaService.setLocationAndSize(rect, context.getX(), context.getY(), width, height);
 
-				if (group.eResource() == null) {
-					getDiagram().eResource().getContents().add(group);
-				}
-				
 				peService.createChopboxAnchor(container);
 				AnchorUtil.addFixedPointAnchors(container, rect);
 				

@@ -232,10 +232,6 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 			ChopboxAnchor anchor = peService.createChopboxAnchor(containerShape);
 			anchor.setReferencedGraphicsAlgorithm(ellipse);
 
-			if (event.eResource() == null) {
-				getDiagram().eResource().getContents().add(event);
-			}
-
 			peService.setPropertyValue(containerShape, cancelKey, "true");
 			layoutPictogramElement(context.getTargetContainer());
 			return containerShape;

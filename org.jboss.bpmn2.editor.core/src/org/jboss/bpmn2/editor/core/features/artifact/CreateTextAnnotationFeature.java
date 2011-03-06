@@ -28,21 +28,21 @@ public class CreateTextAnnotationFeature extends AbstractCreateFeature {
 
 	@Override
 	public Object[] create(ICreateContext context) {
-		TextAnnotation annotation = null;
+		TextAnnotation ta = null;
 
 		try {
 			ModelHandler mh = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
-			TextAnnotation ta = ModelHandler.FACTORY.createTextAnnotation();
+			ta = ModelHandler.FACTORY.createTextAnnotation();
 			ta.setId(EcoreUtil.generateUUID());
-			annotation = mh.addArtifact(FeatureSupport.getTargetParticipant(context, mh), ta);
-			annotation.setText("Enter your comment here");
+			mh.addArtifact(FeatureSupport.getTargetParticipant(context, mh), ta);
+			ta.setText("Enter your comment here");
 		} catch (IOException e) {
 			Activator.logError(e);
 		}
 
-		addGraphicalRepresentation(context, annotation);
+		addGraphicalRepresentation(context, ta);
 
-		return new Object[] { annotation };
+		return new Object[] { ta };
 	}
 
 	@Override

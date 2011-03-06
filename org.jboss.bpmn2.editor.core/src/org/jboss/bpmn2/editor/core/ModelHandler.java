@@ -9,6 +9,7 @@ import org.eclipse.bpmn2.Association;
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Bpmn2Factory;
 import org.eclipse.bpmn2.Collaboration;
+import org.eclipse.bpmn2.ConversationNode;
 import org.eclipse.bpmn2.DataInput;
 import org.eclipse.bpmn2.DataOutput;
 import org.eclipse.bpmn2.Definitions;
@@ -119,7 +120,12 @@ public class ModelHandler {
 		getOrCreateIOSpecification(target).getDataInputs().add(dataInput);
 		return dataInput;
 	}
-
+	
+	public ConversationNode addConversationNode(ConversationNode conversationNode) {
+		getOrCreateCollaboration().getConversations().add(conversationNode);
+		return conversationNode;
+	}
+	
 	private InputOutputSpecification getOrCreateIOSpecification(Object target) {
 		Process process = getOrCreateProcess(getParticipant(target));
 		if (process.getIoSpecification() == null) {
@@ -221,10 +227,10 @@ public class ModelHandler {
 		SequenceFlow sequenceFlow = FACTORY.createSequenceFlow();
 		sequenceFlow.setId(EcoreUtil.generateUUID());
 
-		SequenceFlow flow = addFlowElement(source, sequenceFlow);
-		flow.setSourceRef(source);
-		flow.setTargetRef(target);
-		return flow;
+		addFlowElement(source, sequenceFlow);
+		sequenceFlow.setSourceRef(source);
+		sequenceFlow.setTargetRef(target);
+		return sequenceFlow;
 	}
 
 	public MessageFlow createMessageFlow(InteractionNode source, InteractionNode target) {
@@ -245,14 +251,14 @@ public class ModelHandler {
 		} else {
 			e = getInternalParticipant();
 		}
-		Association createAssociation = FACTORY.createAssociation();
-		Association association = addArtifact(e, createAssociation);
+		Association association = FACTORY.createAssociation();
+		addArtifact(e, association);
 		association.setId(EcoreUtil.generateUUID());
 		association.setSourceRef(source);
 		association.setTargetRef(target);
 		return association;
 	}
-
+	
 	private Collaboration getOrCreateCollaboration() {
 		List<RootElement> rootElements = getDefinitions().getRootElements();
 		

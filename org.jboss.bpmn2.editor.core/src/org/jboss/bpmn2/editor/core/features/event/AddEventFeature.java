@@ -67,10 +67,6 @@ public class AddEventFeature extends AbstractBpmnAddFeature {
 		gaService.setLocationAndSize(text, 0, ShapeUtil.EVENT_SIZE, ShapeUtil.EVENT_SIZE, ShapeUtil.EVENT_TEXT_AREA);
 		link(textShape, e);
 
-		if (e.eResource() == null) {
-			getDiagram().eResource().getContents().add(e);
-		}
-
 		createDIShape(containerShape, e);
 
 		peCreateService.createChopboxAnchor(containerShape);

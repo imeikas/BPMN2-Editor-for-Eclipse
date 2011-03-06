@@ -30,7 +30,8 @@ public class CreateConversationFeature extends AbstractCreateFeature {
 			ModelHandler handler = FeatureSupport.getModelHanderInstance(getDiagram());
 			c = ModelHandler.FACTORY.createConversation();
 			c.setId(EcoreUtil.generateUUID());
-			//TODO add to model
+			c.setName("Conversation");
+			handler.addConversationNode(c);
 		} catch (IOException e) {
 			Activator.logError(e);
 		}

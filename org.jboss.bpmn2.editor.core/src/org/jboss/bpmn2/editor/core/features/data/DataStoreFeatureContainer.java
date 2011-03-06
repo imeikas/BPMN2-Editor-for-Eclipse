@@ -92,10 +92,6 @@ public class DataStoreFeatureContainer implements FeatureContainer {
 				peService.createChopboxAnchor(container);
 				AnchorUtil.addFixedPointAnchors(container, invisibleRect);
 
-				if (store.eResource() == null) {
-					getDiagram().eResource().getContents().add(store);
-				}
-
 				link(container, store);
 				createDIShape(container, store);
 				return container;

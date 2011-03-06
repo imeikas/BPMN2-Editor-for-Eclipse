@@ -52,10 +52,6 @@ public class DefaultAddGatewayFeature extends AbstractBpmnAddFeature {
 
 		decorateGateway(containerShape);
 
-		if (addedGateway.eResource() == null) {
-			getDiagram().eResource().getContents().add(addedGateway);
-		}
-
 		createDIShape(containerShape, addedGateway);
 
 		peService.createChopboxAnchor(containerShape);

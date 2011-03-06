@@ -7,10 +7,8 @@ import org.eclipse.graphiti.features.ICreateConnectionFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.eclipse.graphiti.mm.algorithms.styles.LineStyle;
-import org.eclipse.graphiti.mm.pictograms.Anchor;
 import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
-import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.ConnectionFeatureContainer;
 
 public class AssociationFeatureContainer extends ConnectionFeatureContainer {
@@ -25,13 +23,13 @@ public class AssociationFeatureContainer extends ConnectionFeatureContainer {
 	    return new AbstractAddFlowFeature(fp) {
 			
 	    	@Override
-	    	void decorateConnectionLine(Polyline connectionLine) {
+	    	protected void decorateConnectionLine(Polyline connectionLine) {
 	    		connectionLine.setLineWidth(2);
 	    		connectionLine.setLineStyle(LineStyle.DOT);
 	    	}
 	    	
 			@Override
-			Class<? extends BaseElement> getBoClass() {
+			protected  Class<? extends BaseElement> getBoClass() {
 				return Association.class;
 			}
 		};
@@ -42,7 +40,7 @@ public class AssociationFeatureContainer extends ConnectionFeatureContainer {
 	    return new CreateAssociationFeature(fp);
     }
 		
-	public static class CreateAssociationFeature extends AbstractCreateFlowFeature<BaseElement> {
+	public static class CreateAssociationFeature extends AbstractCreateFlowFeature<BaseElement, BaseElement> {
 
 
 		public CreateAssociationFeature(IFeatureProvider fp) {
@@ -50,21 +48,23 @@ public class AssociationFeatureContainer extends ConnectionFeatureContainer {
         }
 
 		@Override
-        BaseElement createFlow(ModelHandler mh, BaseElement source, BaseElement target) {
-			return mh.createAssociation(source, target);
+        protected String getStencilImageId() {
+	        return ImageProvider.IMG_16_ASSOCIATION;
         }
 
 		@Override
-        BaseElement getFlowNode(Anchor anchor) {
-			if (anchor != null) {
-				return (BaseElement) BusinessObjectUtil.getFirstElementOfType(anchor.getParent(), BaseElement.class);
-			}
-			return null;
+        protected Class<BaseElement> getSourceClass() {
+	        return BaseElement.class;
         }
-		
+
 		@Override
-		String getStencilImageId() {
-			return ImageProvider.IMG_16_ASSOCIATION;
-		}
+        protected Class<BaseElement> getTargetClass() {
+	        return BaseElement.class;
+        }
+
+		@Override
+        protected BaseElement createFlow(ModelHandler mh, BaseElement source, BaseElement target) {
+			return mh.createAssociation(source, target);
+        }
 	}
 }

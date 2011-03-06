@@ -53,7 +53,8 @@ public class DataInputFeatureContainer extends AbstractDataFeatureContainer {
 			DataInput dataInput = ModelHandler.FACTORY.createDataInput();
 			dataInput.setId(EcoreUtil.generateUUID());
 			dataInput.setName("Data Input");
-			return handler.addDataInput(target, dataInput);
+			handler.addDataInput(target, dataInput);
+			return dataInput;
 		}
 
 		@Override

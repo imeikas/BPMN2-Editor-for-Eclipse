@@ -51,10 +51,11 @@ public class DataOutputFeatureContainer extends AbstractDataFeatureContainer {
 		@SuppressWarnings("unchecked")
 		@Override
 		DataOutput add(Object target, ModelHandler handler) {
-			DataOutput dataoutput = ModelHandler.FACTORY.createDataOutput();
-			dataoutput.setId(EcoreUtil.generateUUID());
-			dataoutput.setName("Data Output");
-			return handler.addDataOutput(target, dataoutput);
+			DataOutput dataOutput = ModelHandler.FACTORY.createDataOutput();
+			dataOutput.setId(EcoreUtil.generateUUID());
+			dataOutput.setName("Data Output");
+			handler.addDataOutput(target, dataOutput);
+			return dataOutput;
 		}
 
 		@Override
