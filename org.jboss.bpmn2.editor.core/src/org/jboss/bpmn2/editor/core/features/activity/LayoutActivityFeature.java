@@ -5,8 +5,6 @@ import java.util.Iterator;
 import org.eclipse.bpmn2.Activity;
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.BoundaryEvent;
-import org.eclipse.bpmn2.di.BPMNShape;
-import org.eclipse.dd.dc.Bounds;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ILayoutContext;
 import org.eclipse.graphiti.features.impl.AbstractLayoutFeature;

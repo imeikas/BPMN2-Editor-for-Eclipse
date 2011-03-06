@@ -46,6 +46,7 @@ import org.jboss.bpmn2.editor.core.features.artifact.GroupFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.bendpoint.AddBendpointFeature;
 import org.jboss.bpmn2.editor.core.features.bendpoint.MoveBendpointFeature;
 import org.jboss.bpmn2.editor.core.features.bendpoint.RemoveBendpointFeature;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyTaskFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.conversation.ConversationFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.conversation.ConversationLinkFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.data.DataObjectFeatureContainer;
@@ -116,6 +117,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers.add(new IntermediateCatchEventFeatureContainer());
 		containers.add(new IntermediateThrowEventFeatureContainer());
 		containers.add(new BoundaryEventFeatureContainer());
+		containers.add(new ChoreographyTaskFeatureContainer());
 		containers.add(new ServiceTaskFeatureContainer());
 		containers.add(new UserTaskFeatureContainer());
 		containers.add(new ManualTaskFeatureContainer());

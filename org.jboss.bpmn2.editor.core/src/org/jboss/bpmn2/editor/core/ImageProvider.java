@@ -6,6 +6,7 @@ import org.eclipse.bpmn2.BoundaryEvent;
 import org.eclipse.bpmn2.BusinessRuleTask;
 import org.eclipse.bpmn2.CallActivity;
 import org.eclipse.bpmn2.CancelEventDefinition;
+import org.eclipse.bpmn2.ChoreographyTask;
 import org.eclipse.bpmn2.CompensateEventDefinition;
 import org.eclipse.bpmn2.ComplexGateway;
 import org.eclipse.bpmn2.ConditionalEventDefinition;
@@ -101,7 +102,8 @@ public class ImageProvider extends AbstractImageProvider {
 	public static final String IMG_16_CALL_ACTIVITY = PREFIX + CallActivity.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_CONVERSATION = PREFIX + Conversation.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_CONVERSATION_LINK = PREFIX + ConversationLink.class.getSimpleName().toLowerCase() + dot16;
-
+	public static final String IMG_16_CHOREOGRAPHY_TASK = PREFIX + ChoreographyTask.class.getSimpleName().toLowerCase() + dot16;
+	
 	public static final String IMG_20_CONDITION = PREFIX + ConditionalEventDefinition.class.getSimpleName().toLowerCase() + dot20;
 	public static final String IMG_20_TIMER = PREFIX + TimerEventDefinition.class.getSimpleName().toLowerCase() + dot20;
 	public static final String IMG_20_MULTIPLE = PREFIX + "multipleeventdefinition" + dot20; // FIXME
@@ -155,6 +157,7 @@ public class ImageProvider extends AbstractImageProvider {
 		addImageFilePath(IMG_16_CALL_ACTIVITY, ICONS_16 + "CallActivity.png");
 		addImageFilePath(IMG_16_CONVERSATION, ICONS_16 + "Conversation.png");
 		addImageFilePath(IMG_16_CONVERSATION_LINK, ICONS_16 + "ConversationLink.png");
+		addImageFilePath(IMG_16_CHOREOGRAPHY_TASK, ICONS_16 + "ChoreographyTask.png");
 		
 		addImageFilePath(IMG_20_CONDITION, ICONS_20 + "Condition.png");
 		addImageFilePath(IMG_20_TIMER, ICONS_20 + "Timer.png");

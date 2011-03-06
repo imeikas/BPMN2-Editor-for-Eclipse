@@ -91,7 +91,6 @@ public class MainPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 					propertyDescriptor.getChoiceOfValues(be);
 					createLabel(propertyDescriptor.getDisplayName(be));
 					createSingleItemEditor(a, be.eGet(a), propertyDescriptor.getChoiceOfValues(be));
-					System.out.println("iip" + a);
 				}
 			}
 		}
