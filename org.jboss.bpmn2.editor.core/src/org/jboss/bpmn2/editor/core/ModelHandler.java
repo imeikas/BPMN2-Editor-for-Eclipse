@@ -9,6 +9,7 @@ import org.eclipse.bpmn2.Association;
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Bpmn2Factory;
 import org.eclipse.bpmn2.Collaboration;
+import org.eclipse.bpmn2.ConversationLink;
 import org.eclipse.bpmn2.ConversationNode;
 import org.eclipse.bpmn2.DataInput;
 import org.eclipse.bpmn2.DataOutput;
@@ -240,6 +241,14 @@ public class ModelHandler {
 		messageFlow.setTargetRef(target);
 		getOrCreateCollaboration().getMessageFlows().add(messageFlow);
 		return messageFlow;
+	}
+	
+	public ConversationLink createConversationLink(InteractionNode source, InteractionNode target) {
+		ConversationLink link = FACTORY.createConversationLink();
+		link.setSourceRef(source);
+		link.setTargetRef(target);
+		getOrCreateCollaboration().getConversationLinks().add(link);
+		return link;
 	}
 
 	public Association createAssociation(BaseElement source, BaseElement target) {

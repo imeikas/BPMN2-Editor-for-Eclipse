@@ -1,8 +1,9 @@
 package org.jboss.bpmn2.editor.core.features.conversation;
 
 import org.eclipse.bpmn2.BaseElement;
+import org.eclipse.bpmn2.Conversation;
 import org.eclipse.bpmn2.ConversationLink;
-import org.eclipse.bpmn2.InteractionNode;
+import org.eclipse.bpmn2.Participant;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateConnectionFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -41,7 +42,7 @@ public class ConversationLinkFeatureContainer extends ConnectionFeatureContainer
 		return new CreateConversationLinkFeature(fp);
 	}
 
-	public static class CreateConversationLinkFeature extends AbstractCreateFlowFeature<InteractionNode, InteractionNode> {
+	public static class CreateConversationLinkFeature extends AbstractCreateFlowFeature<Conversation, Participant> {
 
 		public CreateConversationLinkFeature(IFeatureProvider fp) {
 			super(fp, "Conversation Link", "Connects Conversation nodes to and from Participants");
@@ -53,23 +54,20 @@ public class ConversationLinkFeatureContainer extends ConnectionFeatureContainer
         }
 
 		@Override
-        protected BaseElement createFlow(ModelHandler mh, InteractionNode source, InteractionNode target) {
-			ConversationLink conversationLink = ModelHandler.FACTORY.createConversationLink();
+        protected BaseElement createFlow(ModelHandler mh, Conversation source, Participant target) {
+			ConversationLink conversationLink = mh.createConversationLink(source, target);
 			conversationLink.setName("Conversation Link");
-			conversationLink.setSourceRef(source);
-			conversationLink.setTargetRef(target);
-			// TODO add to model
 	        return conversationLink;
         }
 
 		@Override
-        protected Class<InteractionNode> getSourceClass() {
-	        return InteractionNode.class;
+        protected Class<Conversation> getSourceClass() {
+	        return Conversation.class;
         }
 
 		@Override
-        protected Class<InteractionNode> getTargetClass() {
-	        return InteractionNode.class;
+        protected Class<Participant> getTargetClass() {
+	        return Participant.class;
         }
 	}
 }
