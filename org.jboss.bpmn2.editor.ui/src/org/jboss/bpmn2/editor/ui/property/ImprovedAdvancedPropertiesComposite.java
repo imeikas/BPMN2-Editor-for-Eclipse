@@ -183,7 +183,7 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 		for (CommandParameter command : desc) {
 			EStructuralFeature feature = (EStructuralFeature) command.feature;
 
-			if (eAllContainments.contains(feature) && !"flowElements".equals(feature.getName())
+			if (eAllContainments.contains(feature) // && !"flowElements".equals(feature.getName())
 					&& prefs.isEnabled(baseElement.eClass(), feature)) {
 				Object value = baseElement.eGet(feature);
 
