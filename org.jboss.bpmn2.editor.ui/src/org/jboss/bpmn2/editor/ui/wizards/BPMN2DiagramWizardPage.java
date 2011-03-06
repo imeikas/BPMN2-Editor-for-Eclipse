@@ -22,11 +22,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 
-/**
- * The "New" wizard page allows setting the diagramContainer for the new file as well as the file name. The page will
- * only accept file name without the extension OR with the extension that matches the expected one (bpmn2d).
- */
-
 public class BPMN2DiagramWizardPage extends WizardPage {
 	private Text containerText;
 
@@ -43,8 +38,8 @@ public class BPMN2DiagramWizardPage extends WizardPage {
 	 */
 	public BPMN2DiagramWizardPage(ISelection selection) {
 		super("wizardPage");
-		setTitle("Multi-page Editor File");
-		setDescription("This wizard creates a new file with *.bpmn2 extension that can be opened by a diagram editor.");
+		setTitle("New BPMN2 File");
+		setDescription("Create a new BPMN2 file.");
 		this.selection = selection;
 	}
 
@@ -59,7 +54,7 @@ public class BPMN2DiagramWizardPage extends WizardPage {
 		layout.numColumns = 3;
 		layout.verticalSpacing = 9;
 		Label label = new Label(container, SWT.NULL);
-		label.setText("&Container:");
+		label.setText("&Location:");
 
 		containerText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -126,7 +121,7 @@ public class BPMN2DiagramWizardPage extends WizardPage {
 
 	private void handleBrowse() {
 		ContainerSelectionDialog dialog = new ContainerSelectionDialog(getShell(), ResourcesPlugin.getWorkspace()
-				.getRoot(), false, "Select new file diagramContainer");
+				.getRoot(), false, "Select Folder for the diagram");
 		if (dialog.open() == Window.OK) {
 			Object[] result = dialog.getResult();
 			if (result.length == 1) {
@@ -144,11 +139,11 @@ public class BPMN2DiagramWizardPage extends WizardPage {
 		String fileName = getFileName();
 
 		if (getContainerName().length() == 0) {
-			updateStatus("File diagramContainer must be specified");
+			updateStatus("Folder must be specified");
 			return;
 		}
 		if (diagramContainer == null || (diagramContainer.getType() & (IResource.PROJECT | IResource.FOLDER)) == 0) {
-			updateStatus("File diagramContainer must exist");
+			updateStatus("Folder must exist");
 			return;
 		}
 		if (!diagramContainer.isAccessible()) {
@@ -156,11 +151,11 @@ public class BPMN2DiagramWizardPage extends WizardPage {
 			return;
 		}
 		if (fileName.length() == 0) {
-			updateStatus("File name must be specified");
+			updateStatus("Name must be specified");
 			return;
 		}
 		if (fileName.replace('\\', '/').indexOf('/', 1) > 0) {
-			updateStatus("File name must be valid");
+			updateStatus("Name must be valid");
 			return;
 		}
 		int dotLoc = fileName.lastIndexOf('.');
