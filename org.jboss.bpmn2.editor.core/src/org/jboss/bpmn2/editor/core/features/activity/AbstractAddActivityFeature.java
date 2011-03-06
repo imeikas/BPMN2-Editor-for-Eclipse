@@ -23,7 +23,6 @@ import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public abstract class AbstractAddActivityFeature extends AbstractBpmnAddFeature {
 
-
 	public AbstractAddActivityFeature(IFeatureProvider fp) {
 		super(fp);
 	}
@@ -49,7 +48,7 @@ public abstract class AbstractAddActivityFeature extends AbstractBpmnAddFeature 
 
 		ContainerShape containerShape = peService.createContainerShape(context.getTargetContainer(), true);
 		Rectangle invisibleRect = gaService.createInvisibleRectangle(containerShape);
-		gaService.setLocationAndSize(invisibleRect, context.getX(), context.getY(), width, height);
+		gaService.setLocationAndSize(invisibleRect, context.getX(), context.getY(), width, height + paddingBottom);
 
 		Shape rectShape = peService.createShape(containerShape, false);
 		RoundedRectangle rect = gaService.createRoundedRectangle(rectShape, 5, 5);
@@ -66,17 +65,17 @@ public abstract class AbstractAddActivityFeature extends AbstractBpmnAddFeature 
 		int y = height - paddingBottom - h - 3 - getMarkerContainerOffset();
 		gaService.setLocationAndSize(markerInvisibleRect, 0, y, invisibleRect.getWidth(), h);
 		peService.setPropertyValue(markerContainer, ShapeUtil.ACTIVITY_MARKER_CONTAINER, Boolean.toString(true));
-		
+
 		hook(activity, containerShape, context, width, height); // hook for subclasses to inject extra code
-		
+
 		peService.createChopboxAnchor(containerShape);
 		AnchorUtil.addFixedPointAnchors(containerShape, rect);
-		
+
 		createDIShape(containerShape, activity);
 
 		Graphiti.getPeService().setPropertyValue(containerShape, IS_COMPENSATE_PROPERTY, Boolean.toString(false));
 		Graphiti.getPeService().setPropertyValue(containerShape, IS_LOOP_OR_MULTI_INSTANCE,
-		        getLoopCharacteristicsValue(activity).getName());
+				getLoopCharacteristicsValue(activity).getName());
 		layoutPictogramElement(containerShape);
 
 		return containerShape;
