@@ -102,9 +102,8 @@ public class BPMN2Editor extends DiagramEditor {
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		// TODO: this might be unnecessary, if all elements eClasses would have ID's
 		modelHandler.save();
-		super.doSave(monitor);
+		((BasicCommandStack) getEditingDomain().getCommandStack()).saveIsDone();
 	}
 
 	@Override
@@ -127,8 +126,8 @@ public class BPMN2Editor extends DiagramEditor {
 			modelHandler = ModelHandlerLocator.createModelHandler(modelUri, bpmnResource);
 			ModelHandlerLocator.put(diagramUri, modelHandler);
 			importDiagram();
-			((BasicCommandStack) getEditingDomain().getCommandStack()).saveIsDone();
 		}
+		((BasicCommandStack) getEditingDomain().getCommandStack()).saveIsDone();
 	}
 
 	private void importDiagram() {

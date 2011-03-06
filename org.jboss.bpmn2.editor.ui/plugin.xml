@@ -3,9 +3,9 @@
 <plugin>
  <extension
          point="org.eclipse.ui.newWizards">
-      <primaryWizard
-            id="org.jboss.bpmn2.editor.ui.diagramWizard">
-      </primaryWizard>
+<!--      <primaryWizard
+            id="org.jboss.bpmn2.editor.ui.diagram">
+      </primaryWizard>-->
       <category
             id="org.jboss.bpmn2.editor.ui.mainCategory"
             name="BPMN2">
@@ -13,9 +13,9 @@
       <wizard
             category="org.jboss.bpmn2.editor.ui.mainCategory"
             class="org.jboss.bpmn2.editor.ui.wizards.BPMN2DiagramWizard"
-            icon="icons/sample.gif"
-            id="org.jboss.bpmn2.editor.ui.diagramWizard"
-            name="BPMN2 Diagram Wizard">
+            icon="icons/bpmn2_editor_16.png"
+            id="org.jboss.bpmn2.editor.ui.diagram"
+            name="BPMN2 Diagram">
       </wizard>
    </extension>
  <extension
@@ -25,10 +25,20 @@
           contributorClass="org.eclipse.graphiti.ui.editor.DiagramEditorActionBarContributor"
           default="true"
           extensions="bpmn2"
-          id="org.jboss.bpmn2.editor.ui.bpmn2editor"
-          name="BPMN2 Editor">
+          icon="icons/bpmn2_editor_16.png"                  
+          id="org.jboss.bpmn2.editor.ui.bpmn2editor"          
+          name="BPMN2 Visual Editor">
     </editor>
  </extension>
+ 
+ 
+<extension point="org.eclipse.core.contenttype.contentTypes">
+	<content-type base-type="org.eclipse.core.runtime.properties"
+		file-extensions="bpmn2"
+		id="org.jboss.bpmn2.filetype" name="BPMN2 File" priority="normal">
+	</content-type>
+</extension>
+
  <extension
        point="org.eclipse.ui.propertyPages">
     <page
@@ -46,32 +56,7 @@
           </enabledWhen>
        </page>
  </extension>
-<!-- <extension
-       point="org.eclipse.ui.views">
-    <category
-          id="org.jboss.bpmn2.editor.ui"
-          name="BPMN2">
-    </category>
-    <view
-          category="org.jboss.bpmn2.editor.ui"
-          class="org.jboss.bpmn2.editor.ui.views.BPMN2ModelView"
-          icon="icons/sample.gif"
-          id="org.jboss.bpmn2.editor.ui.views.BPMN2ModelView"
-          name="BPMN2 Model View">
-    </view>
- </extension> 
- <extension
-       point="org.eclipse.ui.perspectiveExtensions">
-    <perspectiveExtension
-          targetID="org.eclipse.jdt.ui.JavaPerspective">
-       <view
-             id="org.jboss.bpmn2.editor.ui.views.BPMN2ModelView"
-             ratio="0.5"
-             relationship="right"
-             relative="org.eclipse.ui.views.TaskList">
-       </view>
-    </perspectiveExtension>
- </extension> -->
+
  
  <extension
           point="org.eclipse.ui.views.properties.tabbed.propertyContributor">

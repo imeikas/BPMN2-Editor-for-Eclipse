@@ -1,3 +1,24 @@
-Editor BPMN 2.0
+# BPMN2 Editor in Eclipse
 
-More information in wiki
+More information in wiki at https://github.com/imeikas/BPMN2-Editor-for-Eclipse/wiki
+
+## Installation instructions
+
+Please note that the editor is in active development and the latest continuous version might not be 100% stable!
+
+### Requirements
+
+ * Eclipse 3.6 or newer
+ * Graphiti framework. Update site: http://download.eclipse.org/graphiti/updates/0.7.1/
+ * EMF. Included in the main eclipse update sites
+
+There are two ways for getting the editor:
+** Update site ***
+
+Use http://codehoop.com/bpmn2 update site to get the latest automated build of the editor.
+
+** Source from Git **
+Update site already includes the latest bpmn2 EMF model but to run from source, you need to check out additional EMF BPMN2 meta-model dependency from git://git.eclipse.org/gitroot/bpmn2
+
+Use git://github.com/imeikas/BPMN2-Editor-for-Eclipse.git for loading the source
+

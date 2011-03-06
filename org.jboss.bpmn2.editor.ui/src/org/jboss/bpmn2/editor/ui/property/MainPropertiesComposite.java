@@ -74,9 +74,6 @@ public class MainPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 				IItemPropertyDescriptor propertyDescriptor = itemProviderAdapter.getPropertyDescriptor(be, a);
 				if (String.class.equals(a.getEType().getInstanceClass())) {
 					Text t = createTextInput(propertyDescriptor.getDisplayName(be), propertyDescriptor.isMultiLine(be));
-					if ("id".equals(a.getName())) {
-						t.setEditable(false);
-					}
 					Binding bind = bind(a, t);
 					bindings.add(bind);
 				} else if (boolean.class.equals(a.getEType().getInstanceClass())) {
@@ -104,15 +101,21 @@ public class MainPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 		}
 	}
 
-	public void bindReference(final EReference reference, String name) {
-		Object eGet = be.eGet(reference);
+	public void bindReference(final EReference reference, final String name) {
+		TransactionalEditingDomain domain = bpmn2Editor.getEditingDomain();
+		domain.getCommandStack().execute(new RecordingCommand(domain) {
+			@Override
+			protected void doExecute() {
+				Object eGet = be.eGet(reference);
 
-		createLabel(name);
-		if (eGet instanceof List) {
-			createListEditor(reference, eGet);
-		} else {
-			createSingleItemEditor(reference, eGet, null);
-		}
+				createLabel(name);
+				if (eGet instanceof List) {
+					createListEditor(reference, eGet);
+				} else {
+					createSingleItemEditor(reference, eGet, null);
+				}
+			}
+		});
 	}
 
 	private void createListEditor(final EReference reference, Object eGet) {
