@@ -60,10 +60,10 @@ public class AnchorUtil {
 		public FixPointAnchor targetAnchor;
 	}
 
-	private static class BoundaryAnchor {
-		FixPointAnchor anchor;
-		AnchorLocation locationType;
-		ILocation location;
+	public static class BoundaryAnchor {
+		public FixPointAnchor anchor;
+		public AnchorLocation locationType;
+		public ILocation location;
 	}
 
 	public static FixPointAnchor createAnchor(Shape s, AnchorLocation loc, int x, int y) {
@@ -78,7 +78,7 @@ public class AnchorUtil {
 		return anchor;
 	}
 
-	private static Map<AnchorLocation, BoundaryAnchor> getBoundaryAnchors(Shape s) {
+	public static Map<AnchorLocation, BoundaryAnchor> getBoundaryAnchors(Shape s) {
 		Map<AnchorLocation, BoundaryAnchor> map = new HashMap<AnchorLocation, AnchorUtil.BoundaryAnchor>(4);
 		Iterator<Anchor> iterator = s.getAnchors().iterator();
 		while (iterator.hasNext()) {
