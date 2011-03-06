@@ -359,7 +359,7 @@ public class ModelHandler {
 		Process process = findElementOfType(Process.class, o);
 		
 		for (Participant p : getOrCreateCollaboration().getParticipants()) {
-			if (p.getProcessRef().equals(process)) {
+			if (p.getProcessRef() != null && p.getProcessRef().equals(process)) {
 				return p;
 			}
 		}

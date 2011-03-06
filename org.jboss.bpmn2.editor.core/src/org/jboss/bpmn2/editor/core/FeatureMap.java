@@ -21,6 +21,7 @@ import org.jboss.bpmn2.editor.core.features.activity.task.TaskFeatureContainer.C
 import org.jboss.bpmn2.editor.core.features.activity.task.UserTaskFeatureContainer.CreateUserTaskFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.CreateTextAnnotationFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.GroupFeatureContainer.CreateGroupFeature;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyTaskFeatureContainer.CreateChoreographyTaskFeature;
 import org.jboss.bpmn2.editor.core.features.conversation.ConversationLinkFeatureContainer.CreateConversationLinkFeature;
 import org.jboss.bpmn2.editor.core.features.conversation.CreateConversationFeature;
 import org.jboss.bpmn2.editor.core.features.data.DataInputFeatureContainer.CreateDataInputFeature;
@@ -106,6 +107,7 @@ public class FeatureMap {
 		featureMap.put(i.getMessage(), CreateMessageFeature.class);
 		featureMap.put(i.getConversation(), CreateConversationFeature.class);
 		featureMap.put(i.getConversationLink(), CreateConversationLinkFeature.class);
+		featureMap.put(i.getChoreographyTask(), CreateChoreographyTaskFeature.class);
 		FEATURE_MAP = Collections.unmodifiableMap(featureMap);
 	}
 
