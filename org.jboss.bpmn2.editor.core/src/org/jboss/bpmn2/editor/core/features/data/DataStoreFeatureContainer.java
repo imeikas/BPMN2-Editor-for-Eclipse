@@ -72,9 +72,9 @@ public class DataStoreFeatureContainer implements FeatureContainer {
 				int[] bend = { 0, 0, whalf, whalf, 0, 0, 0, 0, whalf, whalf, 0, 0 };
 				Polygon polygon = gaService.createPolygon(invisibleRect, xy, bend);
 				polygon.setFilled(true);
-				polygon.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
-				AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
-				gaService.setRenderingStyle(polygon, gradient);
+				//polygon.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
+				
+				StyleUtil.applyBGStyle(polygon, this);
 
 				xy = new int[] { 0, 14, whalf, 24, width, 14 };
 				bend = new int[] { 0, 0, whalf, whalf, 0, 0 };
@@ -91,10 +91,6 @@ public class DataStoreFeatureContainer implements FeatureContainer {
 
 				peService.createChopboxAnchor(container);
 				AnchorUtil.addFixedPointAnchors(container, invisibleRect);
-
-				if (store.eResource() == null) {
-					getDiagram().eResource().getContents().add(store);
-				}
 
 				link(container, store);
 				createDIShape(container, store);

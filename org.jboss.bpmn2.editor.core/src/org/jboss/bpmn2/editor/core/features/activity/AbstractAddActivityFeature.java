@@ -9,14 +9,12 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.mm.algorithms.Rectangle;
 import org.eclipse.graphiti.mm.algorithms.RoundedRectangle;
-import org.eclipse.graphiti.mm.algorithms.styles.AdaptedGradientColoredAreas;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
-import org.eclipse.graphiti.util.PredefinedColoredAreas;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.utils.AnchorUtil;
@@ -55,9 +53,9 @@ public abstract class AbstractAddActivityFeature extends AbstractBpmnAddFeature 
 
 		Shape rectShape = peService.createShape(containerShape, false);
 		RoundedRectangle rect = gaService.createRoundedRectangle(rectShape, 5, 5);
-		rect.setStyle(StyleUtil.getStyleForClass(getDiagram()));
-		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
-		gaService.setRenderingStyle(rect, gradient);
+
+		StyleUtil.applyBGStyle(rect, this);
+
 		gaService.setLocationAndSize(rect, 0, 0, width, height - paddingBottom);
 		link(rectShape, activity);
 		decorateActivityRectangle(rect);
@@ -75,10 +73,6 @@ public abstract class AbstractAddActivityFeature extends AbstractBpmnAddFeature 
 		AnchorUtil.addFixedPointAnchors(containerShape, rect);
 		
 		createDIShape(containerShape, activity);
-
-		if (activity.eResource() == null) {
-			getDiagram().eResource().getContents().add(activity);
-		}
 
 		Graphiti.getPeService().setPropertyValue(containerShape, IS_COMPENSATE_PROPERTY, Boolean.toString(false));
 		Graphiti.getPeService().setPropertyValue(containerShape, IS_LOOP_OR_MULTI_INSTANCE,

@@ -1,12 +1,16 @@
 package org.jboss.bpmn2.editor.utils;
 
+import org.eclipse.graphiti.features.impl.AbstractFeature;
 import org.eclipse.graphiti.mm.StyleContainer;
+import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
+import org.eclipse.graphiti.mm.algorithms.styles.AdaptedGradientColoredAreas;
 import org.eclipse.graphiti.mm.algorithms.styles.Style;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.util.ColorConstant;
 import org.eclipse.graphiti.util.IColorConstant;
+import org.eclipse.graphiti.util.PredefinedColoredAreas;
 
 public class StyleUtil {
 	
@@ -14,8 +18,13 @@ public class StyleUtil {
 	private static final String TEXT_ID = "E-CLASS-TEXT";
 	
 	public static final IColorConstant CLASS_TEXT_FOREGROUND = IColorConstant.BLACK;
-	public static final IColorConstant CLASS_FOREGROUND = new ColorConstant(146, 146, 208);
-	public static final IColorConstant CLASS_BACKGROUND = new ColorConstant(220, 220, 255);
+	//public static final IColorConstant CLASS_FOREGROUND = new ColorConstant(146, 146, 208);
+	//public static final IColorConstant CLASS_FOREGROUND = new ColorConstant(102, 175, 232);
+	//public static final IColorConstant CLASS_FOREGROUND = new ColorConstant(163, 202, 232);
+	public static final IColorConstant CLASS_FOREGROUND = new ColorConstant(116, 143, 165);
+	
+	//public static final IColorConstant CLASS_BACKGROUND = new ColorConstant(220, 220, 255);
+	public static final IColorConstant CLASS_BACKGROUND = new ColorConstant(220, 233, 255);
 
 	public static Style getStyleForClass(Diagram diagram) {
 		Style s = findStyle(diagram, CLASS_ID);
@@ -53,5 +62,14 @@ public class StyleUtil {
 			}
 		}
 		return null;
+	}
+
+	public static void applyBGStyle(GraphicsAlgorithm shape,
+			AbstractFeature feature) {
+		IGaService gaService = Graphiti.getGaService();
+		shape.setStyle(StyleUtil.getStyleForClass(feature.getFeatureProvider().getDiagramTypeProvider().getDiagram()));
+		shape.setFilled(true);
+		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
+		gaService.setRenderingStyle(shape, gradient);
 	}
 }

@@ -52,9 +52,9 @@ public class AddEventFeature extends AbstractBpmnAddFeature {
 
 		Shape ellipseShape = peCreateService.createShape(containerShape, false);
 		Ellipse ellipse = ShapeUtil.createEventShape(ellipseShape);
-		ellipse.setStyle(StyleUtil.getStyleForClass(getDiagram()));
-		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
-		gaService.setRenderingStyle(ellipse, gradient);
+		
+		StyleUtil.applyBGStyle(ellipse, this);
+		
 		link(ellipseShape, e);
 		decorateEllipse(ellipse);
 
@@ -66,10 +66,6 @@ public class AddEventFeature extends AbstractBpmnAddFeature {
 		text.setBackground(manageColor(IColorConstant.RED));
 		gaService.setLocationAndSize(text, 0, ShapeUtil.EVENT_SIZE, ShapeUtil.EVENT_SIZE, ShapeUtil.EVENT_TEXT_AREA);
 		link(textShape, e);
-
-		if (e.eResource() == null) {
-			getDiagram().eResource().getContents().add(e);
-		}
 
 		createDIShape(containerShape, e);
 

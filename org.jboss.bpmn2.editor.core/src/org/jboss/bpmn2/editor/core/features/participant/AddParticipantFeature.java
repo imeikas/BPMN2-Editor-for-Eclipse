@@ -46,9 +46,9 @@ public class AddParticipantFeature extends AbstractBpmnAddFeature {
 		int height = context.getHeight() > 0 ? context.getHeight() : 100;
 
 		Rectangle rect = gaService.createRectangle(containerShape);
-		rect.setStyle(StyleUtil.getStyleForClass(getDiagram()));
-		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
-		gaService.setRenderingStyle(rect, gradient);
+		
+		StyleUtil.applyBGStyle(rect, this);
+		
 		gaService.setLocationAndSize(rect, context.getX(), context.getY(), width, height);
 
 		Shape lineShape = peCreateService.createShape(containerShape, false);

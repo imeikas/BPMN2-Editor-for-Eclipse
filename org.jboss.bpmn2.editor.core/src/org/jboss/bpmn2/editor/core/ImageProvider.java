@@ -123,7 +123,7 @@ public class ImageProvider extends AbstractImageProvider {
 		addImageFilePath(IMG_16_PARALLEL_GATEWAY, ICONS_16 + "InclusiveGateway.png");
 		addImageFilePath(IMG_16_EVENT_BASED_GATEWAY, ICONS_16 + "EventBasedGateway.png");
 		addImageFilePath(IMG_16_MESSAGE_FLOW, ICONS_16 + "MessageFlow.png");
-		addImageFilePath(IMG_16_INTERMEDIATE_CATCH_EVENT, ICONS_16 + "IntermediateCatchEvent.png");
+		addImageFilePath(IMG_16_INTERMEDIATE_CATCH_EVENT, ICONS_16 + "IntermediateThrowEvent.png");
 		addImageFilePath(IMG_16_INTERMEDIATE_THORW_EVENT, ICONS_16 + "IntermediateThrowEvent.png");
 		addImageFilePath(IMG_16_COMPLEX_GATEWAY, ICONS_16 + "ComplexGateway.png");
 		addImageFilePath(IMG_16_USER_TASK, ICONS_16 + "UserTask.png");

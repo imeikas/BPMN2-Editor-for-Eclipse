@@ -217,24 +217,17 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 
 			peService.setPropertyValue(context.getTargetContainer(), boundaryDistance,
 					Integer.toString(x + ShapeUtil.EVENT_SIZE + 5));
-
-			Style style = StyleUtil.getStyleForClass(getDiagram());
-			ellipse.setStyle(style);
-
-			AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
-			gaService.setRenderingStyle(ellipse, gradient);
-
+			
+			StyleUtil.applyBGStyle(ellipse, this);	
+			
 			Ellipse circle = ShapeUtil.createIntermediateEventCircle(ellipse);
-			circle.setStyle(style);
+
+			circle.setStyle(StyleUtil.getStyleForClass(getDiagram()));
 
 			createDIShape(containerShape, event);
 
 			ChopboxAnchor anchor = peService.createChopboxAnchor(containerShape);
 			anchor.setReferencedGraphicsAlgorithm(ellipse);
-
-			if (event.eResource() == null) {
-				getDiagram().eResource().getContents().add(event);
-			}
 
 			peService.setPropertyValue(containerShape, cancelKey, "true");
 			layoutPictogramElement(context.getTargetContainer());

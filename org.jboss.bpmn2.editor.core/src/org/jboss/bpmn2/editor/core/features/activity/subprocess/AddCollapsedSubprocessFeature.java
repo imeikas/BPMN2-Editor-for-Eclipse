@@ -57,9 +57,9 @@ public class AddCollapsedSubprocessFeature extends AbstractAddFeature {
 
 		Shape rectShape = peService.createShape(containerShape, false);
 		RoundedRectangle rect = gaService.createRoundedRectangle(rectShape, 5, 5);
-		rect.setStyle(StyleUtil.getStyleForClass(getDiagram()));
-		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
-		gaService.setRenderingStyle(rect, gradient);
+				
+		StyleUtil.applyBGStyle(rect, this);		
+
 		gaService.setLocationAndSize(rect, 0, 0, width, height);
 		decorateRect(rect);
 		link(rectShape, subprocess);
@@ -87,10 +87,6 @@ public class AddCollapsedSubprocessFeature extends AbstractAddFeature {
 
 		ChopboxAnchor anchor = peService.createChopboxAnchor(containerShape);
 		anchor.setReferencedGraphicsAlgorithm(rect);
-
-		if (subprocess.eResource() == null) {
-			getDiagram().eResource().getContents().add(subprocess);
-		}
 
 		peService.setPropertyValue(containerShape, TRIGGERED_BY_EVENT, "false");
 		link(containerShape, subprocess);
