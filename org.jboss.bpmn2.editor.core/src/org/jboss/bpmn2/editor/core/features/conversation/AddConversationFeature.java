@@ -41,10 +41,8 @@ public class AddConversationFeature extends AbstractBpmnAddFeature {
 
 		int[] xy = { w_5th, 0, w_5th * 4, 0, w, h / 2, w_5th * 4, h, w_5th, h, 0, h / 2 };
 		Polygon hexagon = gaService.createPolygon(containerShape, xy);
-		hexagon.setFilled(false);
-		hexagon.setStyle(StyleUtil.getStyleForClass(getDiagram()));
-		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
-		gaService.setRenderingStyle(hexagon, gradient);
+		
+		StyleUtil.applyBGStyle(hexagon, this);
 		
 		peService.createChopboxAnchor(containerShape);
 		AnchorUtil.addFixedPointAnchors(containerShape, hexagon);

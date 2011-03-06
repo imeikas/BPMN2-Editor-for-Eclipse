@@ -52,9 +52,8 @@ public class AddLaneFeature extends AbstractBpmnAddFeature {
 		int height = context.getHeight() > 0 ? context.getHeight() : 100;
 
 		Rectangle rect = gaService.createRectangle(containerShape);
-		rect.setStyle(StyleUtil.getStyleForClass(getDiagram()));
-		AdaptedGradientColoredAreas gradient = PredefinedColoredAreas.getBlueWhiteAdaptions();
-		gaService.setRenderingStyle(rect, gradient);
+		
+		StyleUtil.applyBGStyle(rect, this);	
 
 		if (FeatureSupport.isTargetLane(context)) {
 			GraphicsAlgorithm ga = context.getTargetContainer().getGraphicsAlgorithm();
