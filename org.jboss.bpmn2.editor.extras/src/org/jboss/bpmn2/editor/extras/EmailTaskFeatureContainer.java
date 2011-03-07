@@ -8,10 +8,10 @@ import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.jboss.bpmn2.editor.core.Bpmn2Preferences;
-import org.jboss.bpmn2.editor.core.ImageProvider;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.activity.task.AbstractCreateTaskFeature;
-import org.jboss.bpmn2.editor.core.features.activity.task.TaskFeatureContainer;
+import org.jboss.bpmn2.editor.ui.ImageProvider;
+import org.jboss.bpmn2.editor.ui.features.activity.task.TaskFeatureContainer;
 
 public class EmailTaskFeatureContainer extends TaskFeatureContainer {
 
