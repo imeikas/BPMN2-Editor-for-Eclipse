@@ -173,7 +173,12 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		for (FeatureContainer c : containers) {
 			if (c instanceof ConnectionFeatureContainer) {
 				ConnectionFeatureContainer connectionFeatureContainer = (ConnectionFeatureContainer) c;
-				createConnectionFeatureList.add(connectionFeatureContainer.getCreateConnectionFeature(this));
+				ICreateConnectionFeature createConnectionFeature = connectionFeatureContainer
+				        .getCreateConnectionFeature(this);
+				if (createConnectionFeature == null) {
+					continue;
+				}
+				createConnectionFeatureList.add(createConnectionFeature);
 			}
 		}
 
