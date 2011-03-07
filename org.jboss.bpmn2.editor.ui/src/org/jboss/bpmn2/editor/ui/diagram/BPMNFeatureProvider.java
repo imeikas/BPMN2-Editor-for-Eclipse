@@ -63,6 +63,7 @@ import org.jboss.bpmn2.editor.ui.features.conversation.ConversationFeatureContai
 import org.jboss.bpmn2.editor.ui.features.conversation.ConversationLinkFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.data.DataInputFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.data.DataObjectFeatureContainer;
+import org.jboss.bpmn2.editor.ui.features.data.DataObjectReferenceFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.data.DataOutputFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.data.DataStoreReferenceFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.data.MessageFeatureContainer;
@@ -122,6 +123,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers = new ArrayList<FeatureContainer>();
 		containers.add(new GroupFeatureContainer());
 		containers.add(new DataObjectFeatureContainer());
+		containers.add(new DataObjectReferenceFeatureContainer());
 		containers.add(new DataStoreReferenceFeatureContainer());
 		containers.add(new DataInputFeatureContainer());
 		containers.add(new DataOutputFeatureContainer());
