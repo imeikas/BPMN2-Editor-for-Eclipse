@@ -1,8 +1,11 @@
 package org.jboss.bpmn2.editor.ui.features.data;
 
+import java.io.IOException;
+
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.DataStore;
-import org.eclipse.bpmn2.RootElement;
+import org.eclipse.bpmn2.DataStoreReference;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IDeleteFeature;
@@ -13,6 +16,7 @@ import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.IAddContext;
+import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
 import org.eclipse.graphiti.mm.algorithms.Polygon;
@@ -28,25 +32,27 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
+import org.jboss.bpmn2.editor.core.features.AbstractCreateFlowElementFeature;
 import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.UpdateBaseElementNameFeature;
-import org.jboss.bpmn2.editor.core.features.data.AbstractCreateRootElementFeature;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
+import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
+import org.jboss.bpmn2.editor.ui.Activator;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 import org.jboss.bpmn2.editor.ui.features.LayoutBaseElementTextFeature;
 
-public class DataStoreFeatureContainer implements FeatureContainer {
+public class DataStoreReferenceFeatureContainer implements FeatureContainer {
 
 	@Override
 	public boolean canApplyTo(BaseElement element) {
-		return element instanceof DataStore;
+		return element instanceof DataStoreReference;
 	}
 
 	@Override
 	public ICreateFeature getCreateFeature(IFeatureProvider fp) {
-		return new CreateDataStoreFeature(fp);
+		return new CreateDataStoreReferenceFeature(fp);
 	}
 
 	@Override
@@ -62,7 +68,7 @@ public class DataStoreFeatureContainer implements FeatureContainer {
 			public PictogramElement add(IAddContext context) {
 				IGaService gaService = Graphiti.getGaService();
 				IPeService peService = Graphiti.getPeService();
-				DataStore store = (DataStore) context.getNewObject();
+				DataStoreReference store = (DataStoreReference) context.getNewObject();
 
 				int width = 50;
 				int height = 50;
@@ -149,28 +155,41 @@ public class DataStoreFeatureContainer implements FeatureContainer {
 		};
 	}
 
-	public static class CreateDataStoreFeature extends AbstractCreateRootElementFeature {
+	public static class CreateDataStoreReferenceFeature extends AbstractCreateFlowElementFeature<DataStoreReference> {
 
-		public CreateDataStoreFeature(IFeatureProvider fp) {
+		public CreateDataStoreReferenceFeature(IFeatureProvider fp) {
 			super(fp, "Data Store", "Persist information that is beyond the scope of the process");
 		}
 
 		@Override
-		public RootElement createRootElement() {
-			DataStore dataStore = ModelHandler.FACTORY.createDataStore();
-			dataStore.setName("Data Store");
-			return dataStore;
+		protected DataStoreReference createFlowElement(ICreateContext context) {
+			DataStoreReference dataStoreReference = null;
+			try {
+				dataStoreReference = ModelHandler.FACTORY.createDataStoreReference();
+				dataStoreReference.setName("Data Store Ref");
+				DataStore dataStore = ModelHandler.FACTORY.createDataStore();
+				dataStore.setName("Data Store");
+				dataStore.setId(EcoreUtil.generateUUID());
+				FeatureSupport.getModelHanderInstance(getDiagram()).addRootElement(dataStore);
+			} catch (IOException e) {
+				Activator.showErrorWithLogging(e);
+			}
+			return dataStoreReference;
 		}
 
 		@Override
-		public String getStencilImageId() {
+		public String getCreateImageId() {
+			return ImageProvider.IMG_16_DATA_STORE;
+		}
+
+		@Override
+		public String getCreateLargeImageId() {
 			return ImageProvider.IMG_16_DATA_STORE;
 		}
 	}
 
 	@Override
 	public IDeleteFeature getDeleteFeature(IFeatureProvider context) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

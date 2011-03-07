@@ -29,7 +29,7 @@ import org.jboss.bpmn2.editor.ui.features.conversation.CreateConversationFeature
 import org.jboss.bpmn2.editor.ui.features.data.DataInputFeatureContainer.CreateDataInputFeature;
 import org.jboss.bpmn2.editor.ui.features.data.DataObjectFeatureContainer.CreateDataObjectFeature;
 import org.jboss.bpmn2.editor.ui.features.data.DataOutputFeatureContainer.CreateDataOutputFeature;
-import org.jboss.bpmn2.editor.ui.features.data.DataStoreFeatureContainer.CreateDataStoreFeature;
+import org.jboss.bpmn2.editor.ui.features.data.DataStoreReferenceFeatureContainer.CreateDataStoreReferenceFeature;
 import org.jboss.bpmn2.editor.ui.features.data.MessageFeatureContainer.CreateMessageFeature;
 import org.jboss.bpmn2.editor.ui.features.event.BoundaryEventFeatureContainer.CreateBoundaryEvent;
 import org.jboss.bpmn2.editor.ui.features.event.EndEventFeatureContainer.CreateEndEventFeature;
@@ -107,7 +107,7 @@ public class FeatureMap {
 		featureMap.put(i.getTransaction(), CreateTransactionFeature.class);
 		featureMap.put(i.getGroup(), CreateGroupFeature.class);
 		featureMap.put(i.getDataObject(), CreateDataObjectFeature.class);
-		featureMap.put(i.getDataStore(), CreateDataStoreFeature.class);
+		featureMap.put(i.getDataStoreReference(), CreateDataStoreReferenceFeature.class);
 		featureMap.put(i.getDataInput(), CreateDataInputFeature.class);
 		featureMap.put(i.getDataOutput(), CreateDataOutputFeature.class);
 		featureMap.put(i.getAdHocSubProcess(), CreateAdHocSubProcessFeature.class);
@@ -162,7 +162,7 @@ public class FeatureMap {
 
 		features = new ArrayList<Class<? extends IFeature>>();
 		features.add(CreateDataObjectFeature.class);
-		features.add(CreateDataStoreFeature.class);
+		features.add(CreateDataStoreReferenceFeature.class);
 		features.add(CreateDataInputFeature.class);
 		features.add(CreateDataOutputFeature.class);
 		DATA = Collections.unmodifiableList(features);

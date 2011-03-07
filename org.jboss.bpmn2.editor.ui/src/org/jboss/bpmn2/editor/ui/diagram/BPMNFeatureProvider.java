@@ -54,7 +54,7 @@ import org.jboss.bpmn2.editor.ui.features.conversation.ConversationLinkFeatureCo
 import org.jboss.bpmn2.editor.ui.features.data.DataInputFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.data.DataObjectFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.data.DataOutputFeatureContainer;
-import org.jboss.bpmn2.editor.ui.features.data.DataStoreFeatureContainer;
+import org.jboss.bpmn2.editor.ui.features.data.DataStoreReferenceFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.data.MessageFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.event.BoundaryEventFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.event.EndEventFeatureContainer;
@@ -110,7 +110,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers = new ArrayList<FeatureContainer>();
 		containers.add(new GroupFeatureContainer());
 		containers.add(new DataObjectFeatureContainer());
-		containers.add(new DataStoreFeatureContainer());
+		containers.add(new DataStoreReferenceFeatureContainer());
 		containers.add(new DataInputFeatureContainer());
 		containers.add(new DataOutputFeatureContainer());
 		containers.add(new MessageFeatureContainer());
@@ -178,7 +178,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		}
 
 		createConnectionFeatures = createConnectionFeatureList
-				.toArray(new ICreateConnectionFeature[createConnectionFeatureList.size()]);
+		        .toArray(new ICreateConnectionFeature[createConnectionFeatureList.size()]);
 	}
 
 	@Override

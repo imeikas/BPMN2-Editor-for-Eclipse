@@ -145,7 +145,7 @@ public class DIImport {
 
 		if (addFeature == null) {
 			Activator.logStatus(new Status(IStatus.WARNING, Activator.PLUGIN_ID, "Element not supported: "
-					+ bpmnElement.eClass().getName()));
+			        + bpmnElement.eClass().getName()));
 			return;
 		}
 
@@ -265,12 +265,12 @@ public class DIImport {
 			createEdgeAndSetBendpoints(bpmnEdge, se, te);
 		} else {
 			Activator.logStatus(new Status(IStatus.WARNING, Activator.PLUGIN_ID,
-					"Couldn't find target element, probably not supported! Source: " + source + " Target: " + target));
+			        "Couldn't find target element, probably not supported! Source: " + source + " Target: " + target));
 		}
 	}
 
 	private void createEdgeAndSetBendpoints(BPMNEdge bpmnEdge, PictogramElement sourceElement,
-			PictogramElement targetElement) {
+	        PictogramElement targetElement) {
 		FixPointAnchor sourceAnchor = createAnchor(sourceElement);
 		FixPointAnchor targetAnchor = createAnchor(targetElement);
 
@@ -278,7 +278,7 @@ public class DIImport {
 		context.setNewObject(bpmnEdge.getBpmnElement());
 
 		IAddFeature addFeature = featureProvider.getAddFeature(context);
-		if (addFeature.canAdd(context)) {
+		if (addFeature != null && addFeature.canAdd(context)) {
 			context.putProperty(IMPORT_PROPERTY, true);
 			Connection connection = (Connection) addFeature.add(context);
 
@@ -296,6 +296,9 @@ public class DIImport {
 				}
 			}
 			featureProvider.link(connection, new Object[] { bpmnEdge.getBpmnElement(), bpmnEdge });
+		} else {
+			Activator.logStatus(new Status(IStatus.WARNING, Activator.PLUGIN_ID, "Unsupported feature "
+			        + ((EObject) context.getNewObject()).eClass().getName()));
 		}
 	}
 
@@ -309,7 +312,7 @@ public class DIImport {
 
 	private void setAnchorLocation(PictogramElement elem, FixPointAnchor anchor, Point point) {
 		org.eclipse.graphiti.mm.algorithms.styles.Point p = gaService.createPoint((int) point.getX(),
-				(int) point.getY());
+		        (int) point.getY());
 
 		ILocation loc = Graphiti.getPeLayoutService().getLocationRelativeToDiagram((Shape) elem);
 

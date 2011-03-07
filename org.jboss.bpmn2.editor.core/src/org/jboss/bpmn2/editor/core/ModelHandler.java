@@ -40,6 +40,9 @@ import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
+import org.eclipse.graphiti.mm.pictograms.PictogramElement;
+import org.eclipse.graphiti.mm.pictograms.Shape;
+import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 
 public class ModelHandler {
 	public static final Bpmn2Factory FACTORY = Bpmn2Factory.eINSTANCE;
@@ -121,12 +124,12 @@ public class ModelHandler {
 		getOrCreateIOSpecification(target).getDataInputs().add(dataInput);
 		return dataInput;
 	}
-	
+
 	public ConversationNode addConversationNode(ConversationNode conversationNode) {
 		getOrCreateCollaboration().getConversations().add(conversationNode);
 		return conversationNode;
 	}
-	
+
 	private InputOutputSpecification getOrCreateIOSpecification(Object target) {
 		Process process = getOrCreateProcess(getParticipant(target));
 		if (process.getIoSpecification() == null) {
@@ -242,7 +245,7 @@ public class ModelHandler {
 		getOrCreateCollaboration().getMessageFlows().add(messageFlow);
 		return messageFlow;
 	}
-	
+
 	public ConversationLink createConversationLink(InteractionNode source, InteractionNode target) {
 		ConversationLink link = FACTORY.createConversationLink();
 		link.setSourceRef(source);
@@ -267,31 +270,31 @@ public class ModelHandler {
 		association.setTargetRef(target);
 		return association;
 	}
-	
+
 	private Collaboration getOrCreateCollaboration() {
 		List<RootElement> rootElements = getDefinitions().getRootElements();
-		
+
 		for (RootElement element : rootElements) {
 			if (element instanceof Collaboration) {
 				return (Collaboration) element;
 			}
 		}
-		
+
 		Collaboration collaboration = FACTORY.createCollaboration();
 		collaboration.setId(EcoreUtil.generateUUID());
-		
+
 		Participant participant = FACTORY.createParticipant();
 		participant.setId(EcoreUtil.generateUUID());
 		participant.setName("Internal");
 		for (RootElement element : rootElements) {
-			if(element instanceof Process) {
+			if (element instanceof Process) {
 				participant.setProcessRef((Process) element);
 				break;
 			}
 		}
 		collaboration.getParticipants().add(participant);
 		rootElements.add(collaboration);
-		
+
 		return collaboration;
 	}
 
@@ -352,12 +355,17 @@ public class ModelHandler {
 			return getInternalParticipant();
 		}
 
-		if (o instanceof Participant) {
-			return (Participant) o;
+		Object object = o;
+		if (o instanceof Shape) {
+			object = BusinessObjectUtil.getFirstElementOfType((PictogramElement) o, BaseElement.class);
 		}
 
-		Process process = findElementOfType(Process.class, o);
-		
+		if (object instanceof Participant) {
+			return (Participant) object;
+		}
+
+		Process process = findElementOfType(Process.class, object);
+
 		for (Participant p : getOrCreateCollaboration().getParticipants()) {
 			if (p.getProcessRef() != null && p.getProcessRef().equals(process)) {
 				return p;
@@ -381,7 +389,7 @@ public class ModelHandler {
 	}
 
 	@SuppressWarnings("unchecked")
-    public <T> List<T> getAll(final Class<T> class1) {
+	public <T> List<T> getAll(final Class<T> class1) {
 		ArrayList<T> l = new ArrayList<T>();
 		TreeIterator<EObject> contents = resource.getAllContents();
 		for (; contents.hasNext();) {
@@ -401,10 +409,10 @@ public class ModelHandler {
 
 			for (DiagramElement elem : planeElement) {
 				if (elem instanceof BPMNShape && element.getId() != null
-						&& element.getId().equals(((BPMNShape) elem).getBpmnElement().getId())) {
+				        && element.getId().equals(((BPMNShape) elem).getBpmnElement().getId())) {
 					return (elem);
 				} else if (elem instanceof BPMNEdge && element.getId() != null
-						&& element.getId().equals(((BPMNEdge) elem).getBpmnElement().getId())) {
+				        && element.getId().equals(((BPMNEdge) elem).getBpmnElement().getId())) {
 					return (elem);
 				}
 			}
