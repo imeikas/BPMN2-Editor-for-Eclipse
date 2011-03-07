@@ -37,8 +37,6 @@ public class LayoutActivityFeature extends AbstractLayoutFeature {
 		ContainerShape containerShape = (ContainerShape) context.getPictogramElement();
 		GraphicsAlgorithm parentGa = containerShape.getGraphicsAlgorithm();
 
-		DIUtils.updateDIShape(getDiagram(), containerShape, Activity.class);
-
 		Iterator<Shape> iterator = Graphiti.getPeService().getAllContainedShapes(containerShape).iterator();
 		while (iterator.hasNext()) {
 			Shape shape = iterator.next();
@@ -76,6 +74,7 @@ public class LayoutActivityFeature extends AbstractLayoutFeature {
 			}
 		}
 
+		DIUtils.updateDIShape(getDiagram(), containerShape, Activity.class, ShapeUtil.ACTIVITY_BOTTOM_PADDING);
 		return changed;
 	}
 

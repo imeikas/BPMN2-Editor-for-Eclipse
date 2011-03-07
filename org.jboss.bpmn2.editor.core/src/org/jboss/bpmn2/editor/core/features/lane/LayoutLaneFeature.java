@@ -22,7 +22,7 @@ public class LayoutLaneFeature extends AbstractLayoutFeature {
 	@Override
 	public boolean layout(ILayoutContext context) {
 		FeatureSupport.redraw((ContainerShape) context.getPictogramElement());
-		DIUtils.updateDIShape(getDiagram(), context.getPictogramElement(), Lane.class);
+		DIUtils.updateDIShape(getDiagram(), context.getPictogramElement(), Lane.class, 0);
 		return true;
 	}
 }

@@ -44,11 +44,11 @@ public abstract class AbstractAddActivityFeature extends AbstractBpmnAddFeature 
 
 		int paddingBottom = ShapeUtil.ACTIVITY_BOTTOM_PADDING;
 		int width = context.getWidth() > 0 ? context.getWidth() : getWidth();
-		int height = context.getHeight() > 0 ? context.getHeight() : getHeight() + paddingBottom;
+		int height = context.getHeight() > 0 ? context.getHeight() + paddingBottom : getHeight() + paddingBottom;
 
 		ContainerShape containerShape = peService.createContainerShape(context.getTargetContainer(), true);
 		Rectangle invisibleRect = gaService.createInvisibleRectangle(containerShape);
-		gaService.setLocationAndSize(invisibleRect, context.getX(), context.getY(), width, height + paddingBottom);
+		gaService.setLocationAndSize(invisibleRect, context.getX(), context.getY(), width, height);
 
 		Shape rectShape = peService.createShape(containerShape, false);
 		RoundedRectangle rect = gaService.createRoundedRectangle(rectShape, 5, 5);

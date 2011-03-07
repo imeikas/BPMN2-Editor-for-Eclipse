@@ -214,9 +214,9 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 
 			peService.setPropertyValue(context.getTargetContainer(), boundaryDistance,
 					Integer.toString(x + ShapeUtil.EVENT_SIZE + 5));
-			
-			StyleUtil.applyBGStyle(ellipse, this);	
-			
+
+			StyleUtil.applyBGStyle(ellipse, this);
+
 			Ellipse circle = ShapeUtil.createIntermediateEventCircle(ellipse);
 
 			circle.setStyle(StyleUtil.getStyleForClass(getDiagram()));
@@ -256,7 +256,7 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 
 				int y = parentGa.getHeight() - ShapeUtil.EVENT_SIZE;
 
-				DIUtils.updateDIShape(getDiagram(), element, BoundaryEvent.class);
+				DIUtils.updateDIShape(getDiagram(), element, BoundaryEvent.class, 0);
 
 				if (ga.getY() != y) {
 					Graphiti.getGaService().setLocation(ga, ga.getX(), y);

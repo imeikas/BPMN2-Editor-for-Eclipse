@@ -27,7 +27,7 @@ public abstract class AbstractAddFlowFeature extends AbstractBpmnAddFeature {
 	@Override
 	public boolean canAdd(IAddContext context) {
 		return context instanceof IAddConnectionContext
-		        && getBoClass().isAssignableFrom(context.getNewObject().getClass());
+				&& getBoClass().isAssignableFrom(context.getNewObject().getClass());
 	}
 
 	@Override
@@ -38,17 +38,17 @@ public abstract class AbstractAddFlowFeature extends AbstractBpmnAddFeature {
 		IAddConnectionContext addConContext = (IAddConnectionContext) context;
 
 		Connection connection = peService.createFreeFormConnection(getDiagram());
-		
+
 		Object importProp = context.getProperty(DIImport.IMPORT_PROPERTY);
-		if(importProp != null && (Boolean) importProp) {
+		if (importProp != null && (Boolean) importProp) {
 			connection.setStart(addConContext.getSourceAnchor());
 			connection.setEnd(addConContext.getTargetAnchor());
 		} else {
 			ContainerShape sourceContainer = (ContainerShape) addConContext.getSourceAnchor().eContainer();
 			ContainerShape targetContainer = (ContainerShape) addConContext.getTargetAnchor().eContainer();
-			Tuple<FixPointAnchor, FixPointAnchor> anchors = AnchorUtil.getSourceAndTargetBoundaryAnchors(sourceContainer,
-					targetContainer);
-			
+			Tuple<FixPointAnchor, FixPointAnchor> anchors = AnchorUtil.getSourceAndTargetBoundaryAnchors(
+					sourceContainer, targetContainer);
+
 			connection.setStart(anchors.getFirst());
 			connection.setEnd(anchors.getSecond());
 		}
@@ -60,7 +60,6 @@ public abstract class AbstractAddFlowFeature extends AbstractBpmnAddFeature {
 		decorateConnectionLine(connectionLine);
 
 		createDIEdge(connection, element);
-		link(connection, element);
 		createConnectionDecorators(connection);
 		hook(addConContext, connection, element);
 
