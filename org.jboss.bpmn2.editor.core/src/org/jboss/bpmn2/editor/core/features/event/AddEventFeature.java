@@ -18,7 +18,7 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
-import org.jboss.bpmn2.editor.core.features.UpdateFlowElementNameFeature;
+import org.jboss.bpmn2.editor.core.features.UpdateBaseElementNameFeature;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
 import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
@@ -61,7 +61,7 @@ public class AddEventFeature extends AbstractBpmnAddFeature {
 		decorateEllipse(ellipse);
 
 		Shape textShape = peService.createShape(containerShape, false);
-		peService.setPropertyValue(textShape, UpdateFlowElementNameFeature.TEXT_ELEMENT, Boolean.toString(true));
+		peService.setPropertyValue(textShape, UpdateBaseElementNameFeature.TEXT_ELEMENT, Boolean.toString(true));
 		Text text = gaService.createDefaultText(textShape, e.getName());
 		text.setStyle(StyleUtil.getStyleForText(getDiagram()));
 		text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);

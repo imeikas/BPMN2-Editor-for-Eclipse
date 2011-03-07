@@ -1,8 +1,5 @@
 package org.jboss.bpmn2.editor.core.features.gateway;
 
-import static org.jboss.bpmn2.editor.core.utils.GraphicsUtil.EVENT_SIZE;
-import static org.jboss.bpmn2.editor.core.utils.GraphicsUtil.EVENT_TEXT_AREA;
-
 import org.eclipse.bpmn2.Gateway;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
@@ -17,6 +14,7 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
+import org.jboss.bpmn2.editor.core.features.UpdateBaseElementNameFeature;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
 import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
@@ -57,20 +55,17 @@ public class DefaultAddGatewayFeature extends AbstractBpmnAddFeature {
 		decorateGateway(containerShape);
 		
 		Shape textShape = peService.createShape(containerShape, false);
-		peService.setPropertyValue(textShape, EVENT_ELEMENT, EVENT_TEXT);
-		Text text = gaService.createDefaultText(textShape, e.getName());
+		peService.setPropertyValue(textShape, UpdateBaseElementNameFeature.TEXT_ELEMENT, Boolean.toString(true));
+		Text text = gaService.createDefaultText(textShape, addedGateway.getName());
 		text.setStyle(StyleUtil.getStyleForText(getDiagram()));
 		text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		text.setVerticalAlignment(Orientation.ALIGNMENT_TOP);
-		gaService.setLocationAndSize(text, 0, EVENT_SIZE, EVENT_SIZE, EVENT_TEXT_AREA);
+		gaService.setLocationAndSize(text, 0, d, d, p);
 		
 		createDIShape(containerShape, addedGateway);
-
-		
-		
 		peService.createChopboxAnchor(containerShape);
 		AnchorUtil.addFixedPointAnchors(containerShape, gateway);
-		
+		layoutPictogramElement(containerShape);
 		return containerShape;
 	}
 

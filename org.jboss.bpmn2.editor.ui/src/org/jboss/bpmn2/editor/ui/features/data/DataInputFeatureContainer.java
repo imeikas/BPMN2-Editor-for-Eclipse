@@ -9,7 +9,6 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.mm.algorithms.Polygon;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.data.AbstractCreateDataInputOutputFeature;
-import org.jboss.bpmn2.editor.core.features.data.AbstractDataFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.data.AddDataFeature;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
@@ -41,6 +40,11 @@ public class DataInputFeatureContainer extends AbstractDataFeatureContainer {
 				arrow.setFilled(false);
 				arrow.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 			}
+
+			@Override
+            public String getName(DataInput t) {
+	            return t.getName();
+            }
 		};
 	}
 

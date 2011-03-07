@@ -23,10 +23,14 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 
 public class GraphicsUtil {
-
+	
 	private static final IGaService gaService = Graphiti.getGaService();
 	private static final IPeService peService = Graphiti.getPeService();
-
+	
+	// TODO move all size properties to separate interface
+	public static int DATA_WIDTH = 36;
+	public static int DATA_HEIGHT = 50;
+	
 	public static class Envelope {
 		public Rectangle rect;
 		public Polyline line;

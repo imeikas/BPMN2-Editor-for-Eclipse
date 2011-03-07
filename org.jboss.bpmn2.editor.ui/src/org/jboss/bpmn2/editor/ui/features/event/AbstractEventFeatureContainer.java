@@ -11,13 +11,15 @@ import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
 import org.jboss.bpmn2.editor.core.features.DirectEditFlowElementFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.MoveFlowNodeFeature;
-import org.jboss.bpmn2.editor.core.features.UpdateFlowElementNameFeature;
+import org.jboss.bpmn2.editor.core.features.UpdateBaseElementNameFeature;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.ui.features.LayoutBaseElementTextFeature;
 
 public abstract class AbstractEventFeatureContainer implements FeatureContainer {
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
-		return new UpdateFlowElementNameFeature(fp);
+		return new UpdateBaseElementNameFeature(fp);
 	}
 
 	@Override
@@ -27,7 +29,13 @@ public abstract class AbstractEventFeatureContainer implements FeatureContainer 
 
 	@Override
 	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
-		return new LayoutEventFeature(fp);
+		return new LayoutBaseElementTextFeature(fp) {
+
+			@Override
+			public int getMinimumWidth() {
+				return GraphicsUtil.EVENT_SIZE;
+			}
+		};
 	}
 
 	@Override

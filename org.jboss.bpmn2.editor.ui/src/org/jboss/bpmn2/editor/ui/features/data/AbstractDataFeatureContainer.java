@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.data;
+package org.jboss.bpmn2.editor.ui.features.data;
 
 import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -8,17 +8,17 @@ import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
+import org.jboss.bpmn2.editor.core.features.UpdateBaseElementNameFeature;
 import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.ui.features.LayoutBaseElementTextFeature;
 
 public abstract class AbstractDataFeatureContainer implements FeatureContainer {
 	
-	public static final String COLLECTION_PROPERTY = "isCollection";
-	public static final String HIDEABLE_PROPERTY = "hideable";
-	
 	@Override
     public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
-	    return null;
+	    return new UpdateBaseElementNameFeature(fp);
     }
 
 	@Override
@@ -28,7 +28,13 @@ public abstract class AbstractDataFeatureContainer implements FeatureContainer {
 
 	@Override
     public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
-	    return null;
+	    return new LayoutBaseElementTextFeature(fp) {
+			
+			@Override
+			public int getMinimumWidth() {
+				return GraphicsUtil.DATA_WIDTH;
+			}
+		};
     }
 
 	@Override

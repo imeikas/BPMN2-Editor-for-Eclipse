@@ -1,14 +1,13 @@
 package org.jboss.bpmn2.editor.core.features.data;
 
-import static org.jboss.bpmn2.editor.core.features.data.AbstractDataFeatureContainer.COLLECTION_PROPERTY;
-import static org.jboss.bpmn2.editor.core.features.data.AbstractDataFeatureContainer.HIDEABLE_PROPERTY;
-
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.mm.algorithms.Polygon;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.eclipse.graphiti.mm.algorithms.Rectangle;
+import org.eclipse.graphiti.mm.algorithms.Text;
+import org.eclipse.graphiti.mm.algorithms.styles.Orientation;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
@@ -16,11 +15,13 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
+import org.jboss.bpmn2.editor.core.features.UpdateBaseElementNameFeature;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
 import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 
-public class AddDataFeature<T extends BaseElement> extends AbstractBpmnAddFeature {
+public abstract class AddDataFeature<T extends BaseElement> extends AbstractBpmnAddFeature {
 
 	public AddDataFeature(IFeatureProvider fp) {
 		super(fp);
@@ -42,10 +43,11 @@ public class AddDataFeature<T extends BaseElement> extends AbstractBpmnAddFeatur
 		@SuppressWarnings("unchecked")
 		T t = (T) context.getNewObject();
 
-		int width = 36;
-		int height = 50;
+		int width = GraphicsUtil.DATA_WIDTH;
+		int height = GraphicsUtil.DATA_HEIGHT;
 		int e = 10;
-
+		int textArea = 15;
+		
 		ContainerShape container = peService.createContainerShape(context.getTargetContainer(), true);
 		Rectangle invisibleRect = gaService.createInvisibleRectangle(container);
 		gaService.setLocationAndSize(invisibleRect, context.getX(), context.getY(), width, height);
@@ -54,9 +56,7 @@ public class AddDataFeature<T extends BaseElement> extends AbstractBpmnAddFeatur
 		Polygon rect = gaService.createPolygon(rectShape, new int[] { 0, 0, width - e, 0, width, e, width, height, 0,
 				height });
 		rect.setLineWidth(1);
-		
 		StyleUtil.applyBGStyle(rect, this);
-
 		decorate(rect);
 
 		int p = width - e - 1;
@@ -70,12 +70,19 @@ public class AddDataFeature<T extends BaseElement> extends AbstractBpmnAddFeatur
 			createCollectionShape(container, new int[] { whalf, height - 8, whalf, height });
 			createCollectionShape(container, new int[] { whalf + 2, height - 8, whalf + 2, height });
 
-			Graphiti.getPeService().setPropertyValue(container, COLLECTION_PROPERTY, Boolean.toString(false));
+			Graphiti.getPeService().setPropertyValue(container, Properties.COLLECTION_PROPERTY, Boolean.toString(false));
 		}
-
+		
+		Shape textShape = peService.createShape(container, false);
+		peService.setPropertyValue(textShape, UpdateBaseElementNameFeature.TEXT_ELEMENT, Boolean.toString(true));
+		Text text = gaService.createDefaultText(textShape, getName(t));
+		text.setStyle(StyleUtil.getStyleForText(getDiagram()));
+		text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
+		text.setVerticalAlignment(Orientation.ALIGNMENT_TOP);
+		gaService.setLocationAndSize(text, 0, height, width, textArea);
+		
 		peService.createChopboxAnchor(container);
 		AnchorUtil.addFixedPointAnchors(container, invisibleRect);
-
 		createDIShape(container, t);
 		return container;
 	}
@@ -88,7 +95,7 @@ public class AddDataFeature<T extends BaseElement> extends AbstractBpmnAddFeatur
 		line.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 		line.setLineWidth(1);
 		line.setLineVisible(false);
-		peService.setPropertyValue(collectionShape, HIDEABLE_PROPERTY, Boolean.toString(true));
+		peService.setPropertyValue(collectionShape, Properties.HIDEABLE_PROPERTY, Boolean.toString(true));
 		return collectionShape;
 	}
 
@@ -98,4 +105,6 @@ public class AddDataFeature<T extends BaseElement> extends AbstractBpmnAddFeatur
 	protected boolean isSupportCollectionMarkers() {
 		return true;
 	}
+	
+	public abstract String getName(T t);
 }

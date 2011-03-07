@@ -17,8 +17,8 @@ import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
+import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.gateway.AbstractCreateGatewayFeature;
-import org.jboss.bpmn2.editor.core.features.gateway.AbstractGatewayFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.gateway.DefaultAddGatewayFeature;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
@@ -67,7 +67,10 @@ public class EventBasedGatewayFeatureContainer extends AbstractGatewayFeatureCon
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
-		return new UpdateEventBasedGatewayFeature(fp);
+		MultiUpdateFeature multiUpdate = new MultiUpdateFeature(fp);
+		multiUpdate.addUpdateFeature(super.getUpdateFeature(fp));
+		multiUpdate.addUpdateFeature(new UpdateEventBasedGatewayFeature(fp));
+		return multiUpdate;
 	}
 
 	public static class CreateEventBasedGatewayFeature extends AbstractCreateGatewayFeature {
