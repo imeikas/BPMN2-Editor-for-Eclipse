@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.bpmn2.Association;
 import org.eclipse.bpmn2.BaseElement;
+import org.eclipse.bpmn2.ConversationLink;
 import org.eclipse.bpmn2.DataAssociation;
 import org.eclipse.bpmn2.Event;
 import org.eclipse.bpmn2.FlowNode;
@@ -137,7 +138,7 @@ public class DIImport {
 	private void importConnections(List<DiagramElement> ownedElement) {
 		for (DiagramElement diagramElement : ownedElement) {
 			if (diagramElement instanceof BPMNEdge) {
-				importEdge((BPMNEdge) diagramElement);
+				createEdge((BPMNEdge) diagramElement);
 			}
 		}
 	}
@@ -179,9 +180,8 @@ public class DIImport {
 			featureProvider.link(newContainer, new Object[] { bpmnElement, shape });
 			if (bpmnElement instanceof Participant) {
 				elements.put(((Participant) bpmnElement).getProcessRef(), newContainer);
-			} else {
-				elements.put(bpmnElement, newContainer);
 			}
+			elements.put(bpmnElement, newContainer);
 			handleEvents(bpmnElement, newContainer);
 		}
 	}
@@ -254,39 +254,50 @@ public class DIImport {
 	 * 
 	 * @param shape
 	 */
-	private void importEdge(BPMNEdge bpmnEdge) {
+	private void createEdge(BPMNEdge bpmnEdge) {
+		BaseElement bpmnElement = bpmnEdge.getBpmnElement();
 		EObject source = null;
 		EObject target = null;
+		PictogramElement se = null;
+		PictogramElement te = null;
 
 		// for some reason connectors don't have a common interface
-		if (bpmnEdge.getBpmnElement() instanceof MessageFlow) {
-			source = ((MessageFlow) bpmnEdge.getBpmnElement()).getSourceRef();
-			target = ((MessageFlow) bpmnEdge.getBpmnElement()).getTargetRef();
-		} else if (bpmnEdge.getBpmnElement() instanceof SequenceFlow) {
-			source = ((SequenceFlow) bpmnEdge.getBpmnElement()).getSourceRef();
-			target = ((SequenceFlow) bpmnEdge.getBpmnElement()).getTargetRef();
-		} else if (bpmnEdge.getBpmnElement() instanceof Association) {
-			source = ((Association) bpmnEdge.getBpmnElement()).getSourceRef();
-			target = ((Association) bpmnEdge.getBpmnElement()).getTargetRef();
-		} else if (bpmnEdge.getBpmnElement() instanceof DataAssociation) {
-			List<ItemAwareElement> sourceRef = ((DataAssociation) bpmnEdge.getBpmnElement()).getSourceRef();
-			ItemAwareElement targetRef = ((DataAssociation) bpmnEdge.getBpmnElement()).getTargetRef();
+		if (bpmnElement instanceof MessageFlow) {
+			source = ((MessageFlow) bpmnElement).getSourceRef();
+			target = ((MessageFlow) bpmnElement).getTargetRef();
+			se = elements.get(source);
+			te = elements.get(target);
+		} else if (bpmnElement instanceof SequenceFlow) {
+			source = ((SequenceFlow) bpmnElement).getSourceRef();
+			target = ((SequenceFlow) bpmnElement).getTargetRef();
+			se = elements.get(source);
+			te = elements.get(target);
+		} else if (bpmnElement instanceof Association) {
+			source = ((Association) bpmnElement).getSourceRef();
+			target = ((Association) bpmnElement).getTargetRef();
+			se = elements.get(source);
+			te = elements.get(target);
+		} else if (bpmnElement instanceof ConversationLink) {
+			source = ((ConversationLink) bpmnElement).getSourceRef();
+			target = ((ConversationLink) bpmnElement).getTargetRef();
+			se = elements.get(source);
+			te = elements.get(target);
+		} else if (bpmnElement instanceof DataAssociation) {
+			List<ItemAwareElement> sourceRef = ((DataAssociation) bpmnElement).getSourceRef();
+			ItemAwareElement targetRef = ((DataAssociation) bpmnElement).getTargetRef();
 			if (sourceRef != null) {
 				source = sourceRef.get(0);
 			}
 			target = targetRef;
+			do {
+				se = elements.get(source);
+				source = source.eContainer();
+			} while (se == null && source.eContainer() != null);
+			do {
+				te = elements.get(target);
+				target = target.eContainer();
+			} while (te == null && target.eContainer() != null);
 		}
-
-		PictogramElement se;
-		PictogramElement te;
-		do {
-			se = elements.get(source);
-			source = source.eContainer();
-		} while (se == null && source.eContainer() != null);
-		do {
-			te = elements.get(target);
-			target = target.eContainer();
-		} while (te == null && target.eContainer() != null);
 
 		if (se != null && te != null) {
 			createEdgeAndSetBendpoints(bpmnEdge, se, te);
@@ -296,7 +307,7 @@ public class DIImport {
 		}
 	}
 
-	private void createEdgeAndSetBendpoints(BPMNEdge bpmnEdge, PictogramElement sourceElement,
+	private Connection createEdgeAndSetBendpoints(BPMNEdge bpmnEdge, PictogramElement sourceElement,
 			PictogramElement targetElement) {
 		FixPointAnchor sourceAnchor = createAnchor(sourceElement);
 		FixPointAnchor targetAnchor = createAnchor(targetElement);
@@ -323,10 +334,12 @@ public class DIImport {
 				}
 			}
 			featureProvider.link(connection, new Object[] { bpmnEdge.getBpmnElement(), bpmnEdge });
+			return connection;
 		} else {
 			Activator.logStatus(new Status(IStatus.WARNING, Activator.PLUGIN_ID, "Unsupported feature "
 					+ ((EObject) context.getNewObject()).eClass().getName()));
 		}
+		return null;
 	}
 
 	private FixPointAnchor createAnchor(PictogramElement elem) {
