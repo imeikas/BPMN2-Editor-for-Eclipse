@@ -52,7 +52,7 @@ public abstract class EventDefinitionFeatureContainer implements FeatureContaine
 			return new DecorationAlgorithm() {
 
 				@Override
-				Shape draw(ContainerShape shape) {
+				public Shape draw(ContainerShape shape) {
 					if (event instanceof BoundaryEvent)
 						return drawForBoundary(this, shape);
 					if (event instanceof IntermediateCatchEvent)
@@ -67,7 +67,7 @@ public abstract class EventDefinitionFeatureContainer implements FeatureContaine
 				}
 
 				@Override
-				Color manageColor(IColorConstant colorConstant) {
+				public Color manageColor(IColorConstant colorConstant) {
 					return AddEventDefinitionFeature.this.manageColor(colorConstant);
 				}
 			};

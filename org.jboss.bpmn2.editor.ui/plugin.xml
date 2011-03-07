@@ -106,4 +106,37 @@
               </propertySection>
           </propertySections>
       </extension>
+      
+      <extension
+         point="org.eclipse.graphiti.ui.diagramTypes">
+      <diagramType
+            description="This is the diagram type for the BMPN2 diagram"
+            id="org.jboss.bpmn2.editor.ui.diagram.MainBPMNDiagramType"
+            name="BPMN2 Diagram Type"
+            type="BPMN2">
+      </diagramType>
+   </extension>
+   
+   <extension
+         point="org.eclipse.graphiti.ui.diagramTypeProviders">
+      <diagramTypeProvider
+            class="org.jboss.bpmn2.editor.ui.diagram.MainBPMNDiagramTypeProvider"
+            description="This is the editor for the BPMN2 diagram"
+            id="org.jboss.bpmn2.editor.ui.diagram.MainBPMNDiagramType"
+            name="BPMN2 Editor">
+         <diagramType
+               id="org.jboss.bpmn2.editor.ui.diagram.MainBPMNDiagramType">
+         </diagramType>
+         <imageProvider
+               id="org.jboss.bpmn2.editor.ui.ImageProvider">
+         </imageProvider>
+      </diagramTypeProvider>
+   </extension>
+   <extension
+         point="org.eclipse.graphiti.ui.imageProviders">
+      <imageProvider
+            class="org.jboss.bpmn2.editor.ui.ImageProvider"
+            id="org.jboss.bpmn2.editor.ui.ImageProvider">
+      </imageProvider>
+   </extension>
 </plugin>

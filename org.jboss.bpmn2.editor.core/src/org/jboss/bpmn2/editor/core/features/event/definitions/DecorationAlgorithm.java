@@ -6,9 +6,9 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.util.IColorConstant;
 
 
-abstract class DecorationAlgorithm {
+public abstract class DecorationAlgorithm {
 	
-	abstract Shape draw(ContainerShape shape);
+	public abstract Shape draw(ContainerShape shape);
 	
-	abstract Color manageColor(IColorConstant colorCOnstant);
+	public abstract Color manageColor(IColorConstant colorCOnstant);
 }

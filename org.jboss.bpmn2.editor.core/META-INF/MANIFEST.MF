@@ -6,14 +6,12 @@ Bundle-Version: 0.0.1.qualifier
 Bundle-Activator: org.jboss.bpmn2.editor.core.Activator
 Bundle-Vendor: JBOSS
 Require-Bundle: org.eclipse.emf.transaction,
- org.eclipse.graphiti.ui,
  org.eclipse.graphiti,
  org.eclipse.bpmn2.edit
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.jboss.bpmn2.editor.core,
  org.jboss.bpmn2.editor.core.di,
- org.jboss.bpmn2.editor.core.diagram,
  org.jboss.bpmn2.editor.core.features,
  org.jboss.bpmn2.editor.core.features.activity,
  org.jboss.bpmn2.editor.core.features.activity.subprocess,
@@ -21,6 +19,7 @@ Export-Package: org.jboss.bpmn2.editor.core,
  org.jboss.bpmn2.editor.core.features.activity.task.extension,
  org.jboss.bpmn2.editor.core.features.artifact,
  org.jboss.bpmn2.editor.core.features.bendpoint,
+ org.jboss.bpmn2.editor.core.features.choreography,
  org.jboss.bpmn2.editor.core.features.conversation,
  org.jboss.bpmn2.editor.core.features.data,
  org.jboss.bpmn2.editor.core.features.event,

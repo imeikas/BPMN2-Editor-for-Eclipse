@@ -34,9 +34,9 @@ public abstract class AbstractCreateDataInputOutputFeature extends AbstractCreat
 		return new Object[] { element };
 	}
 
-	abstract <T extends BaseElement> T add(Object target, ModelHandler handler);
+	public abstract <T extends BaseElement> T add(Object target, ModelHandler handler);
 
-	abstract String getStencilImageId();
+	public abstract String getStencilImageId();
 
 	@Override
 	public String getCreateImageId() {

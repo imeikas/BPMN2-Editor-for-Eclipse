@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.eclipse.bpmn2.di.impl.BPMNDiagramImpl;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.ui.platform.GFPropertySection;
@@ -34,8 +35,13 @@ public class Bpmn2MainPropertySection extends GFPropertySection implements ITabb
 			EObject be = Graphiti.getLinkService().getBusinessObjectForLinkedPictogramElement(pe);
 			if (be instanceof BPMNDiagramImpl) {
 				try {
-					composite.setEObject((BPMN2Editor) getDiagramEditor(),
-							ModelHandlerLocator.getModelHandler(be.eResource()).getDefinitions());
+					Resource eResource = be.eResource();
+					if (eResource != null) {
+						composite.setEObject((BPMN2Editor) getDiagramEditor(),
+						        ModelHandlerLocator.getModelHandler(eResource).getDefinitions());
+					} else {
+						composite.setEObject((BPMN2Editor) getDiagramEditor(), null);
+					}
 				} catch (IOException e) {
 					Activator.showErrorWithLogging(e);
 				}

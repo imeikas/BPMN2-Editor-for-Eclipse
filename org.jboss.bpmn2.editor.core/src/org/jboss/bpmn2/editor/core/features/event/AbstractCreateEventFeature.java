@@ -10,7 +10,7 @@ public abstract class AbstractCreateEventFeature extends AbstractCreateFlowEleme
 	    super(fp, name, description);
     }
 	
-	abstract String getStencilImageId();
+	public abstract String getStencilImageId();
 	
 	@Override
 	public String getCreateImageId() {

@@ -38,9 +38,9 @@ public abstract class AbstractCreateArtifactFeature extends AbstractCreateFeatur
 		return new Object[] { artifact };
 	}
 	
-	abstract Artifact createArtifact(ICreateContext context);
+	public abstract Artifact createArtifact(ICreateContext context);
 	
-	abstract String getStencilImageId();
+	public abstract String getStencilImageId();
 	
 	@Override
 	public String getCreateImageId() {

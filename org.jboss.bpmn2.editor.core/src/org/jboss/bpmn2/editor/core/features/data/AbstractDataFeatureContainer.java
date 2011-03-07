@@ -13,8 +13,8 @@ import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 
 public abstract class AbstractDataFeatureContainer implements FeatureContainer {
 	
-	static final String COLLECTION_PROPERTY = "isCollection";
-	static final String HIDEABLE_PROPERTY = "hideable";
+	public static final String COLLECTION_PROPERTY = "isCollection";
+	public static final String HIDEABLE_PROPERTY = "hideable";
 	
 	@Override
     public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {

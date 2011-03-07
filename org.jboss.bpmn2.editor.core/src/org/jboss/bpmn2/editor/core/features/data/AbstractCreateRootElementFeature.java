@@ -39,9 +39,9 @@ public abstract class AbstractCreateRootElementFeature extends AbstractCreateFea
 		return new Object[] { element };
     }
 	
-	abstract RootElement createRootElement();
+	public abstract RootElement createRootElement();
 	
-	abstract String getStencilImageId();
+	public abstract String getStencilImageId();
 	
 	@Override
 	public String getCreateImageId() {
