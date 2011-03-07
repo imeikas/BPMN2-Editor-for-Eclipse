@@ -16,8 +16,11 @@ import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
 import org.eclipse.graphiti.mm.algorithms.Rectangle;
+import org.eclipse.graphiti.mm.algorithms.Text;
+import org.eclipse.graphiti.mm.algorithms.styles.Orientation;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
+import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
@@ -25,12 +28,14 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
 import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
+import org.jboss.bpmn2.editor.core.features.UpdateBaseElementNameFeature;
 import org.jboss.bpmn2.editor.core.features.data.AbstractCreateRootElementFeature;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil.Envelope;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
+import org.jboss.bpmn2.editor.ui.features.LayoutBaseElementTextFeature;
 
 public class MessageFeatureContainer implements FeatureContainer {
 
@@ -61,23 +66,31 @@ public class MessageFeatureContainer implements FeatureContainer {
 
 				int width = context.getWidth() > 0 ? context.getWidth() : 30;
 				int height = context.getHeight() > 0 ? context.getHeight() : 20;
+				int textArea = 15;
 
 				ContainerShape container = peService.createContainerShape(context.getTargetContainer(), true);
 				Rectangle invisibleRect = gaService.createInvisibleRectangle(container);
-				gaService.setLocationAndSize(invisibleRect, context.getX(), context.getY(), width, height);
-				
+				gaService.setLocationAndSize(invisibleRect, context.getX(), context.getY(), width, height + textArea);
+
 				Envelope envelope = GraphicsUtil.createEnvelope(invisibleRect, 0, 0, width, height);
 				envelope.rect.setFilled(true);
-
 				StyleUtil.applyBGStyle(envelope.rect, this);
-
 				envelope.line.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
+
+				Shape textShape = peService.createShape(container, false);
+				peService
+				        .setPropertyValue(textShape, UpdateBaseElementNameFeature.TEXT_ELEMENT, Boolean.toString(true));
+				Text text = gaService.createDefaultText(textShape, msg.getName());
+				text.setStyle(StyleUtil.getStyleForText(getDiagram()));
+				text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
+				text.setVerticalAlignment(Orientation.ALIGNMENT_TOP);
+				gaService.setLocationAndSize(text, 0, height, width, textArea);
 
 				peService.createChopboxAnchor(container);
 				AnchorUtil.addFixedPointAnchors(container, invisibleRect);
 
-				link(container, msg);
 				createDIShape(container, msg);
+				layoutPictogramElement(container);
 				return container;
 			}
 		};
@@ -85,7 +98,7 @@ public class MessageFeatureContainer implements FeatureContainer {
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
-		return null;
+		return new UpdateBaseElementNameFeature(fp);
 	}
 
 	@Override
@@ -95,7 +108,12 @@ public class MessageFeatureContainer implements FeatureContainer {
 
 	@Override
 	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
-		return null;
+		return new LayoutBaseElementTextFeature(fp) {
+			@Override
+			public int getMinimumWidth() {
+				return 0;
+			}
+		};
 	}
 
 	@Override

@@ -18,8 +18,11 @@ import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
 import org.eclipse.graphiti.mm.algorithms.Polygon;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.eclipse.graphiti.mm.algorithms.Rectangle;
+import org.eclipse.graphiti.mm.algorithms.Text;
+import org.eclipse.graphiti.mm.algorithms.styles.Orientation;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
+import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
@@ -27,10 +30,12 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
 import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
+import org.jboss.bpmn2.editor.core.features.UpdateBaseElementNameFeature;
 import org.jboss.bpmn2.editor.core.features.data.AbstractCreateRootElementFeature;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
+import org.jboss.bpmn2.editor.ui.features.LayoutBaseElementTextFeature;
 
 public class DataStoreFeatureContainer implements FeatureContainer {
 
@@ -61,10 +66,11 @@ public class DataStoreFeatureContainer implements FeatureContainer {
 
 				int width = 50;
 				int height = 50;
+				int textArea = 15;
 
 				ContainerShape container = peService.createContainerShape(context.getTargetContainer(), true);
 				Rectangle invisibleRect = gaService.createInvisibleRectangle(container);
-				gaService.setLocationAndSize(invisibleRect, context.getX(), context.getY(), width, height);
+				gaService.setLocationAndSize(invisibleRect, context.getX(), context.getY(), width, height + textArea);
 
 				int whalf = width / 2;
 
@@ -89,11 +95,19 @@ public class DataStoreFeatureContainer implements FeatureContainer {
 				Polyline lineTop = gaService.createPolyline(invisibleRect, xy, bend);
 				lineTop.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 
+				Shape textShape = peService.createShape(container, false);
+				peService
+				        .setPropertyValue(textShape, UpdateBaseElementNameFeature.TEXT_ELEMENT, Boolean.toString(true));
+				Text text = gaService.createDefaultText(textShape, store.getName());
+				text.setStyle(StyleUtil.getStyleForText(getDiagram()));
+				text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
+				text.setVerticalAlignment(Orientation.ALIGNMENT_TOP);
+				gaService.setLocationAndSize(text, 0, height, width, textArea);
+
 				peService.createChopboxAnchor(container);
 				AnchorUtil.addFixedPointAnchors(container, invisibleRect);
-
-				link(container, store);
 				createDIShape(container, store);
+				layoutPictogramElement(container);
 				return container;
 			}
 		};
@@ -101,7 +115,7 @@ public class DataStoreFeatureContainer implements FeatureContainer {
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
-		return null;
+		return new UpdateBaseElementNameFeature(fp);
 	}
 
 	@Override
@@ -111,7 +125,13 @@ public class DataStoreFeatureContainer implements FeatureContainer {
 
 	@Override
 	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
-		return null;
+		return new LayoutBaseElementTextFeature(fp) {
+
+			@Override
+			public int getMinimumWidth() {
+				return 50;
+			}
+		};
 	}
 
 	@Override
