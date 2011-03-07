@@ -49,9 +49,9 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 
 @SuppressWarnings("restriction")
 public class DIImport {
-	
+
 	public static final String IMPORT_PROPERTY = DIImport.class.getSimpleName().concat(".import");
-	
+
 	private Diagram diagram;
 	private TransactionalEditingDomain domain;
 	private ModelHandler modelHandler;
@@ -162,7 +162,11 @@ public class DIImport {
 		if (addFeature.canAdd(context)) {
 			PictogramElement newContainer = addFeature.add(context);
 			featureProvider.link(newContainer, new Object[] { bpmnElement, shape });
-			elements.put(bpmnElement, newContainer);
+			if (bpmnElement instanceof Participant) {
+				elements.put(((Participant) bpmnElement).getProcessRef(), newContainer);
+			} else {
+				elements.put(bpmnElement, newContainer);
+			}
 			handleEvents(bpmnElement, newContainer);
 		}
 	}
@@ -210,13 +214,13 @@ public class DIImport {
 
 		// find a correct container element
 		List<Lane> lanes = node.getLanes();
-		if (node.eContainer() instanceof SubProcess) {
+		if (node.eContainer() instanceof SubProcess || (node.eContainer() instanceof Process && lanes.isEmpty())) {
 			ContainerShape containerShape = (ContainerShape) elements.get(node.eContainer());
 			if (containerShape != null) {
 				target = containerShape;
 				ILocation loc = Graphiti.getPeLayoutService().getLocationRelativeToDiagram(target);
 				x -= loc.getX();
-				y -= loc.getX();
+				y -= loc.getY();
 			}
 		} else if (!lanes.isEmpty()) {
 			for (Lane lane : lanes) {

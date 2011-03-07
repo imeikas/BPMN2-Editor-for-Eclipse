@@ -3,6 +3,7 @@ package org.jboss.bpmn2.editor.core.features;
 import java.io.IOException;
 import java.util.List;
 
+import org.eclipse.bpmn2.Activity;
 import org.eclipse.bpmn2.Association;
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.MessageFlow;
@@ -26,6 +27,7 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
+import org.jboss.bpmn2.editor.utils.ShapeUtil;
 
 public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 
@@ -37,10 +39,10 @@ public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 		try {
 			ILocation loc = Graphiti.getLayoutService().getLocationRelativeToDiagram(containerShape);
 			BPMNShape shape = (BPMNShape) ModelHandlerLocator.getModelHandler(getDiagram().eResource()).findDIElement(
-			        getDiagram(), elem);
+					getDiagram(), elem);
 			if (shape == null) {
 				EList<EObject> businessObjects = Graphiti.getLinkService().getLinkForPictogramElement(getDiagram())
-				        .getBusinessObjects();
+						.getBusinessObjects();
 				for (EObject eObject : businessObjects) {
 					if (eObject instanceof BPMNDiagram) {
 						BPMNDiagram bpmnDiagram = (BPMNDiagram) eObject;
@@ -48,7 +50,12 @@ public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 						shape = BpmnDiFactory.eINSTANCE.createBPMNShape();
 						shape.setBpmnElement(elem);
 						Bounds bounds = DcFactory.eINSTANCE.createBounds();
-						bounds.setHeight(containerShape.getGraphicsAlgorithm().getHeight());
+						if (elem instanceof Activity) {
+							bounds.setHeight(containerShape.getGraphicsAlgorithm().getHeight()
+									- ShapeUtil.ACTIVITY_BOTTOM_PADDING);
+						} else {
+							bounds.setHeight(containerShape.getGraphicsAlgorithm().getHeight());
+						}
 						bounds.setWidth(containerShape.getGraphicsAlgorithm().getWidth());
 						bounds.setX(loc.getX());
 						bounds.setY(loc.getY());
@@ -76,7 +83,7 @@ public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 			BPMNEdge edge = (BPMNEdge) modelHandler.findDIElement(getDiagram(), conElement);
 			if (edge == null) {
 				EList<EObject> businessObjects = Graphiti.getLinkService().getLinkForPictogramElement(getDiagram())
-				        .getBusinessObjects();
+						.getBusinessObjects();
 				for (EObject eObject : businessObjects) {
 					if (eObject instanceof BPMNDiagram) {
 						BPMNDiagram bpmnDiagram = (BPMNDiagram) eObject;
@@ -85,22 +92,23 @@ public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 						edge.setBpmnElement(conElement);
 						if (conElement instanceof Association) {
 							edge.setSourceElement(modelHandler.findDIElement(getDiagram(),
-							        ((Association) conElement).getSourceRef()));
+									((Association) conElement).getSourceRef()));
 							edge.setTargetElement(modelHandler.findDIElement(getDiagram(),
-							        ((Association) conElement).getTargetRef()));
+									((Association) conElement).getTargetRef()));
 						} else if (conElement instanceof MessageFlow) {
 							edge.setSourceElement(modelHandler.findDIElement(getDiagram(),
-							        (BaseElement) ((MessageFlow) conElement).getSourceRef()));
+									(BaseElement) ((MessageFlow) conElement).getSourceRef()));
 							edge.setTargetElement(modelHandler.findDIElement(getDiagram(),
-							        (BaseElement) ((MessageFlow) conElement).getTargetRef()));
+									(BaseElement) ((MessageFlow) conElement).getTargetRef()));
 						} else if (conElement instanceof SequenceFlow) {
 							edge.setSourceElement(modelHandler.findDIElement(getDiagram(),
-							        ((SequenceFlow) conElement).getSourceRef()));
+									((SequenceFlow) conElement).getSourceRef()));
 							edge.setTargetElement(modelHandler.findDIElement(getDiagram(),
-							        ((SequenceFlow) conElement).getTargetRef()));
+									((SequenceFlow) conElement).getTargetRef()));
 						}
 
-						ILocation sourceLoc = Graphiti.getPeService().getLocationRelativeToDiagram(connection.getStart());
+						ILocation sourceLoc = Graphiti.getPeService().getLocationRelativeToDiagram(
+								connection.getStart());
 						ILocation targetLoc = Graphiti.getPeService().getLocationRelativeToDiagram(connection.getEnd());
 
 						Point point = DcFactory.eINSTANCE.createPoint();

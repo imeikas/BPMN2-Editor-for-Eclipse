@@ -5,6 +5,10 @@ import java.util.List;
 
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.Lane;
+import org.eclipse.bpmn2.LaneSet;
+import org.eclipse.bpmn2.Participant;
+import org.eclipse.bpmn2.SubProcess;
+import org.eclipse.graphiti.datatypes.ILocation;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.features.context.ITargetContext;
@@ -17,7 +21,9 @@ import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
+import org.eclipse.graphiti.services.ILayoutService;
 import org.eclipse.graphiti.services.IPeCreateService;
+import org.eclipse.graphiti.util.ILocationInfo;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.utils.AnchorUtil;
@@ -50,10 +56,11 @@ public class AddLaneFeature extends AbstractBpmnAddFeature {
 		int height = context.getHeight() > 0 ? context.getHeight() : 100;
 
 		Rectangle rect = gaService.createRectangle(containerShape);
-		
-		StyleUtil.applyBGStyle(rect, this);	
 
-		if (FeatureSupport.isTargetLane(context)) {
+		StyleUtil.applyBGStyle(rect, this);
+
+		if (FeatureSupport.isTargetLane(context) || FeatureSupport.isTargetParticipant(context)
+				|| FeatureSupport.isTargetSubProcess(context)) {
 			GraphicsAlgorithm ga = context.getTargetContainer().getGraphicsAlgorithm();
 
 			if (getNumberOfLanes(context) == 1) {
@@ -63,7 +70,13 @@ public class AddLaneFeature extends AbstractBpmnAddFeature {
 					s.setContainer(containerShape);
 				}
 			} else {
-				gaService.setLocationAndSize(rect, 15, ga.getWidth() - 1, ga.getHeight() - 15, height);
+				ILayoutService layoutService = Graphiti.getLayoutService();
+				ILocationInfo locationInfo = layoutService.getLocationInfo(getDiagram(), context.getX(),
+						context.getHeight());
+				ILocation loc = layoutService.getLocationRelativeToDiagram(containerShape);
+				int x = context.getX() - loc.getX();
+				int y = context.getY() - loc.getY();
+				gaService.setLocationAndSize(rect, x - 15, y, ga.getWidth() - 15, height);
 			}
 			containerShape.setContainer(context.getTargetContainer());
 		} else {
@@ -83,7 +96,7 @@ public class AddLaneFeature extends AbstractBpmnAddFeature {
 
 		peCreateService.createChopboxAnchor(containerShape);
 		AnchorUtil.addFixedPointAnchors(containerShape, rect);
-		
+
 		if (FeatureSupport.isTargetLane(context)) {
 			FeatureSupport.redraw(context.getTargetContainer());
 		}
@@ -104,7 +117,23 @@ public class AddLaneFeature extends AbstractBpmnAddFeature {
 
 	private int getNumberOfLanes(ITargetContext context) {
 		ContainerShape targetContainer = context.getTargetContainer();
-		Lane lane = (Lane) getBusinessObjectForPictogramElement(targetContainer);
-		return lane.getChildLaneSet().getLanes().size();
+		Object bo = getBusinessObjectForPictogramElement(targetContainer);
+		if (bo instanceof Lane) {
+			Lane lane = (Lane) bo;
+			return lane.getChildLaneSet().getLanes().size();
+		} else if (bo instanceof Participant) {
+			List<LaneSet> laneSets = ((Participant) bo).getProcessRef().getLaneSets();
+			if (laneSets.size() > 0) {
+				return laneSets.get(0).getLanes().size();
+			}
+			return laneSets.size();
+		} else if (bo instanceof SubProcess) {
+			List<LaneSet> laneSets = ((SubProcess) bo).getLaneSets();
+			if (laneSets.size() > 0) {
+				return laneSets.get(0).getLanes().size();
+			}
+			return laneSets.size();
+		}
+		return 0;
 	}
 }
