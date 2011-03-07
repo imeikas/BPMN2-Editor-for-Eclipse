@@ -5,7 +5,6 @@ import static org.jboss.bpmn2.editor.core.utils.FeatureSupport.getShape;
 import java.lang.reflect.Method;
 
 import org.eclipse.bpmn2.BaseElement;
-import org.eclipse.bpmn2.FlowElement;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.IReason;
 import org.eclipse.graphiti.features.context.IUpdateContext;
@@ -28,8 +27,9 @@ public class UpdateBaseElementNameFeature extends AbstractUpdateFeature {
 	public boolean canUpdate(IUpdateContext context) {
 		BaseElement element = (BaseElement) BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
 		        BaseElement.class);
-		if (element == null)
+		if (element == null) {
 			return false;
+		}
 		return hasName(element);
 	}
 
@@ -56,10 +56,10 @@ public class UpdateBaseElementNameFeature extends AbstractUpdateFeature {
 	@Override
 	public boolean update(IUpdateContext context) {
 		ContainerShape container = (ContainerShape) context.getPictogramElement();
-		FlowElement element = (FlowElement) BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
-		        FlowElement.class);
+		BaseElement element = (BaseElement) BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
+		        BaseElement.class);
 		Shape textShape = getShape(container, TEXT_ELEMENT, Boolean.toString(true));
-		((AbstractText) textShape.getGraphicsAlgorithm()).setValue(element.getName());
+		((AbstractText) textShape.getGraphicsAlgorithm()).setValue(getName(element));
 		layoutPictogramElement(context.getPictogramElement());
 		return true;
 	}

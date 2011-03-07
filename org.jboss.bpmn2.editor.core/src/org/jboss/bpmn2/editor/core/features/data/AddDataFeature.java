@@ -50,7 +50,7 @@ public abstract class AddDataFeature<T extends BaseElement> extends AbstractBpmn
 		
 		ContainerShape container = peService.createContainerShape(context.getTargetContainer(), true);
 		Rectangle invisibleRect = gaService.createInvisibleRectangle(container);
-		gaService.setLocationAndSize(invisibleRect, context.getX(), context.getY(), width, height);
+		gaService.setLocationAndSize(invisibleRect, context.getX(), context.getY(), width, height + textArea);
 
 		Shape rectShape = peService.createShape(container, false);
 		Polygon rect = gaService.createPolygon(rectShape, new int[] { 0, 0, width - e, 0, width, e, width, height, 0,
@@ -84,6 +84,7 @@ public abstract class AddDataFeature<T extends BaseElement> extends AbstractBpmn
 		peService.createChopboxAnchor(container);
 		AnchorUtil.addFixedPointAnchors(container, invisibleRect);
 		createDIShape(container, t);
+		layoutPictogramElement(container);
 		return container;
 	}
 

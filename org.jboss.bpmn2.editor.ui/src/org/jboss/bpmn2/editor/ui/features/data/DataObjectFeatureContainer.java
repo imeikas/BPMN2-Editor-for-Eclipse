@@ -20,12 +20,14 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractCreateFlowElementFeature;
+import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
+import org.jboss.bpmn2.editor.core.features.UpdateBaseElementNameFeature;
 import org.jboss.bpmn2.editor.core.features.data.AddDataFeature;
 import org.jboss.bpmn2.editor.core.features.data.Properties;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
 public class DataObjectFeatureContainer extends AbstractDataFeatureContainer {
-	
+
 	@Override
 	public boolean canApplyTo(BaseElement element) {
 		return element instanceof DataObject;
@@ -41,54 +43,65 @@ public class DataObjectFeatureContainer extends AbstractDataFeatureContainer {
 		return new AddDataFeature<DataObject>(fp) {
 
 			@Override
-            public String getName(DataObject t) {
-	            return t.getName();
-            }
-			
+			public String getName(DataObject t) {
+				return t.getName();
+			}
+
 		};
 	}
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
-		return new AbstractUpdateFeature(fp) {
+		MultiUpdateFeature multiUpdate = new MultiUpdateFeature(fp);
+		multiUpdate.addUpdateFeature(new UpdateMarkersFeature(fp));
+		multiUpdate.addUpdateFeature(new UpdateBaseElementNameFeature(fp));
+		return multiUpdate;
+	}
 
-			@Override
-            public boolean canUpdate(IUpdateContext context) {
-				Object o = getBusinessObjectForPictogramElement(context.getPictogramElement());
-	            return o != null && o instanceof BaseElement && canApplyTo((BaseElement) o);
-            }
+	private class UpdateMarkersFeature extends AbstractUpdateFeature {
 
-			@Override
-            public IReason updateNeeded(IUpdateContext context) {
-				IPeService peService = Graphiti.getPeService();
-				ContainerShape container = (ContainerShape) context.getPictogramElement();
-	            DataObject data = (DataObject) getBusinessObjectForPictogramElement(container);
-	            boolean isCollection = Boolean.parseBoolean(peService.getPropertyValue(container, Properties.COLLECTION_PROPERTY));
-	            return data.isIsCollection() != isCollection ? Reason.createTrueReason() : Reason.createFalseReason();
-            }
+		public UpdateMarkersFeature(IFeatureProvider fp) {
+			super(fp);
+		}
 
-			@Override
-            public boolean update(IUpdateContext context) {
-				IPeService peService = Graphiti.getPeService();
-				ContainerShape container = (ContainerShape) context.getPictogramElement();
-	            DataObject data = (DataObject) getBusinessObjectForPictogramElement(container);
-	            
-	            boolean drawCollectionMarker = data.isIsCollection();
-	            
-	            Iterator<Shape> iterator = peService.getAllContainedShapes(container).iterator();
-	            while (iterator.hasNext()) {
-	                Shape shape = (Shape) iterator.next();
-	                String prop = peService.getPropertyValue(shape, Properties.HIDEABLE_PROPERTY);
-	                if(prop != null && new Boolean(prop)) {
-	                	Polyline line = (Polyline) shape.getGraphicsAlgorithm();
-	                	line.setLineVisible(drawCollectionMarker);
-	                }
-                }
-	            
-	            peService.setPropertyValue(container, Properties.COLLECTION_PROPERTY, Boolean.toString(data.isIsCollection()));
-	            return true;
-            }
-		};
+		@Override
+		public boolean canUpdate(IUpdateContext context) {
+			Object o = getBusinessObjectForPictogramElement(context.getPictogramElement());
+			return o != null && o instanceof BaseElement && canApplyTo((BaseElement) o);
+		}
+
+		@Override
+		public IReason updateNeeded(IUpdateContext context) {
+			IPeService peService = Graphiti.getPeService();
+			ContainerShape container = (ContainerShape) context.getPictogramElement();
+			DataObject data = (DataObject) getBusinessObjectForPictogramElement(container);
+			boolean isCollection = Boolean.parseBoolean(peService.getPropertyValue(container,
+			        Properties.COLLECTION_PROPERTY));
+			return data.isIsCollection() != isCollection ? Reason.createTrueReason() : Reason.createFalseReason();
+		}
+
+		@Override
+		public boolean update(IUpdateContext context) {
+			IPeService peService = Graphiti.getPeService();
+			ContainerShape container = (ContainerShape) context.getPictogramElement();
+			DataObject data = (DataObject) getBusinessObjectForPictogramElement(container);
+
+			boolean drawCollectionMarker = data.isIsCollection();
+
+			Iterator<Shape> iterator = peService.getAllContainedShapes(container).iterator();
+			while (iterator.hasNext()) {
+				Shape shape = iterator.next();
+				String prop = peService.getPropertyValue(shape, Properties.HIDEABLE_PROPERTY);
+				if (prop != null && new Boolean(prop)) {
+					Polyline line = (Polyline) shape.getGraphicsAlgorithm();
+					line.setLineVisible(drawCollectionMarker);
+				}
+			}
+
+			peService.setPropertyValue(container, Properties.COLLECTION_PROPERTY,
+			        Boolean.toString(data.isIsCollection()));
+			return true;
+		}
 	}
 
 	public static class CreateDataObjectFeature extends AbstractCreateFlowElementFeature<DataObject> {
