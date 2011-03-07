@@ -25,11 +25,11 @@ import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
 import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.data.AbstractCreateRootElementFeature;
+import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil.Envelope;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
-import org.jboss.bpmn2.editor.utils.AnchorUtil;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
-import org.jboss.bpmn2.editor.utils.ShapeUtil.Envelope;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class MessageFeatureContainer implements FeatureContainer {
 
@@ -65,7 +65,7 @@ public class MessageFeatureContainer implements FeatureContainer {
 				Rectangle invisibleRect = gaService.createInvisibleRectangle(container);
 				gaService.setLocationAndSize(invisibleRect, context.getX(), context.getY(), width, height);
 				
-				Envelope envelope = ShapeUtil.createEnvelope(invisibleRect, 0, 0, width, height);
+				Envelope envelope = GraphicsUtil.createEnvelope(invisibleRect, 0, 0, width, height);
 				envelope.rect.setFilled(true);
 				
 				StyleUtil.applyBGStyle(envelope.rect, this);

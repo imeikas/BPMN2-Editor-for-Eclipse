@@ -17,9 +17,9 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.event.definitions.CreateEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.DecorationAlgorithm;
 import org.jboss.bpmn2.editor.core.features.event.definitions.EventDefinitionFeatureContainer;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class LinkEventDefinitionContainer extends EventDefinitionFeatureContainer {
 
@@ -61,7 +61,7 @@ public class LinkEventDefinitionContainer extends EventDefinitionFeatureContaine
 	
 	private Shape draw(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape linkShape = Graphiti.getPeService().createShape(shape, false);
-		Polygon link = ShapeUtil.createEventLink(linkShape);
+		Polygon link = GraphicsUtil.createEventLink(linkShape);
 		link.setFilled(false);
 		link.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		return linkShape;
@@ -69,7 +69,7 @@ public class LinkEventDefinitionContainer extends EventDefinitionFeatureContaine
 	
 	private Shape drawFilled(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape linkShape = Graphiti.getPeService().createShape(shape, false);
-		Polygon link = ShapeUtil.createEventLink(linkShape);
+		Polygon link = GraphicsUtil.createEventLink(linkShape);
 		link.setFilled(true);
 		link.setBackground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		link.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));

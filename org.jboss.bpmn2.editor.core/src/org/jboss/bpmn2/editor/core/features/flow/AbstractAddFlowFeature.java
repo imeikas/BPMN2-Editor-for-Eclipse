@@ -14,9 +14,9 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.di.DIImport;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
-import org.jboss.bpmn2.editor.utils.AnchorUtil;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
-import org.jboss.bpmn2.editor.utils.Tuple;
+import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
+import org.jboss.bpmn2.editor.core.utils.Tuple;
 
 public abstract class AbstractAddFlowFeature extends AbstractBpmnAddFeature {
 

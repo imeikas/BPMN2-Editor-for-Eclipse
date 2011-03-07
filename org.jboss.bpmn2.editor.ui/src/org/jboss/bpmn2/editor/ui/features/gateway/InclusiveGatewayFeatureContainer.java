@@ -13,9 +13,9 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.gateway.AbstractCreateGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.gateway.AbstractGatewayFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.gateway.DefaultAddGatewayFeature;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class InclusiveGatewayFeatureContainer extends AbstractGatewayFeatureContainer {
 
@@ -29,7 +29,7 @@ public class InclusiveGatewayFeatureContainer extends AbstractGatewayFeatureCont
 		return new DefaultAddGatewayFeature(fp) {
 			@Override
 			protected void decorateGateway(ContainerShape container) {
-				Ellipse ellipse = ShapeUtil.createGatewayOuterCircle(container);
+				Ellipse ellipse = GraphicsUtil.createGatewayOuterCircle(container);
 				ellipse.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 				ellipse.setLineWidth(2);
 			}

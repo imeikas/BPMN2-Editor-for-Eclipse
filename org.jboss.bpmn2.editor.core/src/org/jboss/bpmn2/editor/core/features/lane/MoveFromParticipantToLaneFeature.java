@@ -11,7 +11,7 @@ import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
-import org.jboss.bpmn2.editor.core.features.FeatureSupport;
+import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 
 public class MoveFromParticipantToLaneFeature extends MoveLaneFeature {
 

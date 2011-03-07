@@ -12,10 +12,10 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.gateway.AbstractCreateGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.gateway.AbstractGatewayFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.gateway.DefaultAddGatewayFeature;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil.Cross;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
-import org.jboss.bpmn2.editor.utils.ShapeUtil.Cross;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class ParallelGatewayFeatureContainer extends AbstractGatewayFeatureContainer {
 
@@ -34,7 +34,7 @@ public class ParallelGatewayFeatureContainer extends AbstractGatewayFeatureConta
 		return new DefaultAddGatewayFeature(fp) {
 			@Override
 			protected void decorateGateway(ContainerShape container) {
-				Cross cross = ShapeUtil.createGatewayCross(container);
+				Cross cross = GraphicsUtil.createGatewayCross(container);
 				cross.vertical.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 				cross.horizontal.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 			}

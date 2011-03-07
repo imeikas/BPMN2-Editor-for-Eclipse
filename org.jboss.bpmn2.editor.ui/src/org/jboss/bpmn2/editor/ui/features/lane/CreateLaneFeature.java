@@ -9,7 +9,7 @@ import org.eclipse.graphiti.features.impl.AbstractCreateFeature;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
-import org.jboss.bpmn2.editor.core.features.FeatureSupport;
+import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
 public class CreateLaneFeature extends AbstractCreateFeature {

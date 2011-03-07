@@ -6,7 +6,7 @@ import org.eclipse.graphiti.features.context.ILayoutContext;
 import org.eclipse.graphiti.features.impl.AbstractLayoutFeature;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.jboss.bpmn2.editor.core.di.DIUtils;
-import org.jboss.bpmn2.editor.core.features.FeatureSupport;
+import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 
 public class LayoutLaneFeature extends AbstractLayoutFeature {
 

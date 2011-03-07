@@ -14,10 +14,10 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.event.definitions.CreateEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.DecorationAlgorithm;
 import org.jboss.bpmn2.editor.core.features.event.definitions.EventDefinitionFeatureContainer;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil.Envelope;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
-import org.jboss.bpmn2.editor.utils.ShapeUtil.Envelope;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class MessageEventDefinitionContainer extends EventDefinitionFeatureContainer {
 
@@ -58,7 +58,7 @@ public class MessageEventDefinitionContainer extends EventDefinitionFeatureConta
 	
 	private Shape drawEnvleope(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape envelopeShape = Graphiti.getPeService().createShape(shape, false);
-		Envelope env = ShapeUtil.createEventEnvelope(envelopeShape);
+		Envelope env = GraphicsUtil.createEventEnvelope(envelopeShape);
 		env.rect.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		env.line.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		return envelopeShape;
@@ -66,7 +66,7 @@ public class MessageEventDefinitionContainer extends EventDefinitionFeatureConta
 	
 	private Shape drawFilledEnvelope(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape envelopeShape = Graphiti.getPeService().createShape(shape, false);
-		Envelope env = ShapeUtil.createEventEnvelope(envelopeShape);
+		Envelope env = GraphicsUtil.createEventEnvelope(envelopeShape);
 		env.rect.setFilled(true);
 		env.rect.setBackground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		env.rect.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));

@@ -33,9 +33,9 @@ import org.jboss.bpmn2.editor.core.features.ConnectionFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.flow.AbstractAddFlowFeature;
 import org.jboss.bpmn2.editor.core.features.flow.AbstractCreateFlowFeature;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
+import org.jboss.bpmn2.editor.core.utils.Tuple;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
-import org.jboss.bpmn2.editor.utils.Tuple;
 
 public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
 

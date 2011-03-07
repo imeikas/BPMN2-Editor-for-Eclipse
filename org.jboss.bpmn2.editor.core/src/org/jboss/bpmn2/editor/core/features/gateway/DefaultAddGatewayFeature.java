@@ -10,10 +10,10 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
-import org.jboss.bpmn2.editor.core.features.FeatureSupport;
-import org.jboss.bpmn2.editor.utils.AnchorUtil;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
+import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
+import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 
 public class DefaultAddGatewayFeature extends AbstractBpmnAddFeature {
 
@@ -40,7 +40,7 @@ public class DefaultAddGatewayFeature extends AbstractBpmnAddFeature {
 
 		ContainerShape containerShape = peService.createContainerShape(context.getTargetContainer(), true);
 
-		Polygon gateway = ShapeUtil.createGateway(containerShape);
+		Polygon gateway = GraphicsUtil.createGateway(containerShape);
 		StyleUtil.applyBGStyle(gateway, this);
 				
 		gaService.setLocationAndSize(gateway, context.getX(), context.getY(), 2 * RADIUS, 2 * RADIUS);

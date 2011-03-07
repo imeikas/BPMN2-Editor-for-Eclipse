@@ -13,8 +13,8 @@ import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IPeService;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 
 public class UpdateEventBasedGatewayFeature extends AbstractUpdateFeature {
 
@@ -71,31 +71,31 @@ public class UpdateEventBasedGatewayFeature extends AbstractUpdateFeature {
 	}
 
 	private void clearGateway(PictogramElement element) {
-		ShapeUtil.clearGateway(element);
+		GraphicsUtil.clearGateway(element);
 	}
 
 	private void drawEventBased(ContainerShape container) {
-		Ellipse outer = ShapeUtil.createGatewayOuterCircle(container);
+		Ellipse outer = GraphicsUtil.createGatewayOuterCircle(container);
 		outer.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
-		Ellipse inner = ShapeUtil.createGatewayInnerCircle(container);
+		Ellipse inner = GraphicsUtil.createGatewayInnerCircle(container);
 		inner.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
-		Polygon pentagon = ShapeUtil.createGatewayPentagon(container);
+		Polygon pentagon = GraphicsUtil.createGatewayPentagon(container);
 		pentagon.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 		pentagon.setFilled(false);
 	}
 
 	private void drawExclusiveEventBased(ContainerShape container) {
-		Ellipse ellipse = ShapeUtil.createGatewayOuterCircle(container);
+		Ellipse ellipse = GraphicsUtil.createGatewayOuterCircle(container);
 		ellipse.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
-		Polygon pentagon = ShapeUtil.createGatewayPentagon(container);
+		Polygon pentagon = GraphicsUtil.createGatewayPentagon(container);
 		pentagon.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 		pentagon.setFilled(false);
 	}
 
 	private void drawParallelMultipleEventBased(ContainerShape container) {
-		Ellipse ellipse = ShapeUtil.createGatewayOuterCircle(container);
+		Ellipse ellipse = GraphicsUtil.createGatewayOuterCircle(container);
 		ellipse.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
-		Polygon cross = ShapeUtil.createEventGatewayParallelCross(container);
+		Polygon cross = GraphicsUtil.createEventGatewayParallelCross(container);
 		cross.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 	}
 }

@@ -19,9 +19,9 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.event.definitions.CreateEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.DecorationAlgorithm;
 import org.jboss.bpmn2.editor.core.features.event.definitions.EventDefinitionFeatureContainer;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class EscalationEventDefinitionContainer extends EventDefinitionFeatureContainer {
 
@@ -62,7 +62,7 @@ public class EscalationEventDefinitionContainer extends EventDefinitionFeatureCo
 
 	private Shape draw(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape escalationShape = Graphiti.getPeService().createShape(shape, false);
-		Polygon escalation = ShapeUtil.createEventEscalation(escalationShape);
+		Polygon escalation = GraphicsUtil.createEventEscalation(escalationShape);
 		escalation.setFilled(false);
 		escalation.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		return escalationShape;
@@ -70,7 +70,7 @@ public class EscalationEventDefinitionContainer extends EventDefinitionFeatureCo
 
 	private Shape drawFilled(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape escalationShape = Graphiti.getPeService().createShape(shape, false);
-		Polygon escalation = ShapeUtil.createEventEscalation(escalationShape);
+		Polygon escalation = GraphicsUtil.createEventEscalation(escalationShape);
 		escalation.setFilled(true);
 		escalation.setBackground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		escalation.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));

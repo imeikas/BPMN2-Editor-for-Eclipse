@@ -5,7 +5,7 @@ import org.eclipse.dd.dc.Bounds;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.eclipse.graphiti.features.impl.DefaultMoveShapeFeature;
-import org.jboss.bpmn2.editor.utils.AnchorUtil;
+import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
 
 public class DefaultBpmnMoveFeature extends DefaultMoveShapeFeature {
 

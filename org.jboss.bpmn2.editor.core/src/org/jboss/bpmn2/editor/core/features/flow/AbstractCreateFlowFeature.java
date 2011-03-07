@@ -13,7 +13,7 @@ import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
-import org.jboss.bpmn2.editor.core.features.FeatureSupport;
+import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 
 public abstract class AbstractCreateFlowFeature<A extends EObject, B extends EObject> extends
         AbstractCreateConnectionFeature {

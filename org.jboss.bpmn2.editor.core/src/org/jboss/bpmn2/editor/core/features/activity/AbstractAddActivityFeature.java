@@ -16,10 +16,10 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
-import org.jboss.bpmn2.editor.core.features.FeatureSupport;
-import org.jboss.bpmn2.editor.utils.AnchorUtil;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
+import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
+import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 
 public abstract class AbstractAddActivityFeature extends AbstractBpmnAddFeature {
 
@@ -42,7 +42,7 @@ public abstract class AbstractAddActivityFeature extends AbstractBpmnAddFeature 
 		IGaService gaService = Graphiti.getGaService();
 		IPeService peService = Graphiti.getPeService();
 
-		int paddingBottom = ShapeUtil.ACTIVITY_BOTTOM_PADDING;
+		int paddingBottom = GraphicsUtil.ACTIVITY_BOTTOM_PADDING;
 		int width = context.getWidth() > 0 ? context.getWidth() : getWidth();
 		int height = context.getHeight() > 0 ? context.getHeight() : getHeight() + paddingBottom;
 
@@ -64,7 +64,7 @@ public abstract class AbstractAddActivityFeature extends AbstractBpmnAddFeature 
 		int h = 10;
 		int y = height - paddingBottom - h - 3 - getMarkerContainerOffset();
 		gaService.setLocationAndSize(markerInvisibleRect, 0, y, invisibleRect.getWidth(), h);
-		peService.setPropertyValue(markerContainer, ShapeUtil.ACTIVITY_MARKER_CONTAINER, Boolean.toString(true));
+		peService.setPropertyValue(markerContainer, GraphicsUtil.ACTIVITY_MARKER_CONTAINER, Boolean.toString(true));
 
 		hook(activity, containerShape, context, width, height); // hook for subclasses to inject extra code
 

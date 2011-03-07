@@ -11,10 +11,10 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.gateway.AbstractCreateGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.gateway.AbstractGatewayFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.gateway.DefaultAddGatewayFeature;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil.Asterisk;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
-import org.jboss.bpmn2.editor.utils.ShapeUtil.Asterisk;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class ComplexGatewayFeatureContainer extends AbstractGatewayFeatureContainer {
 
@@ -33,7 +33,7 @@ public class ComplexGatewayFeatureContainer extends AbstractGatewayFeatureContai
 	    return new DefaultAddGatewayFeature(fp) {
 	    	@Override
 	    	protected void decorateGateway(ContainerShape container) {
-	    		Asterisk asterisk = ShapeUtil.createGatewayAsterisk(container);
+	    		Asterisk asterisk = GraphicsUtil.createGatewayAsterisk(container);
 	    		asterisk.horizontal.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 	    		asterisk.vertical.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 	    		asterisk.diagonalAsc.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));

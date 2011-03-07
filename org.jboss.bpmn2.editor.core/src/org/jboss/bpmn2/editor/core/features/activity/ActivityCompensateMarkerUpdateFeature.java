@@ -3,9 +3,9 @@ package org.jboss.bpmn2.editor.core.features.activity;
 import org.eclipse.bpmn2.Activity;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
-import org.jboss.bpmn2.editor.utils.ShapeUtil.Compensation;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil.Compensation;
 
 public class ActivityCompensateMarkerUpdateFeature extends AbstractMarkerUpdateFeature {
 	
@@ -28,11 +28,11 @@ public class ActivityCompensateMarkerUpdateFeature extends AbstractMarkerUpdateF
 	@Override
 	void doUpdate(Activity activity, ContainerShape markerContainer) {
 		if (activity.isIsForCompensation()) {
-			Compensation compensation = ShapeUtil.createActivityMarkerCompensate(markerContainer);
+			Compensation compensation = GraphicsUtil.createActivityMarkerCompensate(markerContainer);
 			compensation.arrow1.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 			compensation.arrow2.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 		} else {
-			ShapeUtil.clearActivityMarker(markerContainer, ShapeUtil.ACTIVITY_MARKER_COMPENSATE);
+			GraphicsUtil.clearActivityMarker(markerContainer, GraphicsUtil.ACTIVITY_MARKER_COMPENSATE);
 		}
 	}
 	

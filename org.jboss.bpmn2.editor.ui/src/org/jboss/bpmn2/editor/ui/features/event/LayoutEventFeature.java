@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.event;
+package org.jboss.bpmn2.editor.ui.features.event;
 
 import static org.jboss.bpmn2.editor.core.features.event.AddEventFeature.EVENT_CIRCLE;
 import static org.jboss.bpmn2.editor.core.features.event.AddEventFeature.EVENT_ELEMENT;
@@ -11,12 +11,13 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ILayoutContext;
 import org.eclipse.graphiti.features.impl.AbstractLayoutFeature;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
+import org.eclipse.graphiti.mm.algorithms.Text;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
-import org.eclipse.graphiti.services.IPeService;
+import org.eclipse.graphiti.ui.services.GraphitiUi;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 
@@ -42,14 +43,13 @@ public class LayoutEventFeature extends AbstractLayoutFeature {
 		ContainerShape container = (ContainerShape) context.getPictogramElement();
 
 		Shape textShape = getShape(container, EVENT_ELEMENT, EVENT_TEXT);
-		GraphicsAlgorithm textRectGa = textShape.getGraphicsAlgorithm();
-
-		IDimension size = gaService.calculateSize(textRectGa);
+		Text textGa = (Text) textShape.getGraphicsAlgorithm();
+		IDimension size = GraphitiUi.getUiLayoutService().calculateTextSize(textGa.getValue(), textGa.getFont());
 		
 		GraphicsAlgorithm parentGa = container.getGraphicsAlgorithm();
 		gaService.setSize(parentGa, size.getWidth(), parentGa.getHeight());
 
-		gaService.setSize(textRectGa, size.getWidth(), size.getHeight());
+		gaService.setSize(textGa, size.getWidth(), size.getHeight());
 		
 		int s = GraphicsUtil.EVENT_SIZE;
 		Shape circleShape = getShape(container, EVENT_ELEMENT, EVENT_CIRCLE);

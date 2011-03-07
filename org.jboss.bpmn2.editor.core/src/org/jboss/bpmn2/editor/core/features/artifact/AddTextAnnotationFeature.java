@@ -15,9 +15,9 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeCreateService;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
-import org.jboss.bpmn2.editor.core.features.FeatureSupport;
-import org.jboss.bpmn2.editor.utils.AnchorUtil;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
+import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
+import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 
 public class AddTextAnnotationFeature extends AbstractBpmnAddFeature {
 

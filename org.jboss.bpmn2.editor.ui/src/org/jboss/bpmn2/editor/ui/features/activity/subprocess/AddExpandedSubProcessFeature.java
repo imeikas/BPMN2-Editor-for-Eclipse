@@ -8,7 +8,7 @@ import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.jboss.bpmn2.editor.core.features.activity.AbstractAddActivityFeature;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 
 public class AddExpandedSubProcessFeature extends AbstractAddActivityFeature {
 
@@ -24,11 +24,11 @@ public class AddExpandedSubProcessFeature extends AbstractAddActivityFeature {
 	
 	@Override
     protected int getWidth() {
-	    return ShapeUtil.SUB_PROCEESS_DEFAULT_WIDTH;
+	    return GraphicsUtil.SUB_PROCEESS_DEFAULT_WIDTH;
     }
 	
 	@Override
     protected int getHeight() {
-	    return ShapeUtil.SUB_PROCESS_DEFAULT_HEIGHT;
+	    return GraphicsUtil.SUB_PROCESS_DEFAULT_HEIGHT;
     }
 }

@@ -11,9 +11,9 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.data.AbstractCreateDataInputOutputFeature;
 import org.jboss.bpmn2.editor.core.features.data.AbstractDataFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.data.AddDataFeature;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class DataOutputFeatureContainer extends AbstractDataFeatureContainer {
 
@@ -37,7 +37,7 @@ public class DataOutputFeatureContainer extends AbstractDataFeatureContainer {
 
 			@Override
 			protected void decorate(Polygon p) {
-				Polygon arrow = ShapeUtil.createDataArrow(p);
+				Polygon arrow = GraphicsUtil.createDataArrow(p);
 				arrow.setFilled(true);
 				arrow.setBackground(manageColor(StyleUtil.CLASS_FOREGROUND));
 				arrow.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));

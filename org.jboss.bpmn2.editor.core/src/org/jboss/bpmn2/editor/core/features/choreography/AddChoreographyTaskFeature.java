@@ -16,8 +16,8 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.eclipse.graphiti.util.IColorConstant;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
-import org.jboss.bpmn2.editor.utils.AnchorUtil;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
+import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 
 public class AddChoreographyTaskFeature extends AbstractBpmnAddFeature {
 

@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.utils;
+package org.jboss.bpmn2.editor.core.utils;
 
 import org.eclipse.graphiti.features.impl.AbstractFeature;
 import org.eclipse.graphiti.mm.StyleContainer;

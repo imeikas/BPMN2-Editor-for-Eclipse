@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.utils;
+package org.jboss.bpmn2.editor.core.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +23,6 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
-import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 
 public class AnchorUtil {
 
