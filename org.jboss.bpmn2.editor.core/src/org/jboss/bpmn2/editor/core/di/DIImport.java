@@ -15,8 +15,10 @@ import java.util.List;
 
 import org.eclipse.bpmn2.Association;
 import org.eclipse.bpmn2.BaseElement;
+import org.eclipse.bpmn2.DataAssociation;
 import org.eclipse.bpmn2.Event;
 import org.eclipse.bpmn2.FlowNode;
+import org.eclipse.bpmn2.ItemAwareElement;
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.MessageFlow;
 import org.eclipse.bpmn2.Participant;
@@ -155,7 +157,7 @@ public class DIImport {
 
 		if (addFeature == null) {
 			Activator.logStatus(new Status(IStatus.WARNING, Activator.PLUGIN_ID, "Element not supported: "
-			        + bpmnElement.eClass().getName()));
+					+ bpmnElement.eClass().getName()));
 			return;
 		}
 
@@ -266,21 +268,36 @@ public class DIImport {
 		} else if (bpmnEdge.getBpmnElement() instanceof Association) {
 			source = ((Association) bpmnEdge.getBpmnElement()).getSourceRef();
 			target = ((Association) bpmnEdge.getBpmnElement()).getTargetRef();
+		} else if (bpmnEdge.getBpmnElement() instanceof DataAssociation) {
+			List<ItemAwareElement> sourceRef = ((DataAssociation) bpmnEdge.getBpmnElement()).getSourceRef();
+			ItemAwareElement targetRef = ((DataAssociation) bpmnEdge.getBpmnElement()).getTargetRef();
+			if (sourceRef != null) {
+				source = sourceRef.get(0);
+			}
+			target = targetRef;
 		}
 
-		PictogramElement se = elements.get(source);
-		PictogramElement te = elements.get(target);
+		PictogramElement se;
+		PictogramElement te;
+		do {
+			se = elements.get(source);
+			source = source.eContainer();
+		} while (se == null && source.eContainer() != null);
+		do {
+			te = elements.get(target);
+			target = target.eContainer();
+		} while (te == null && target.eContainer() != null);
 
 		if (se != null && te != null) {
 			createEdgeAndSetBendpoints(bpmnEdge, se, te);
 		} else {
 			Activator.logStatus(new Status(IStatus.WARNING, Activator.PLUGIN_ID,
-			        "Couldn't find target element, probably not supported! Source: " + source + " Target: " + target));
+					"Couldn't find target element, probably not supported! Source: " + source + " Target: " + target));
 		}
 	}
 
 	private void createEdgeAndSetBendpoints(BPMNEdge bpmnEdge, PictogramElement sourceElement,
-	        PictogramElement targetElement) {
+			PictogramElement targetElement) {
 		FixPointAnchor sourceAnchor = createAnchor(sourceElement);
 		FixPointAnchor targetAnchor = createAnchor(targetElement);
 
@@ -308,7 +325,7 @@ public class DIImport {
 			featureProvider.link(connection, new Object[] { bpmnEdge.getBpmnElement(), bpmnEdge });
 		} else {
 			Activator.logStatus(new Status(IStatus.WARNING, Activator.PLUGIN_ID, "Unsupported feature "
-			        + ((EObject) context.getNewObject()).eClass().getName()));
+					+ ((EObject) context.getNewObject()).eClass().getName()));
 		}
 	}
 
@@ -322,7 +339,7 @@ public class DIImport {
 
 	private void setAnchorLocation(PictogramElement elem, FixPointAnchor anchor, Point point) {
 		org.eclipse.graphiti.mm.algorithms.styles.Point p = gaService.createPoint((int) point.getX(),
-		        (int) point.getY());
+				(int) point.getY());
 
 		ILocation loc = Graphiti.getPeLayoutService().getLocationRelativeToDiagram((Shape) elem);
 
