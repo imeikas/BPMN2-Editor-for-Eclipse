@@ -41,7 +41,8 @@ public class AddLaneFeature extends AbstractBpmnAddFeature {
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
 		boolean intoLane = FeatureSupport.isTargetLane(context);
 		boolean intoParticipant = FeatureSupport.isTargetParticipant(context);
-		return isLane && (intoDiagram || intoLane || intoParticipant);
+		boolean intoSubprocess = FeatureSupport.isTargetSubProcess(context);
+		return isLane && (intoDiagram || intoLane || intoParticipant || intoSubprocess);
 	}
 
 	@Override
@@ -59,24 +60,28 @@ public class AddLaneFeature extends AbstractBpmnAddFeature {
 
 		StyleUtil.applyBGStyle(rect, this);
 
-		if (FeatureSupport.isTargetLane(context) || FeatureSupport.isTargetParticipant(context)
-				|| FeatureSupport.isTargetSubProcess(context)) {
+		if (FeatureSupport.isTargetLane(context) || FeatureSupport.isTargetParticipant(context)) {
 			GraphicsAlgorithm ga = context.getTargetContainer().getGraphicsAlgorithm();
 
 			if (getNumberOfLanes(context) == 1) {
-				gaService.setLocationAndSize(rect, 15, 0, ga.getWidth() - 15, ga.getHeight());
+				gaService.setLocationAndSize(rect, 15, 0, width - 15, height);
 				for (Shape s : getFlowNodeShapes(context, lane)) {
 					Graphiti.getPeService().sendToFront(s);
 					s.setContainer(containerShape);
 				}
 			} else {
-				ILayoutService layoutService = Graphiti.getLayoutService();
-				ILocationInfo locationInfo = layoutService.getLocationInfo(getDiagram(), context.getX(),
-						context.getHeight());
-				ILocation loc = layoutService.getLocationRelativeToDiagram(containerShape);
-				int x = context.getX() - loc.getX();
-				int y = context.getY() - loc.getY();
-				gaService.setLocationAndSize(rect, x - 15, y, ga.getWidth() - 15, height);
+				if (context.getWidth() == -1 || context.getHeight() == -1) {
+					gaService.setLocationAndSize(rect, 15, ga.getWidth() - 1, ga.getHeight() - 15, height);
+					// gaService.setLocationAndSize(rect, context.getX(), context.getY(), width, height);
+				} else {
+					ILayoutService layoutService = Graphiti.getLayoutService();
+					ILocationInfo locationInfo = layoutService.getLocationInfo(getDiagram(), context.getX(),
+							context.getHeight());
+					ILocation loc = layoutService.getLocationRelativeToDiagram(containerShape);
+					int x = context.getX() - loc.getX();
+					int y = context.getY() - loc.getY();
+					gaService.setLocationAndSize(rect, x - 15, y, ga.getWidth() - 15, height);
+				}
 			}
 			containerShape.setContainer(context.getTargetContainer());
 		} else {
@@ -97,7 +102,7 @@ public class AddLaneFeature extends AbstractBpmnAddFeature {
 		peCreateService.createChopboxAnchor(containerShape);
 		AnchorUtil.addFixedPointAnchors(containerShape, rect);
 
-		if (FeatureSupport.isTargetLane(context)) {
+		if (FeatureSupport.isTargetLane(context) || FeatureSupport.isTargetParticipant(context)) {
 			FeatureSupport.redraw(context.getTargetContainer());
 		}
 		return containerShape;
