@@ -71,6 +71,7 @@ public class GraphicsUtil {
 	private static final String DELETABLE_PROPERTY = "deletable";
 
 	public static final int GATEWAY_RADIUS = 25;
+	public static final int GATEWAY_TEXT_AREA = 15;
 
 	private static final int[] GATEWAY = { 0, GATEWAY_RADIUS, GATEWAY_RADIUS, 0, 2 * GATEWAY_RADIUS, GATEWAY_RADIUS,
 			GATEWAY_RADIUS, 2 * GATEWAY_RADIUS };

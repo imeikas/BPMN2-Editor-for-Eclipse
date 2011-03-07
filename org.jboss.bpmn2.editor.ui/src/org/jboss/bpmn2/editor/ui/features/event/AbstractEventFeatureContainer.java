@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.event;
+package org.jboss.bpmn2.editor.ui.features.event;
 
 import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -11,12 +11,13 @@ import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
 import org.jboss.bpmn2.editor.core.features.DirectEditFlowElementFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.MoveFlowNodeFeature;
+import org.jboss.bpmn2.editor.core.features.UpdateFlowElementNameFeature;
 
 public abstract class AbstractEventFeatureContainer implements FeatureContainer {
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
-		return new UpdateEventNameFeature(fp);
+		return new UpdateFlowElementNameFeature(fp);
 	}
 
 	@Override

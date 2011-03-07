@@ -10,7 +10,6 @@ import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.mm.algorithms.Ellipse;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.event.AbstractCreateEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.AbstractEventFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.event.AddEventFeature;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 

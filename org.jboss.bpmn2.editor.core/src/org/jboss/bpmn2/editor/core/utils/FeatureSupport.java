@@ -30,7 +30,6 @@ import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
-import org.jboss.bpmn2.editor.core.features.event.AddEventFeature;
 
 public class FeatureSupport {
 

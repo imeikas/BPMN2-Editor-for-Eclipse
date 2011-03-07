@@ -8,7 +8,6 @@ import org.eclipse.bpmn2.Event;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.mm.algorithms.Ellipse;
-import org.eclipse.graphiti.mm.algorithms.MultiText;
 import org.eclipse.graphiti.mm.algorithms.Rectangle;
 import org.eclipse.graphiti.mm.algorithms.Text;
 import org.eclipse.graphiti.mm.algorithms.styles.Orientation;
@@ -19,16 +18,16 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
+import org.jboss.bpmn2.editor.core.features.UpdateFlowElementNameFeature;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
 import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 
 public class AddEventFeature extends AbstractBpmnAddFeature {
-	
+
 	public static final String EVENT_ELEMENT = "event.graphics.element";
-	public static final String EVENT_TEXT = "event.graphics.element.text";
 	public static final String EVENT_CIRCLE = "event.graphics.element.circle";
-	
+
 	public AddEventFeature(IFeatureProvider fp) {
 		super(fp);
 	}
@@ -62,19 +61,18 @@ public class AddEventFeature extends AbstractBpmnAddFeature {
 		decorateEllipse(ellipse);
 
 		Shape textShape = peService.createShape(containerShape, false);
-		peService.setPropertyValue(textShape, EVENT_ELEMENT, EVENT_TEXT);
+		peService.setPropertyValue(textShape, UpdateFlowElementNameFeature.TEXT_ELEMENT, Boolean.toString(true));
 		Text text = gaService.createDefaultText(textShape, e.getName());
 		text.setStyle(StyleUtil.getStyleForText(getDiagram()));
 		text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		text.setVerticalAlignment(Orientation.ALIGNMENT_TOP);
 		gaService.setLocationAndSize(text, 0, EVENT_SIZE, EVENT_SIZE, EVENT_TEXT_AREA);
 
-
 		peService.createChopboxAnchor(containerShape);
 		AnchorUtil.addFixedPointAnchors(containerShape, ellipse);
 		hook(containerShape);
 		createDIShape(containerShape, e);
-		updatePictogramElement(containerShape);
+		layoutPictogramElement(containerShape);
 		return containerShape;
 	}
 

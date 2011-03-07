@@ -21,7 +21,6 @@ import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.event.AbstractCreateEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.AbstractEventFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.event.AddEventFeature;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 

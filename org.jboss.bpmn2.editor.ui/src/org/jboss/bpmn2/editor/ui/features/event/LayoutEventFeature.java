@@ -1,8 +1,6 @@
 package org.jboss.bpmn2.editor.ui.features.event;
 
-import static org.jboss.bpmn2.editor.core.features.event.AddEventFeature.EVENT_CIRCLE;
 import static org.jboss.bpmn2.editor.core.features.event.AddEventFeature.EVENT_ELEMENT;
-import static org.jboss.bpmn2.editor.core.features.event.AddEventFeature.EVENT_TEXT;
 import static org.jboss.bpmn2.editor.core.utils.FeatureSupport.getShape;
 
 import org.eclipse.bpmn2.Event;
@@ -19,6 +17,7 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.ui.services.GraphitiUi;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
+import org.jboss.bpmn2.editor.core.features.UpdateFlowElementNameFeature;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 
 public class LayoutEventFeature extends AbstractLayoutFeature {
@@ -42,20 +41,18 @@ public class LayoutEventFeature extends AbstractLayoutFeature {
 	public boolean layout(ILayoutContext context) {
 		ContainerShape container = (ContainerShape) context.getPictogramElement();
 
-		Shape textShape = getShape(container, EVENT_ELEMENT, EVENT_TEXT);
+		Shape textShape = getShape(container, UpdateFlowElementNameFeature.TEXT_ELEMENT, Boolean.toString(true));
 		Text textGa = (Text) textShape.getGraphicsAlgorithm();
 		IDimension size = GraphitiUi.getUiLayoutService().calculateTextSize(textGa.getValue(), textGa.getFont());
 		
 		GraphicsAlgorithm parentGa = container.getGraphicsAlgorithm();
-		gaService.setSize(parentGa, size.getWidth(), parentGa.getHeight());
-
+		
+		if(size.getWidth() > GraphicsUtil.EVENT_SIZE) {
+			gaService.setSize(parentGa, size.getWidth(), parentGa.getHeight());
+		}
+		
 		gaService.setSize(textGa, size.getWidth(), size.getHeight());
 		
-		int s = GraphicsUtil.EVENT_SIZE;
-		Shape circleShape = getShape(container, EVENT_ELEMENT, EVENT_CIRCLE);
-		GraphicsAlgorithm circle = circleShape.getGraphicsAlgorithm();
-		gaService.setLocationAndSize(circle, (size.getWidth() / 2) - (s / 2), 0, s, s);
-
 		return true;
 	}
 }
