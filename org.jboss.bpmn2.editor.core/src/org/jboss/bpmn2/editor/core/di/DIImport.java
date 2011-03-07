@@ -79,7 +79,6 @@ public class DIImport {
 					d.setPlane(plane);
 
 					modelHandler.getDefinitions().getDiagrams().add(d);
-					featureProvider.link(diagram, d);
 				}
 
 				for (BPMNDiagram d : diagrams) {
@@ -137,7 +136,10 @@ public class DIImport {
 	 */
 	private void createShape(BPMNShape shape) {
 		BaseElement bpmnElement = shape.getBpmnElement();
-
+		if (shape.getChoreographyActivityShape() != null) {
+			// FIXME: we currently generate participant bands automatically
+			return;
+		}
 		IAddFeature addFeature = featureProvider.getAddFeature(new AddContext(new AreaContext(), bpmnElement));
 
 		if (addFeature == null) {

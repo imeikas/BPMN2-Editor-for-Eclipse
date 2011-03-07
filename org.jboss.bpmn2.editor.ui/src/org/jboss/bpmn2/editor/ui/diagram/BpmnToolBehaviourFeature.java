@@ -63,14 +63,15 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 		// add compartments from super class
 
 		IFeatureProvider featureProvider = getFeatureProvider();
+
+		createConnectors(pref, ret, featureProvider);
+
 		createEventsCompartments(pref, ret, featureProvider);
 		createTasksCompartments(pref, ret, featureProvider);
 		createGatewaysCompartments(pref, ret, featureProvider);
 		createEventDefinitionsCompartments(pref, ret, featureProvider);
 		createDataCompartments(pref, ret, featureProvider);
 		createOtherCompartments(pref, ret, featureProvider);
-
-		createConnectors(pref, ret, featureProvider);
 
 		createCustomTasks(ret, featureProvider);
 
