@@ -82,6 +82,8 @@ import org.jboss.bpmn2.editor.ui.features.event.definitions.SignalEventDefinitio
 import org.jboss.bpmn2.editor.ui.features.event.definitions.TerminateEventDefinitionFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.event.definitions.TimerEventDefinitionContainer;
 import org.jboss.bpmn2.editor.ui.features.flow.AssociationFeatureContainer;
+import org.jboss.bpmn2.editor.ui.features.flow.DataInputAssociationFeatureContainer;
+import org.jboss.bpmn2.editor.ui.features.flow.DataOutputAssociationFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.flow.MessageFlowFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.flow.SequenceFlowFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.gateway.ComplexGatewayFeatureContainer;
@@ -162,6 +164,8 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers.add(new AssociationFeatureContainer());
 		containers.add(new ConversationFeatureContainer());
 		containers.add(new ConversationLinkFeatureContainer());
+		containers.add(new DataInputAssociationFeatureContainer());
+		containers.add(new DataOutputAssociationFeatureContainer());
 
 		List<ICreateFeature> createFeaturesList = new ArrayList<ICreateFeature>();
 
