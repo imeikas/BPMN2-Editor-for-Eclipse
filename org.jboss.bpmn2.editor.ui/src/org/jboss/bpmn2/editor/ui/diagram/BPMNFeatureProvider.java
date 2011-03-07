@@ -88,13 +88,13 @@ import org.jboss.bpmn2.editor.ui.features.participant.ParticipantFeatureResolver
  */
 public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
-	private List<FeatureContainer> containers;
+	private final List<FeatureContainer> containers;
 
-	private List<FeatureResolver> resolvers;
+	private final List<FeatureResolver> resolvers;
 
-	private ICreateFeature[] createFeatures;
+	private final ICreateFeature[] createFeatures;
 
-	private ICreateConnectionFeature[] createConnectionFeatures;
+	private final ICreateConnectionFeature[] createConnectionFeatures;
 
 	public BPMNFeatureProvider(IDiagramTypeProvider dtp) {
 		super(dtp);
@@ -117,15 +117,15 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers.add(new IntermediateCatchEventFeatureContainer());
 		containers.add(new IntermediateThrowEventFeatureContainer());
 		containers.add(new BoundaryEventFeatureContainer());
-		containers.add(new ChoreographyTaskFeatureContainer());
+		containers.add(new TaskFeatureContainer());
+		containers.add(new ScriptTaskFeatureContainer());
 		containers.add(new ServiceTaskFeatureContainer());
 		containers.add(new UserTaskFeatureContainer());
 		containers.add(new ManualTaskFeatureContainer());
-		containers.add(new ScriptTaskFeatureContainer());
 		containers.add(new BusinessRuleTaskFeatureContainer());
 		containers.add(new SendTaskFeatureContainer());
 		containers.add(new ReceiveTaskFeatureContainer());
-		containers.add(new TaskFeatureContainer());
+		containers.add(new ChoreographyTaskFeatureContainer());
 		containers.add(new ExclusiveGatewayFeatureContainer());
 		containers.add(new InclusiveGatewayFeatureContainer());
 		containers.add(new ParallelGatewayFeatureContainer());
@@ -176,7 +176,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		}
 
 		createConnectionFeatures = createConnectionFeatureList
-		        .toArray(new ICreateConnectionFeature[createConnectionFeatureList.size()]);
+				.toArray(new ICreateConnectionFeature[createConnectionFeatureList.size()]);
 	}
 
 	@Override
@@ -200,8 +200,9 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		for (FeatureContainer container : containers) {
 			if (container.canApplyTo(element)) {
 				IAddFeature feature = container.getAddFeature(this);
-				if (feature == null)
+				if (feature == null) {
 					break;
+				}
 				return feature;
 			}
 		}
@@ -235,8 +236,9 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		for (FeatureContainer container : containers) {
 			if (container.canApplyTo(element)) {
 				IUpdateFeature feature = container.getUpdateFeature(this);
-				if (feature == null)
+				if (feature == null) {
 					break;
+				}
 				return feature;
 			}
 		}
@@ -270,8 +272,9 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		for (FeatureContainer container : containers) {
 			if (container.canApplyTo(element)) {
 				IDirectEditingFeature feature = container.getDirectEditingFeature(this);
-				if (feature == null)
+				if (feature == null) {
 					break;
+				}
 				return feature;
 			}
 		}
@@ -300,8 +303,9 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		for (FeatureContainer container : containers) {
 			if (container.canApplyTo(element)) {
 				ILayoutFeature feature = container.getLayoutFeature(this);
-				if (feature == null)
+				if (feature == null) {
 					break;
+				}
 				return feature;
 			}
 		}
@@ -330,8 +334,9 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		for (FeatureContainer container : containers) {
 			if (container.canApplyTo(element)) {
 				IMoveShapeFeature feature = container.getMoveFeature(this);
-				if (feature == null)
+				if (feature == null) {
 					break;
+				}
 				return feature;
 			}
 		}
@@ -360,30 +365,31 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		for (FeatureContainer container : containers) {
 			if (container.canApplyTo(element)) {
 				IResizeShapeFeature feature = container.getResizeFeature(this);
-				if (feature == null)
+				if (feature == null) {
 					break;
+				}
 				return feature;
 			}
 		}
 
 		return super.getResizeShapeFeature(context);
 	}
-	
+
 	@Override
 	public IAddBendpointFeature getAddBendpointFeature(IAddBendpointContext context) {
-	    return new AddBendpointFeature(this);
+		return new AddBendpointFeature(this);
 	}
-	
+
 	@Override
 	public IMoveBendpointFeature getMoveBendpointFeature(IMoveBendpointContext context) {
-	    return new MoveBendpointFeature(this);
+		return new MoveBendpointFeature(this);
 	}
-	
+
 	@Override
 	public IRemoveBendpointFeature getRemoveBendpointFeature(IRemoveBendpointContext context) {
-	    return new RemoveBendpointFeature(this);
+		return new RemoveBendpointFeature(this);
 	}
-	
+
 	private boolean isNotBaseElement(Object o) {
 		return !(o instanceof BaseElement);
 	}

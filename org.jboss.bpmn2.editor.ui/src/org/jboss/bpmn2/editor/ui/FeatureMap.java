@@ -1,7 +1,9 @@
 package org.jboss.bpmn2.editor.ui;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.bpmn2.Bpmn2Package;
@@ -22,8 +24,8 @@ import org.jboss.bpmn2.editor.ui.features.activity.task.UserTaskFeatureContainer
 import org.jboss.bpmn2.editor.ui.features.artifact.CreateTextAnnotationFeature;
 import org.jboss.bpmn2.editor.ui.features.artifact.GroupFeatureContainer.CreateGroupFeature;
 import org.jboss.bpmn2.editor.ui.features.choreography.ChoreographyTaskFeatureContainer.CreateChoreographyTaskFeature;
-import org.jboss.bpmn2.editor.ui.features.conversation.CreateConversationFeature;
 import org.jboss.bpmn2.editor.ui.features.conversation.ConversationLinkFeatureContainer.CreateConversationLinkFeature;
+import org.jboss.bpmn2.editor.ui.features.conversation.CreateConversationFeature;
 import org.jboss.bpmn2.editor.ui.features.data.DataInputFeatureContainer.CreateDataInputFeature;
 import org.jboss.bpmn2.editor.ui.features.data.DataObjectFeatureContainer.CreateDataObjectFeature;
 import org.jboss.bpmn2.editor.ui.features.data.DataOutputFeatureContainer.CreateDataOutputFeature;
@@ -56,7 +58,13 @@ import org.jboss.bpmn2.editor.ui.features.lane.CreateLaneFeature;
 import org.jboss.bpmn2.editor.ui.features.participant.CreateParticipantFeature;
 
 public class FeatureMap {
-	public static Map<EClass, Class<? extends IFeature>> FEATURE_MAP;
+	public static final Map<EClass, Class<? extends IFeature>> FEATURE_MAP;
+	public static final List<Class<? extends IFeature>> EVENT_DEFINITIONS;
+	public static final List<Class<? extends IFeature>> EVENTS;
+	public static final List<Class<? extends IFeature>> GATEWAYS;
+	public static final List<Class<? extends IFeature>> TASKS;
+	public static final List<Class<? extends IFeature>> DATA;
+	public static final List<Class<? extends IFeature>> OTHER;
 	static {
 		Bpmn2Package i = Bpmn2Package.eINSTANCE;
 
@@ -109,6 +117,69 @@ public class FeatureMap {
 		featureMap.put(i.getConversationLink(), CreateConversationLinkFeature.class);
 		featureMap.put(i.getChoreographyTask(), CreateChoreographyTaskFeature.class);
 		FEATURE_MAP = Collections.unmodifiableMap(featureMap);
+
+		ArrayList<Class<? extends IFeature>> features = new ArrayList<Class<? extends IFeature>>();
+		features.add(CreateConditionalEventDefinition.class);
+		features.add(CreateTimerEventDefinition.class);
+		features.add(CreateSignalEventDefinition.class);
+		features.add(CreateMessageEventDefinition.class);
+		features.add(CreateEscalationEventDefinition.class);
+		features.add(CreateCompensateEventDefinition.class);
+		features.add(CreateLinkEventDefinition.class);
+		features.add(CreateErrorEventDefinition.class);
+		features.add(CreateCancelEventDefinition.class);
+		features.add(CreateTerminateEventDefinition.class);
+		EVENT_DEFINITIONS = Collections.unmodifiableList(features);
+
+		features = new ArrayList<Class<? extends IFeature>>();
+		features.add(CreateStartEventFeature.class);
+		features.add(CreateEndEventFeature.class);
+		features.add(CreateIntermediateThrowEventFeature.class);
+		features.add(CreateIntermediateCatchEventFeature.class);
+		features.add(CreateBoundaryEvent.class);
+		EVENTS = Collections.unmodifiableList(features);
+
+		features = new ArrayList<Class<? extends IFeature>>();
+		features.add(CreateInclusiveGatewayFeature.class);
+		features.add(CreateExclusiveGatewayFeature.class);
+		features.add(CreateParallelGatewayFeature.class);
+		features.add(CreateEventBasedGatewayFeature.class);
+		features.add(CreateComplexGatewayFeature.class);
+
+		GATEWAYS = Collections.unmodifiableList(features);
+
+		features = new ArrayList<Class<? extends IFeature>>();
+		features.add(CreateTaskFeature.class);
+		features.add(CreateManualTaskFeature.class);
+		features.add(CreateUserTaskFeature.class);
+		features.add(CreateScriptTaskFeature.class);
+		features.add(CreateBusinessRuleTaskFeature.class);
+		features.add(CreateServiceTaskFeature.class);
+		features.add(CreateSendTaskFeature.class);
+		features.add(CreateReceiveTaskFeature.class);
+		features.add(CreateChoreographyTaskFeature.class);
+		TASKS = Collections.unmodifiableList(features);
+
+		features = new ArrayList<Class<? extends IFeature>>();
+		features.add(CreateDataObjectFeature.class);
+		features.add(CreateDataStoreFeature.class);
+		features.add(CreateDataInputFeature.class);
+		features.add(CreateDataOutputFeature.class);
+		DATA = Collections.unmodifiableList(features);
+
+		features = new ArrayList<Class<? extends IFeature>>();
+		features.add(CreateLaneFeature.class);
+		features.add(CreateParticipantFeature.class);
+		features.add(CreateTextAnnotationFeature.class);
+		features.add(CreateSubProcessFeature.class);
+		features.add(CreateTransactionFeature.class);
+		features.add(CreateGroupFeature.class);
+		features.add(CreateAdHocSubProcessFeature.class);
+		features.add(CreateCallActivityFeatureContainer.class);
+		features.add(CreateMessageFeature.class);
+		features.add(CreateConversationFeature.class);
+		OTHER = Collections.unmodifiableList(features);
+
 	}
 
 	public static EClass getElement(IFeature cf) {

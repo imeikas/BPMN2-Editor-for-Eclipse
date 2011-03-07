@@ -1,6 +1,7 @@
 package org.jboss.bpmn2.editor.ui.diagram;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -9,11 +10,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.graphiti.dt.IDiagramTypeProvider;
 import org.eclipse.graphiti.features.FeatureCheckerAdapter;
 import org.eclipse.graphiti.features.ICreateConnectionFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
+import org.eclipse.graphiti.features.IFeature;
 import org.eclipse.graphiti.features.IFeatureChecker;
 import org.eclipse.graphiti.features.IFeatureCheckerHolder;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -59,21 +62,80 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 
 		// add compartments from super class
 
-		// add new compartment at the end of the existing compartments
-		PaletteCompartmentEntry compartmentEntry = new PaletteCompartmentEntry("Flow Objects", null);
+		IFeatureProvider featureProvider = getFeatureProvider();
+		createEventsCompartments(pref, ret, featureProvider);
+		createTasksCompartments(pref, ret, featureProvider);
+		createGatewaysCompartments(pref, ret, featureProvider);
+		createEventDefinitionsCompartments(pref, ret, featureProvider);
+		createDataCompartments(pref, ret, featureProvider);
+		createOtherCompartments(pref, ret, featureProvider);
+
+		createConnectors(pref, ret, featureProvider);
+
+		createCustomTasks(ret, featureProvider);
+
+		return ret.toArray(new IPaletteCompartmentEntry[ret.size()]);
+	}
+
+	private void createEventsCompartments(Bpmn2Preferences pref, List<IPaletteCompartmentEntry> ret,
+			IFeatureProvider featureProvider) {
+		PaletteCompartmentEntry compartmentEntry = new PaletteCompartmentEntry("Events", null);
 		ret.add(compartmentEntry);
 
-		// add all create-features to the new stack-entry
-		IFeatureProvider featureProvider = getFeatureProvider();
-		ICreateFeature[] createFeatures = featureProvider.getCreateFeatures();
-		for (ICreateFeature cf : createFeatures) {
-			if (pref.isEnabled(FeatureMap.getElement(cf))) {
-				ObjectCreationToolEntry objectCreationToolEntry = new ObjectCreationToolEntry(cf.getCreateName(),
-						cf.getCreateDescription(), cf.getCreateImageId(), cf.getCreateLargeImageId(), cf);
-				compartmentEntry.addToolEntry(objectCreationToolEntry);
-			}
-		}
+		createEntries(pref, FeatureMap.EVENTS, compartmentEntry, featureProvider);
+	}
 
+	private void createOtherCompartments(Bpmn2Preferences pref, List<IPaletteCompartmentEntry> ret,
+			IFeatureProvider featureProvider) {
+		PaletteCompartmentEntry compartmentEntry = new PaletteCompartmentEntry("Other", null);
+		compartmentEntry.setInitiallyOpen(false);
+		ret.add(compartmentEntry);
+
+		createEntries(pref, FeatureMap.OTHER, compartmentEntry, featureProvider);
+
+	}
+
+	private void createDataCompartments(Bpmn2Preferences pref, List<IPaletteCompartmentEntry> ret,
+			IFeatureProvider featureProvider) {
+		PaletteCompartmentEntry compartmentEntry = new PaletteCompartmentEntry("Data Items", null);
+		compartmentEntry.setInitiallyOpen(false);
+		ret.add(compartmentEntry);
+
+		createEntries(pref, FeatureMap.DATA, compartmentEntry, featureProvider);
+
+	}
+
+	private void createEventDefinitionsCompartments(Bpmn2Preferences pref, List<IPaletteCompartmentEntry> ret,
+			IFeatureProvider featureProvider) {
+		PaletteCompartmentEntry compartmentEntry = new PaletteCompartmentEntry("Event Definitions", null);
+		compartmentEntry.setInitiallyOpen(false);
+		ret.add(compartmentEntry);
+
+		createEntries(pref, FeatureMap.EVENT_DEFINITIONS, compartmentEntry, featureProvider);
+
+	}
+
+	private void createGatewaysCompartments(Bpmn2Preferences pref, List<IPaletteCompartmentEntry> ret,
+			IFeatureProvider featureProvider) {
+		PaletteCompartmentEntry compartmentEntry = new PaletteCompartmentEntry("Gateways", null);
+		ret.add(compartmentEntry);
+
+		createEntries(pref, FeatureMap.GATEWAYS, compartmentEntry, featureProvider);
+
+	}
+
+	private void createTasksCompartments(Bpmn2Preferences pref, List<IPaletteCompartmentEntry> ret,
+			IFeatureProvider featureProvider) {
+		PaletteCompartmentEntry compartmentEntry = new PaletteCompartmentEntry("Tasks", null);
+		ret.add(compartmentEntry);
+
+		createEntries(pref, FeatureMap.TASKS, compartmentEntry, featureProvider);
+
+	}
+
+	private void createConnectors(Bpmn2Preferences pref, List<IPaletteCompartmentEntry> ret,
+			IFeatureProvider featureProvider) {
+		PaletteCompartmentEntry compartmentEntry;
 		compartmentEntry = new PaletteCompartmentEntry("Connectors", null);
 		ret.add(compartmentEntry);
 		// add all create-connection-features to the new stack-entry
@@ -87,15 +149,26 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 				compartmentEntry.addToolEntry(connectionCreationToolEntry);
 			}
 		}
+	}
 
-		createCustomTasks(ret, featureProvider);
+	private void createEntries(Bpmn2Preferences pref, List<Class<? extends IFeature>> neededEntries,
+			PaletteCompartmentEntry compartmentEntry, IFeatureProvider featureProvider) {
+		List<ICreateFeature> tools = Arrays.asList(featureProvider.getCreateFeatures());
 
-		return ret.toArray(new IPaletteCompartmentEntry[ret.size()]);
+		for (ICreateFeature cf : tools) {
+			EClass feature = FeatureMap.getElement(cf);
+			if (pref.isEnabled(feature) && neededEntries.contains(cf.getClass())) {
+				ObjectCreationToolEntry objectCreationToolEntry = new ObjectCreationToolEntry(cf.getCreateName(),
+						cf.getCreateDescription(), cf.getCreateImageId(), cf.getCreateLargeImageId(), cf);
+				compartmentEntry.addToolEntry(objectCreationToolEntry);
+			}
+		}
 	}
 
 	private void createCustomTasks(List<IPaletteCompartmentEntry> ret, IFeatureProvider featureProvider) {
 		PaletteCompartmentEntry compartmentEntry;
 		compartmentEntry = new PaletteCompartmentEntry("Custom Task", null);
+		compartmentEntry.setInitiallyOpen(false);
 		ret.add(compartmentEntry);
 
 		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(
