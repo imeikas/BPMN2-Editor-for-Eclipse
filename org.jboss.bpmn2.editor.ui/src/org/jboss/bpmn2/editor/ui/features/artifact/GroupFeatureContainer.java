@@ -6,6 +6,7 @@ import org.eclipse.bpmn2.Group;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
+import org.eclipse.graphiti.features.IDeleteFeature;
 import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.ILayoutFeature;
@@ -71,7 +72,7 @@ public class GroupFeatureContainer implements FeatureContainer {
 
 				peService.createChopboxAnchor(container);
 				AnchorUtil.addFixedPointAnchors(container, rect);
-				
+
 				link(container, group);
 				createDIShape(container, group);
 				return container;
@@ -126,5 +127,11 @@ public class GroupFeatureContainer implements FeatureContainer {
 		public String getStencilImageId() {
 			return ImageProvider.IMG_16_GROUP;
 		}
+	}
+
+	@Override
+	public IDeleteFeature getDeleteFeature(IFeatureProvider context) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

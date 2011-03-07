@@ -18,7 +18,6 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.activity.subprocess.AbstractCreateSubProcess;
-import org.jboss.bpmn2.editor.core.features.activity.subprocess.AbstractSubProcessFeatureContainer;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 import org.jboss.bpmn2.editor.utils.ShapeUtil;
 import org.jboss.bpmn2.editor.utils.StyleUtil;

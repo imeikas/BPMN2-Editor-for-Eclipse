@@ -9,7 +9,6 @@ import org.eclipse.graphiti.features.context.ICreateContext;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.activity.subprocess.AbstractCreateSubProcess;
-import org.jboss.bpmn2.editor.core.features.activity.subprocess.AbstractSubProcessFeatureContainer;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
 public class SubProcessFeatureContainer extends AbstractSubProcessFeatureContainer {

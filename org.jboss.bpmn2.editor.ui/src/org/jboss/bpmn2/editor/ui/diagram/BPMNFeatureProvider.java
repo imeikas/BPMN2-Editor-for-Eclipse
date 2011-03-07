@@ -9,6 +9,7 @@ import org.eclipse.graphiti.features.IAddBendpointFeature;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateConnectionFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
+import org.eclipse.graphiti.features.IDeleteFeature;
 import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveBendpointFeature;
@@ -18,6 +19,7 @@ import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.IAddBendpointContext;
 import org.eclipse.graphiti.features.context.IAddContext;
+import org.eclipse.graphiti.features.context.IDeleteContext;
 import org.eclipse.graphiti.features.context.IDirectEditingContext;
 import org.eclipse.graphiti.features.context.ILayoutContext;
 import org.eclipse.graphiti.features.context.IMoveBendpointContext;
@@ -392,5 +394,34 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 	private boolean isNotBaseElement(Object o) {
 		return !(o instanceof BaseElement);
+	}
+
+	@Override
+	public IDeleteFeature getDeleteFeature(IDeleteContext context) {
+		Object o = getBusinessObjectForPictogramElement(context.getPictogramElement());
+
+		if (isNotBaseElement(o)) {
+			return super.getDeleteFeature(context);
+		}
+
+		BaseElement element = (BaseElement) o;
+
+		// TODO remove after refactoring all remaining resolvers -> containers
+		for (FeatureResolver r : resolvers) {
+			IDeleteFeature f = r.getDeleteFeature(this, (BaseElement) o);
+			if (f != null) {
+				return f;
+			}
+		}
+
+		for (FeatureContainer container : containers) {
+			if (container.canApplyTo(element)) {
+				IDeleteFeature feature = container.getDeleteFeature(this);
+				if (feature != null) {
+					return feature;
+				}
+			}
+		}
+		return super.getDeleteFeature(context);
 	}
 }

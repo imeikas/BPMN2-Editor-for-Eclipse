@@ -1,6 +1,8 @@
 package org.jboss.bpmn2.editor.core.features.choreography;
 
-import static org.jboss.bpmn2.editor.core.features.choreography.Properties.*;
+import static org.jboss.bpmn2.editor.core.features.choreography.Properties.BODY_BAND_TEXT;
+import static org.jboss.bpmn2.editor.core.features.choreography.Properties.CHOREOGRAPHY_TASK_PROPERTY;
+
 import java.util.Iterator;
 
 import org.eclipse.bpmn2.ChoreographyTask;

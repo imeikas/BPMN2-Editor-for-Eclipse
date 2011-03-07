@@ -1,6 +1,7 @@
 package org.jboss.bpmn2.editor.core.features.event;
 
 import org.eclipse.bpmn2.BaseElement;
+import org.eclipse.graphiti.features.IDeleteFeature;
 import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.ILayoutFeature;
@@ -52,5 +53,10 @@ public abstract class AbstractEventFeatureContainer implements FeatureContainer 
 				return false;
 			}
 		};
+	}
+
+	@Override
+	public IDeleteFeature getDeleteFeature(IFeatureProvider context) {
+		return null;
 	}
 }

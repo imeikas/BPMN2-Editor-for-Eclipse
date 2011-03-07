@@ -14,6 +14,7 @@ import org.eclipse.bpmn2.EventDefinition;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
+import org.eclipse.graphiti.features.IDeleteFeature;
 import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.ILayoutFeature;
@@ -292,5 +293,11 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 				return false;
 			}
 		};
+	}
+
+	@Override
+	public IDeleteFeature getDeleteFeature(IFeatureProvider context) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -1,6 +1,13 @@
 package org.jboss.bpmn2.editor.core.features.choreography;
 
-import static org.jboss.bpmn2.editor.core.features.choreography.Properties.*;
+import static org.jboss.bpmn2.editor.core.features.choreography.Properties.BODY_BAND;
+import static org.jboss.bpmn2.editor.core.features.choreography.Properties.BODY_BAND_TEXT;
+import static org.jboss.bpmn2.editor.core.features.choreography.Properties.BOTTOM_BAND;
+import static org.jboss.bpmn2.editor.core.features.choreography.Properties.BOTTOM_BAND_TEXT;
+import static org.jboss.bpmn2.editor.core.features.choreography.Properties.CHOREOGRAPHY_TASK_PROPERTY;
+import static org.jboss.bpmn2.editor.core.features.choreography.Properties.PARTICIPANT_REF;
+import static org.jboss.bpmn2.editor.core.features.choreography.Properties.TOP_BAND;
+import static org.jboss.bpmn2.editor.core.features.choreography.Properties.TOP_BAND_TEXT;
 
 import java.util.Iterator;
 

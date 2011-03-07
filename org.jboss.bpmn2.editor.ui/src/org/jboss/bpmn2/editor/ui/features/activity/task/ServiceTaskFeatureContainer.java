@@ -13,7 +13,6 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.activity.task.AbstractCreateTaskFeature;
-import org.jboss.bpmn2.editor.core.features.activity.task.AbstractTaskFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.activity.task.AddTaskFeature;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 

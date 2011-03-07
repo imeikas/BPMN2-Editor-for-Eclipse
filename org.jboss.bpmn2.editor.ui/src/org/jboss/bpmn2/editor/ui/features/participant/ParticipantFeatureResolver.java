@@ -5,15 +5,18 @@ import java.util.List;
 
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Participant;
+import org.eclipse.bpmn2.TextAnnotation;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateConnectionFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
+import org.eclipse.graphiti.features.IDeleteFeature;
 import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
+import org.eclipse.graphiti.ui.features.DefaultDeleteFeature;
 import org.jboss.bpmn2.editor.core.features.DefaultBPMNResizeFeature;
 import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureResolver;
@@ -38,43 +41,57 @@ public class ParticipantFeatureResolver implements FeatureResolver {
 
 	@Override
 	public IAddFeature getAddFeature(IFeatureProvider fp, BaseElement e) {
-		if (e instanceof Participant)
+		if (e instanceof Participant) {
 			return new AddParticipantFeature(fp);
+		}
 		return null;
 	}
 
 	@Override
 	public IDirectEditingFeature getDirectEditingFeature(IFeatureProvider fp, BaseElement e) {
-		if (e instanceof Participant)
+		if (e instanceof Participant) {
 			return new DirectEditParticipantFeature(fp);
+		}
 		return null;
 	}
 
 	@Override
 	public ILayoutFeature getLayoutFeature(IFeatureProvider fp, BaseElement e) {
-		if (e instanceof Participant)
+		if (e instanceof Participant) {
 			return new LayoutParticipantFeature(fp);
+		}
 		return null;
 	}
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IFeatureProvider fp, BaseElement e) {
-		if (e instanceof Participant)
+		if (e instanceof Participant) {
 			return new UpdateParticipantFeature(fp);
+		}
 		return null;
 	}
 
 	@Override
 	public IMoveShapeFeature getMoveFeature(IFeatureProvider fp, BaseElement e) {
-		if (e instanceof Participant)
+		if (e instanceof Participant) {
 			return new DefaultBpmnMoveFeature(fp);
+		}
 		return null;
 	}
 
 	@Override
 	public IResizeShapeFeature getResizeFeature(IFeatureProvider fp, BaseElement e) {
-		if (e instanceof Participant)
+		if (e instanceof Participant) {
 			return new DefaultBPMNResizeFeature(fp);
+		}
+		return null;
+	}
+
+	@Override
+	public IDeleteFeature getDeleteFeature(IFeatureProvider fp, BaseElement e) {
+		if (e instanceof TextAnnotation) {
+			return new DefaultDeleteFeature(fp);
+		}
 		return null;
 	}
 }

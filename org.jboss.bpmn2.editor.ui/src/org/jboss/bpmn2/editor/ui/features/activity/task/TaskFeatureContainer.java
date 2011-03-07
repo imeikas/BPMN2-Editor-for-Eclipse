@@ -8,7 +8,6 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.activity.task.AbstractCreateTaskFeature;
-import org.jboss.bpmn2.editor.core.features.activity.task.AbstractTaskFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.activity.task.AddTaskFeature;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
