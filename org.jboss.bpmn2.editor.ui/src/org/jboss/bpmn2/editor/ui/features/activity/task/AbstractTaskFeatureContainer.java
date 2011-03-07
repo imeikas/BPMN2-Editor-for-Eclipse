@@ -9,7 +9,7 @@ import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
-import org.eclipse.graphiti.mm.algorithms.Text;
+import org.eclipse.graphiti.mm.algorithms.MultiText;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.jboss.bpmn2.editor.core.features.AbstractBaseElementUpdateFeature;
@@ -17,6 +17,7 @@ import org.jboss.bpmn2.editor.core.features.MoveFlowNodeFeature;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.activity.LayoutActivityFeature;
 import org.jboss.bpmn2.editor.core.features.activity.task.DirectEditTaskFeature;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 import org.jboss.bpmn2.editor.ui.features.activity.AbstractActivityFeatureContainer;
 
 public abstract class AbstractTaskFeatureContainer extends AbstractActivityFeatureContainer {
@@ -46,8 +47,9 @@ public abstract class AbstractTaskFeatureContainer extends AbstractActivityFeatu
 		return new LayoutActivityFeature(fp) {
 			@Override
 			protected boolean layoutHook(Shape shape, GraphicsAlgorithm ga, Object bo, int newWidth, int newHeight) {
-				if (bo != null && bo instanceof Task && ga instanceof Text) {
-					Graphiti.getGaService().setSize(ga, newWidth, ga.getHeight());
+				if (bo != null && bo instanceof Task && ga instanceof MultiText) {
+					int padding = GraphicsUtil.TASK_IMAGE_SIZE;
+					Graphiti.getGaService().setLocationAndSize(ga, 3, padding, newWidth - 6, newHeight - padding);
 					return true;
 				}
 				return false;

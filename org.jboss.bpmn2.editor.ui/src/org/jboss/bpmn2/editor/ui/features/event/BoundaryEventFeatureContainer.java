@@ -50,10 +50,10 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.di.DIUtils;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
-import org.jboss.bpmn2.editor.core.features.FeatureSupport;
+import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class BoundaryEventFeatureContainer implements FeatureContainer {
 
@@ -208,17 +208,17 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 				x = Integer.parseInt(distanceProp);
 			}
 
-			int y = ga.getHeight() - ShapeUtil.EVENT_SIZE / 2;
+			int y = ga.getHeight() - GraphicsUtil.EVENT_SIZE / 2;
 
 			Ellipse ellipse = gaService.createEllipse(containerShape);
-			gaService.setLocationAndSize(ellipse, x, y, ShapeUtil.EVENT_SIZE, ShapeUtil.EVENT_SIZE);
+			gaService.setLocationAndSize(ellipse, x, y, GraphicsUtil.EVENT_SIZE, GraphicsUtil.EVENT_SIZE);
 
 			peService.setPropertyValue(context.getTargetContainer(), boundaryDistance,
-					Integer.toString(x + ShapeUtil.EVENT_SIZE + 5));
+					Integer.toString(x + GraphicsUtil.EVENT_SIZE + 5));
 
 			StyleUtil.applyBGStyle(ellipse, this);
 
-			Ellipse circle = ShapeUtil.createIntermediateEventCircle(ellipse);
+			Ellipse circle = GraphicsUtil.createIntermediateEventCircle(ellipse);
 
 			circle.setStyle(StyleUtil.getStyleForClass(getDiagram()));
 
@@ -255,7 +255,7 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 				ContainerShape parentContainer = (ContainerShape) element.eContainer();
 				GraphicsAlgorithm parentGa = parentContainer.getGraphicsAlgorithm();
 
-				int y = parentGa.getHeight() - ShapeUtil.EVENT_SIZE;
+				int y = parentGa.getHeight() - GraphicsUtil.EVENT_SIZE;
 
 				DIUtils.updateDIShape(getDiagram(), element, BoundaryEvent.class, 0);
 

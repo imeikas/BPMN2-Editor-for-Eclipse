@@ -9,7 +9,6 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.gateway.AbstractCreateGatewayFeature;
-import org.jboss.bpmn2.editor.core.features.gateway.AbstractGatewayFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.gateway.DefaultAddGatewayFeature;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 

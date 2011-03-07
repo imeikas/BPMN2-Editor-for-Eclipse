@@ -28,9 +28,9 @@ import org.jboss.bpmn2.editor.core.features.DefaultBPMNResizeFeature;
 import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.artifact.AbstractCreateArtifactFeature;
+import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
-import org.jboss.bpmn2.editor.utils.AnchorUtil;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class GroupFeatureContainer implements FeatureContainer {
 

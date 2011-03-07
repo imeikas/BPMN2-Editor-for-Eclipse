@@ -16,7 +16,7 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.di.DIUtils;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 
 public class LayoutActivityFeature extends AbstractLayoutFeature {
 
@@ -44,10 +44,10 @@ public class LayoutActivityFeature extends AbstractLayoutFeature {
 			IGaService gaService = Graphiti.getGaService();
 
 			int newWidth = parentGa.getWidth();
-			int newHeight = parentGa.getHeight() - ShapeUtil.ACTIVITY_BOTTOM_PADDING;
+			int newHeight = parentGa.getHeight() - GraphicsUtil.ACTIVITY_BOTTOM_PADDING;
 
-			String markerProperty = Graphiti.getPeService()
-					.getPropertyValue(shape, ShapeUtil.ACTIVITY_MARKER_CONTAINER);
+			String markerProperty = Graphiti.getPeService().getPropertyValue(shape,
+					GraphicsUtil.ACTIVITY_MARKER_CONTAINER);
 			if (markerProperty != null && new Boolean(markerProperty)) {
 				int x = (newWidth / 2) - (ga.getWidth() / 2);
 				int y = newHeight - ga.getHeight() - 3 - getMarkerContainerOffset();
@@ -74,7 +74,7 @@ public class LayoutActivityFeature extends AbstractLayoutFeature {
 			}
 		}
 
-		DIUtils.updateDIShape(getDiagram(), containerShape, Activity.class, ShapeUtil.ACTIVITY_BOTTOM_PADDING);
+		DIUtils.updateDIShape(getDiagram(), containerShape, Activity.class, GraphicsUtil.ACTIVITY_BOTTOM_PADDING);
 		return changed;
 	}
 

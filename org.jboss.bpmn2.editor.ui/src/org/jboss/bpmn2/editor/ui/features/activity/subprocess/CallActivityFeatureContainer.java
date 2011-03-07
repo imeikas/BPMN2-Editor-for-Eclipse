@@ -35,10 +35,10 @@ import org.jboss.bpmn2.editor.core.features.AbstractCreateFlowElementFeature;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.activity.LayoutActivityFeature;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil.Expand;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
-import org.jboss.bpmn2.editor.utils.ShapeUtil.Expand;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class CallActivityFeatureContainer extends AbstractSubProcessFeatureContainer {
 
@@ -168,18 +168,18 @@ public class CallActivityFeatureContainer extends AbstractSubProcessFeatureConta
 			CallActivity callActivity = (CallActivity) BusinessObjectUtil.getFirstElementOfType(
 			        context.getPictogramElement(), CallActivity.class);
 
-			ContainerShape markerContainer = (ContainerShape) getShape(container, ShapeUtil.ACTIVITY_MARKER_CONTAINER);
+			ContainerShape markerContainer = (ContainerShape) getShape(container, GraphicsUtil.ACTIVITY_MARKER_CONTAINER);
 			Shape globalTaskShape = getShape(container, GLOBAL_TASK_SHAPE_PROPERTY);
 			
 			if (callActivity.getCalledElementRef() == null) {
-				ShapeUtil.clearActivityMarker(markerContainer, ShapeUtil.ACTIVITY_MARKER_EXPAND);
+				GraphicsUtil.clearActivityMarker(markerContainer, GraphicsUtil.ACTIVITY_MARKER_EXPAND);
 				if(globalTaskShape != null) {
 					peService.deletePictogramElement(globalTaskShape);
 				}
 			}
 
 			else if (callActivity.getCalledElementRef() instanceof GlobalTask) {
-				ShapeUtil.clearActivityMarker(markerContainer, ShapeUtil.ACTIVITY_MARKER_EXPAND);
+				GraphicsUtil.clearActivityMarker(markerContainer, GraphicsUtil.ACTIVITY_MARKER_EXPAND);
 				GlobalTask t = (GlobalTask) callActivity.getCalledElementRef();
 				if(globalTaskShape == null) {
 					globalTaskShape = peService.createShape(container, false);
@@ -196,7 +196,7 @@ public class CallActivityFeatureContainer extends AbstractSubProcessFeatureConta
 				if(globalTaskShape != null) {
 					peService.deletePictogramElement(globalTaskShape);
 				}
-				Expand expand = ShapeUtil.createActivityMarkerExpand(markerContainer);
+				Expand expand = GraphicsUtil.createActivityMarkerExpand(markerContainer);
 				expand.rect.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 				expand.horizontal.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 				expand.vertical.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));

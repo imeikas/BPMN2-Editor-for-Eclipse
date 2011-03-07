@@ -12,6 +12,7 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
+import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 
 public class MoveFlowNodeFeature extends DefaultBpmnMoveFeature {
 

@@ -21,11 +21,11 @@ import org.eclipse.graphiti.util.IColorConstant;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.ConnectionFeatureContainer;
-import org.jboss.bpmn2.editor.core.features.FeatureSupport;
 import org.jboss.bpmn2.editor.core.features.flow.AbstractAddFlowFeature;
 import org.jboss.bpmn2.editor.core.features.flow.AbstractCreateFlowFeature;
+import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class MessageFlowFeatureContainer extends ConnectionFeatureContainer {
 

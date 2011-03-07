@@ -15,8 +15,8 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.event.definitions.CreateEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.DecorationAlgorithm;
 import org.jboss.bpmn2.editor.core.features.event.definitions.EventDefinitionFeatureContainer;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
 
 public class ConditionalEventDefinitionContainer extends EventDefinitionFeatureContainer {
 
@@ -57,7 +57,7 @@ public class ConditionalEventDefinitionContainer extends EventDefinitionFeatureC
 	
 	private Shape draw(ContainerShape shape) {
 		Shape conditionShape = Graphiti.getPeService().createShape(shape, false);
-		ShapeUtil.createEventImage(conditionShape, ImageProvider.IMG_20_CONDITION);
+		GraphicsUtil.createEventImage(conditionShape, ImageProvider.IMG_20_CONDITION);
 		return conditionShape;
 	}
 

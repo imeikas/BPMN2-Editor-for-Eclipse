@@ -20,8 +20,8 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractCreateFlowElementFeature;
-import org.jboss.bpmn2.editor.core.features.data.AbstractDataFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.data.AddDataFeature;
+import org.jboss.bpmn2.editor.core.features.data.Properties;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
 public class DataObjectFeatureContainer extends AbstractDataFeatureContainer {
@@ -38,7 +38,14 @@ public class DataObjectFeatureContainer extends AbstractDataFeatureContainer {
 
 	@Override
 	public IAddFeature getAddFeature(IFeatureProvider fp) {
-		return new AddDataFeature<DataObject>(fp);
+		return new AddDataFeature<DataObject>(fp) {
+
+			@Override
+            public String getName(DataObject t) {
+	            return t.getName();
+            }
+			
+		};
 	}
 
 	@Override
@@ -56,7 +63,7 @@ public class DataObjectFeatureContainer extends AbstractDataFeatureContainer {
 				IPeService peService = Graphiti.getPeService();
 				ContainerShape container = (ContainerShape) context.getPictogramElement();
 	            DataObject data = (DataObject) getBusinessObjectForPictogramElement(container);
-	            boolean isCollection = Boolean.parseBoolean(peService.getPropertyValue(container, COLLECTION_PROPERTY));
+	            boolean isCollection = Boolean.parseBoolean(peService.getPropertyValue(container, Properties.COLLECTION_PROPERTY));
 	            return data.isIsCollection() != isCollection ? Reason.createTrueReason() : Reason.createFalseReason();
             }
 
@@ -71,14 +78,14 @@ public class DataObjectFeatureContainer extends AbstractDataFeatureContainer {
 	            Iterator<Shape> iterator = peService.getAllContainedShapes(container).iterator();
 	            while (iterator.hasNext()) {
 	                Shape shape = (Shape) iterator.next();
-	                String prop = peService.getPropertyValue(shape, HIDEABLE_PROPERTY);
+	                String prop = peService.getPropertyValue(shape, Properties.HIDEABLE_PROPERTY);
 	                if(prop != null && new Boolean(prop)) {
 	                	Polyline line = (Polyline) shape.getGraphicsAlgorithm();
 	                	line.setLineVisible(drawCollectionMarker);
 	                }
                 }
 	            
-	            peService.setPropertyValue(container, COLLECTION_PROPERTY, Boolean.toString(data.isIsCollection()));
+	            peService.setPropertyValue(container, Properties.COLLECTION_PROPERTY, Boolean.toString(data.isIsCollection()));
 	            return true;
             }
 		};

@@ -1,8 +1,9 @@
-package org.jboss.bpmn2.editor.core.features;
+package org.jboss.bpmn2.editor.core.utils;
 
 import java.awt.Dimension;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.bpmn2.BaseElement;
@@ -25,8 +26,10 @@ import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
+import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
+import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 
 public class FeatureSupport {
 
@@ -68,7 +71,7 @@ public class FeatureSupport {
 		resizeRecursively(root);
 		postResizeFixLenghts(root);
 	}
-
+	
 	private static ContainerShape getRootContainer(ContainerShape container) {
 		ContainerShape parent = container.getContainer();
 		EObject bo = BusinessObjectUtil.getFirstElementOfType(parent, BaseElement.class);
@@ -254,5 +257,18 @@ public class FeatureSupport {
 		}
 
 		return handler.getParticipant(bo);
+	}
+	
+	public static Shape getShape(ContainerShape container, String property, String expextedValue) {
+		IPeService peService = Graphiti.getPeService();
+		Iterator<Shape> iterator = peService.getAllContainedShapes(container).iterator();
+		while (iterator.hasNext()) {
+	        Shape shape = (Shape) iterator.next();
+	        String value = peService.getPropertyValue(shape, property);
+	        if(value != null && value.equals(expextedValue)) {
+	        	return shape;
+	        }
+        }
+		return null;
 	}
 }

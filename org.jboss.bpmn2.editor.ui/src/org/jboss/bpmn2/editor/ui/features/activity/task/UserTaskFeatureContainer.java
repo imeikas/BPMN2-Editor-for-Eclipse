@@ -14,6 +14,7 @@ import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.activity.task.AbstractCreateTaskFeature;
 import org.jboss.bpmn2.editor.core.features.activity.task.AddTaskFeature;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
 public class UserTaskFeatureContainer extends AbstractTaskFeatureContainer {
@@ -35,7 +36,7 @@ public class UserTaskFeatureContainer extends AbstractTaskFeatureContainer {
 			protected void decorateActivityRectangle(RoundedRectangle rect) {
 				IGaService service = Graphiti.getGaService();
 				Image img = service.createImage(rect, ImageProvider.IMG_16_USER_TASK);
-				service.setLocationAndSize(img, 2, 2, 16, 16);
+				service.setLocationAndSize(img, 2, 2, GraphicsUtil.TASK_IMAGE_SIZE, GraphicsUtil.TASK_IMAGE_SIZE);
 			}
 		};
 	}

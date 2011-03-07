@@ -19,10 +19,10 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.event.definitions.CreateEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.DecorationAlgorithm;
 import org.jboss.bpmn2.editor.core.features.event.definitions.EventDefinitionFeatureContainer;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil.Compensation;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
-import org.jboss.bpmn2.editor.utils.ShapeUtil.Compensation;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class CompensateEventDefinitionContainer extends EventDefinitionFeatureContainer {
 
@@ -63,7 +63,7 @@ public class CompensateEventDefinitionContainer extends EventDefinitionFeatureCo
 	
 	private Shape draw(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape compensateShape = Graphiti.getPeService().createShape(shape, false);
-		Compensation compensation = ShapeUtil.createEventCompensation(compensateShape);
+		Compensation compensation = GraphicsUtil.createEventCompensation(compensateShape);
 		compensation.arrow1.setFilled(false);
 		compensation.arrow1.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		compensation.arrow2.setFilled(false);
@@ -73,7 +73,7 @@ public class CompensateEventDefinitionContainer extends EventDefinitionFeatureCo
 	
 	private Shape drawFilled(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape compensateShape = Graphiti.getPeService().createShape(shape, false);
-		Compensation compensation = ShapeUtil.createEventCompensation(compensateShape);
+		Compensation compensation = GraphicsUtil.createEventCompensation(compensateShape);
 		compensation.arrow1.setFilled(true);
 		compensation.arrow1.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		compensation.arrow1.setBackground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));

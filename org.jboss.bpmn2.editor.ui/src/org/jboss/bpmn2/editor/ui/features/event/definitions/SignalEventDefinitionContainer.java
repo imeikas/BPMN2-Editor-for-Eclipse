@@ -14,9 +14,9 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.event.definitions.CreateEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.DecorationAlgorithm;
 import org.jboss.bpmn2.editor.core.features.event.definitions.EventDefinitionFeatureContainer;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class SignalEventDefinitionContainer extends EventDefinitionFeatureContainer {
 
@@ -57,7 +57,7 @@ public class SignalEventDefinitionContainer extends EventDefinitionFeatureContai
 	
 	private Shape draw(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape signalShape = Graphiti.getPeService().createShape(shape, false);
-		Polygon signal = ShapeUtil.createEventSignal(signalShape);
+		Polygon signal = GraphicsUtil.createEventSignal(signalShape);
 		signal.setFilled(false);
 		signal.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 	    return signalShape;
@@ -65,7 +65,7 @@ public class SignalEventDefinitionContainer extends EventDefinitionFeatureContai
 	
 	private Shape drawFilled(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape signalShape = Graphiti.getPeService().createShape(shape, false);
-		Polygon signal = ShapeUtil.createEventSignal(signalShape);
+		Polygon signal = GraphicsUtil.createEventSignal(signalShape);
 		signal.setFilled(true);
 		signal.setBackground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		signal.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));

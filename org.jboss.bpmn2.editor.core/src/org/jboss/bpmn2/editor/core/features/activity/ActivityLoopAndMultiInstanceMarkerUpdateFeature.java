@@ -6,10 +6,10 @@ import org.eclipse.bpmn2.MultiInstanceLoopCharacteristics;
 import org.eclipse.bpmn2.StandardLoopCharacteristics;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
-import org.jboss.bpmn2.editor.utils.ShapeUtil.Loop;
-import org.jboss.bpmn2.editor.utils.ShapeUtil.MultiInstance;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil.Loop;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil.MultiInstance;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 
 public class ActivityLoopAndMultiInstanceMarkerUpdateFeature extends AbstractMarkerUpdateFeature {
 
@@ -52,21 +52,21 @@ public class ActivityLoopAndMultiInstanceMarkerUpdateFeature extends AbstractMar
 
 	@Override
 	void doUpdate(Activity activity, ContainerShape markerContainer) {
-		ShapeUtil.clearActivityMarker(markerContainer, ShapeUtil.ACTIVITY_MARKER_LOOP_CHARACTERISTIC);
+		GraphicsUtil.clearActivityMarker(markerContainer, GraphicsUtil.ACTIVITY_MARKER_LOOP_CHARACTERISTIC);
 		switch (getLoopCharacteristicsValue(activity)) {
 		case LOOP:
-			Loop loop = ShapeUtil.createActivityMarkerStandardLoop(markerContainer);
+			Loop loop = GraphicsUtil.createActivityMarkerStandardLoop(markerContainer);
 			loop.circle.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 			loop.arrow.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 			break;
 		case MULTI_PARALLEL:
-			MultiInstance multiParallel = ShapeUtil.createActivityMarkerMultiParallel(markerContainer);
+			MultiInstance multiParallel = GraphicsUtil.createActivityMarkerMultiParallel(markerContainer);
 			multiParallel.line1.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 			multiParallel.line2.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 			multiParallel.line3.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 			break;
 		case MULTI_SEQUENTIAL:
-			MultiInstance multiSeq = ShapeUtil.createActivityMarkerMultiSequential(markerContainer);
+			MultiInstance multiSeq = GraphicsUtil.createActivityMarkerMultiSequential(markerContainer);
 			multiSeq.line1.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 			multiSeq.line2.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 			multiSeq.line3.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));

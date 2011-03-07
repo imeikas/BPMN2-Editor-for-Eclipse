@@ -18,9 +18,9 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.activity.subprocess.AbstractCreateSubProcess;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class AdHocSubProcessFeatureContainer extends AbstractSubProcessFeatureContainer {
 
@@ -44,9 +44,9 @@ public class AdHocSubProcessFeatureContainer extends AbstractSubProcessFeatureCo
 			    Iterator<Shape> iterator = peService.getAllContainedShapes(container).iterator();
 			    while (iterator.hasNext()) {
 	                Shape shape = (Shape) iterator.next();
-	                String property = peService.getPropertyValue(shape, ShapeUtil.ACTIVITY_MARKER_CONTAINER);
+	                String property = peService.getPropertyValue(shape, GraphicsUtil.ACTIVITY_MARKER_CONTAINER);
 	                if(property != null && new Boolean(property)) {
-	                	Polyline tilde = ShapeUtil.createActivityMarkerAdHoc((ContainerShape) shape);
+	                	Polyline tilde = GraphicsUtil.createActivityMarkerAdHoc((ContainerShape) shape);
 	                	tilde.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 	                }
                 }

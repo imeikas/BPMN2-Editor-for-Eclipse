@@ -28,7 +28,7 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 
 public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 
@@ -54,7 +54,7 @@ public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 						Bounds bounds = DcFactory.eINSTANCE.createBounds();
 						if (elem instanceof Activity) {
 							bounds.setHeight(containerShape.getGraphicsAlgorithm().getHeight()
-									- ShapeUtil.ACTIVITY_BOTTOM_PADDING);
+									- GraphicsUtil.ACTIVITY_BOTTOM_PADDING);
 						} else {
 							bounds.setHeight(containerShape.getGraphicsAlgorithm().getHeight());
 						}

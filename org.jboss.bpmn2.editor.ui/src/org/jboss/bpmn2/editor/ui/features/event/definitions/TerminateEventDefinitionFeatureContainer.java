@@ -16,9 +16,9 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.event.definitions.CreateEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.DecorationAlgorithm;
 import org.jboss.bpmn2.editor.core.features.event.definitions.EventDefinitionFeatureContainer;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class TerminateEventDefinitionFeatureContainer extends EventDefinitionFeatureContainer {
 
@@ -40,7 +40,7 @@ public class TerminateEventDefinitionFeatureContainer extends EventDefinitionFea
 	@Override
 	protected Shape drawForEnd(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape terminateShape = Graphiti.getPeService().createShape(shape, false);
-		Ellipse ellispe = ShapeUtil.createEventTerminate(terminateShape);
+		Ellipse ellispe = GraphicsUtil.createEventTerminate(terminateShape);
 		ellispe.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		ellispe.setBackground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		return terminateShape;

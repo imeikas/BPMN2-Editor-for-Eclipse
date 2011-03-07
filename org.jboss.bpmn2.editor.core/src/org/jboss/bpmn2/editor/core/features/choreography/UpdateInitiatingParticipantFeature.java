@@ -24,7 +24,7 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IPeService;
 import org.eclipse.graphiti.util.IColorConstant;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
-import org.jboss.bpmn2.editor.utils.Tuple;
+import org.jboss.bpmn2.editor.core.utils.Tuple;
 
 public class UpdateInitiatingParticipantFeature extends AbstractUpdateFeature {
 

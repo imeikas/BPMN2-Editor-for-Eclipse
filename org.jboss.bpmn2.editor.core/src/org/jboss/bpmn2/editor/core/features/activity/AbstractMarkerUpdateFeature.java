@@ -13,7 +13,7 @@ import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IPeService;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 
 public abstract class AbstractMarkerUpdateFeature extends AbstractUpdateFeature {
 
@@ -50,7 +50,7 @@ public abstract class AbstractMarkerUpdateFeature extends AbstractUpdateFeature 
 		Iterator<Shape> iterator = peService.getAllContainedShapes(container).iterator();
 		while (iterator.hasNext()) {
 			Shape shape = (Shape) iterator.next();
-			String property = peService.getPropertyValue(shape, ShapeUtil.ACTIVITY_MARKER_CONTAINER);
+			String property = peService.getPropertyValue(shape, GraphicsUtil.ACTIVITY_MARKER_CONTAINER);
 			if(property != null && new Boolean(property)) {
 				markerContainer = (ContainerShape) shape;
 				break;

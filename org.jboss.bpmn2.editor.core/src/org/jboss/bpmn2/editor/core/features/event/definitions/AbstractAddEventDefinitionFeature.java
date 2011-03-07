@@ -13,8 +13,8 @@ import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.jboss.bpmn2.editor.core.features.event.definitions.EventDefinitionSupport.EventWithDefinitions;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 
 public abstract class AbstractAddEventDefinitionFeature extends AbstractAddShapeFeature {
 
@@ -39,7 +39,7 @@ public abstract class AbstractAddEventDefinitionFeature extends AbstractAddShape
 		int size = definitions.getEventDefinitions().size();
 
 		if (size > 1) {
-			if (ShapeUtil.clearEvent(container)) {
+			if (GraphicsUtil.clearEvent(container)) {
 				Shape multipleShape = Graphiti.getPeService().createShape(container, false);
 				drawForEvent(event, multipleShape);
 				link(multipleShape, definitions.getEventDefinitions().toArray(new EventDefinition[size]));
@@ -63,7 +63,7 @@ public abstract class AbstractAddEventDefinitionFeature extends AbstractAddShape
 	}
 	
 	private void drawMultiple(Event event, Shape shape) {
-		Polygon pentagon = ShapeUtil.createEventPentagon(shape);
+		Polygon pentagon = GraphicsUtil.createEventPentagon(shape);
 		pentagon.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 		if (event instanceof ThrowEvent) {
 			pentagon.setBackground(manageColor(StyleUtil.CLASS_FOREGROUND));
@@ -73,7 +73,7 @@ public abstract class AbstractAddEventDefinitionFeature extends AbstractAddShape
 	}
 	
 	private void drawParallelMultiple(Event event, Shape shape) {
-		Polygon cross = ShapeUtil.createEventParallelMultiple(shape);
+		Polygon cross = GraphicsUtil.createEventParallelMultiple(shape);
 		cross.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 	}
 }

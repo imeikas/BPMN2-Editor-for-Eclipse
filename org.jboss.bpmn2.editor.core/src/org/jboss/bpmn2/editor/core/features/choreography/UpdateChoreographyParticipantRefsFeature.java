@@ -31,8 +31,8 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.eclipse.graphiti.util.IColorConstant;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
-import org.jboss.bpmn2.editor.utils.Tuple;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
+import org.jboss.bpmn2.editor.core.utils.Tuple;
 
 public class UpdateChoreographyParticipantRefsFeature extends AbstractUpdateFeature {
 

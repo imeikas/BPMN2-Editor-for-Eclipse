@@ -9,11 +9,10 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.mm.algorithms.Polygon;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.data.AbstractCreateDataInputOutputFeature;
-import org.jboss.bpmn2.editor.core.features.data.AbstractDataFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.data.AddDataFeature;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class DataInputFeatureContainer extends AbstractDataFeatureContainer {
 
@@ -37,10 +36,15 @@ public class DataInputFeatureContainer extends AbstractDataFeatureContainer {
 
 			@Override
 			protected void decorate(Polygon p) {
-				Polygon arrow = ShapeUtil.createDataArrow(p);
+				Polygon arrow = GraphicsUtil.createDataArrow(p);
 				arrow.setFilled(false);
 				arrow.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 			}
+
+			@Override
+            public String getName(DataInput t) {
+	            return t.getName();
+            }
 		};
 	}
 

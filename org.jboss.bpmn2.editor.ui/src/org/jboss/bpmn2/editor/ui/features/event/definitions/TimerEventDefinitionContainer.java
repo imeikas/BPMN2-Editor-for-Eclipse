@@ -15,8 +15,8 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.event.definitions.CreateEventDefinition;
 import org.jboss.bpmn2.editor.core.features.event.definitions.DecorationAlgorithm;
 import org.jboss.bpmn2.editor.core.features.event.definitions.EventDefinitionFeatureContainer;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
 
 public class TimerEventDefinitionContainer extends EventDefinitionFeatureContainer {
 
@@ -57,7 +57,7 @@ public class TimerEventDefinitionContainer extends EventDefinitionFeatureContain
 
 	private Shape draw(ContainerShape shape) {
 		Shape timerShape = Graphiti.getPeService().createShape(shape, false);
-		ShapeUtil.createEventImage(timerShape, ImageProvider.IMG_20_TIMER);
+		GraphicsUtil.createEventImage(timerShape, ImageProvider.IMG_20_TIMER);
 		return timerShape;
 	}
 

@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.utils;
+package org.jboss.bpmn2.editor.core.utils;
 
 public class Tuple<A extends Object, B extends Object> {
 

@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.gateway;
+package org.jboss.bpmn2.editor.ui.features.gateway;
 
 import org.eclipse.graphiti.features.IDeleteFeature;
 import org.eclipse.graphiti.features.IDirectEditingFeature;
@@ -11,12 +11,15 @@ import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.MoveFlowNodeFeature;
+import org.jboss.bpmn2.editor.core.features.UpdateBaseElementNameFeature;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.ui.features.LayoutBaseElementTextFeature;
 
 public abstract class AbstractGatewayFeatureContainer implements FeatureContainer {
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
-		return null; // TODO
+		return new UpdateBaseElementNameFeature(fp);
 	}
 
 	@Override
@@ -26,7 +29,13 @@ public abstract class AbstractGatewayFeatureContainer implements FeatureContaine
 
 	@Override
 	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
-		return null; // TODO
+		return new LayoutBaseElementTextFeature(fp) {
+			
+			@Override
+			public int getMinimumWidth() {
+				return 2 * GraphicsUtil.GATEWAY_RADIUS;
+			}
+		};
 	}
 
 	@Override

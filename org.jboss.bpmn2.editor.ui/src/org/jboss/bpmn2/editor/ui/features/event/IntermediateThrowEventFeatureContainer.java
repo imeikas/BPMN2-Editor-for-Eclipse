@@ -9,11 +9,10 @@ import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.mm.algorithms.Ellipse;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.event.AbstractCreateEventFeature;
-import org.jboss.bpmn2.editor.core.features.event.AbstractEventFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.event.AddEventFeature;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
-import org.jboss.bpmn2.editor.utils.ShapeUtil;
-import org.jboss.bpmn2.editor.utils.StyleUtil;
 
 public class IntermediateThrowEventFeatureContainer extends AbstractEventFeatureContainer {
 
@@ -32,7 +31,7 @@ public class IntermediateThrowEventFeatureContainer extends AbstractEventFeature
 	    return new AddEventFeature(fp){
 	    	@Override
 	    	protected void decorateEllipse(Ellipse e) {
-	    		Ellipse circle = ShapeUtil.createIntermediateEventCircle(e);
+	    		Ellipse circle = GraphicsUtil.createIntermediateEventCircle(e);
 	    		circle.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 	    	}
 	    };

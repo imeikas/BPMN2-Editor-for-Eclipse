@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.utils;
+package org.jboss.bpmn2.editor.core.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,11 +22,15 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 
-public class ShapeUtil {
-
+public class GraphicsUtil {
+	
 	private static final IGaService gaService = Graphiti.getGaService();
 	private static final IPeService peService = Graphiti.getPeService();
-
+	
+	// TODO move all size properties to separate interface
+	public static int DATA_WIDTH = 36;
+	public static int DATA_HEIGHT = 50;
+	
 	public static class Envelope {
 		public Rectangle rect;
 		public Polyline line;
@@ -71,6 +75,7 @@ public class ShapeUtil {
 	private static final String DELETABLE_PROPERTY = "deletable";
 
 	public static final int GATEWAY_RADIUS = 25;
+	public static final int GATEWAY_TEXT_AREA = 15;
 
 	private static final int[] GATEWAY = { 0, GATEWAY_RADIUS, GATEWAY_RADIUS, 0, 2 * GATEWAY_RADIUS, GATEWAY_RADIUS,
 			GATEWAY_RADIUS, 2 * GATEWAY_RADIUS };
@@ -364,6 +369,7 @@ public class ShapeUtil {
 
 	public static final int TASK_DEFAULT_WIDTH = 110;
 	public static final int TASK_DEFAULT_HEIGHT = 50;
+	public static final int TASK_IMAGE_SIZE = 16;
 
 	public static final int SUB_PROCEESS_DEFAULT_WIDTH = 300;
 	public static final int SUB_PROCESS_DEFAULT_HEIGHT = 300;
