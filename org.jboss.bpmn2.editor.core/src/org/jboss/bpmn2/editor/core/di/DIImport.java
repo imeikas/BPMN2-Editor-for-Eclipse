@@ -79,6 +79,7 @@ public class DIImport {
 					d.setPlane(plane);
 
 					modelHandler.getDefinitions().getDiagrams().add(d);
+					featureProvider.link(diagram, d);
 				}
 
 				for (BPMNDiagram d : diagrams) {
@@ -242,13 +243,13 @@ public class DIImport {
 	 * @param shape
 	 */
 	private void importEdge(BPMNEdge bpmnEdge) {
-		BaseElement source = null;
-		BaseElement target = null;
+		EObject source = null;
+		EObject target = null;
 
 		// for some reason connectors don't have a common interface
 		if (bpmnEdge.getBpmnElement() instanceof MessageFlow) {
-			source = (BaseElement) ((MessageFlow) bpmnEdge.getBpmnElement()).getSourceRef();
-			target = (BaseElement) ((MessageFlow) bpmnEdge.getBpmnElement()).getTargetRef();
+			source = ((MessageFlow) bpmnEdge.getBpmnElement()).getSourceRef();
+			target = ((MessageFlow) bpmnEdge.getBpmnElement()).getTargetRef();
 		} else if (bpmnEdge.getBpmnElement() instanceof SequenceFlow) {
 			source = ((SequenceFlow) bpmnEdge.getBpmnElement()).getSourceRef();
 			target = ((SequenceFlow) bpmnEdge.getBpmnElement()).getTargetRef();
