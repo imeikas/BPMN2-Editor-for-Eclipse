@@ -25,8 +25,8 @@ import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 
 public class DIUtils {
-	
-	public static void updateDIShape(Diagram diagram, PictogramElement element, Class clazz) {
+
+	public static void updateDIShape(Diagram diagram, PictogramElement element, Class clazz, int invis) {
 		try {
 			ModelHandler modelHandler = ModelHandlerLocator.getModelHandler(element.getLink().getBusinessObjects()
 					.get(0).eResource());
@@ -41,7 +41,7 @@ public class DIUtils {
 			bounds.setY(loc.getY());
 
 			GraphicsAlgorithm graphicsAlgorithm = element.getGraphicsAlgorithm();
-			bounds.setHeight(graphicsAlgorithm.getHeight());
+			bounds.setHeight(graphicsAlgorithm.getHeight() - invis);
 			bounds.setWidth(graphicsAlgorithm.getWidth());
 		} catch (IOException e) {
 			Activator.logError(e);

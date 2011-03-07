@@ -1,5 +1,6 @@
 package org.jboss.bpmn2.editor.ui.features.gateway;
 
+import org.eclipse.graphiti.features.IDeleteFeature;
 import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.ILayoutFeature;
@@ -23,7 +24,7 @@ public abstract class AbstractGatewayFeatureContainer implements FeatureContaine
 
 	@Override
 	public IDirectEditingFeature getDirectEditingFeature(IFeatureProvider fp) {
-		return null; //TODO
+		return null; // TODO
 	}
 
 	@Override
@@ -50,5 +51,10 @@ public abstract class AbstractGatewayFeatureContainer implements FeatureContaine
 				return false;
 			}
 		};
+	}
+
+	@Override
+	public IDeleteFeature getDeleteFeature(IFeatureProvider context) {
+		return null;
 	}
 }

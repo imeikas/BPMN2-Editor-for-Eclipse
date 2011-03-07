@@ -11,6 +11,7 @@ import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateConnectionFeature;
+import org.eclipse.graphiti.features.IDeleteFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.IReason;
 import org.eclipse.graphiti.features.IUpdateFeature;
@@ -63,7 +64,7 @@ public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
 				int l = 8;
 
 				ConnectionDecorator decorator = Graphiti.getPeService().createConnectionDecorator(connection, false,
-				        1.0, true);
+						1.0, true);
 
 				IGaService gaService = Graphiti.getGaService();
 				Polyline arrow = gaService.createPolygon(decorator, new int[] { -l, w, 0, 0, -l, -w, -l, w });
@@ -94,11 +95,16 @@ public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
 		return multiUpdate;
 	}
 
+	@Override
+	public IDeleteFeature getDeleteFeature(IFeatureProvider fp) {
+		return null;
+	}
+
 	public static class CreateSequenceFlowFeature extends AbstractCreateFlowFeature<FlowNode, FlowNode> {
 
 		public CreateSequenceFlowFeature(IFeatureProvider fp) {
 			super(fp, "Sequence Flow",
-			        "A Sequence Flow is used to show the order that Activities will be performed in a Process");
+					"A Sequence Flow is used to show the order that Activities will be performed in a Process");
 		}
 
 		@Override
@@ -133,7 +139,7 @@ public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
 		@Override
 		public boolean canUpdate(IUpdateContext context) {
 			SequenceFlow flow = (SequenceFlow) BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
-			        SequenceFlow.class);
+					SequenceFlow.class);
 			boolean canUpdate = flow != null && isDefaultAttributeSupported(flow.getSourceRef());
 			return canUpdate;
 		}
@@ -146,7 +152,7 @@ public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
 				return Reason.createFalseReason();
 			}
 			SequenceFlow flow = (SequenceFlow) BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
-			        SequenceFlow.class);
+					SequenceFlow.class);
 			SequenceFlow defaultFlow = getDefaultFlow(flow.getSourceRef());
 			boolean isDefault = defaultFlow == null ? false : defaultFlow.equals(flow);
 			boolean changed = isDefault != new Boolean(property);
@@ -186,7 +192,7 @@ public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
 			}
 
 			peService.setPropertyValue(context.getPictogramElement(), IS_DEFAULT_FLOW_PROPERTY,
-			        Boolean.toString(isDefault));
+					Boolean.toString(isDefault));
 			return true;
 		}
 	}
@@ -200,7 +206,7 @@ public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
 		@Override
 		public boolean canUpdate(IUpdateContext context) {
 			SequenceFlow flow = (SequenceFlow) BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
-			        SequenceFlow.class);
+					SequenceFlow.class);
 			boolean canUpdate = flow != null && flow.getSourceRef() instanceof Activity;
 			return canUpdate;
 		}
@@ -239,16 +245,18 @@ public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
 			}
 
 			peService.setPropertyValue(context.getPictogramElement(), IS_CONDITIONAL_FLOW_PROPERTY,
-			        Boolean.toString(flow.getConditionExpression() != null));
+					Boolean.toString(flow.getConditionExpression() != null));
 			return true;
 		}
 	}
 
 	private boolean isDefaultAttributeSupported(FlowNode node) {
-		if (node instanceof Activity)
+		if (node instanceof Activity) {
 			return true;
-		if (node instanceof ExclusiveGateway || node instanceof InclusiveGateway || node instanceof ComplexGateway)
+		}
+		if (node instanceof ExclusiveGateway || node instanceof InclusiveGateway || node instanceof ComplexGateway) {
 			return true;
+		}
 		return false;
 	}
 
@@ -271,7 +279,7 @@ public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
 
 		Iterator<ConnectionDecorator> iterator = connection.getConnectionDecorators().iterator();
 		while (iterator.hasNext()) {
-			ConnectionDecorator connectionDecorator = (ConnectionDecorator) iterator.next();
+			ConnectionDecorator connectionDecorator = iterator.next();
 			String defProp = peService.getPropertyValue(connectionDecorator, DEFAULT_MARKER_PROPERTY);
 			if (defProp != null && new Boolean(defProp)) {
 				defaultDecorator = connectionDecorator;

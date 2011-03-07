@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.activity.task;
+package org.jboss.bpmn2.editor.ui.features.activity.task;
 
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Task;
@@ -15,9 +15,10 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.jboss.bpmn2.editor.core.features.AbstractBaseElementUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.MoveFlowNodeFeature;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
-import org.jboss.bpmn2.editor.core.features.activity.AbstractActivityFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.activity.LayoutActivityFeature;
+import org.jboss.bpmn2.editor.core.features.activity.task.DirectEditTaskFeature;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.ui.features.activity.AbstractActivityFeatureContainer;
 
 public abstract class AbstractTaskFeatureContainer extends AbstractActivityFeatureContainer {
 

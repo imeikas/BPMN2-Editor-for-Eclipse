@@ -14,6 +14,7 @@ import org.eclipse.bpmn2.EventDefinition;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
+import org.eclipse.graphiti.features.IDeleteFeature;
 import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.ILayoutFeature;
@@ -214,9 +215,9 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 
 			peService.setPropertyValue(context.getTargetContainer(), boundaryDistance,
 					Integer.toString(x + GraphicsUtil.EVENT_SIZE + 5));
-			
-			StyleUtil.applyBGStyle(ellipse, this);	
-			
+
+			StyleUtil.applyBGStyle(ellipse, this);
+
 			Ellipse circle = GraphicsUtil.createIntermediateEventCircle(ellipse);
 
 			circle.setStyle(StyleUtil.getStyleForClass(getDiagram()));
@@ -256,7 +257,7 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 
 				int y = parentGa.getHeight() - GraphicsUtil.EVENT_SIZE;
 
-				DIUtils.updateDIShape(getDiagram(), element, BoundaryEvent.class);
+				DIUtils.updateDIShape(getDiagram(), element, BoundaryEvent.class, 0);
 
 				if (ga.getY() != y) {
 					Graphiti.getGaService().setLocation(ga, ga.getX(), y);
@@ -292,5 +293,11 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 				return false;
 			}
 		};
+	}
+
+	@Override
+	public IDeleteFeature getDeleteFeature(IFeatureProvider context) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -1,6 +1,15 @@
 package org.jboss.bpmn2.editor.core.features.choreography;
 
-import static org.jboss.bpmn2.editor.core.features.choreography.Properties.*;
+import static org.jboss.bpmn2.editor.core.features.choreography.Properties.BODY_BAND;
+import static org.jboss.bpmn2.editor.core.features.choreography.Properties.BODY_BAND_TEXT;
+import static org.jboss.bpmn2.editor.core.features.choreography.Properties.BOTTOM_BAND;
+import static org.jboss.bpmn2.editor.core.features.choreography.Properties.BOTTOM_BAND_TEXT;
+import static org.jboss.bpmn2.editor.core.features.choreography.Properties.CHOREOGRAPHY_TASK_PROPERTY;
+import static org.jboss.bpmn2.editor.core.features.choreography.Properties.INITIATING_PARTICIPANT_REF;
+import static org.jboss.bpmn2.editor.core.features.choreography.Properties.PARTICIPANT_REF_NUM;
+import static org.jboss.bpmn2.editor.core.features.choreography.Properties.TOP_BAND;
+import static org.jboss.bpmn2.editor.core.features.choreography.Properties.TOP_BAND_TEXT;
+
 import org.eclipse.bpmn2.ChoreographyTask;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;

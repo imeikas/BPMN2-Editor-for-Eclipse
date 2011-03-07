@@ -35,10 +35,9 @@ import org.jboss.bpmn2.editor.core.features.AbstractCreateFlowElementFeature;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.activity.LayoutActivityFeature;
-import org.jboss.bpmn2.editor.core.features.activity.subprocess.AbstractSubProcessFeatureContainer;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
-import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil.Expand;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
 public class CallActivityFeatureContainer extends AbstractSubProcessFeatureContainer {

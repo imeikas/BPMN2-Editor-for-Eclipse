@@ -14,9 +14,9 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.di.DIUtils;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
-import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil.AnchorLocation;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil.BoundaryAnchor;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 
 public class DefaultBPMNResizeFeature extends DefaultResizeShapeFeature {
 
@@ -27,7 +27,7 @@ public class DefaultBPMNResizeFeature extends DefaultResizeShapeFeature {
 	@Override
 	public void resizeShape(IResizeShapeContext context) {
 		super.resizeShape(context);
-		DIUtils.updateDIShape(getDiagram(), context.getPictogramElement(), BaseElement.class);
+		DIUtils.updateDIShape(getDiagram(), context.getPictogramElement(), BaseElement.class, 0);
 		if (context.getPictogramElement() instanceof Shape) {
 			Shape shape = (Shape) context.getPictogramElement();
 			IGaService gaService = Graphiti.getGaService();
@@ -52,7 +52,7 @@ public class DefaultBPMNResizeFeature extends DefaultResizeShapeFeature {
 
 			anchor = anchors.get(AnchorLocation.LEFT).anchor;
 			anchor.setLocation(gaService.createPoint(0, h / 2));
-			
+
 			Object[] node = getAllBusinessObjectsForPictogramElement(context.getShape());
 			for (Object object : node) {
 				if (object instanceof BPMNShape) {

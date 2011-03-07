@@ -5,6 +5,7 @@ import org.eclipse.bpmn2.DataStore;
 import org.eclipse.bpmn2.RootElement;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
+import org.eclipse.graphiti.features.IDeleteFeature;
 import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.ILayoutFeature;
@@ -71,8 +72,8 @@ public class DataStoreFeatureContainer implements FeatureContainer {
 				int[] bend = { 0, 0, whalf, whalf, 0, 0, 0, 0, whalf, whalf, 0, 0 };
 				Polygon polygon = gaService.createPolygon(invisibleRect, xy, bend);
 				polygon.setFilled(true);
-				//polygon.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
-				
+				// polygon.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
+
 				StyleUtil.applyBGStyle(polygon, this);
 
 				xy = new int[] { 0, 14, whalf, 24, width, 14 };
@@ -138,12 +139,18 @@ public class DataStoreFeatureContainer implements FeatureContainer {
 		public RootElement createRootElement() {
 			DataStore dataStore = ModelHandler.FACTORY.createDataStore();
 			dataStore.setName("Data Store");
-	        return dataStore;
-        }
+			return dataStore;
+		}
 
 		@Override
 		public String getStencilImageId() {
-	        return ImageProvider.IMG_16_DATA_STORE;
-        }
+			return ImageProvider.IMG_16_DATA_STORE;
+		}
+	}
+
+	@Override
+	public IDeleteFeature getDeleteFeature(IFeatureProvider context) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

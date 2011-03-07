@@ -20,8 +20,8 @@ import org.jboss.bpmn2.editor.core.features.event.definitions.CreateEventDefinit
 import org.jboss.bpmn2.editor.core.features.event.definitions.DecorationAlgorithm;
 import org.jboss.bpmn2.editor.core.features.event.definitions.EventDefinitionFeatureContainer;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
-import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil.Compensation;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
 public class CompensateEventDefinitionContainer extends EventDefinitionFeatureContainer {

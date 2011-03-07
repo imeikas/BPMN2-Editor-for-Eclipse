@@ -11,8 +11,8 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.gateway.AbstractCreateGatewayFeature;
 import org.jboss.bpmn2.editor.core.features.gateway.DefaultAddGatewayFeature;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
-import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil.Asterisk;
+import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
 public class ComplexGatewayFeatureContainer extends AbstractGatewayFeatureContainer {

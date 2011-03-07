@@ -37,8 +37,6 @@ public class LayoutActivityFeature extends AbstractLayoutFeature {
 		ContainerShape containerShape = (ContainerShape) context.getPictogramElement();
 		GraphicsAlgorithm parentGa = containerShape.getGraphicsAlgorithm();
 
-		DIUtils.updateDIShape(getDiagram(), containerShape, Activity.class);
-
 		Iterator<Shape> iterator = Graphiti.getPeService().getAllContainedShapes(containerShape).iterator();
 		while (iterator.hasNext()) {
 			Shape shape = iterator.next();
@@ -48,8 +46,8 @@ public class LayoutActivityFeature extends AbstractLayoutFeature {
 			int newWidth = parentGa.getWidth();
 			int newHeight = parentGa.getHeight() - GraphicsUtil.ACTIVITY_BOTTOM_PADDING;
 
-			String markerProperty = Graphiti.getPeService()
-					.getPropertyValue(shape, GraphicsUtil.ACTIVITY_MARKER_CONTAINER);
+			String markerProperty = Graphiti.getPeService().getPropertyValue(shape,
+					GraphicsUtil.ACTIVITY_MARKER_CONTAINER);
 			if (markerProperty != null && new Boolean(markerProperty)) {
 				int x = (newWidth / 2) - (ga.getWidth() / 2);
 				int y = newHeight - ga.getHeight() - 3 - getMarkerContainerOffset();
@@ -76,6 +74,7 @@ public class LayoutActivityFeature extends AbstractLayoutFeature {
 			}
 		}
 
+		DIUtils.updateDIShape(getDiagram(), containerShape, Activity.class, GraphicsUtil.ACTIVITY_BOTTOM_PADDING);
 		return changed;
 	}
 

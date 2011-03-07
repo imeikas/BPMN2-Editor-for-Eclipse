@@ -4,6 +4,7 @@ import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.ChoreographyTask;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
+import org.eclipse.graphiti.features.IDeleteFeature;
 import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.ILayoutFeature;
@@ -25,7 +26,7 @@ import org.jboss.bpmn2.editor.core.features.choreography.UpdateInitiatingPartici
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
 public class ChoreographyTaskFeatureContainer implements FeatureContainer {
-	
+
 	@Override
 	public boolean canApplyTo(BaseElement element) {
 		return element instanceof ChoreographyTask;
@@ -50,26 +51,26 @@ public class ChoreographyTaskFeatureContainer implements FeatureContainer {
 	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
 		return new LayoutChoreographyTaskFeature(fp);
 	}
-	
+
 	@Override
-    public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
+	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
 		MultiUpdateFeature updateFeature = new MultiUpdateFeature(fp);
 		updateFeature.addUpdateFeature(new UpdateChoreographyNameFeature(fp));
 		updateFeature.addUpdateFeature(new UpdateChoreographyParticipantRefsFeature(fp));
 		updateFeature.addUpdateFeature(new UpdateInitiatingParticipantFeature(fp));
-	    return updateFeature;
-    }
+		return updateFeature;
+	}
 
 	@Override
-    public IMoveShapeFeature getMoveFeature(IFeatureProvider fp) {
-	    return new DefaultBpmnMoveFeature(fp);
-    }
+	public IMoveShapeFeature getMoveFeature(IFeatureProvider fp) {
+		return new DefaultBpmnMoveFeature(fp);
+	}
 
 	@Override
-    public IResizeShapeFeature getResizeFeature(IFeatureProvider fp) {
-	    return new DefaultBPMNResizeFeature(fp);
-    }
-	
+	public IResizeShapeFeature getResizeFeature(IFeatureProvider fp) {
+		return new DefaultBPMNResizeFeature(fp);
+	}
+
 	public static class CreateChoreographyTaskFeature extends AbstractCreateFlowElementFeature<ChoreographyTask> {
 
 		public CreateChoreographyTaskFeature(IFeatureProvider fp) {
@@ -92,5 +93,11 @@ public class ChoreographyTaskFeatureContainer implements FeatureContainer {
 		public String getCreateLargeImageId() {
 			return ImageProvider.IMG_16_CHOREOGRAPHY_TASK;
 		}
+	}
+
+	@Override
+	public IDeleteFeature getDeleteFeature(IFeatureProvider context) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

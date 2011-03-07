@@ -35,7 +35,7 @@ public class LayoutParticipantFeature extends AbstractLayoutFeature {
 		boolean changed = false;
 
 		ContainerShape containerShape = (ContainerShape) context.getPictogramElement();
-		DIUtils.updateDIShape(getDiagram(), containerShape, Participant.class);
+		DIUtils.updateDIShape(getDiagram(), containerShape, Participant.class, 0);
 
 		GraphicsAlgorithm containerGa = containerShape.getGraphicsAlgorithm();
 		IGaService gaService = Graphiti.getGaService();
