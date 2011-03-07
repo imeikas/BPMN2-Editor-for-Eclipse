@@ -18,6 +18,7 @@ import org.eclipse.dd.dc.Point;
 import org.eclipse.dd.di.DiagramElement;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.datatypes.ILocation;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
@@ -48,6 +49,7 @@ public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 						BPMNDiagram bpmnDiagram = (BPMNDiagram) eObject;
 
 						shape = BpmnDiFactory.eINSTANCE.createBPMNShape();
+						shape.setId(EcoreUtil.generateUUID());
 						shape.setBpmnElement(elem);
 						Bounds bounds = DcFactory.eINSTANCE.createBounds();
 						if (elem instanceof Activity) {
@@ -89,6 +91,7 @@ public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 						BPMNDiagram bpmnDiagram = (BPMNDiagram) eObject;
 
 						edge = BpmnDiFactory.eINSTANCE.createBPMNEdge();
+						edge.setId(EcoreUtil.generateUUID());
 						edge.setBpmnElement(conElement);
 						if (conElement instanceof Association) {
 							edge.setSourceElement(modelHandler.findDIElement(getDiagram(),
