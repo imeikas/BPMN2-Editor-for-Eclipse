@@ -135,7 +135,7 @@ public class MainPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 		toolkit.adapt(text, true, true);
 		widgets.add(text);
 
-		Button editButton = new Button(this, SWT.BORDER);
+		Button editButton = new Button(this, SWT.NONE);
 		editButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		editButton.setText("Edit ...");
 		toolkit.adapt(editButton, true, true);
