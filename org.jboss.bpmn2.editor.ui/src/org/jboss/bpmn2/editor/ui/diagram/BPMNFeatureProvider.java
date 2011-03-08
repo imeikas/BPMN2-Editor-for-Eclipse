@@ -63,6 +63,7 @@ import org.jboss.bpmn2.editor.ui.features.conversation.ConversationFeatureContai
 import org.jboss.bpmn2.editor.ui.features.conversation.ConversationLinkFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.data.DataInputFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.data.DataObjectFeatureContainer;
+import org.jboss.bpmn2.editor.ui.features.data.DataObjectReferenceFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.data.DataOutputFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.data.DataStoreReferenceFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.data.MessageFeatureContainer;
@@ -82,6 +83,8 @@ import org.jboss.bpmn2.editor.ui.features.event.definitions.SignalEventDefinitio
 import org.jboss.bpmn2.editor.ui.features.event.definitions.TerminateEventDefinitionFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.event.definitions.TimerEventDefinitionContainer;
 import org.jboss.bpmn2.editor.ui.features.flow.AssociationFeatureContainer;
+import org.jboss.bpmn2.editor.ui.features.flow.DataInputAssociationFeatureContainer;
+import org.jboss.bpmn2.editor.ui.features.flow.DataOutputAssociationFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.flow.MessageFlowFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.flow.SequenceFlowFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.gateway.ComplexGatewayFeatureContainer;
@@ -120,6 +123,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers = new ArrayList<FeatureContainer>();
 		containers.add(new GroupFeatureContainer());
 		containers.add(new DataObjectFeatureContainer());
+		containers.add(new DataObjectReferenceFeatureContainer());
 		containers.add(new DataStoreReferenceFeatureContainer());
 		containers.add(new DataInputFeatureContainer());
 		containers.add(new DataOutputFeatureContainer());
@@ -162,6 +166,8 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers.add(new AssociationFeatureContainer());
 		containers.add(new ConversationFeatureContainer());
 		containers.add(new ConversationLinkFeatureContainer());
+		containers.add(new DataInputAssociationFeatureContainer());
+		containers.add(new DataOutputAssociationFeatureContainer());
 
 		List<ICreateFeature> createFeaturesList = new ArrayList<ICreateFeature>();
 
@@ -183,7 +189,12 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		for (FeatureContainer c : containers) {
 			if (c instanceof ConnectionFeatureContainer) {
 				ConnectionFeatureContainer connectionFeatureContainer = (ConnectionFeatureContainer) c;
-				createConnectionFeatureList.add(connectionFeatureContainer.getCreateConnectionFeature(this));
+				ICreateConnectionFeature createConnectionFeature = connectionFeatureContainer
+				        .getCreateConnectionFeature(this);
+				if (createConnectionFeature == null) {
+					continue;
+				}
+				createConnectionFeatureList.add(createConnectionFeature);
 			}
 		}
 
