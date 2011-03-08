@@ -13,11 +13,13 @@ package org.jboss.bpmn2.editor.ui.property;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.provider.Bpmn2ItemProviderAdapterFactory;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -233,6 +235,13 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 
 					private void createNewProperty(final EObject baseElement, final EReference eReference) {
 						Object eGet = baseElement.eGet(eReference);
+						if (value instanceof BaseElement) {
+							BaseElement e = ((BaseElement) value);
+							if (e.getId() == null) {
+								e.setId(EcoreUtil.generateUUID());
+							}
+						}
+
 						if (eGet instanceof EList) {
 							((EList) eGet).add(value);
 						} else {
