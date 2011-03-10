@@ -44,7 +44,7 @@ public class AnchorUtil {
 	public enum AnchorLocation {
 		TOP("anchor.top"), BOTTOM("anchor.bottom"), LEFT("anchor.left"), RIGHT("anchor.right");
 
-		private String key;
+		private final String key;
 
 		private AnchorLocation(String key) {
 			this.key = key;
@@ -142,7 +142,7 @@ public class AnchorUtil {
 			return new Tuple<FixPointAnchor, FixPointAnchor>(sourceRight.anchor, targetLeft.anchor);
 		}
 
-		return null;
+		return new Tuple<FixPointAnchor, FixPointAnchor>(sourceTop.anchor, targetTop.anchor);
 	}
 
 	public static void reConnect(BPMNShape shape, Diagram diagram) {
@@ -187,8 +187,9 @@ public class AnchorUtil {
 		List<Connection> connectionsToBeUpdated = new ArrayList<Connection>();
 
 		for (Anchor anchor : anchors) {
-			if (!(anchor instanceof FixPointAnchor))
+			if (!(anchor instanceof FixPointAnchor)) {
 				continue;
+			}
 
 			for (Connection connection : anchor.getOutgoingConnections()) {
 				if (connection.getEnd().eContainer().equals(target)) {
@@ -204,24 +205,25 @@ public class AnchorUtil {
 	}
 
 	private static void deleteEmptyAdHocAnchors(Shape s) {
-		List<Integer> indexes = new ArrayList<Integer>(); 
-		
+		List<Integer> indexes = new ArrayList<Integer>();
+
 		for (int i = 0; i < s.getAnchors().size(); i++) {
 			Anchor a = s.getAnchors().get(i);
-			if (!(a instanceof FixPointAnchor))
+			if (!(a instanceof FixPointAnchor)) {
 				continue;
+			}
 
 			if (peService.getProperty(a, BOUNDARY_FIXPOINT_ANCHOR) == null && a.getIncomingConnections().isEmpty()
 			        && a.getOutgoingConnections().isEmpty()) {
 				indexes.add(i);
 			}
 		}
-		
-		for(int i : indexes) {
+
+		for (int i : indexes) {
 			peService.deletePictogramElement(s.getAnchors().get(i));
 		}
 	}
-	
+
 	public static void addFixedPointAnchors(Shape shape, GraphicsAlgorithm ga) {
 		int w = ga.getWidth();
 		int h = ga.getHeight();
