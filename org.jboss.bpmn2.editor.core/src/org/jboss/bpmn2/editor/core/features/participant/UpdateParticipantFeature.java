@@ -18,11 +18,11 @@ import org.jboss.bpmn2.editor.core.features.AbstractBaseElementUpdateFeature;
 public class UpdateParticipantFeature extends AbstractBaseElementUpdateFeature {
 
 	public UpdateParticipantFeature(IFeatureProvider fp) {
-	    super(fp);
-    }
+		super(fp);
+	}
 
 	@Override
-    public boolean canUpdate(IUpdateContext context) {
+	public boolean canUpdate(IUpdateContext context) {
 		return getBusinessObjectForPictogramElement(context.getPictogramElement()) instanceof Participant;
-    }
+	}
 }

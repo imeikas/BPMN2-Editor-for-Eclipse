@@ -28,9 +28,11 @@ import org.eclipse.graphiti.features.IUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.DefaultBPMNResizeFeature;
 import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureResolver;
+import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.participant.AddParticipantFeature;
 import org.jboss.bpmn2.editor.core.features.participant.DirectEditParticipantFeature;
 import org.jboss.bpmn2.editor.core.features.participant.LayoutParticipantFeature;
+import org.jboss.bpmn2.editor.core.features.participant.ParticipantMultiplicityUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.participant.UpdateParticipantFeature;
 import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
@@ -75,7 +77,10 @@ public class ParticipantFeatureResolver implements FeatureResolver {
 	@Override
 	public IUpdateFeature getUpdateFeature(IFeatureProvider fp, BaseElement e) {
 		if (e instanceof Participant) {
-			return new UpdateParticipantFeature(fp);
+			MultiUpdateFeature multiUpdate = new MultiUpdateFeature(fp);
+			multiUpdate.addUpdateFeature(new UpdateParticipantFeature(fp));
+			multiUpdate.addUpdateFeature(new ParticipantMultiplicityUpdateFeature(fp));
+			return multiUpdate;
 		}
 		return null;
 	}

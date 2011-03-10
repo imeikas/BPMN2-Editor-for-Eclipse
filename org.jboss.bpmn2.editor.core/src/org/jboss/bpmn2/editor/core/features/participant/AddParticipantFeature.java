@@ -24,11 +24,14 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeCreateService;
+import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 
 public class AddParticipantFeature extends AbstractBpmnAddFeature {
+
+	public static final String MULTIPLICITY = "multiplicity";
 
 	public AddParticipantFeature(IFeatureProvider fp) {
 		super(fp);
@@ -44,19 +47,18 @@ public class AddParticipantFeature extends AbstractBpmnAddFeature {
 	@Override
 	public PictogramElement add(IAddContext context) {
 		Participant p = (Participant) context.getNewObject();
+		IGaService gaService = Graphiti.getGaService();
+		IPeService peService = Graphiti.getPeService();
 
 		Diagram targetDiagram = (Diagram) context.getTargetContainer();
 		IPeCreateService peCreateService = Graphiti.getPeCreateService();
 		ContainerShape containerShape = peCreateService.createContainerShape(targetDiagram, true);
-		IGaService gaService = Graphiti.getGaService();
 
 		int width = context.getWidth() > 0 ? context.getWidth() : 600;
 		int height = context.getHeight() > 0 ? context.getHeight() : 100;
 
 		Rectangle rect = gaService.createRectangle(containerShape);
-		
 		StyleUtil.applyBGStyle(rect, this);
-		
 		gaService.setLocationAndSize(rect, context.getX(), context.getY(), width, height);
 
 		Shape lineShape = peCreateService.createShape(containerShape, false);
@@ -70,13 +72,14 @@ public class AddParticipantFeature extends AbstractBpmnAddFeature {
 		text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		text.setAngle(-90);
 		gaService.setLocationAndSize(text, 0, 0, 15, height);
+		peService.setPropertyValue(containerShape, MULTIPLICITY, Boolean.toString(false));
 
 		createDIShape(containerShape, p);
 		link(textShape, p);
-
 		peCreateService.createChopboxAnchor(containerShape);
 		AnchorUtil.addFixedPointAnchors(containerShape, rect);
-		
+		updatePictogramElement(containerShape);
+		layoutPictogramElement(containerShape);
 		return containerShape;
 	}
 }

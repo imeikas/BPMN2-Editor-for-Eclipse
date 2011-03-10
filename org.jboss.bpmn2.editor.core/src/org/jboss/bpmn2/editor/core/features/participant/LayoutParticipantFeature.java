@@ -27,6 +27,7 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.di.DIUtils;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
+import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 
 public class LayoutParticipantFeature extends AbstractLayoutFeature {
 
@@ -42,8 +43,6 @@ public class LayoutParticipantFeature extends AbstractLayoutFeature {
 
 	@Override
 	public boolean layout(ILayoutContext context) {
-		boolean changed = false;
-
 		ContainerShape containerShape = (ContainerShape) context.getPictogramElement();
 		DIUtils.updateDIShape(getDiagram(), containerShape, Participant.class, 0);
 
@@ -62,15 +61,22 @@ public class LayoutParticipantFeature extends AbstractLayoutFeature {
 					Point firstPoint = line.getPoints().get(0);
 					Point newPoint = gaService.createPoint(firstPoint.getX(), containerHeight);
 					line.getPoints().set(1, newPoint);
-					changed = true;
 				} else {
 					gaService.setHeight(ga, containerHeight);
-					changed = true;
 				}
 			}
 		}
 
-		return changed;
+		Shape shape = FeatureSupport.getShape(containerShape, ParticipantMultiplicityUpdateFeature.MULTIPLICITY_MARKER,
+		        Boolean.toString(true));
+		if (shape != null) {
+			GraphicsAlgorithm ga = shape.getGraphicsAlgorithm();
+			int x = (containerGa.getWidth() / 2) - 10;
+			int y = containerGa.getHeight() - 20;
+			gaService.setLocation(ga, x, y);
+		}
+
+		return true;
 	}
 
 }
