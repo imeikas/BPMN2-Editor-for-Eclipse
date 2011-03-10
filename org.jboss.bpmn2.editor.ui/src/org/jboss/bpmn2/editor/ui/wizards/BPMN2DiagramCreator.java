@@ -41,7 +41,7 @@ public class BPMN2DiagramCreator {
 	private URI uri;
 
 	public void createDiagram() throws CoreException {
-		final DiagramEditorInput editorInput = createDiagram(true);
+		createDiagram(true);
 	}
 
 	public DiagramEditorInput createDiagram(boolean openEditor) throws CoreException {

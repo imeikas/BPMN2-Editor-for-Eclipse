@@ -13,7 +13,6 @@ package org.jboss.bpmn2.editor.ui.wizards;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -62,7 +61,6 @@ public class BPMN2DiagramWizard extends Wizard implements INewWizard {
 			@Override
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
-					IProject project = container.getProject();
 					IPath path = container.getFullPath().append(fileName);
 					IFolder folder = null;
 					BPMN2DiagramCreator factory = new BPMN2DiagramCreator();

@@ -35,7 +35,6 @@ Export-Package: org.jboss.bpmn2.editor.ui,
  org.jboss.bpmn2.editor.ui.features.participant,
  org.jboss.bpmn2.editor.ui.preferences,
  org.jboss.bpmn2.editor.ui.property,
- org.jboss.bpmn2.editor.ui.property.iospecification,
  org.jboss.bpmn2.editor.ui.util,
  org.jboss.bpmn2.editor.ui.views,
  org.jboss.bpmn2.editor.ui.wizards
