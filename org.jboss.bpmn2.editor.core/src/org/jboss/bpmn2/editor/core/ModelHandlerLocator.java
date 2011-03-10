@@ -29,10 +29,6 @@ public class ModelHandlerLocator {
 		URI uri = eResource.getURI();
 		String[] segments = uri.segments();
 
-		// uri = uri.trimFragment();
-		// uri = uri.trimFileExtension();
-		// uri = uri.appendFileExtension("bpmn2");
-
 		return getModelHandler(uri);
 	}
 
