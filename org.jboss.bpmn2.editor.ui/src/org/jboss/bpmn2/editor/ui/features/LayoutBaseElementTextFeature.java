@@ -52,17 +52,19 @@ public abstract class LayoutBaseElementTextFeature extends AbstractLayoutFeature
 		Shape textShape = getShape(container, UpdateBaseElementNameFeature.TEXT_ELEMENT, Boolean.toString(true));
 		Text textGa = (Text) textShape.getGraphicsAlgorithm();
 		IDimension size = GraphitiUi.getUiLayoutService().calculateTextSize(textGa.getValue(), textGa.getFont());
-		
+
 		GraphicsAlgorithm parentGa = container.getGraphicsAlgorithm();
-		
-		if(size.getWidth() > getMinimumWidth()) {
+
+		if (size.getWidth() > getMinimumWidth()) {
 			gaService.setSize(parentGa, size.getWidth(), parentGa.getHeight());
+		} else {
+			gaService.setSize(parentGa, getMinimumWidth(), parentGa.getHeight());
 		}
-		
+
 		gaService.setSize(textGa, size.getWidth(), size.getHeight());
-		
+
 		return true;
 	}
-	
+
 	public abstract int getMinimumWidth();
 }

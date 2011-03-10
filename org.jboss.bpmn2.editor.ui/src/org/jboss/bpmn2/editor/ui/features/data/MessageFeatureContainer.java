@@ -121,7 +121,7 @@ public class MessageFeatureContainer implements FeatureContainer {
 		return new LayoutBaseElementTextFeature(fp) {
 			@Override
 			public int getMinimumWidth() {
-				return 0;
+				return 30;
 			}
 		};
 	}
@@ -162,7 +162,6 @@ public class MessageFeatureContainer implements FeatureContainer {
 
 	@Override
 	public IDeleteFeature getDeleteFeature(IFeatureProvider context) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }
