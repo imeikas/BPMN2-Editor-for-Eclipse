@@ -23,14 +23,15 @@ import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.UpdateBaseElementNameFeature;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 import org.jboss.bpmn2.editor.ui.features.LayoutBaseElementTextFeature;
 
 public abstract class AbstractDataFeatureContainer implements FeatureContainer {
-	
+
 	@Override
-    public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
-	    return new UpdateBaseElementNameFeature(fp);
-    }
+	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
+		return new UpdateBaseElementNameFeature(fp);
+	}
 
 	@Override
 	public IDirectEditingFeature getDirectEditingFeature(IFeatureProvider fp) {
@@ -38,15 +39,15 @@ public abstract class AbstractDataFeatureContainer implements FeatureContainer {
 	}
 
 	@Override
-    public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
-	    return new LayoutBaseElementTextFeature(fp) {
-			
+	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
+		return new LayoutBaseElementTextFeature(fp) {
+
 			@Override
 			public int getMinimumWidth() {
 				return GraphicsUtil.DATA_WIDTH;
 			}
 		};
-    }
+	}
 
 	@Override
 	public IMoveShapeFeature getMoveFeature(IFeatureProvider fp) {
@@ -64,7 +65,7 @@ public abstract class AbstractDataFeatureContainer implements FeatureContainer {
 	}
 
 	@Override
-	public IDeleteFeature getDeleteFeature(IFeatureProvider context) {
-		return null;
+	public IDeleteFeature getDeleteFeature(IFeatureProvider fp) {
+		return new AbstractDefaultDeleteFeature(fp);
 	}
 }

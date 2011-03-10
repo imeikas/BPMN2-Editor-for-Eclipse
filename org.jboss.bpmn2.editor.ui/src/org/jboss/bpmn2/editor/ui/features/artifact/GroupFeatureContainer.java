@@ -41,6 +41,7 @@ import org.jboss.bpmn2.editor.core.features.artifact.AbstractCreateArtifactFeatu
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
+import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
 public class GroupFeatureContainer implements FeatureContainer {
 
@@ -140,8 +141,7 @@ public class GroupFeatureContainer implements FeatureContainer {
 	}
 
 	@Override
-	public IDeleteFeature getDeleteFeature(IFeatureProvider context) {
-		// TODO Auto-generated method stub
-		return null;
+	public IDeleteFeature getDeleteFeature(IFeatureProvider fp) {
+		return new AbstractDefaultDeleteFeature(fp);
 	}
 }

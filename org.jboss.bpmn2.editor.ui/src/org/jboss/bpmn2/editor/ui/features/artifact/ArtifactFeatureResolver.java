@@ -25,7 +25,6 @@ import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
-import org.eclipse.graphiti.ui.features.DefaultDeleteFeature;
 import org.jboss.bpmn2.editor.core.features.DefaultBPMNResizeFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureResolver;
 import org.jboss.bpmn2.editor.core.features.artifact.AddTextAnnotationFeature;
@@ -33,6 +32,7 @@ import org.jboss.bpmn2.editor.core.features.artifact.DirectEditTextAnnotationFea
 import org.jboss.bpmn2.editor.core.features.artifact.LayoutTextAnnotationFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.MoveTextAnnotationFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.UpdateTextAnnotationFeature;
+import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
 public class ArtifactFeatureResolver implements FeatureResolver {
 
@@ -99,7 +99,7 @@ public class ArtifactFeatureResolver implements FeatureResolver {
 	@Override
 	public IDeleteFeature getDeleteFeature(IFeatureProvider fp, BaseElement e) {
 		if (e instanceof TextAnnotation) {
-			return new DefaultDeleteFeature(fp);
+			return new AbstractDefaultDeleteFeature(fp);
 		}
 		return null;
 	}

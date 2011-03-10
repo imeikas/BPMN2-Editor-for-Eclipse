@@ -26,6 +26,7 @@ import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
 import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.conversation.AddConversationFeature;
+import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
 public class ConversationFeatureContainer implements FeatureContainer {
 
@@ -75,8 +76,7 @@ public class ConversationFeatureContainer implements FeatureContainer {
 	}
 
 	@Override
-	public IDeleteFeature getDeleteFeature(IFeatureProvider context) {
-		// TODO Auto-generated method stub
-		return null;
+	public IDeleteFeature getDeleteFeature(IFeatureProvider fp) {
+		return new AbstractDefaultDeleteFeature(fp);
 	}
 }

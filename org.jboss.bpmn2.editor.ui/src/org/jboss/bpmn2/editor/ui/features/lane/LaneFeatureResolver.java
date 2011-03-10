@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Lane;
-import org.eclipse.bpmn2.TextAnnotation;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateConnectionFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
@@ -26,7 +25,6 @@ import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
-import org.eclipse.graphiti.ui.features.DefaultDeleteFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureResolver;
 import org.jboss.bpmn2.editor.core.features.lane.AddLaneFeature;
 import org.jboss.bpmn2.editor.core.features.lane.DirectEditLaneFeature;
@@ -34,6 +32,7 @@ import org.jboss.bpmn2.editor.core.features.lane.LayoutLaneFeature;
 import org.jboss.bpmn2.editor.core.features.lane.MoveLaneFeature;
 import org.jboss.bpmn2.editor.core.features.lane.ResizeLaneFeature;
 import org.jboss.bpmn2.editor.core.features.lane.UpdateLaneFeature;
+import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
 public class LaneFeatureResolver implements FeatureResolver {
 
@@ -99,8 +98,8 @@ public class LaneFeatureResolver implements FeatureResolver {
 
 	@Override
 	public IDeleteFeature getDeleteFeature(IFeatureProvider fp, BaseElement e) {
-		if (e instanceof TextAnnotation) {
-			return new DefaultDeleteFeature(fp);
+		if (e instanceof Lane) {
+			return new AbstractDefaultDeleteFeature(fp);
 		}
 		return null;
 	}

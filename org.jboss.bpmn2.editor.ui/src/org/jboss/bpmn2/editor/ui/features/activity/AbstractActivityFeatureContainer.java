@@ -20,6 +20,7 @@ import org.jboss.bpmn2.editor.core.features.MoveFlowNodeFeature;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.activity.ActivityCompensateMarkerUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.activity.ActivityLoopAndMultiInstanceMarkerUpdateFeature;
+import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
 public abstract class AbstractActivityFeatureContainer implements FeatureContainer {
 
@@ -47,6 +48,6 @@ public abstract class AbstractActivityFeatureContainer implements FeatureContain
 
 	@Override
 	public IDeleteFeature getDeleteFeature(IFeatureProvider fp) {
-		return new ActivityDefaultDeleteFeature(fp);
+		return new AbstractDefaultDeleteFeature(fp);
 	}
 }

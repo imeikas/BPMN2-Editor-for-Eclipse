@@ -8,7 +8,7 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package org.jboss.bpmn2.editor.ui.features.activity;
+package org.jboss.bpmn2.editor.ui.features;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +23,8 @@ import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.ui.features.DefaultDeleteFeature;
 
-public class ActivityDefaultDeleteFeature extends DefaultDeleteFeature {
-	public ActivityDefaultDeleteFeature(IFeatureProvider fp) {
+public class AbstractDefaultDeleteFeature extends DefaultDeleteFeature {
+	public AbstractDefaultDeleteFeature(IFeatureProvider fp) {
 		super(fp);
 	}
 

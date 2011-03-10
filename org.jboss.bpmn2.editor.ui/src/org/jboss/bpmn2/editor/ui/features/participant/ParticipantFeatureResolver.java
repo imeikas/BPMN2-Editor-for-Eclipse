@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Participant;
-import org.eclipse.bpmn2.TextAnnotation;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateConnectionFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
@@ -26,7 +25,6 @@ import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
-import org.eclipse.graphiti.ui.features.DefaultDeleteFeature;
 import org.jboss.bpmn2.editor.core.features.DefaultBPMNResizeFeature;
 import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureResolver;
@@ -34,6 +32,7 @@ import org.jboss.bpmn2.editor.core.features.participant.AddParticipantFeature;
 import org.jboss.bpmn2.editor.core.features.participant.DirectEditParticipantFeature;
 import org.jboss.bpmn2.editor.core.features.participant.LayoutParticipantFeature;
 import org.jboss.bpmn2.editor.core.features.participant.UpdateParticipantFeature;
+import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
 public class ParticipantFeatureResolver implements FeatureResolver {
 
@@ -99,8 +98,8 @@ public class ParticipantFeatureResolver implements FeatureResolver {
 
 	@Override
 	public IDeleteFeature getDeleteFeature(IFeatureProvider fp, BaseElement e) {
-		if (e instanceof TextAnnotation) {
-			return new DefaultDeleteFeature(fp);
+		if (e instanceof Participant) {
+			return new AbstractDefaultDeleteFeature(fp);
 		}
 		return null;
 	}

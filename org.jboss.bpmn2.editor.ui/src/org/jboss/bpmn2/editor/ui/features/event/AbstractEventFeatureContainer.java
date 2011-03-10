@@ -24,6 +24,7 @@ import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.MoveFlowNodeFeature;
 import org.jboss.bpmn2.editor.core.features.UpdateBaseElementNameFeature;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 import org.jboss.bpmn2.editor.ui.features.LayoutBaseElementTextFeature;
 
 public abstract class AbstractEventFeatureContainer implements FeatureContainer {
@@ -65,7 +66,7 @@ public abstract class AbstractEventFeatureContainer implements FeatureContainer 
 	}
 
 	@Override
-	public IDeleteFeature getDeleteFeature(IFeatureProvider context) {
-		return null;
+	public IDeleteFeature getDeleteFeature(IFeatureProvider fp) {
+		return new AbstractDefaultDeleteFeature(fp);
 	}
 }

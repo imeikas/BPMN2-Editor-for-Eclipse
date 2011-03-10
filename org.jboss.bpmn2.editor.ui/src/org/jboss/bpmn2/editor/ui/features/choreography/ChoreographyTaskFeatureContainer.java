@@ -34,6 +34,7 @@ import org.jboss.bpmn2.editor.core.features.choreography.UpdateChoreographyNameF
 import org.jboss.bpmn2.editor.core.features.choreography.UpdateChoreographyParticipantRefsFeature;
 import org.jboss.bpmn2.editor.core.features.choreography.UpdateInitiatingParticipantFeature;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
+import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
 public class ChoreographyTaskFeatureContainer implements FeatureContainer {
 
@@ -106,8 +107,7 @@ public class ChoreographyTaskFeatureContainer implements FeatureContainer {
 	}
 
 	@Override
-	public IDeleteFeature getDeleteFeature(IFeatureProvider context) {
-		// TODO Auto-generated method stub
-		return null;
+	public IDeleteFeature getDeleteFeature(IFeatureProvider fp) {
+		return new AbstractDefaultDeleteFeature(fp);
 	}
 }
