@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.graphiti.ui.editor.DiagramEditor;
 import org.eclipse.graphiti.ui.editor.DiagramEditorInput;
 import org.eclipse.ui.IEditorInput;
@@ -119,6 +120,7 @@ public class BPMN2Editor extends DiagramEditor {
 	@Override
 	protected void setInput(IEditorInput input) {
 		super.setInput(input);
+		BasicCommandStack basicCommandStack = (BasicCommandStack) getEditingDomain().getCommandStack();
 		if (input instanceof DiagramEditorInput) {
 			ResourceSet resourceSet = getEditingDomain().getResourceSet();
 			Bpmn2ResourceImpl bpmnResource = (Bpmn2ResourceImpl) resourceSet.createResource(modelUri,
@@ -135,9 +137,15 @@ public class BPMN2Editor extends DiagramEditor {
 				Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e);
 				ErrorUtils.showErrorWithLogging(status);
 			}
-			importDiagram();
+			basicCommandStack.execute(new RecordingCommand(getEditingDomain()) {
+
+				@Override
+				protected void doExecute() {
+					importDiagram();
+				}
+			});
 		}
-		((BasicCommandStack) getEditingDomain().getCommandStack()).saveIsDone();
+		basicCommandStack.saveIsDone();
 	}
 
 	private void importDiagram() {
