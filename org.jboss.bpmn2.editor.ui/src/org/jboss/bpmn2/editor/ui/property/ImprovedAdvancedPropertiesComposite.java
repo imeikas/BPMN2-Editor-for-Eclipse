@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.provider.Bpmn2ItemProviderAdapterFactory;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -24,6 +25,8 @@ import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.emf.transaction.RecordingCommand;
+import org.eclipse.emf.transaction.ResourceSetChangeEvent;
+import org.eclipse.emf.transaction.ResourceSetListenerImpl;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.ui.services.GraphitiUi;
@@ -66,6 +69,18 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 	private BPMN2Editor diagramEditor;
 	private final MainPropertiesComposite mainPropertiesComposite;
 	private Bpmn2Preferences prefs;
+	private TransactionalEditingDomain domain;
+	private DomainListener domainListener;
+
+	class DomainListener extends ResourceSetListenerImpl {
+		@Override
+		public void resourceSetChanged(ResourceSetChangeEvent event) {
+			List<Notification> notifications = event.getNotifications();
+			for (Notification notification : notifications) {
+				treeViewer.refresh(notification.getNotifier(), true);
+			}
+		}
+	}
 
 	/**
 	 * Create the composite.
@@ -132,8 +147,16 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 	}
 
 	public void setEObject(BPMN2Editor diagramEditor, EObject be) {
+		if (domain != null && domainListener != null) {
+			domain.removeResourceSetListener(domainListener);
+		}
 		this.diagramEditor = diagramEditor;
 		this.be = be;
+
+		domain = diagramEditor.getEditingDomain();
+		domainListener = new DomainListener();
+		domain.addResourceSetListener(domainListener);
+
 		treeViewer.setInput(be);
 		prefs = Bpmn2Preferences.getPreferences(diagramEditor.getModelFile().getProject());
 	}
