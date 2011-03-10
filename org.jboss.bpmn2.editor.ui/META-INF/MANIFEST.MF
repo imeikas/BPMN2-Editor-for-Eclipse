@@ -38,3 +38,5 @@ Export-Package: org.jboss.bpmn2.editor.ui,
  org.jboss.bpmn2.editor.ui.util,
  org.jboss.bpmn2.editor.ui.views,
  org.jboss.bpmn2.editor.ui.wizards
+Import-Package: org.apache.xerces.parsers,
+ org.apache.xerces.xni

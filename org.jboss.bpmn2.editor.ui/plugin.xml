@@ -28,15 +28,24 @@
           icon="icons/bpmn2_editor_16.png"                  
           id="org.jboss.bpmn2.editor.ui.bpmn2editor"          
           name="BPMN2 Visual Editor">
+         <contentTypeBinding
+               contentTypeId="org.jboss.bpmn2.contenttype">
+         </contentTypeBinding>
     </editor>
  </extension>
  
  
 <extension point="org.eclipse.core.contenttype.contentTypes">
-	<content-type base-type="org.eclipse.core.runtime.properties"
-		file-extensions="bpmn2"
-		id="org.jboss.bpmn2.filetype" name="BPMN2 File" priority="normal">
-	</content-type>
+	   <content-type
+	   		base-type="org.eclipse.core.runtime.xml"
+	        id="org.jboss.bpmn2.contenttype"
+	        name="BPMN2 Editor File"
+	        file-extensions="bpmn,bpmn2"
+	        priority="normal">
+	      <describer
+              class="org.jboss.bpmn2.editor.ui.BPMN2ContentDescriber">
+          </describer>
+	   </content-type>
 </extension>
 
  <extension
