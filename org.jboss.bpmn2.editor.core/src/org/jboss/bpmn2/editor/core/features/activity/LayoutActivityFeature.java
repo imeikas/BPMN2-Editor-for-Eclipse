@@ -26,6 +26,7 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.di.DIUtils;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
+import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 
 public class LayoutActivityFeature extends AbstractLayoutFeature {
@@ -42,8 +43,6 @@ public class LayoutActivityFeature extends AbstractLayoutFeature {
 
 	@Override
 	public boolean layout(ILayoutContext context) {
-		boolean changed = false;
-
 		ContainerShape containerShape = (ContainerShape) context.getPictogramElement();
 		GraphicsAlgorithm parentGa = containerShape.getGraphicsAlgorithm();
 
@@ -57,35 +56,30 @@ public class LayoutActivityFeature extends AbstractLayoutFeature {
 			int newHeight = parentGa.getHeight() - GraphicsUtil.ACTIVITY_BOTTOM_PADDING;
 
 			String markerProperty = Graphiti.getPeService().getPropertyValue(shape,
-					GraphicsUtil.ACTIVITY_MARKER_CONTAINER);
+			        GraphicsUtil.ACTIVITY_MARKER_CONTAINER);
 			if (markerProperty != null && new Boolean(markerProperty)) {
 				int x = (newWidth / 2) - (ga.getWidth() / 2);
 				int y = newHeight - ga.getHeight() - 3 - getMarkerContainerOffset();
 				gaService.setLocation(ga, x, y);
-				changed = true;
 				continue;
 			}
+
+			Shape rectShape = FeatureSupport.getShape(containerShape, "activity", Boolean.toString(true));
+			gaService.setSize(rectShape.getGraphicsAlgorithm(), newWidth, newHeight);
+			layoutInRectangle((RoundedRectangle) rectShape.getGraphicsAlgorithm());
 
 			Object[] objects = getAllBusinessObjectsForPictogramElement(shape);
 			for (Object bo : objects) {
 				if (bo instanceof BoundaryEvent) {
 					layoutPictogramElement(shape);
-					changed = true;
-					continue;
-				} else if (bo instanceof Activity && ga instanceof RoundedRectangle) {
-					gaService.setSize(ga, newWidth, newHeight);
-					layoutInRectangle((RoundedRectangle) ga);
-					changed = true;
 					continue;
 				}
-				if (layoutHook(shape, ga, bo, newWidth, newHeight)) {
-					changed = true;
-				}
+				layoutHook(shape, ga, bo, newWidth, newHeight);
 			}
 		}
 
 		DIUtils.updateDIShape(getDiagram(), containerShape, Activity.class, GraphicsUtil.ACTIVITY_BOTTOM_PADDING);
-		return changed;
+		return true;
 	}
 
 	protected int getMarkerContainerOffset() {

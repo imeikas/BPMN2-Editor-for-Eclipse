@@ -56,12 +56,12 @@ public abstract class LayoutBaseElementTextFeature extends AbstractLayoutFeature
 		GraphicsAlgorithm parentGa = container.getGraphicsAlgorithm();
 
 		if (size.getWidth() > getMinimumWidth()) {
-			gaService.setSize(parentGa, size.getWidth(), parentGa.getHeight());
+			gaService.setSize(parentGa, size.getWidth() + 3, parentGa.getHeight());
 		} else {
 			gaService.setSize(parentGa, getMinimumWidth(), parentGa.getHeight());
 		}
 
-		gaService.setSize(textGa, size.getWidth(), size.getHeight());
+		gaService.setSize(textGa, size.getWidth() + 3, textGa.getHeight());
 
 		return true;
 	}

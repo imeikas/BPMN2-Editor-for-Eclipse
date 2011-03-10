@@ -12,7 +12,6 @@ package org.jboss.bpmn2.editor.core.features.activity;
 
 import static org.jboss.bpmn2.editor.core.features.activity.ActivityCompensateMarkerUpdateFeature.IS_COMPENSATE_PROPERTY;
 import static org.jboss.bpmn2.editor.core.features.activity.ActivityLoopAndMultiInstanceMarkerUpdateFeature.IS_LOOP_OR_MULTI_INSTANCE;
-import static org.jboss.bpmn2.editor.core.features.activity.ActivityLoopAndMultiInstanceMarkerUpdateFeature.getLoopCharacteristicsValue;
 
 import org.eclipse.bpmn2.Activity;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -26,6 +25,7 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
+import org.jboss.bpmn2.editor.core.features.activity.ActivityLoopAndMultiInstanceMarkerUpdateFeature.LoopCharacteristicType;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
 import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
@@ -62,12 +62,11 @@ public abstract class AbstractAddActivityFeature extends AbstractBpmnAddFeature 
 
 		Shape rectShape = peService.createShape(containerShape, false);
 		RoundedRectangle rect = gaService.createRoundedRectangle(rectShape, 5, 5);
-
 		StyleUtil.applyBGStyle(rect, this);
-
 		gaService.setLocationAndSize(rect, 0, 0, width, height - paddingBottom);
 		link(rectShape, activity);
 		decorateActivityRectangle(rect);
+		peService.setPropertyValue(rectShape, "activity", Boolean.toString(true));
 
 		ContainerShape markerContainer = peService.createContainerShape(containerShape, false);
 		Rectangle markerInvisibleRect = gaService.createInvisibleRectangle(markerContainer);
@@ -85,7 +84,8 @@ public abstract class AbstractAddActivityFeature extends AbstractBpmnAddFeature 
 
 		Graphiti.getPeService().setPropertyValue(containerShape, IS_COMPENSATE_PROPERTY, Boolean.toString(false));
 		Graphiti.getPeService().setPropertyValue(containerShape, IS_LOOP_OR_MULTI_INSTANCE,
-				getLoopCharacteristicsValue(activity).getName());
+		        LoopCharacteristicType.NULL.getName());
+		updatePictogramElement(containerShape);
 		layoutPictogramElement(containerShape);
 
 		return containerShape;
