@@ -33,6 +33,7 @@ import org.jboss.bpmn2.editor.ui.features.activity.task.TaskFeatureContainer.Cre
 import org.jboss.bpmn2.editor.ui.features.activity.task.UserTaskFeatureContainer.CreateUserTaskFeature;
 import org.jboss.bpmn2.editor.ui.features.artifact.CreateTextAnnotationFeature;
 import org.jboss.bpmn2.editor.ui.features.artifact.GroupFeatureContainer.CreateGroupFeature;
+import org.jboss.bpmn2.editor.ui.features.choreography.CallChoreographyFeatureContainer.CreateCallChoreographyFeature;
 import org.jboss.bpmn2.editor.ui.features.choreography.ChoreographyTaskFeatureContainer.CreateChoreographyTaskFeature;
 import org.jboss.bpmn2.editor.ui.features.choreography.SubChoreographyFeatureContainer.CreateSubChoreographyFeature;
 import org.jboss.bpmn2.editor.ui.features.conversation.ConversationLinkFeatureContainer.CreateConversationLinkFeature;
@@ -130,6 +131,7 @@ public class FeatureMap {
 		featureMap.put(i.getConversationLink(), CreateConversationLinkFeature.class);
 		featureMap.put(i.getChoreographyTask(), CreateChoreographyTaskFeature.class);
 		featureMap.put(i.getSubChoreography(), CreateSubChoreographyFeature.class);
+		featureMap.put(i.getCallChoreography(), CreateCallChoreographyFeature.class);
 		FEATURE_MAP = Collections.unmodifiableMap(featureMap);
 
 		ArrayList<Class<? extends IFeature>> features = new ArrayList<Class<? extends IFeature>>();
@@ -194,6 +196,7 @@ public class FeatureMap {
 		features.add(CreateMessageFeature.class);
 		features.add(CreateConversationFeature.class);
 		features.add(CreateSubChoreographyFeature.class);
+		features.add(CreateCallChoreographyFeature.class);
 		OTHER = Collections.unmodifiableList(features);
 
 	}

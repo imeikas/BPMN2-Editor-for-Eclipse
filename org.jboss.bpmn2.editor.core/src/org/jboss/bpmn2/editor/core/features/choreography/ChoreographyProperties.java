@@ -14,16 +14,17 @@ public interface ChoreographyProperties {
 
 	int PARTICIPANT_BAND_HEIGHT = 25;
 
-	static final String CHOREOGRAPHY_ACTIVITY_PROPERTY = "choreography.task";
-	static final String PARTICIPANT_REF = "choreography.task.participant.ref";
-	static final String PARTICIPANT_REF_ID = "choreography.task.participant.ref.id";
-	static final String PARTICIPANT_REF_NUM = "choreography.task.participant.ref.number";
-	static final String INITIATING_PARTICIPANT_REF = "choreography.task.initiating.participant.ref";
-	static final String TOP_BAND = "choreography.task.band.top";
-	static final String TOP_BAND_TEXT = "choreography.task.band.top.text";
-	static final String BOTTOM_BAND = "choreography.task.band.bottom";
-	static final String BOTTOM_BAND_TEXT = "choreography.task.band.bottom.text";
-	static final String BODY_BAND = "choreography.task.band.body";
-	static final String BODY_BAND_TEXT = "choreography.task.band.body.text";
-
+	static final String CHOREOGRAPHY_ACTIVITY_PROPERTY = "choreography.activity";
+	static final String PARTICIPANT_REF = "choreography.activity.participant.ref";
+	static final String PARTICIPANT_REF_ID = "choreography.activity.participant.ref.id";
+	static final String PARTICIPANT_REF_NUM = "choreography.activity.participant.ref.number";
+	static final String INITIATING_PARTICIPANT_REF = "choreography.activity.initiating.participant.ref";
+	static final String TOP_BAND = "choreography.activity.band.top";
+	static final String TOP_BAND_TEXT = "choreography.activity.band.top.text";
+	static final String BOTTOM_BAND = "choreography.activity.band.bottom";
+	static final String BOTTOM_BAND_TEXT = "choreography.activity.band.bottom.text";
+	static final String BODY_BAND = "choreography.activity.band.body";
+	static final String BODY_BAND_TEXT = "choreography.activity.band.body.text";
+	static final String BODY_LINE_LEFT = "choreography.activity.band.body.line.left";
+	static final String BODY_LINE_RIGHT = "choreography.activity.band.body.line.right";
 }
