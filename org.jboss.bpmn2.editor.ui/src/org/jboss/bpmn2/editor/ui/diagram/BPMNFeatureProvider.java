@@ -59,6 +59,7 @@ import org.jboss.bpmn2.editor.ui.features.activity.task.UserTaskFeatureContainer
 import org.jboss.bpmn2.editor.ui.features.artifact.ArtifactFeatureResolver;
 import org.jboss.bpmn2.editor.ui.features.artifact.GroupFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.choreography.ChoreographyTaskFeatureContainer;
+import org.jboss.bpmn2.editor.ui.features.choreography.SubChoreographyFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.conversation.ConversationFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.conversation.ConversationLinkFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.data.DataInputFeatureContainer;
@@ -168,6 +169,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers.add(new ConversationLinkFeatureContainer());
 		containers.add(new DataInputAssociationFeatureContainer());
 		containers.add(new DataOutputAssociationFeatureContainer());
+		containers.add(new SubChoreographyFeatureContainer());
 
 		List<ICreateFeature> createFeaturesList = new ArrayList<ICreateFeature>();
 

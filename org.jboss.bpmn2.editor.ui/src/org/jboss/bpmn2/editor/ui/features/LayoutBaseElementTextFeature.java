@@ -51,7 +51,8 @@ public abstract class LayoutBaseElementTextFeature extends AbstractLayoutFeature
 
 		Shape textShape = getShape(container, UpdateBaseElementNameFeature.TEXT_ELEMENT, Boolean.toString(true));
 		Text textGa = (Text) textShape.getGraphicsAlgorithm();
-		IDimension size = GraphitiUi.getUiLayoutService().calculateTextSize(textGa.getValue(), textGa.getFont());
+		String text = textGa.getValue() == null ? "" : textGa.getValue();
+		IDimension size = GraphitiUi.getUiLayoutService().calculateTextSize(text, textGa.getFont());
 
 		GraphicsAlgorithm parentGa = container.getGraphicsAlgorithm();
 

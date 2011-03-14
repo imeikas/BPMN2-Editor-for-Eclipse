@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features.gateway;
 
+import org.eclipse.bpmn2.FlowElementsContainer;
 import org.eclipse.bpmn2.Gateway;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
@@ -24,6 +25,7 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
+import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.UpdateBaseElementNameFeature;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
 import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
@@ -41,8 +43,9 @@ public class DefaultAddGatewayFeature extends AbstractBpmnAddFeature {
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
 		boolean intoLane = FeatureSupport.isTargetLane(context) && FeatureSupport.isTargetLaneOnTop(context);
 		boolean intoParticipant = FeatureSupport.isTargetParticipant(context);
-		boolean intoSubProcess = FeatureSupport.isTargetSubProcess(context);
-		return intoDiagram || intoLane || intoParticipant || intoSubProcess;
+		boolean intoFlowELementContainer = BusinessObjectUtil.containsElementOfType(context.getTargetContainer(),
+		        FlowElementsContainer.class);
+		return intoDiagram || intoLane || intoParticipant || intoFlowELementContainer;
 	}
 
 	@Override
@@ -50,20 +53,20 @@ public class DefaultAddGatewayFeature extends AbstractBpmnAddFeature {
 		Gateway addedGateway = (Gateway) context.getNewObject();
 		IGaService gaService = Graphiti.getGaService();
 		IPeService peService = Graphiti.getPeService();
-		
+
 		int d = 2 * GraphicsUtil.GATEWAY_RADIUS;
 		int p = GraphicsUtil.GATEWAY_TEXT_AREA;
-		
+
 		ContainerShape containerShape = peService.createContainerShape(context.getTargetContainer(), true);
 		Rectangle rect = gaService.createInvisibleRectangle(containerShape);
 		gaService.setLocationAndSize(rect, context.getX(), context.getY(), d, d + p);
-		
+
 		Shape gatewayShape = peService.createShape(containerShape, false);
 		Polygon gateway = GraphicsUtil.createGateway(gatewayShape);
 		StyleUtil.applyBGStyle(gateway, this);
 		gaService.setLocationAndSize(gateway, 0, 0, d, d);
 		decorateGateway(containerShape);
-		
+
 		Shape textShape = peService.createShape(containerShape, false);
 		peService.setPropertyValue(textShape, UpdateBaseElementNameFeature.TEXT_ELEMENT, Boolean.toString(true));
 		Text text = gaService.createDefaultText(textShape, addedGateway.getName());
@@ -71,7 +74,7 @@ public class DefaultAddGatewayFeature extends AbstractBpmnAddFeature {
 		text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		text.setVerticalAlignment(Orientation.ALIGNMENT_TOP);
 		gaService.setLocationAndSize(text, 0, d, d, p);
-		
+
 		createDIShape(containerShape, addedGateway);
 		peService.createChopboxAnchor(containerShape);
 		AnchorUtil.addFixedPointAnchors(containerShape, gateway);
