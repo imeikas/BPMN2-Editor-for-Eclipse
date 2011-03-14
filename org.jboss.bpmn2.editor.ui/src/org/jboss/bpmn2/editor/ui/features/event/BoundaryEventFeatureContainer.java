@@ -21,6 +21,7 @@ import org.eclipse.bpmn2.CancelEventDefinition;
 import org.eclipse.bpmn2.CompensateEventDefinition;
 import org.eclipse.bpmn2.ErrorEventDefinition;
 import org.eclipse.bpmn2.EventDefinition;
+import org.eclipse.bpmn2.FlowElementsContainer;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
@@ -93,17 +94,17 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 			public IReason updateNeeded(IUpdateContext context) {
 				Property cancelProperty = Graphiti.getPeService().getProperty(context.getPictogramElement(), cancelKey);
 				BoundaryEvent event = (BoundaryEvent) getBusinessObjectForPictogramElement(context
-						.getPictogramElement());
+				        .getPictogramElement());
 				boolean changed = Boolean.parseBoolean(cancelProperty.getValue()) != event.isCancelActivity();
 				IReason reason = changed ? Reason.createTrueReason("Boundary type changed") : Reason
-						.createFalseReason();
+				        .createFalseReason();
 				return reason;
 			}
 
 			@Override
 			public boolean update(IUpdateContext context) {
 				BoundaryEvent event = (BoundaryEvent) getBusinessObjectForPictogramElement(context
-						.getPictogramElement());
+				        .getPictogramElement());
 
 				boolean canUpdate = true;
 
@@ -112,7 +113,7 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 				if (event.isCancelActivity() == false) {
 					for (EventDefinition d : definitions) {
 						if (d instanceof ErrorEventDefinition || d instanceof CancelEventDefinition
-								|| d instanceof CompensateEventDefinition) {
+						        || d instanceof CompensateEventDefinition) {
 							canUpdate = false;
 							break;
 						}
@@ -124,7 +125,7 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 				}
 
 				Graphiti.getPeService().setPropertyValue(context.getPictogramElement(), cancelKey,
-						Boolean.toString(event.isCancelActivity()));
+				        Boolean.toString(event.isCancelActivity()));
 
 				Ellipse ellipse = (Ellipse) context.getPictogramElement().getGraphicsAlgorithm();
 				Ellipse innerEllipse = (Ellipse) ellipse.getGraphicsAlgorithmChildren().get(0);
@@ -166,7 +167,12 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 				event.setAttachedToRef(activity);
 				event.setName("Boundary event");
 				event.setCancelActivity(true); // by default is interrupting
-				handler.addFlowElement(getBusinessObjectForPictogramElement(context.getTargetContainer()), event);
+				Object bo = getBusinessObjectForPictogramElement(context.getTargetContainer());
+				if (bo instanceof FlowElementsContainer) {
+					bo = getBusinessObjectForPictogramElement((PictogramElement) context.getTargetContainer()
+					        .eContainer());
+				}
+				handler.addFlowElement(bo, event);
 			} catch (IOException e) {
 				Activator.logError(e);
 			}
@@ -224,7 +230,7 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 			gaService.setLocationAndSize(ellipse, x, y, GraphicsUtil.EVENT_SIZE, GraphicsUtil.EVENT_SIZE);
 
 			peService.setPropertyValue(context.getTargetContainer(), boundaryDistance,
-					Integer.toString(x + GraphicsUtil.EVENT_SIZE + 5));
+			        Integer.toString(x + GraphicsUtil.EVENT_SIZE + 5));
 
 			StyleUtil.applyBGStyle(ellipse, this);
 
