@@ -283,6 +283,7 @@ public class DIImport {
 			se = elements.get(source);
 			te = elements.get(target);
 		} else if (bpmnElement instanceof DataAssociation) {
+			// Data Association allows connections for multiple starting points, we don't support it yet
 			List<ItemAwareElement> sourceRef = ((DataAssociation) bpmnElement).getSourceRef();
 			ItemAwareElement targetRef = ((DataAssociation) bpmnElement).getTargetRef();
 			if (sourceRef != null) {
@@ -299,15 +300,29 @@ public class DIImport {
 			} while (te == null && target.eContainer() != null);
 		}
 
+		addSourceAndTargetToEdge(bpmnEdge, source, target);
+
 		if (se != null && te != null) {
-			createEdgeAndSetBendpoints(bpmnEdge, se, te);
+
+			createConnectionAndSetBendpoints(bpmnEdge, se, te);
 		} else {
 			Activator.logStatus(new Status(IStatus.WARNING, Activator.PLUGIN_ID,
 					"Couldn't find target element, probably not supported! Source: " + source + " Target: " + target));
 		}
 	}
 
-	private Connection createEdgeAndSetBendpoints(BPMNEdge bpmnEdge, PictogramElement sourceElement,
+	private void addSourceAndTargetToEdge(BPMNEdge bpmnEdge, EObject source, EObject target) {
+		// We get most of the information from the BpmnEdge, not from the referencing business object. Because of this
+		// we must ensure, that the edge contains necessary information.
+		if (bpmnEdge.getSourceElement() == null) {
+			bpmnEdge.setSourceElement(modelHandler.findDIElement(diagram, (BaseElement) source));
+		}
+		if (bpmnEdge.getTargetElement() == null) {
+			bpmnEdge.setTargetElement(modelHandler.findDIElement(diagram, (BaseElement) target));
+		}
+	}
+
+	private Connection createConnectionAndSetBendpoints(BPMNEdge bpmnEdge, PictogramElement sourceElement,
 			PictogramElement targetElement) {
 		FixPointAnchor sourceAnchor = createAnchor(sourceElement);
 		FixPointAnchor targetAnchor = createAnchor(targetElement);
