@@ -20,6 +20,7 @@ import org.eclipse.graphiti.features.context.ILayoutContext;
 import org.eclipse.graphiti.features.impl.AbstractLayoutFeature;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
+import org.eclipse.graphiti.mm.algorithms.Text;
 import org.eclipse.graphiti.mm.algorithms.styles.Point;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.Shape;
@@ -61,7 +62,7 @@ public class LayoutParticipantFeature extends AbstractLayoutFeature {
 					Point firstPoint = line.getPoints().get(0);
 					Point newPoint = gaService.createPoint(firstPoint.getX(), containerHeight);
 					line.getPoints().set(1, newPoint);
-				} else {
+				} else if (ga instanceof Text) {
 					gaService.setHeight(ga, containerHeight);
 				}
 			}
@@ -78,5 +79,4 @@ public class LayoutParticipantFeature extends AbstractLayoutFeature {
 
 		return true;
 	}
-
 }
