@@ -10,21 +10,22 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features.choreography;
 
-import static org.jboss.bpmn2.editor.core.features.choreography.Properties.BOTTOM_BAND;
-import static org.jboss.bpmn2.editor.core.features.choreography.Properties.BOTTOM_BAND_TEXT;
-import static org.jboss.bpmn2.editor.core.features.choreography.Properties.CHOREOGRAPHY_TASK_PROPERTY;
-import static org.jboss.bpmn2.editor.core.features.choreography.Properties.INITIATING_PARTICIPANT_REF;
-import static org.jboss.bpmn2.editor.core.features.choreography.Properties.PARTICIPANT_REF;
-import static org.jboss.bpmn2.editor.core.features.choreography.Properties.PARTICIPANT_REF_ID;
-import static org.jboss.bpmn2.editor.core.features.choreography.Properties.PARTICIPANT_REF_NUM;
-import static org.jboss.bpmn2.editor.core.features.choreography.Properties.TOP_BAND;
-import static org.jboss.bpmn2.editor.core.features.choreography.Properties.TOP_BAND_TEXT;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.BOTTOM_BAND;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.BOTTOM_BAND_TEXT;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.CHOREOGRAPHY_ACTIVITY_PROPERTY;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.INITIATING_PARTICIPANT_REF;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.PARTICIPANT_BAND_HEIGHT;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.PARTICIPANT_REF;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.PARTICIPANT_REF_ID;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.PARTICIPANT_REF_NUM;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.TOP_BAND;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.TOP_BAND_TEXT;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.bpmn2.ChoreographyTask;
+import org.eclipse.bpmn2.ChoreographyActivity;
 import org.eclipse.bpmn2.Participant;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.IReason;
@@ -48,22 +49,22 @@ public class UpdateChoreographyParticipantRefsFeature extends AbstractUpdateFeat
 
 	private static final IPeService peService = Graphiti.getPeService();
 	private static final IGaService gaService = Graphiti.getGaService();
-	
+
 	public UpdateChoreographyParticipantRefsFeature(IFeatureProvider fp) {
 		super(fp);
 	}
 
 	@Override
 	public boolean canUpdate(IUpdateContext context) {
-		return BusinessObjectUtil.containsElementOfType(context.getPictogramElement(), ChoreographyTask.class);
+		return BusinessObjectUtil.containsElementOfType(context.getPictogramElement(), ChoreographyActivity.class);
 	}
 
 	@Override
 	public IReason updateNeeded(IUpdateContext context) {
-		ChoreographyTask task = (ChoreographyTask) BusinessObjectUtil.getFirstElementOfType(
-		        context.getPictogramElement(), ChoreographyTask.class);
+		ChoreographyActivity activity = (ChoreographyActivity) BusinessObjectUtil.getFirstElementOfType(
+		        context.getPictogramElement(), ChoreographyActivity.class);
 
-		if (task.getParticipantRefs().size() != getParticipantRefNumber(context)) {
+		if (activity.getParticipantRefs().size() != getParticipantRefNumber(context)) {
 			return Reason.createTrueReason();
 		} else {
 			return Reason.createFalseReason();
@@ -72,14 +73,14 @@ public class UpdateChoreographyParticipantRefsFeature extends AbstractUpdateFeat
 
 	@Override
 	public boolean update(IUpdateContext context) {
-		ChoreographyTask task = (ChoreographyTask) BusinessObjectUtil.getFirstElementOfType(
-		        context.getPictogramElement(), ChoreographyTask.class);
+		ChoreographyActivity activity = (ChoreographyActivity) BusinessObjectUtil.getFirstElementOfType(
+		        context.getPictogramElement(), ChoreographyActivity.class);
 
-		clearChoreographyTask(context);
-		buildChoreographyTask(task, context);
+		clearChoreographyActivity(context);
+		buildChoreographyActivity(activity, context);
 
 		peService.setPropertyValue(context.getPictogramElement(), PARTICIPANT_REF_NUM,
-		        Integer.toString(task.getParticipantRefs().size()));
+		        Integer.toString(activity.getParticipantRefs().size()));
 		return true;
 	}
 
@@ -87,7 +88,7 @@ public class UpdateChoreographyParticipantRefsFeature extends AbstractUpdateFeat
 		return Integer.parseInt(peService.getPropertyValue(context.getPictogramElement(), PARTICIPANT_REF_NUM));
 	}
 
-	private void clearChoreographyTask(IUpdateContext context) {
+	private void clearChoreographyActivity(IUpdateContext context) {
 		List<Shape> toBeRemoved = new ArrayList<Shape>();
 
 		Iterator<Shape> iterator = peService.getAllContainedShapes((ContainerShape) context.getPictogramElement())
@@ -104,57 +105,61 @@ public class UpdateChoreographyParticipantRefsFeature extends AbstractUpdateFeat
 		for (int i = 0; i < size; i++) {
 			peService.deletePictogramElement(toBeRemoved.get(i));
 		}
-		
+
 		Tuple<Shape, Shape> topAndBottomBands = getTopAndBottomBands(context);
 		peService.setPropertyValue(topAndBottomBands.getFirst(), PARTICIPANT_REF_ID, Boolean.toString(false));
 		peService.setPropertyValue(topAndBottomBands.getSecond(), PARTICIPANT_REF_ID, Boolean.toString(false));
 	}
 
-	private void buildChoreographyTask(ChoreographyTask task, IUpdateContext context) {
+	private void buildChoreographyActivity(ChoreographyActivity task, IUpdateContext context) {
 		List<Participant> participants = task.getParticipantRefs();
 		int size = participants.size();
 		Tuple<Text, Text> topAndBottom = getTopAndBottomTexts(context);
 		Tuple<Shape, Shape> topAndBottomBands = getTopAndBottomBands(context);
-		
+
 		ContainerShape container = (ContainerShape) context.getPictogramElement();
 		String participantRefProperty = peService.getPropertyValue(container, INITIATING_PARTICIPANT_REF);
-		
+
 		int h = 20;
 		int w = container.getGraphicsAlgorithm().getWidth();
-		int topY = AddChoreographyTaskFeature.PARTICIPANT_BAND_HEIGHT - 5;
+		int topY = PARTICIPANT_BAND_HEIGHT - 5;
 		int bottomY = container.getGraphicsAlgorithm().getHeight() - topY - h;
 		int location = 0;
-		
+
 		for (int i = 0; i < size; i++) {
 			Participant participant = participants.get(i);
-			
-			if(i == 0) {
+
+			if (i == 0) {
 				topAndBottom.getFirst().setValue(participant.getName());
 				peService.setPropertyValue(topAndBottomBands.getFirst(), PARTICIPANT_REF_ID, participant.getId());
-				if(participant.getId().equals(participantRefProperty)) {
-					topAndBottomBands.getFirst().getGraphicsAlgorithm().setBackground(manageColor(IColorConstant.WHITE));
+				if (participant.getId().equals(participantRefProperty)) {
+					topAndBottomBands.getFirst().getGraphicsAlgorithm()
+					        .setBackground(manageColor(IColorConstant.WHITE));
 				} else {
-					topAndBottomBands.getFirst().getGraphicsAlgorithm().setBackground(manageColor(IColorConstant.LIGHT_GRAY));
+					topAndBottomBands.getFirst().getGraphicsAlgorithm()
+					        .setBackground(manageColor(IColorConstant.LIGHT_GRAY));
 				}
 				continue;
 			}
-			if(i == 1) {
+			if (i == 1) {
 				topAndBottom.getSecond().setValue(participant.getName());
 				peService.setPropertyValue(topAndBottomBands.getSecond(), PARTICIPANT_REF_ID, participant.getId());
-				if(participant.getId().equals(participantRefProperty)) {
-					topAndBottomBands.getSecond().getGraphicsAlgorithm().setBackground(manageColor(IColorConstant.WHITE));
+				if (participant.getId().equals(participantRefProperty)) {
+					topAndBottomBands.getSecond().getGraphicsAlgorithm()
+					        .setBackground(manageColor(IColorConstant.WHITE));
 				} else {
-					topAndBottomBands.getSecond().getGraphicsAlgorithm().setBackground(manageColor(IColorConstant.LIGHT_GRAY));
+					topAndBottomBands.getSecond().getGraphicsAlgorithm()
+					        .setBackground(manageColor(IColorConstant.LIGHT_GRAY));
 				}
 				continue;
 			}
-			
+
 			Shape shape = peService.createShape(container, false);
 			peService.setPropertyValue(shape, PARTICIPANT_REF, Boolean.toString(true));
 			peService.setPropertyValue(shape, PARTICIPANT_REF_ID, participant.getId());
 			Rectangle rect = gaService.createRectangle(shape);
-			
-			if(location == 0) {
+
+			if (location == 0) {
 				gaService.setLocationAndSize(rect, 0, topY, w, h);
 				topY += h - 1;
 				location += 1;
@@ -163,16 +168,16 @@ public class UpdateChoreographyParticipantRefsFeature extends AbstractUpdateFeat
 				bottomY -= h - 1;
 				location -= 1;
 			}
-			
+
 			rect.setFilled(true);
 			rect.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
-			
-			if(participant.getId().equals(participantRefProperty)) {
+
+			if (participant.getId().equals(participantRefProperty)) {
 				rect.setBackground(manageColor(IColorConstant.WHITE));
 			} else {
 				rect.setBackground(manageColor(IColorConstant.LIGHT_GRAY));
 			}
-			
+
 			Text text = gaService.createText(rect);
 			gaService.setLocationAndSize(text, 0, 0, w, h);
 			text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
@@ -180,13 +185,13 @@ public class UpdateChoreographyParticipantRefsFeature extends AbstractUpdateFeat
 			text.setStyle(StyleUtil.getStyleForText(getDiagram()));
 			text.setValue(participant.getName());
 		}
-		
-		if(size == 0) {
+
+		if (size == 0) {
 			topAndBottom.getFirst().setValue("Participant A");
 			topAndBottom.getSecond().setValue("Participant B");
 		}
-		
-		if(size == 1) {
+
+		if (size == 1) {
 			topAndBottom.getSecond().setValue("Participant B");
 		}
 	}
@@ -198,7 +203,7 @@ public class UpdateChoreographyParticipantRefsFeature extends AbstractUpdateFeat
 		        .iterator();
 		while (iterator.hasNext()) {
 			Shape shape = (Shape) iterator.next();
-			String property = peService.getPropertyValue(shape, CHOREOGRAPHY_TASK_PROPERTY);
+			String property = peService.getPropertyValue(shape, CHOREOGRAPHY_ACTIVITY_PROPERTY);
 			if (property == null) {
 				continue;
 			}
@@ -207,13 +212,13 @@ public class UpdateChoreographyParticipantRefsFeature extends AbstractUpdateFeat
 			} else if (property.equals(BOTTOM_BAND_TEXT)) {
 				bottom = (Text) shape.getGraphicsAlgorithm();
 			}
-			if(top != null && bottom != null) {
+			if (top != null && bottom != null) {
 				break;
 			}
 		}
 		return new Tuple<Text, Text>(top, bottom);
 	}
-	
+
 	private Tuple<Shape, Shape> getTopAndBottomBands(IUpdateContext context) {
 		Shape top = null;
 		Shape bottom = null;
@@ -221,7 +226,7 @@ public class UpdateChoreographyParticipantRefsFeature extends AbstractUpdateFeat
 		        .iterator();
 		while (iterator.hasNext()) {
 			Shape shape = (Shape) iterator.next();
-			String property = peService.getPropertyValue(shape, CHOREOGRAPHY_TASK_PROPERTY);
+			String property = peService.getPropertyValue(shape, CHOREOGRAPHY_ACTIVITY_PROPERTY);
 			if (property == null) {
 				continue;
 			}

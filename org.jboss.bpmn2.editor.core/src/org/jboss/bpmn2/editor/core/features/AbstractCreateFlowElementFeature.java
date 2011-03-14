@@ -13,6 +13,7 @@ package org.jboss.bpmn2.editor.core.features;
 import java.io.IOException;
 
 import org.eclipse.bpmn2.FlowElement;
+import org.eclipse.bpmn2.FlowElementsContainer;
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -34,8 +35,9 @@ public abstract class AbstractCreateFlowElementFeature<T extends FlowElement> ex
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
 		boolean intoLane = FeatureSupport.isTargetLane(context) && FeatureSupport.isTargetLaneOnTop(context);
 		boolean intoParticipant = FeatureSupport.isTargetParticipant(context);
-		boolean intoSubProcess = FeatureSupport.isTargetSubProcess(context);
-		return intoDiagram || intoLane || intoParticipant || intoSubProcess;
+		boolean intoFlowElementContainer = BusinessObjectUtil.containsElementOfType(context.getTargetContainer(),
+		        FlowElementsContainer.class);
+		return intoDiagram || intoLane || intoParticipant || intoFlowElementContainer;
 	}
 
 	@Override
@@ -47,7 +49,7 @@ public abstract class AbstractCreateFlowElementFeature<T extends FlowElement> ex
 			element.setId(EcoreUtil.generateUUID());
 			if (FeatureSupport.isTargetLane(context) && element instanceof FlowNode) {
 				((FlowNode) element).getLanes().add(
-						(Lane) getBusinessObjectForPictogramElement(context.getTargetContainer()));
+				        (Lane) getBusinessObjectForPictogramElement(context.getTargetContainer()));
 			}
 
 			handler.addFlowElement(getBusinessObjectForPictogramElement(context.getTargetContainer()), element);

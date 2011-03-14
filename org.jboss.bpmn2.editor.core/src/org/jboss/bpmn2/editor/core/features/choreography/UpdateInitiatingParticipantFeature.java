@@ -10,18 +10,18 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features.choreography;
 
-import static org.jboss.bpmn2.editor.core.features.choreography.Properties.BOTTOM_BAND;
-import static org.jboss.bpmn2.editor.core.features.choreography.Properties.CHOREOGRAPHY_TASK_PROPERTY;
-import static org.jboss.bpmn2.editor.core.features.choreography.Properties.INITIATING_PARTICIPANT_REF;
-import static org.jboss.bpmn2.editor.core.features.choreography.Properties.PARTICIPANT_REF;
-import static org.jboss.bpmn2.editor.core.features.choreography.Properties.PARTICIPANT_REF_ID;
-import static org.jboss.bpmn2.editor.core.features.choreography.Properties.TOP_BAND;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.BOTTOM_BAND;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.CHOREOGRAPHY_ACTIVITY_PROPERTY;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.INITIATING_PARTICIPANT_REF;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.PARTICIPANT_REF;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.PARTICIPANT_REF_ID;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.TOP_BAND;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.bpmn2.ChoreographyTask;
+import org.eclipse.bpmn2.ChoreographyActivity;
 import org.eclipse.bpmn2.Participant;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.IReason;
@@ -46,16 +46,16 @@ public class UpdateInitiatingParticipantFeature extends AbstractUpdateFeature {
 
 	@Override
 	public boolean canUpdate(IUpdateContext context) {
-		return BusinessObjectUtil.containsElementOfType(context.getPictogramElement(), ChoreographyTask.class);
+		return BusinessObjectUtil.containsElementOfType(context.getPictogramElement(), ChoreographyActivity.class);
 	}
 
 	@Override
 	public IReason updateNeeded(IUpdateContext context) {
-		ChoreographyTask task = (ChoreographyTask) BusinessObjectUtil.getFirstElementOfType(
-		        context.getPictogramElement(), ChoreographyTask.class);
+		ChoreographyActivity activity = (ChoreographyActivity) BusinessObjectUtil.getFirstElementOfType(
+		        context.getPictogramElement(), ChoreographyActivity.class);
 
 		String property = peService.getPropertyValue(context.getPictogramElement(), INITIATING_PARTICIPANT_REF);
-		Participant participant = task.getInitiatingParticipantRef();
+		Participant participant = activity.getInitiatingParticipantRef();
 
 		if (property.equals("false") && participant == null) {
 			return Reason.createFalseReason();
@@ -70,18 +70,18 @@ public class UpdateInitiatingParticipantFeature extends AbstractUpdateFeature {
 
 	@Override
 	public boolean update(IUpdateContext context) {
-		ChoreographyTask task = (ChoreographyTask) BusinessObjectUtil.getFirstElementOfType(
-		        context.getPictogramElement(), ChoreographyTask.class);
+		ChoreographyActivity task = (ChoreographyActivity) BusinessObjectUtil.getFirstElementOfType(
+		        context.getPictogramElement(), ChoreographyActivity.class);
 
 		List<Shape> shapeList = new ArrayList<Shape>();
 
 		Tuple<Shape, Shape> topAndBottomBands = getTopAndBottomBands(context);
 		shapeList.add(topAndBottomBands.getFirst());
 		shapeList.add(topAndBottomBands.getSecond());
-		
-		for(Shape shape : peService.getAllContainedShapes((ContainerShape) context.getPictogramElement())) {
+
+		for (Shape shape : peService.getAllContainedShapes((ContainerShape) context.getPictogramElement())) {
 			String property = peService.getPropertyValue(shape, PARTICIPANT_REF);
-			if(property != null && new Boolean(property)) {
+			if (property != null && new Boolean(property)) {
 				shapeList.add(shape);
 			}
 		}
@@ -113,7 +113,7 @@ public class UpdateInitiatingParticipantFeature extends AbstractUpdateFeature {
 		        .iterator();
 		while (iterator.hasNext()) {
 			Shape shape = (Shape) iterator.next();
-			String property = peService.getPropertyValue(shape, CHOREOGRAPHY_TASK_PROPERTY);
+			String property = peService.getPropertyValue(shape, CHOREOGRAPHY_ACTIVITY_PROPERTY);
 			if (property == null) {
 				continue;
 			}

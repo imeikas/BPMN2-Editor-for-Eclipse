@@ -15,6 +15,7 @@ import static org.jboss.bpmn2.editor.core.utils.GraphicsUtil.EVENT_TEXT_AREA;
 import static org.jboss.bpmn2.editor.core.utils.GraphicsUtil.createEventShape;
 
 import org.eclipse.bpmn2.Event;
+import org.eclipse.bpmn2.FlowElementsContainer;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.mm.algorithms.Ellipse;
@@ -28,6 +29,7 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
+import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.UpdateBaseElementNameFeature;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
 import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
@@ -47,8 +49,9 @@ public class AddEventFeature extends AbstractBpmnAddFeature {
 		boolean intoDiagram = context.getTargetContainer().equals(getDiagram());
 		boolean intoLane = FeatureSupport.isTargetLane(context) && FeatureSupport.isTargetLaneOnTop(context);
 		boolean intoParticipant = FeatureSupport.isTargetParticipant(context);
-		boolean intoSubProcess = FeatureSupport.isTargetSubProcess(context);
-		return intoDiagram || intoLane || intoParticipant || intoSubProcess;
+		boolean intoFlowELementContainer = BusinessObjectUtil.containsElementOfType(context.getTargetContainer(),
+		        FlowElementsContainer.class);
+		return intoDiagram || intoLane || intoParticipant || intoFlowELementContainer;
 	}
 
 	@Override

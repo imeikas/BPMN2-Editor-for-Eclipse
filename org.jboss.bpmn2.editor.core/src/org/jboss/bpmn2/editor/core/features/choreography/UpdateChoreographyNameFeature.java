@@ -10,12 +10,12 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features.choreography;
 
-import static org.jboss.bpmn2.editor.core.features.choreography.Properties.BODY_BAND_TEXT;
-import static org.jboss.bpmn2.editor.core.features.choreography.Properties.CHOREOGRAPHY_TASK_PROPERTY;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.BODY_BAND_TEXT;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.CHOREOGRAPHY_ACTIVITY_PROPERTY;
 
 import java.util.Iterator;
 
-import org.eclipse.bpmn2.ChoreographyTask;
+import org.eclipse.bpmn2.ChoreographyActivity;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.IReason;
 import org.eclipse.graphiti.features.context.IUpdateContext;
@@ -38,14 +38,14 @@ public class UpdateChoreographyNameFeature extends AbstractUpdateFeature {
 
 	@Override
 	public boolean canUpdate(IUpdateContext context) {
-		return BusinessObjectUtil.containsElementOfType(context.getPictogramElement(), ChoreographyTask.class);
+		return BusinessObjectUtil.containsElementOfType(context.getPictogramElement(), ChoreographyActivity.class);
 	}
 
 	@Override
 	public IReason updateNeeded(IUpdateContext context) {
-		ChoreographyTask task = (ChoreographyTask) BusinessObjectUtil.getFirstElementOfType(
-		        context.getPictogramElement(), ChoreographyTask.class);
-		if (task.getName().equals(getBodyText(context).getValue())) {
+		ChoreographyActivity activity = (ChoreographyActivity) BusinessObjectUtil.getFirstElementOfType(
+		        context.getPictogramElement(), ChoreographyActivity.class);
+		if (activity.getName().equals(getBodyText(context).getValue())) {
 			return Reason.createFalseReason();
 		} else {
 			return Reason.createTrueReason("Name is out of date");
@@ -54,8 +54,8 @@ public class UpdateChoreographyNameFeature extends AbstractUpdateFeature {
 
 	@Override
 	public boolean update(IUpdateContext context) {
-		ChoreographyTask task = (ChoreographyTask) BusinessObjectUtil.getFirstElementOfType(
-		        context.getPictogramElement(), ChoreographyTask.class);
+		ChoreographyActivity task = (ChoreographyActivity) BusinessObjectUtil.getFirstElementOfType(
+		        context.getPictogramElement(), ChoreographyActivity.class);
 		getBodyText(context).setValue(task.getName());
 		return true;
 	}
@@ -65,7 +65,7 @@ public class UpdateChoreographyNameFeature extends AbstractUpdateFeature {
 		        .iterator();
 		while (iterator.hasNext()) {
 			Shape shape = (Shape) iterator.next();
-			String property = peService.getPropertyValue(shape, CHOREOGRAPHY_TASK_PROPERTY);
+			String property = peService.getPropertyValue(shape, CHOREOGRAPHY_ACTIVITY_PROPERTY);
 			if (property != null && property.equals(BODY_BAND_TEXT)) {
 				return (Text) shape.getGraphicsAlgorithm();
 			}

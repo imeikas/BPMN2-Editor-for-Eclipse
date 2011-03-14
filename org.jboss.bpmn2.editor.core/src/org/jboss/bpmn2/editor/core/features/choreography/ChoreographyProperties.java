@@ -10,9 +10,11 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features.choreography;
 
-public interface Properties {
+public interface ChoreographyProperties {
 
-	static final String CHOREOGRAPHY_TASK_PROPERTY = "choreography.task";
+	int PARTICIPANT_BAND_HEIGHT = 25;
+
+	static final String CHOREOGRAPHY_ACTIVITY_PROPERTY = "choreography.task";
 	static final String PARTICIPANT_REF = "choreography.task.participant.ref";
 	static final String PARTICIPANT_REF_ID = "choreography.task.participant.ref.id";
 	static final String PARTICIPANT_REF_NUM = "choreography.task.participant.ref.number";

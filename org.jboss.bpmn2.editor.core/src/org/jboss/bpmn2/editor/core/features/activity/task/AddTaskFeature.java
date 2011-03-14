@@ -11,6 +11,7 @@
 package org.jboss.bpmn2.editor.core.features.activity.task;
 
 import org.eclipse.bpmn2.Activity;
+import org.eclipse.bpmn2.FlowElementsContainer;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.mm.algorithms.MultiText;
@@ -20,27 +21,28 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
+import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.activity.AbstractAddActivityFeature;
-import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 
 public class AddTaskFeature extends AbstractAddActivityFeature {
 
 	public AddTaskFeature(IFeatureProvider fp) {
-	    super(fp);
-    }
-	
+		super(fp);
+	}
+
 	@Override
 	public boolean canAdd(IAddContext context) {
-	    return super.canAdd(context) || FeatureSupport.isTargetSubProcess(context);
+		return super.canAdd(context)
+		        || BusinessObjectUtil.containsElementOfType(context.getTargetContainer(), FlowElementsContainer.class);
 	}
-	
+
 	@Override
 	protected void hook(Activity activity, ContainerShape container, IAddContext context, int width, int height) {
 		IPeService peService = Graphiti.getPeService();
 		IGaService gaService = Graphiti.getGaService();
-		
+
 		Shape textShape = peService.createShape(container, false);
 		MultiText text = gaService.createDefaultMultiText(textShape, activity.getName());
 		int padding = GraphicsUtil.TASK_IMAGE_SIZE;
@@ -51,14 +53,14 @@ public class AddTaskFeature extends AbstractAddActivityFeature {
 		text.getFont().setBold(true);
 		link(textShape, activity);
 	}
-	
-	@Override
-    protected int getWidth() {
-	    return GraphicsUtil.TASK_DEFAULT_WIDTH;
-    }
 
 	@Override
-    protected int getHeight() {
-	    return GraphicsUtil.TASK_DEFAULT_HEIGHT;
-    }
+	protected int getWidth() {
+		return GraphicsUtil.TASK_DEFAULT_WIDTH;
+	}
+
+	@Override
+	protected int getHeight() {
+		return GraphicsUtil.TASK_DEFAULT_HEIGHT;
+	}
 }

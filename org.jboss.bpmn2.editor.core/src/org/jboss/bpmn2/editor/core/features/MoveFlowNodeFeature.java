@@ -14,10 +14,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.bpmn2.FlowElementsContainer;
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.Participant;
-import org.eclipse.bpmn2.SubProcess;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.jboss.bpmn2.editor.core.Activator;
@@ -37,8 +37,8 @@ public class MoveFlowNodeFeature extends DefaultBpmnMoveFeature {
 		algorithms.add(new ToLaneAlgorithm());
 		algorithms.add(new FromParticipantAlgorithm());
 		algorithms.add(new ToParticipantAlgorithm());
-		algorithms.add(new FromSubProcessAlgorithm());
-		algorithms.add(new ToSubProcess());
+		algorithms.add(new FromFlowElementsContainerAlgorithm());
+		algorithms.add(new ToFlowElementsContainerAlgorithm());
 	}
 
 	@Override
@@ -274,7 +274,7 @@ public class MoveFlowNodeFeature extends DefaultBpmnMoveFeature {
 		}
 	}
 
-	class FromSubProcessAlgorithm extends DefaultAlgorithm {
+	class FromFlowElementsContainerAlgorithm extends DefaultAlgorithm {
 
 		@Override
 		public int getType() {
@@ -284,7 +284,7 @@ public class MoveFlowNodeFeature extends DefaultBpmnMoveFeature {
 		@Override
 		public boolean canApplyTo(IMoveShapeContext context) {
 			Object bo = getBusinessObjectForPictogramElement(context.getSourceContainer());
-			return bo != null && bo instanceof SubProcess;
+			return bo != null && bo instanceof FlowElementsContainer;
 		}
 
 		@Override
@@ -292,7 +292,7 @@ public class MoveFlowNodeFeature extends DefaultBpmnMoveFeature {
 		}
 	}
 
-	class ToSubProcess extends DefaultAlgorithm {
+	class ToFlowElementsContainerAlgorithm extends DefaultAlgorithm {
 
 		@Override
 		public int getType() {
@@ -302,7 +302,7 @@ public class MoveFlowNodeFeature extends DefaultBpmnMoveFeature {
 		@Override
 		public boolean canApplyTo(IMoveShapeContext context) {
 			Object bo = getBusinessObjectForPictogramElement(context.getTargetContainer());
-			return bo != null && bo instanceof SubProcess;
+			return bo != null && bo instanceof FlowElementsContainer;
 		}
 	}
 }
