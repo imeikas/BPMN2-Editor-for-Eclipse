@@ -65,7 +65,7 @@ public class LayoutTextAnnotationFeature extends AbstractLayoutFeature {
 		int containerWidth = ga.getWidth();
 		int containerHeight = ga.getHeight();
 
-		DIUtils.updateDIShape(getDiagram(), containerShape, TextAnnotation.class, 0);
+		DIUtils.updateDIShape(getDiagram(), containerShape, TextAnnotation.class);
 
 		Iterator<Shape> iterator = containerShape.getChildren().iterator();
 		while (iterator.hasNext()) {

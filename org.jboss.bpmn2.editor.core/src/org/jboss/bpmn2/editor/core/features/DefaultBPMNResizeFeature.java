@@ -12,7 +12,6 @@ package org.jboss.bpmn2.editor.core.features;
 
 import java.util.Map;
 
-import org.eclipse.bpmn2.Activity;
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.di.BPMNShape;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -26,7 +25,6 @@ import org.jboss.bpmn2.editor.core.di.DIUtils;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil.AnchorLocation;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil.BoundaryAnchor;
-import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 
 public class DefaultBPMNResizeFeature extends DefaultResizeShapeFeature {
 
@@ -37,17 +35,13 @@ public class DefaultBPMNResizeFeature extends DefaultResizeShapeFeature {
 	@Override
 	public void resizeShape(IResizeShapeContext context) {
 		super.resizeShape(context);
-		DIUtils.updateDIShape(getDiagram(), context.getPictogramElement(), BaseElement.class, 0);
+		DIUtils.updateDIShape(getDiagram(), context.getPictogramElement(), BaseElement.class);
 		if (context.getPictogramElement() instanceof Shape) {
 			Shape shape = (Shape) context.getPictogramElement();
 			IGaService gaService = Graphiti.getGaService();
 
 			int w = context.getWidth();
 			int h = context.getHeight();
-
-			if (BusinessObjectUtil.containsElementOfType(context.getPictogramElement(), Activity.class)) {
-				h -= GraphicsUtil.ACTIVITY_BOTTOM_PADDING;
-			}
 
 			Map<AnchorLocation, BoundaryAnchor> anchors = AnchorUtil.getBoundaryAnchors(shape);
 

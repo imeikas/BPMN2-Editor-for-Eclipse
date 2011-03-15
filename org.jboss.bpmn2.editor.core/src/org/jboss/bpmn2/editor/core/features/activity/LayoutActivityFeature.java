@@ -53,7 +53,7 @@ public class LayoutActivityFeature extends AbstractLayoutFeature {
 			IGaService gaService = Graphiti.getGaService();
 
 			int newWidth = parentGa.getWidth();
-			int newHeight = parentGa.getHeight() - GraphicsUtil.ACTIVITY_BOTTOM_PADDING;
+			int newHeight = parentGa.getHeight();
 
 			String markerProperty = Graphiti.getPeService().getPropertyValue(shape,
 			        GraphicsUtil.ACTIVITY_MARKER_CONTAINER);
@@ -78,7 +78,7 @@ public class LayoutActivityFeature extends AbstractLayoutFeature {
 			}
 		}
 
-		DIUtils.updateDIShape(getDiagram(), containerShape, Activity.class, GraphicsUtil.ACTIVITY_BOTTOM_PADDING);
+		DIUtils.updateDIShape(getDiagram(), containerShape, Activity.class);
 		return true;
 	}
 

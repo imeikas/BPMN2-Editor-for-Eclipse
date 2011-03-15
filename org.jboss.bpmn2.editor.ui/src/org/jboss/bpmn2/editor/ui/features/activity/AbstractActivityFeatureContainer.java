@@ -16,7 +16,6 @@ import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.jboss.bpmn2.editor.core.features.DefaultBPMNResizeFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
-import org.jboss.bpmn2.editor.core.features.MoveFlowNodeFeature;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.activity.ActivityCompensateMarkerUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.activity.ActivityLoopAndMultiInstanceMarkerUpdateFeature;
@@ -27,9 +26,9 @@ public abstract class AbstractActivityFeatureContainer implements FeatureContain
 	@Override
 	public MultiUpdateFeature getUpdateFeature(IFeatureProvider fp) {
 		ActivityCompensateMarkerUpdateFeature compensateMarkerUpdateFeature = new ActivityCompensateMarkerUpdateFeature(
-				fp);
+		        fp);
 		ActivityLoopAndMultiInstanceMarkerUpdateFeature loopAndMultiInstanceUpdateFeature = new ActivityLoopAndMultiInstanceMarkerUpdateFeature(
-				fp);
+		        fp);
 		MultiUpdateFeature multiUpdate = new MultiUpdateFeature(fp);
 		multiUpdate.addUpdateFeature(compensateMarkerUpdateFeature);
 		multiUpdate.addUpdateFeature(loopAndMultiInstanceUpdateFeature);
@@ -43,7 +42,7 @@ public abstract class AbstractActivityFeatureContainer implements FeatureContain
 
 	@Override
 	public IMoveShapeFeature getMoveFeature(IFeatureProvider fp) {
-		return new MoveFlowNodeFeature(fp);
+		return new ActivityMoveFeature(fp);
 	}
 
 	@Override
