@@ -192,7 +192,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 			if (c instanceof ConnectionFeatureContainer) {
 				ConnectionFeatureContainer connectionFeatureContainer = (ConnectionFeatureContainer) c;
 				ICreateConnectionFeature createConnectionFeature = connectionFeatureContainer
-				        .getCreateConnectionFeature(this);
+						.getCreateConnectionFeature(this);
 				if (createConnectionFeature == null) {
 					continue;
 				}
@@ -201,7 +201,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		}
 
 		createConnectionFeatures = createConnectionFeatureList
-		        .toArray(new ICreateConnectionFeature[createConnectionFeatureList.size()]);
+				.toArray(new ICreateConnectionFeature[createConnectionFeatureList.size()]);
 	}
 
 	@Override
@@ -447,4 +447,5 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		}
 		return super.getDeleteFeature(context);
 	}
+
 }

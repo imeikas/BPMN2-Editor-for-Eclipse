@@ -57,7 +57,7 @@ public abstract class AbstractAddFlowFeature extends AbstractBpmnAddFeature {
 			ContainerShape sourceContainer = (ContainerShape) addConContext.getSourceAnchor().eContainer();
 			ContainerShape targetContainer = (ContainerShape) addConContext.getTargetAnchor().eContainer();
 			Tuple<FixPointAnchor, FixPointAnchor> anchors = AnchorUtil.getSourceAndTargetBoundaryAnchors(
-					sourceContainer, targetContainer);
+					sourceContainer, targetContainer, connection);
 
 			connection.setStart(anchors.getFirst());
 			connection.setEnd(anchors.getSecond());
