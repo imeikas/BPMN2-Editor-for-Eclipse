@@ -301,7 +301,9 @@ public class DIImport {
 			} while (te == null && target.eContainer() != null);
 		}
 
-		addSourceAndTargetToEdge(bpmnEdge, source, target);
+		if (source != null && target != null) {
+			addSourceAndTargetToEdge(bpmnEdge, source, target);
+		}
 
 		if (se != null && te != null) {
 

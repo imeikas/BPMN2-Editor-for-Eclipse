@@ -282,17 +282,29 @@ public class ModelHandler {
 	}
 
 	private Collaboration getOrCreateCollaboration() {
-		List<RootElement> rootElements = getDefinitions().getRootElements();
+		final List<RootElement> rootElements = getDefinitions().getRootElements();
 
 		for (RootElement element : rootElements) {
 			if (element instanceof Collaboration) {
 				return (Collaboration) element;
 			}
 		}
-
-		Collaboration collaboration = FACTORY.createCollaboration();
+		TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(resource);
+		final Collaboration collaboration = FACTORY.createCollaboration();
 		collaboration.setId(EcoreUtil.generateUUID());
+		if (domain != null) {
+			domain.getCommandStack().execute(new RecordingCommand(domain) {
 
+				@Override
+				protected void doExecute() {
+					addCollaborationToRootElements(rootElements, collaboration);
+				}
+			});
+		}
+		return collaboration;
+	}
+
+	private void addCollaborationToRootElements(final List<RootElement> rootElements, final Collaboration collaboration) {
 		Participant participant = FACTORY.createParticipant();
 		participant.setId(EcoreUtil.generateUUID());
 		participant.setName("Internal");
@@ -304,8 +316,6 @@ public class ModelHandler {
 		}
 		collaboration.getParticipants().add(participant);
 		rootElements.add(collaboration);
-
-		return collaboration;
 	}
 
 	public Bpmn2ResourceImpl getResource() {
@@ -419,10 +429,10 @@ public class ModelHandler {
 
 			for (DiagramElement elem : planeElement) {
 				if (elem instanceof BPMNShape && element.getId() != null
-				        && element.getId().equals(((BPMNShape) elem).getBpmnElement().getId())) {
+						&& element.getId().equals(((BPMNShape) elem).getBpmnElement().getId())) {
 					return (elem);
 				} else if (elem instanceof BPMNEdge && element.getId() != null
-				        && element.getId().equals(((BPMNEdge) elem).getBpmnElement().getId())) {
+						&& element.getId().equals(((BPMNEdge) elem).getBpmnElement().getId())) {
 					return (elem);
 				}
 			}

@@ -12,6 +12,7 @@ package org.jboss.bpmn2.editor.core.features.bendpoint;
 
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.di.BPMNEdge;
+import org.eclipse.bpmn2.di.BPMNShape;
 import org.eclipse.dd.dc.Point;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IMoveBendpointContext;
@@ -21,24 +22,31 @@ import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
+import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
 
 public class MoveBendpointFeature extends DefaultMoveBendpointFeature {
 
 	public MoveBendpointFeature(IFeatureProvider fp) {
-	    super(fp);
-    }
-	
+		super(fp);
+	}
+
 	@Override
 	public boolean moveBendpoint(IMoveBendpointContext context) {
-		boolean moved = super.moveBendpoint(context); 
+		boolean moved = super.moveBendpoint(context);
 		try {
 			FreeFormConnection connection = context.getConnection();
 			BaseElement element = (BaseElement) BusinessObjectUtil.getFirstElementOfType(connection, BaseElement.class);
 			ModelHandler modelHandler = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
 			BPMNEdge edge = (BPMNEdge) modelHandler.findDIElement(getDiagram(), element);
-			Point p = edge.getWaypoint().get(context.getBendpointIndex() + 1);
+			int index = context.getBendpointIndex() + 1;
+			Point p = edge.getWaypoint().get(index);
 			p.setX(context.getX());
 			p.setY(context.getY());
+			if (index == 1) {
+				AnchorUtil.reConnect((BPMNShape) edge.getSourceElement(), getDiagram());
+			} else if (index == connection.getBendpoints().size()) {
+				AnchorUtil.reConnect((BPMNShape) edge.getTargetElement(), getDiagram());
+			}
 		} catch (Exception e) {
 			Activator.logError(e);
 		}
