@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features.choreography;
 
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.BODY_LINE_LEFT;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.BODY_LINE_RIGHT;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.BOTTOM_BAND;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.BOTTOM_BAND_TEXT;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.CHOREOGRAPHY_ACTIVITY_PROPERTY;
@@ -42,6 +44,7 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.eclipse.graphiti.util.IColorConstant;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
+import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.core.utils.Tuple;
 
@@ -78,6 +81,16 @@ public class UpdateChoreographyParticipantRefsFeature extends AbstractUpdateFeat
 
 		clearChoreographyActivity(context);
 		buildChoreographyActivity(activity, context);
+
+		ContainerShape containerShape = (ContainerShape) context.getPictogramElement();
+		Shape shape = FeatureSupport.getShape(containerShape, CHOREOGRAPHY_ACTIVITY_PROPERTY, BODY_LINE_LEFT);
+		if (shape != null) {
+			peService.sendToFront(shape);
+		}
+		shape = FeatureSupport.getShape(containerShape, CHOREOGRAPHY_ACTIVITY_PROPERTY, BODY_LINE_RIGHT);
+		if (shape != null) {
+			peService.sendToFront(shape);
+		}
 
 		peService.setPropertyValue(context.getPictogramElement(), PARTICIPANT_REF_NUM,
 		        Integer.toString(activity.getParticipantRefs().size()));
@@ -130,7 +143,9 @@ public class UpdateChoreographyParticipantRefsFeature extends AbstractUpdateFeat
 			Participant participant = participants.get(i);
 
 			if (i == 0) {
-				topAndBottom.getFirst().setValue(participant.getName());
+				if (showNames()) {
+					topAndBottom.getFirst().setValue(participant.getName());
+				}
 				peService.setPropertyValue(topAndBottomBands.getFirst(), PARTICIPANT_REF_ID, participant.getId());
 				if (participant.getId().equals(participantRefProperty)) {
 					topAndBottomBands.getFirst().getGraphicsAlgorithm()
@@ -142,7 +157,9 @@ public class UpdateChoreographyParticipantRefsFeature extends AbstractUpdateFeat
 				continue;
 			}
 			if (i == 1) {
-				topAndBottom.getSecond().setValue(participant.getName());
+				if (showNames()) {
+					topAndBottom.getSecond().setValue(participant.getName());
+				}
 				peService.setPropertyValue(topAndBottomBands.getSecond(), PARTICIPANT_REF_ID, participant.getId());
 				if (participant.getId().equals(participantRefProperty)) {
 					topAndBottomBands.getSecond().getGraphicsAlgorithm()
@@ -183,15 +200,17 @@ public class UpdateChoreographyParticipantRefsFeature extends AbstractUpdateFeat
 			text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 			text.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 			text.setStyle(StyleUtil.getStyleForText(getDiagram()));
-			text.setValue(participant.getName());
+			if (showNames()) {
+				text.setValue(participant.getName());
+			}
 		}
 
-		if (size == 0) {
+		if (size == 0 && showNames()) {
 			topAndBottom.getFirst().setValue("Participant A");
 			topAndBottom.getSecond().setValue("Participant B");
 		}
 
-		if (size == 1) {
+		if (size == 1 && showNames()) {
 			topAndBottom.getSecond().setValue("Participant B");
 		}
 	}
@@ -240,5 +259,9 @@ public class UpdateChoreographyParticipantRefsFeature extends AbstractUpdateFeat
 			}
 		}
 		return new Tuple<Shape, Shape>(top, bottom);
+	}
+
+	protected boolean showNames() {
+		return true;
 	}
 }

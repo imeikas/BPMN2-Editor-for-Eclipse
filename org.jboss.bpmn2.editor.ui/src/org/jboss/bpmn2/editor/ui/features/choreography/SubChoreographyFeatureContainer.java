@@ -11,7 +11,6 @@
 package org.jboss.bpmn2.editor.ui.features.choreography;
 
 import org.eclipse.bpmn2.BaseElement;
-import org.eclipse.bpmn2.ChoreographyActivity;
 import org.eclipse.bpmn2.SubChoreography;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
@@ -19,11 +18,9 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
-import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractCreateFlowElementFeature;
 import org.jboss.bpmn2.editor.core.features.choreography.AddSubChoreographyFeature;
-import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties;
 import org.jboss.bpmn2.editor.core.features.choreography.LayoutChoreographyFeature;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
@@ -41,14 +38,7 @@ public class SubChoreographyFeatureContainer extends AbstractChoreographyFeature
 
 	@Override
 	public IAddFeature getAddFeature(IFeatureProvider fp) {
-		return new AddSubChoreographyFeature(fp) {
-			@Override
-			protected void hook(ContainerShape containerShape, ChoreographyActivity choreography, int w, int h,
-			        int bandHeight) {
-				createText(containerShape, choreography.getName(), 0, bandHeight, w, 10,
-				        ChoreographyProperties.BODY_BAND_TEXT);
-			}
-		};
+		return new AddSubChoreographyFeature(fp);
 	}
 
 	@Override

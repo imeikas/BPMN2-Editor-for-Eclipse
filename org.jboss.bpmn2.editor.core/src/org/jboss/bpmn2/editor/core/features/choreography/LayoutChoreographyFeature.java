@@ -12,6 +12,8 @@ package org.jboss.bpmn2.editor.core.features.choreography;
 
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.BODY_BAND;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.BODY_BAND_TEXT;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.BODY_LINE_LEFT;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.BODY_LINE_RIGHT;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.BOTTOM_BAND;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.BOTTOM_BAND_TEXT;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.CHOREOGRAPHY_ACTIVITY_PROPERTY;
@@ -27,6 +29,7 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ILayoutContext;
 import org.eclipse.graphiti.features.impl.AbstractLayoutFeature;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
+import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
@@ -84,6 +87,14 @@ public class LayoutChoreographyFeature extends AbstractLayoutFeature {
 				gaService.setLocationAndSize(ga, 0, h - 5, newWidth, newHeight - (2 * h) + 10);
 			} else if (property.equals(BODY_BAND_TEXT)) {
 				layoutBodyText(ga, newWidth, newHeight, h, topY);
+			} else if (property.equals(BODY_LINE_LEFT)) {
+				Polyline line = (Polyline) ga;
+				line.getPoints().set(0, gaService.createPoint(0, 5));
+				line.getPoints().set(1, gaService.createPoint(0, newHeight - 5));
+			} else if (property.equals(BODY_LINE_RIGHT)) {
+				Polyline line = (Polyline) ga;
+				line.getPoints().set(0, gaService.createPoint(newWidth - 3, 5));
+				line.getPoints().set(1, gaService.createPoint(newWidth - 3, newHeight - 5));
 			}
 		}
 	}
