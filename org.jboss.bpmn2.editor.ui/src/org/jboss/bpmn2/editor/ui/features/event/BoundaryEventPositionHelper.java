@@ -83,7 +83,7 @@ public class BoundaryEventPositionHelper {
 
 		PositionOnLine pos = getPositionOnLine(x, y, eventGa.getWidth(), eventGa.getHeight(), activityLoc.getX(),
 		        activityLoc.getY(), activityGa.getWidth(), activityGa.getHeight());
-		return !pos.isEmpty();
+		return pos.isLegalPosition();
 	}
 
 	public static PositionOnLine getPositionOnLineUsingBPMNShape(Shape eventShape, Shape activityShape) {

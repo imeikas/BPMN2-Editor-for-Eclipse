@@ -70,51 +70,72 @@ public class ImageProvider extends AbstractImageProvider {
 	public static final String IMG_16_START_EVENT = PREFIX + StartEvent.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_END_EVENT = PREFIX + EndEvent.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_TASK = PREFIX + Task.class.getSimpleName().toLowerCase() + dot16;
-	public static final String IMG_16_EXCLUSIVE_GATEWAY = PREFIX + ExclusiveGateway.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_EXCLUSIVE_GATEWAY = PREFIX + ExclusiveGateway.class.getSimpleName().toLowerCase()
+	        + dot16;
 	public static final String IMG_16_SEQUENCE_FLOW = PREFIX + SequenceFlow.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_PARTICIPANT = PREFIX + Participant.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_LANE = PREFIX + Lane.class.getSimpleName().toLowerCase() + dot16;
-	public static final String IMG_16_TEXT_ANNOTATION = PREFIX + TextAnnotation.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_TEXT_ANNOTATION = PREFIX + TextAnnotation.class.getSimpleName().toLowerCase()
+	        + dot16;
 	public static final String IMG_16_ASSOCIATION = PREFIX + Association.class.getSimpleName().toLowerCase() + dot16;
-	public static final String IMG_16_INCLUSIVE_GATEWAY = PREFIX + InclusiveGateway.class.getSimpleName().toLowerCase() + dot16;
-	public static final String IMG_16_PARALLEL_GATEWAY = PREFIX + ParallelGateway.class.getSimpleName().toLowerCase() + dot16;
-	public static final String IMG_16_EVENT_BASED_GATEWAY = PREFIX + EventBasedGateway.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_INCLUSIVE_GATEWAY = PREFIX + InclusiveGateway.class.getSimpleName().toLowerCase()
+	        + dot16;
+	public static final String IMG_16_PARALLEL_GATEWAY = PREFIX + ParallelGateway.class.getSimpleName().toLowerCase()
+	        + dot16;
+	public static final String IMG_16_EVENT_BASED_GATEWAY = PREFIX
+	        + EventBasedGateway.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_MESSAGE_FLOW = PREFIX + MessageFlow.class.getSimpleName().toLowerCase() + dot16;
-	public static final String IMG_16_INTERMEDIATE_CATCH_EVENT = PREFIX + IntermediateCatchEvent.class.getSimpleName().toLowerCase() + dot16;
-	public static final String IMG_16_INTERMEDIATE_THORW_EVENT = PREFIX + IntermediateThrowEvent.class.getSimpleName().toLowerCase() + dot16;
-	public static final String IMG_16_COMPLEX_GATEWAY = PREFIX + ComplexGateway.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_INTERMEDIATE_CATCH_EVENT = PREFIX
+	        + IntermediateCatchEvent.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_INTERMEDIATE_THORW_EVENT = PREFIX
+	        + IntermediateThrowEvent.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_COMPLEX_GATEWAY = PREFIX + ComplexGateway.class.getSimpleName().toLowerCase()
+	        + dot16;
 	public static final String IMG_16_USER_TASK = PREFIX + UserTask.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_MANUAL_TASK = PREFIX + ManualTask.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_SCRIPT_TASK = PREFIX + ScriptTask.class.getSimpleName().toLowerCase() + dot16;
-	public static final String IMG_16_BUSINESS_RULE_TASK = PREFIX + BusinessRuleTask.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_BUSINESS_RULE_TASK = PREFIX
+	        + BusinessRuleTask.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_SERVICE_TASK = PREFIX + ServiceTask.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_SEND_TASK = PREFIX + SendTask.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_RECEIVE_TASK = PREFIX + ReceiveTask.class.getSimpleName().toLowerCase() + dot16;
-	public static final String IMG_16_CONDITION = PREFIX + ConditionalEventDefinition.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_CONDITION = PREFIX
+	        + ConditionalEventDefinition.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_TIMER = PREFIX + TimerEventDefinition.class.getSimpleName().toLowerCase() + dot16;
-	public static final String IMG_16_SIGNAL = PREFIX + SignalEventDefinition.class.getSimpleName().toLowerCase() + dot16;
-	public static final String IMG_16_MESSAGE = PREFIX + MessageEventDefinition.class.getSimpleName().toLowerCase() + dot16;
-	public static final String IMG_16_ESCAlATION = PREFIX + EscalationEventDefinition.class.getSimpleName().toLowerCase() + dot16;
-	public static final String IMG_16_COMPENSATE = PREFIX + CompensateEventDefinition.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_SIGNAL = PREFIX + SignalEventDefinition.class.getSimpleName().toLowerCase()
+	        + dot16;
+	public static final String IMG_16_MESSAGE = PREFIX + MessageEventDefinition.class.getSimpleName().toLowerCase()
+	        + dot16;
+	public static final String IMG_16_ESCAlATION = PREFIX
+	        + EscalationEventDefinition.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_COMPENSATE = PREFIX
+	        + CompensateEventDefinition.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_LINK = PREFIX + LinkEventDefinition.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_ERROR = PREFIX + ErrorEventDefinition.class.getSimpleName().toLowerCase() + dot16;
-	public static final String IMG_16_CANCEL = PREFIX + CancelEventDefinition.class.getSimpleName().toLowerCase() + dot16;
-	public static final String IMG_16_BOUNDARY_EVENT = PREFIX + BoundaryEvent.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_CANCEL = PREFIX + CancelEventDefinition.class.getSimpleName().toLowerCase()
+	        + dot16;
+	public static final String IMG_16_BOUNDARY_EVENT = PREFIX + BoundaryEvent.class.getSimpleName().toLowerCase()
+	        + dot16;
 	public static final String IMG_16_SUB_PROCESS = PREFIX + SubProcess.class.getSimpleName().toLowerCase() + dot16;
-	public static final String IMG_16_AD_HOC_SUB_PROCESS = PREFIX + AdHocSubProcess.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_AD_HOC_SUB_PROCESS = PREFIX + AdHocSubProcess.class.getSimpleName().toLowerCase()
+	        + dot16;
 	public static final String IMG_16_TRANSACTION = PREFIX + Transaction.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_GROUP = PREFIX + Group.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_DATA_OBJECT = PREFIX + DataObject.class.getSimpleName().toLowerCase() + dot16;
-	public static final String IMG_16_TERMINATE = PREFIX + TerminateEventDefinition.class.getSimpleName().toLowerCase() + dot16;
+	public static final String IMG_16_TERMINATE = PREFIX + TerminateEventDefinition.class.getSimpleName().toLowerCase()
+	        + dot16;
 	public static final String IMG_16_DATA_STORE = PREFIX + DataStore.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_DATA_INPUT = PREFIX + DataInput.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_DATA_OUTPUT = PREFIX + DataOutput.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_CALL_ACTIVITY = PREFIX + CallActivity.class.getSimpleName().toLowerCase() + dot16;
 	public static final String IMG_16_CONVERSATION = PREFIX + Conversation.class.getSimpleName().toLowerCase() + dot16;
-	public static final String IMG_16_CONVERSATION_LINK = PREFIX + ConversationLink.class.getSimpleName().toLowerCase() + dot16;
-	public static final String IMG_16_CHOREOGRAPHY_TASK = PREFIX + ChoreographyTask.class.getSimpleName().toLowerCase() + dot16;
-	
-	public static final String IMG_20_CONDITION = PREFIX + ConditionalEventDefinition.class.getSimpleName().toLowerCase() + dot20;
+	public static final String IMG_16_CONVERSATION_LINK = PREFIX + ConversationLink.class.getSimpleName().toLowerCase()
+	        + dot16;
+	public static final String IMG_16_CHOREOGRAPHY_TASK = PREFIX + ChoreographyTask.class.getSimpleName().toLowerCase()
+	        + dot16;
+
+	public static final String IMG_20_CONDITION = PREFIX
+	        + ConditionalEventDefinition.class.getSimpleName().toLowerCase() + dot20;
 	public static final String IMG_20_TIMER = PREFIX + TimerEventDefinition.class.getSimpleName().toLowerCase() + dot20;
 	public static final String IMG_20_MULTIPLE = PREFIX + "multipleeventdefinition" + dot20; // FIXME
 
@@ -132,7 +153,7 @@ public class ImageProvider extends AbstractImageProvider {
 		addImageFilePath(IMG_16_TEXT_ANNOTATION, ICONS_16 + "TextAnnotation.png");
 		addImageFilePath(IMG_16_ASSOCIATION, ICONS_16 + "Association.png");
 		addImageFilePath(IMG_16_INCLUSIVE_GATEWAY, ICONS_16 + "InclusiveGateway.png");
-		addImageFilePath(IMG_16_PARALLEL_GATEWAY, ICONS_16 + "InclusiveGateway.png");
+		addImageFilePath(IMG_16_PARALLEL_GATEWAY, ICONS_16 + "ParallelGateway.png");
 		addImageFilePath(IMG_16_EVENT_BASED_GATEWAY, ICONS_16 + "EventBasedGateway.png");
 		addImageFilePath(IMG_16_MESSAGE_FLOW, ICONS_16 + "MessageFlow.png");
 		addImageFilePath(IMG_16_INTERMEDIATE_CATCH_EVENT, ICONS_16 + "IntermediateThrowEvent.png");
@@ -168,7 +189,7 @@ public class ImageProvider extends AbstractImageProvider {
 		addImageFilePath(IMG_16_CONVERSATION, ICONS_16 + "Conversation.png");
 		addImageFilePath(IMG_16_CONVERSATION_LINK, ICONS_16 + "ConversationLink.png");
 		addImageFilePath(IMG_16_CHOREOGRAPHY_TASK, ICONS_16 + "ChoreographyTask.png");
-		
+
 		addImageFilePath(IMG_20_CONDITION, ICONS_20 + "Condition.png");
 		addImageFilePath(IMG_20_TIMER, ICONS_20 + "Timer.png");
 		addImageFilePath(IMG_20_MULTIPLE, ICONS_20 + "Multiple.png");

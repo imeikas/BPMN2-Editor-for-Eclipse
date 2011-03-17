@@ -63,15 +63,4 @@ public abstract class AbstractTaskFeatureContainer extends AbstractActivityFeatu
 			}
 		};
 	}
-
-	// @Override
-	// public IMoveShapeFeature getMoveFeature(IFeatureProvider fp) {
-	// return new MoveFlowNodeFeature(fp) {
-	// @Override
-	// protected void internalMove(IMoveShapeContext context) {
-	// super.internalMove(context);
-	// layoutPictogramElement(context.getPictogramElement());
-	// }
-	// };
-	// }
 }

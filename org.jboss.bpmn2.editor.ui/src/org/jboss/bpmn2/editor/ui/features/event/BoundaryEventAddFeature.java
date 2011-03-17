@@ -100,6 +100,7 @@ public class BoundaryEventAddFeature extends AbstractBpmnAddFeature {
 		peService.setPropertyValue(containerShape, BOUNDARY_EVENT_CANCEL, Boolean.toString(true));
 
 		link(containerShape, event);
+		updatePictogramElement(containerShape);
 		return containerShape;
 	}
 }
