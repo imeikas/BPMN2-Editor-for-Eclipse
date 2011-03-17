@@ -85,6 +85,7 @@ public class AddEventFeature extends AbstractBpmnAddFeature {
 		AnchorUtil.addFixedPointAnchors(containerShape, ellipse);
 		hook(containerShape);
 		createDIShape(containerShape, e);
+		updatePictogramElement(containerShape);
 		layoutPictogramElement(containerShape);
 		return containerShape;
 	}
