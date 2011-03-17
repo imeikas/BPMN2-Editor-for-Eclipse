@@ -74,6 +74,10 @@ public class Bpmn2Preferences {
 		elementSet.add(i.getAssignment());
 		elementSet.add(i.getAssociation());
 		elementSet.add(i.getTextAnnotation());
+		elementSet.add(i.getMessageFlow());
+		elementSet.add(i.getConversationLink());
+		elementSet.add(i.getGroup());
+		elementSet.add(i.getConversation());
 
 		// FIXME: Move to extension point
 		ExtendedMetaData emd = new BasicExtendedMetaData();
