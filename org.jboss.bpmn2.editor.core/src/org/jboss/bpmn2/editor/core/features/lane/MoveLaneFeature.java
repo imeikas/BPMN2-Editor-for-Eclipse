@@ -46,7 +46,7 @@ public class MoveLaneFeature extends DefaultBpmnMoveFeature {
 		if (moveStrategy != null) {
 			moveStrategy.internalMove(context);
 		}
-		DIUtils.updateDIShape(getDiagram(), context.getPictogramElement(), Lane.class, 0);
+		DIUtils.updateDIShape(getDiagram(), context.getPictogramElement(), Lane.class);
 	}
 
 	private MoveLaneFeature getStrategy(IMoveShapeContext context) {

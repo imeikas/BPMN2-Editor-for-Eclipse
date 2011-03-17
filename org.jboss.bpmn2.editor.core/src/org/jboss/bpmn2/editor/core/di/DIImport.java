@@ -158,11 +158,12 @@ public class DIImport {
 
 		if (addFeature == null) {
 			Activator.logStatus(new Status(IStatus.WARNING, Activator.PLUGIN_ID, "Element not supported: "
-					+ bpmnElement.eClass().getName()));
+			        + bpmnElement.eClass().getName()));
 			return;
 		}
 
 		AddContext context = new AddContext();
+		context.putProperty(IMPORT_PROPERTY, true);
 		context.setNewObject(bpmnElement);
 		context.setSize((int) shape.getBounds().getWidth(), (int) shape.getBounds().getHeight());
 
@@ -326,7 +327,7 @@ public class DIImport {
 	}
 
 	private Connection createConnectionAndSetBendpoints(BPMNEdge bpmnEdge, PictogramElement sourceElement,
-			PictogramElement targetElement) {
+	        PictogramElement targetElement) {
 		FixPointAnchor sourceAnchor = createAnchor(sourceElement);
 		FixPointAnchor targetAnchor = createAnchor(targetElement);
 
@@ -355,7 +356,7 @@ public class DIImport {
 			return connection;
 		} else {
 			Activator.logStatus(new Status(IStatus.WARNING, Activator.PLUGIN_ID, "Unsupported feature "
-					+ ((EObject) context.getNewObject()).eClass().getName()));
+			        + ((EObject) context.getNewObject()).eClass().getName()));
 		}
 		return null;
 	}
@@ -370,7 +371,7 @@ public class DIImport {
 
 	private void setAnchorLocation(PictogramElement elem, FixPointAnchor anchor, Point point) {
 		org.eclipse.graphiti.mm.algorithms.styles.Point p = gaService.createPoint((int) point.getX(),
-				(int) point.getY());
+		        (int) point.getY());
 
 		ILocation loc = Graphiti.getPeLayoutService().getLocationRelativeToDiagram((Shape) elem);
 

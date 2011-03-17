@@ -44,7 +44,7 @@ import org.jboss.bpmn2.editor.ui.features.data.DataObjectReferenceFeatureContain
 import org.jboss.bpmn2.editor.ui.features.data.DataOutputFeatureContainer.CreateDataOutputFeature;
 import org.jboss.bpmn2.editor.ui.features.data.DataStoreReferenceFeatureContainer.CreateDataStoreReferenceFeature;
 import org.jboss.bpmn2.editor.ui.features.data.MessageFeatureContainer.CreateMessageFeature;
-import org.jboss.bpmn2.editor.ui.features.event.BoundaryEventFeatureContainer.CreateBoundaryEvent;
+import org.jboss.bpmn2.editor.ui.features.event.BoundaryEventCreateFeature;
 import org.jboss.bpmn2.editor.ui.features.event.EndEventFeatureContainer.CreateEndEventFeature;
 import org.jboss.bpmn2.editor.ui.features.event.IntermediateCatchEventFeatureContainer.CreateIntermediateCatchEventFeature;
 import org.jboss.bpmn2.editor.ui.features.event.IntermediateThrowEventFeatureContainer.CreateIntermediateThrowEventFeature;
@@ -115,7 +115,7 @@ public class FeatureMap {
 		featureMap.put(i.getErrorEventDefinition(), CreateErrorEventDefinition.class);
 		featureMap.put(i.getCancelEventDefinition(), CreateCancelEventDefinition.class);
 		featureMap.put(i.getTerminateEventDefinition(), CreateTerminateEventDefinition.class);
-		featureMap.put(i.getBoundaryEvent(), CreateBoundaryEvent.class);
+		featureMap.put(i.getBoundaryEvent(), BoundaryEventCreateFeature.class);
 		featureMap.put(i.getSubProcess(), CreateSubProcessFeature.class);
 		featureMap.put(i.getTransaction(), CreateTransactionFeature.class);
 		featureMap.put(i.getGroup(), CreateGroupFeature.class);
@@ -152,7 +152,7 @@ public class FeatureMap {
 		features.add(CreateEndEventFeature.class);
 		features.add(CreateIntermediateThrowEventFeature.class);
 		features.add(CreateIntermediateCatchEventFeature.class);
-		features.add(CreateBoundaryEvent.class);
+		features.add(BoundaryEventCreateFeature.class);
 		EVENTS = Collections.unmodifiableList(features);
 
 		features = new ArrayList<Class<? extends IFeature>>();

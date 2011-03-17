@@ -10,15 +10,21 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features;
 
+import java.util.Collection;
+
+import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
+import org.eclipse.graphiti.services.Graphiti;
+import org.eclipse.graphiti.services.IPeService;
 
 public class BusinessObjectUtil {
-	
+
 	@SuppressWarnings("rawtypes")
 	public static boolean containsElementOfType(PictogramElement elem, Class clazz) {
-		if(elem.getLink() == null) {
+		if (elem.getLink() == null) {
 			return false;
 		}
 		EList<EObject> businessObjs = elem.getLink().getBusinessObjects();
@@ -30,17 +36,33 @@ public class BusinessObjectUtil {
 		return false;
 	}
 
-	@SuppressWarnings("rawtypes")
-    public static EObject getFirstElementOfType(PictogramElement elem, Class clazz) {
+	@SuppressWarnings("unchecked")
+	public static <T extends EObject> T getFirstElementOfType(PictogramElement elem, Class<T> clazz) {
 		if (elem.getLink() == null) {
 			return null;
 		}
 		EList<EObject> businessObjs = elem.getLink().getBusinessObjects();
 		for (EObject eObject : businessObjs) {
 			if (clazz.isInstance(eObject)) {
-				return eObject;
+				return (T) eObject;
 			}
 		}
 		return null;
+	}
+
+	public static PictogramElement getElementFromDiagram(Diagram diagram, BaseElement e) {
+		PictogramElement foundElem = null;
+
+		IPeService peService = Graphiti.getPeService();
+		Collection<PictogramElement> elements = peService.getAllContainedPictogramElements(diagram);
+		for (PictogramElement pe : elements) {
+			BaseElement be = getFirstElementOfType(pe, e.getClass());
+			if (be != null && be.equals(e)) {
+				foundElem = pe;
+				break;
+			}
+		}
+
+		return foundElem;
 	}
 }

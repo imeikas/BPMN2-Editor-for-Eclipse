@@ -52,9 +52,8 @@ public abstract class AbstractAddActivityFeature extends AbstractBpmnAddFeature 
 		IGaService gaService = Graphiti.getGaService();
 		IPeService peService = Graphiti.getPeService();
 
-		int paddingBottom = GraphicsUtil.ACTIVITY_BOTTOM_PADDING;
 		int width = context.getWidth() > 0 ? context.getWidth() : getWidth();
-		int height = context.getHeight() > 0 ? context.getHeight() + paddingBottom : getHeight() + paddingBottom;
+		int height = context.getHeight() > 0 ? context.getHeight() : getHeight();
 
 		ContainerShape containerShape = peService.createContainerShape(context.getTargetContainer(), true);
 		Rectangle invisibleRect = gaService.createInvisibleRectangle(containerShape);
@@ -63,7 +62,7 @@ public abstract class AbstractAddActivityFeature extends AbstractBpmnAddFeature 
 		Shape rectShape = peService.createShape(containerShape, false);
 		RoundedRectangle rect = gaService.createRoundedRectangle(rectShape, 5, 5);
 		StyleUtil.applyBGStyle(rect, this);
-		gaService.setLocationAndSize(rect, 0, 0, width, height - paddingBottom);
+		gaService.setLocationAndSize(rect, 0, 0, width, height);
 		link(rectShape, activity);
 		decorateActivityRectangle(rect);
 		peService.setPropertyValue(rectShape, "activity", Boolean.toString(true));
@@ -71,7 +70,7 @@ public abstract class AbstractAddActivityFeature extends AbstractBpmnAddFeature 
 		ContainerShape markerContainer = peService.createContainerShape(containerShape, false);
 		Rectangle markerInvisibleRect = gaService.createInvisibleRectangle(markerContainer);
 		int h = 10;
-		int y = height - paddingBottom - h - 3 - getMarkerContainerOffset();
+		int y = height - h - 3 - getMarkerContainerOffset();
 		gaService.setLocationAndSize(markerInvisibleRect, 0, y, invisibleRect.getWidth(), h);
 		peService.setPropertyValue(markerContainer, GraphicsUtil.ACTIVITY_MARKER_CONTAINER, Boolean.toString(true));
 
