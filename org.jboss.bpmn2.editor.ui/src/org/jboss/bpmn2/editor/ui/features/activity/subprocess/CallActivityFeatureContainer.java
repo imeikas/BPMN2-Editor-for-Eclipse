@@ -32,8 +32,11 @@ import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.eclipse.graphiti.features.impl.AbstractUpdateFeature;
 import org.eclipse.graphiti.features.impl.Reason;
+import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Image;
 import org.eclipse.graphiti.mm.algorithms.RoundedRectangle;
+import org.eclipse.graphiti.mm.algorithms.Text;
+import org.eclipse.graphiti.mm.algorithms.styles.Orientation;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
@@ -41,6 +44,7 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
+import org.jboss.bpmn2.editor.core.features.AbstractBaseElementUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.AbstractCreateFlowElementFeature;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
@@ -55,7 +59,7 @@ public class CallActivityFeatureContainer extends AbstractSubProcessFeatureConta
 	private static final int MARKER_OFFSET = 4;
 	private static final String CALL_ACTIITY_REF_PROPERTY = "call.activity.ref";
 	private static final String GLOBAL_TASK_SHAPE_PROPERTY = "global.task.shape";
-	
+
 	@Override
 	public boolean canApplyTo(BaseElement element) {
 		return element instanceof CallActivity;
@@ -75,6 +79,18 @@ public class CallActivityFeatureContainer extends AbstractSubProcessFeatureConta
 				CallActivity callActivity = (CallActivity) activity;
 				Graphiti.getPeService().setPropertyValue(container, CALL_ACTIITY_REF_PROPERTY,
 				        getCallableElementStringValue(callActivity.getCalledElementRef()));
+
+				IPeService peService = Graphiti.getPeService();
+				IGaService gaService = Graphiti.getGaService();
+
+				Shape textShape = peService.createShape(container, false);
+				Text text = gaService.createDefaultText(textShape, activity.getName());
+				gaService.setLocationAndSize(text, 5, 5, width - 10, 15);
+				text.setStyle(StyleUtil.getStyleForText(getDiagram()));
+				text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
+				text.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
+				text.getFont().setBold(true);
+				link(textShape, activity);
 			}
 
 			@Override
@@ -106,6 +122,15 @@ public class CallActivityFeatureContainer extends AbstractSubProcessFeatureConta
 			protected int getMarkerContainerOffset() {
 				return MARKER_OFFSET;
 			}
+
+			@Override
+			protected boolean layoutHook(Shape shape, GraphicsAlgorithm ga, Object bo, int newWidth, int newHeight) {
+				if (bo != null && bo instanceof CallActivity && ga instanceof Text) {
+					Graphiti.getGaService().setLocationAndSize(ga, 5, 5, newWidth - 10, 15);
+					return true;
+				}
+				return false;
+			}
 		};
 	}
 
@@ -113,6 +138,14 @@ public class CallActivityFeatureContainer extends AbstractSubProcessFeatureConta
 	public MultiUpdateFeature getUpdateFeature(IFeatureProvider fp) {
 		MultiUpdateFeature multiUpdate = super.getUpdateFeature(fp);
 		multiUpdate.addUpdateFeature(new UpdateCallActivityFeature(fp));
+		AbstractBaseElementUpdateFeature nameUpdateFeature = new AbstractBaseElementUpdateFeature(fp) {
+			@Override
+			public boolean canUpdate(IUpdateContext context) {
+				Object bo = getBusinessObjectForPictogramElement(context.getPictogramElement());
+				return bo != null && bo instanceof BaseElement && canApplyTo((BaseElement) bo);
+			}
+		};
+		multiUpdate.addUpdateFeature(nameUpdateFeature);
 		return multiUpdate;
 	}
 
@@ -149,8 +182,8 @@ public class CallActivityFeatureContainer extends AbstractSubProcessFeatureConta
 
 		@Override
 		public boolean canUpdate(IUpdateContext context) {
-			CallActivity callActivity = (CallActivity) BusinessObjectUtil.getFirstElementOfType(
-			        context.getPictogramElement(), CallActivity.class);
+			CallActivity callActivity = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
+			        CallActivity.class);
 			return callActivity != null && context.getPictogramElement() instanceof ContainerShape;
 		}
 
@@ -162,8 +195,8 @@ public class CallActivityFeatureContainer extends AbstractSubProcessFeatureConta
 			if (property == null) {
 				return Reason.createFalseReason();
 			}
-			CallActivity callActivity = (CallActivity) BusinessObjectUtil.getFirstElementOfType(
-			        context.getPictogramElement(), CallActivity.class);
+			CallActivity callActivity = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
+			        CallActivity.class);
 			String value = getCallableElementStringValue(callActivity.getCalledElementRef());
 			boolean changed = !value.equals(property);
 			return changed ? Reason.createTrueReason() : Reason.createFalseReason();
@@ -173,17 +206,18 @@ public class CallActivityFeatureContainer extends AbstractSubProcessFeatureConta
 		public boolean update(IUpdateContext context) {
 			IPeService peService = Graphiti.getPeService();
 			IGaService gaService = Graphiti.getGaService();
-			
-			ContainerShape container = (ContainerShape) context.getPictogramElement();
-			CallActivity callActivity = (CallActivity) BusinessObjectUtil.getFirstElementOfType(
-			        context.getPictogramElement(), CallActivity.class);
 
-			ContainerShape markerContainer = (ContainerShape) getShape(container, GraphicsUtil.ACTIVITY_MARKER_CONTAINER);
+			ContainerShape container = (ContainerShape) context.getPictogramElement();
+			CallActivity callActivity = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
+			        CallActivity.class);
+
+			ContainerShape markerContainer = (ContainerShape) getShape(container,
+			        GraphicsUtil.ACTIVITY_MARKER_CONTAINER);
 			Shape globalTaskShape = getShape(container, GLOBAL_TASK_SHAPE_PROPERTY);
-			
+
 			if (callActivity.getCalledElementRef() == null) {
 				GraphicsUtil.clearActivityMarker(markerContainer, GraphicsUtil.ACTIVITY_MARKER_EXPAND);
-				if(globalTaskShape != null) {
+				if (globalTaskShape != null) {
 					peService.deletePictogramElement(globalTaskShape);
 				}
 			}
@@ -191,19 +225,19 @@ public class CallActivityFeatureContainer extends AbstractSubProcessFeatureConta
 			else if (callActivity.getCalledElementRef() instanceof GlobalTask) {
 				GraphicsUtil.clearActivityMarker(markerContainer, GraphicsUtil.ACTIVITY_MARKER_EXPAND);
 				GlobalTask t = (GlobalTask) callActivity.getCalledElementRef();
-				if(globalTaskShape == null) {
+				if (globalTaskShape == null) {
 					globalTaskShape = peService.createShape(container, false);
 					peService.setPropertyValue(globalTaskShape, GLOBAL_TASK_SHAPE_PROPERTY, Boolean.toString(true));
 				}
 				String imageId = getImageId(t);
-				if(imageId != null) {
+				if (imageId != null) {
 					Image image = gaService.createImage(globalTaskShape, imageId);
 					gaService.setLocationAndSize(image, MARKER_OFFSET + 2, MARKER_OFFSET + 2, 16, 16);
 				}
 			}
 
 			else if (callActivity.getCalledElementRef() instanceof Process) {
-				if(globalTaskShape != null) {
+				if (globalTaskShape != null) {
 					peService.deletePictogramElement(globalTaskShape);
 				}
 				Expand expand = GraphicsUtil.createActivityMarkerExpand(markerContainer);
@@ -243,7 +277,7 @@ public class CallActivityFeatureContainer extends AbstractSubProcessFeatureConta
 		IPeService peService = Graphiti.getPeService();
 		Iterator<Shape> iterator = peService.getAllContainedShapes(container).iterator();
 		while (iterator.hasNext()) {
-			Shape shape = (Shape) iterator.next();
+			Shape shape = iterator.next();
 			String property = peService.getPropertyValue(shape, propertyKey);
 			if (property != null && new Boolean(property)) {
 				return shape;
