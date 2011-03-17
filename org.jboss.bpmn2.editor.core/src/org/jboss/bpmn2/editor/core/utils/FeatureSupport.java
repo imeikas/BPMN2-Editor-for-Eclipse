@@ -22,6 +22,8 @@ import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.SubProcess;
 import org.eclipse.bpmn2.TextAnnotation;
+import org.eclipse.emf.common.util.ECollections;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.features.context.IPictogramElementContext;
 import org.eclipse.graphiti.features.context.ITargetContext;
@@ -68,7 +70,7 @@ public class FeatureSupport {
 	}
 
 	public static boolean isTargetLaneOnTop(ITargetContext context) {
-		Lane lane = (Lane) BusinessObjectUtil.getFirstElementOfType(context.getTargetContainer(), Lane.class);
+		Lane lane = BusinessObjectUtil.getFirstElementOfType(context.getTargetContainer(), Lane.class);
 		return lane.getChildLaneSet() == null || lane.getChildLaneSet().getLanes().isEmpty();
 	}
 
@@ -81,7 +83,7 @@ public class FeatureSupport {
 		resizeRecursively(root);
 		postResizeFixLenghts(root);
 	}
-	
+
 	private static ContainerShape getRootContainer(ContainerShape container) {
 		ContainerShape parent = container.getContainer();
 		EObject bo = BusinessObjectUtil.getFirstElementOfType(parent, BaseElement.class);
@@ -97,7 +99,9 @@ public class FeatureSupport {
 		int height = 0;
 		int width = container.getGraphicsAlgorithm().getWidth() - 15;
 
-		for (Shape s : container.getChildren()) {
+		EList<Shape> children = container.getChildren();
+		ECollections.sort(children, new SiblingLaneComparator());
+		for (Shape s : children) {
 			Object bo = BusinessObjectUtil.getFirstElementOfType(s, BaseElement.class);
 			if (bo != null && (bo instanceof Lane || bo instanceof Participant) && !bo.equals(elem)) {
 				GraphicsAlgorithm ga = s.getGraphicsAlgorithm();
@@ -120,7 +124,7 @@ public class FeatureSupport {
 			int newHeight = height + 1;
 			service.setSize(ga, newWidth, newHeight);
 
-			for (Shape s : container.getChildren()) {
+			for (Shape s : children) {
 				GraphicsAlgorithm childGa = s.getGraphicsAlgorithm();
 				if (childGa instanceof Text) {
 					s.getGraphicsAlgorithm().setHeight(newHeight);
@@ -137,7 +141,7 @@ public class FeatureSupport {
 	}
 
 	private static Dimension resizeRecursively(ContainerShape root) {
-		BaseElement elem = (BaseElement) BusinessObjectUtil.getFirstElementOfType(root, BaseElement.class);
+		BaseElement elem = BusinessObjectUtil.getFirstElementOfType(root, BaseElement.class);
 		List<Dimension> dimensions = new ArrayList<Dimension>();
 		IGaService service = Graphiti.getGaService();
 		int foundContainers = 0;
@@ -176,6 +180,9 @@ public class FeatureSupport {
 		return getMaxDimension(dimensions);
 	}
 
+	/**
+	 * One can only resize lanes and participants
+	 */
 	private static boolean checkForResize(BaseElement currentBo, Shape s, Object bo) {
 		if (!(s instanceof ContainerShape)) {
 			return false;
@@ -208,7 +215,7 @@ public class FeatureSupport {
 
 	private static void postResizeFixLenghts(ContainerShape root) {
 		IGaService service = Graphiti.getGaService();
-		BaseElement elem = (BaseElement) BusinessObjectUtil.getFirstElementOfType(root, BaseElement.class);
+		BaseElement elem = BusinessObjectUtil.getFirstElementOfType(root, BaseElement.class);
 		int width = root.getGraphicsAlgorithm().getWidth() - 15;
 
 		for (Shape s : root.getChildren()) {
@@ -268,17 +275,17 @@ public class FeatureSupport {
 
 		return handler.getParticipant(bo);
 	}
-	
+
 	public static Shape getShape(ContainerShape container, String property, String expextedValue) {
 		IPeService peService = Graphiti.getPeService();
 		Iterator<Shape> iterator = peService.getAllContainedShapes(container).iterator();
 		while (iterator.hasNext()) {
-	        Shape shape = (Shape) iterator.next();
-	        String value = peService.getPropertyValue(shape, property);
-	        if(value != null && value.equals(expextedValue)) {
-	        	return shape;
-	        }
-        }
+			Shape shape = iterator.next();
+			String value = peService.getPropertyValue(shape, property);
+			if (value != null && value.equals(expextedValue)) {
+				return shape;
+			}
+		}
 		return null;
 	}
 }

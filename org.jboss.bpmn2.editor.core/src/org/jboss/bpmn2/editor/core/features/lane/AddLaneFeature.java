@@ -34,6 +34,7 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.ILayoutService;
 import org.eclipse.graphiti.services.IPeCreateService;
 import org.eclipse.graphiti.util.ILocationInfo;
+import org.jboss.bpmn2.editor.core.di.DIImport;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
 import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
@@ -112,7 +113,8 @@ public class AddLaneFeature extends AbstractBpmnAddFeature {
 		peCreateService.createChopboxAnchor(containerShape);
 		AnchorUtil.addFixedPointAnchors(containerShape, rect);
 
-		if (FeatureSupport.isTargetLane(context) || FeatureSupport.isTargetParticipant(context)) {
+		if (context.getProperty(DIImport.IMPORT_PROPERTY) == null
+				&& (FeatureSupport.isTargetLane(context) || FeatureSupport.isTargetParticipant(context))) {
 			FeatureSupport.redraw(context.getTargetContainer());
 		}
 		return containerShape;
