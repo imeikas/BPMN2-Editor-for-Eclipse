@@ -13,11 +13,11 @@ package org.jboss.bpmn2.editor.ui.features.event;
 public class PositionOnLine {
 
 	public enum LineType {
-		X, Y, XY
+		X, Y, XY, UNKNOWN
 	}
 
 	public enum LocationType {
-		TOP, TOP_LEFT, TOP_RIGHT, BOTTOM, BOTTOM_LEFT, BOTTOM_RIGHT, LEFT, RIGHT
+		TOP, TOP_LEFT, TOP_RIGHT, BOTTOM, BOTTOM_LEFT, BOTTOM_RIGHT, LEFT, RIGHT, UNKNOWN
 	}
 
 	private LineType lineType;
@@ -38,6 +38,8 @@ public class PositionOnLine {
 			lineType = LineType.X;
 		} else if (alongY) {
 			lineType = LineType.Y;
+		} else {
+			lineType = LineType.UNKNOWN;
 		}
 
 		if (lineType != null) {
@@ -72,8 +74,13 @@ public class PositionOnLine {
 				}
 				break;
 			default:
+				locationType = LocationType.UNKNOWN;
 				break;
 			}
+		}
+
+		if (locationType == null) {
+			locationType = LocationType.UNKNOWN;
 		}
 	}
 
@@ -85,8 +92,8 @@ public class PositionOnLine {
 		return locationType;
 	}
 
-	public boolean isEmpty() {
-		return lineType == null || locationType == null;
+	public boolean isLegalPosition() {
+		return lineType != LineType.UNKNOWN && locationType != LocationType.UNKNOWN;
 	}
 
 	public static PositionOnLine fromString(String s) {
