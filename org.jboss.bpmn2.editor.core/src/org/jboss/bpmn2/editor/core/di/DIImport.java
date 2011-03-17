@@ -310,7 +310,8 @@ public class DIImport {
 			createConnectionAndSetBendpoints(bpmnEdge, se, te);
 		} else {
 			Activator.logStatus(new Status(IStatus.WARNING, Activator.PLUGIN_ID,
-			        "Couldn't find target element, probably not supported! Source: " + source + " Target: " + target));
+					"Couldn't find target element, probably not supported! Source: " + source + " Target: " + target
+							+ " Element: " + bpmnElement));
 		}
 	}
 

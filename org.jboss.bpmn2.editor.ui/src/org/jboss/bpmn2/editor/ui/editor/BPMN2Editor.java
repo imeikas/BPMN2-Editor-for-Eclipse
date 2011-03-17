@@ -36,6 +36,7 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
+import org.jboss.bpmn2.editor.core.ProxyURIConverterImplExtension;
 import org.jboss.bpmn2.editor.core.di.DIImport;
 import org.jboss.bpmn2.editor.ui.Activator;
 import org.jboss.bpmn2.editor.ui.util.ErrorUtils;
@@ -125,6 +126,7 @@ public class BPMN2Editor extends DiagramEditor {
 			ResourceSet resourceSet = getEditingDomain().getResourceSet();
 			Bpmn2ResourceImpl bpmnResource = (Bpmn2ResourceImpl) resourceSet.createResource(modelUri,
 					"org.eclipse.bpmn2.content-type.xml");
+			resourceSet.setURIConverter(new ProxyURIConverterImplExtension());
 			modelHandler = ModelHandlerLocator.createModelHandler(modelUri, bpmnResource);
 			ModelHandlerLocator.put(diagramUri, modelHandler);
 			try {
