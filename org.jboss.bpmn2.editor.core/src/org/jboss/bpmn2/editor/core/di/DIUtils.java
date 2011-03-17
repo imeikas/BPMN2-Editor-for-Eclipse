@@ -27,6 +27,7 @@ import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
+import org.eclipse.graphiti.mm.pictograms.PictogramLink;
 import org.eclipse.graphiti.mm.pictograms.impl.FreeFormConnectionImpl;
 import org.eclipse.graphiti.services.Graphiti;
 import org.jboss.bpmn2.editor.core.Activator;
@@ -38,8 +39,12 @@ public class DIUtils {
 
 	public static void updateDIShape(Diagram diagram, PictogramElement element, Class clazz) {
 		try {
-			ModelHandler modelHandler = ModelHandlerLocator.getModelHandler(element.getLink().getBusinessObjects()
-			        .get(0).eResource());
+			PictogramLink link = element.getLink();
+			if (link == null) {
+				return;
+			}
+			ModelHandler modelHandler = ModelHandlerLocator.getModelHandler(link.getBusinessObjects().get(0)
+					.eResource());
 
 			EObject be = BusinessObjectUtil.getFirstElementOfType(element, clazz);
 			BPMNShape shape = (BPMNShape) modelHandler.findDIElement(diagram, (BaseElement) be);
@@ -61,7 +66,7 @@ public class DIUtils {
 	public static void updateDIEdge(Diagram diagram, Connection connection, Class clazz) {
 		try {
 			ModelHandler modelHandler = ModelHandlerLocator.getModelHandler(connection.getLink().getBusinessObjects()
-			        .get(0).eResource());
+					.get(0).eResource());
 
 			EObject be = BusinessObjectUtil.getFirstElementOfType(connection, clazz);
 			BPMNEdge edge = (BPMNEdge) modelHandler.findDIElement(diagram, (BaseElement) be);

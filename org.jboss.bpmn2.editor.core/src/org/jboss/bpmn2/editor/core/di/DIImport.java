@@ -59,6 +59,8 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
+import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
+import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 
 @SuppressWarnings("restriction")
 public class DIImport {
@@ -103,10 +105,12 @@ public class DIImport {
 					importShapes(ownedElement);
 					importConnections(ownedElement);
 
+					relayoutLanes(ownedElement);
 					// FIXME: we don't really want to leave, but we also don't want all diagrams mixed together
 					return;
 				}
 			}
+
 		});
 	}
 
@@ -143,6 +147,16 @@ public class DIImport {
 		}
 	}
 
+	private void relayoutLanes(List<DiagramElement> ownedElement) {
+		for (DiagramElement diagramElement : ownedElement) {
+			if (diagramElement instanceof BPMNShape && ((BPMNShape) diagramElement).getBpmnElement() instanceof Lane) {
+				BaseElement lane = ((BPMNShape) diagramElement).getBpmnElement();
+				ContainerShape shape = (ContainerShape) BusinessObjectUtil.getElementFromDiagram(diagram, lane);
+				FeatureSupport.redraw(shape);
+			}
+		}
+	}
+
 	/**
 	 * Find a Graphiti feature for given shape and generate necessary diagram elements.
 	 * 
@@ -158,7 +172,7 @@ public class DIImport {
 
 		if (addFeature == null) {
 			Activator.logStatus(new Status(IStatus.WARNING, Activator.PLUGIN_ID, "Element not supported: "
-			        + bpmnElement.eClass().getName()));
+					+ bpmnElement.eClass().getName()));
 			return;
 		}
 
@@ -214,6 +228,12 @@ public class DIImport {
 				Process processRef = ((Participant) be).getProcessRef();
 				if (processRef != null && parent.getId().equals(processRef.getId())) {
 					cont = (ContainerShape) elements.get(be);
+					break;
+				}
+			} else if (be instanceof Lane) {
+				if (be.getId().equals(parent.getId())) {
+					cont = (ContainerShape) elements.get(be);
+					break;
 				}
 			}
 		}
@@ -327,7 +347,7 @@ public class DIImport {
 	}
 
 	private Connection createConnectionAndSetBendpoints(BPMNEdge bpmnEdge, PictogramElement sourceElement,
-	        PictogramElement targetElement) {
+			PictogramElement targetElement) {
 		FixPointAnchor sourceAnchor = createAnchor(sourceElement);
 		FixPointAnchor targetAnchor = createAnchor(targetElement);
 
@@ -356,7 +376,7 @@ public class DIImport {
 			return connection;
 		} else {
 			Activator.logStatus(new Status(IStatus.WARNING, Activator.PLUGIN_ID, "Unsupported feature "
-			        + ((EObject) context.getNewObject()).eClass().getName()));
+					+ ((EObject) context.getNewObject()).eClass().getName()));
 		}
 		return null;
 	}
@@ -371,7 +391,7 @@ public class DIImport {
 
 	private void setAnchorLocation(PictogramElement elem, FixPointAnchor anchor, Point point) {
 		org.eclipse.graphiti.mm.algorithms.styles.Point p = gaService.createPoint((int) point.getX(),
-		        (int) point.getY());
+				(int) point.getY());
 
 		ILocation loc = Graphiti.getPeLayoutService().getLocationRelativeToDiagram((Shape) elem);
 
