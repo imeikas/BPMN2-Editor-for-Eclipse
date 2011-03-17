@@ -44,7 +44,7 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractCreateFlowElementFeature;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
-import org.jboss.bpmn2.editor.core.features.activity.LayoutActivityFeature;
+import org.jboss.bpmn2.editor.core.features.activity.ActivityLayoutFeature;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil.Expand;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
@@ -101,7 +101,7 @@ public class CallActivityFeatureContainer extends AbstractSubProcessFeatureConta
 
 	@Override
 	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
-		return new LayoutActivityFeature(fp) {
+		return new ActivityLayoutFeature(fp) {
 			@Override
 			protected int getMarkerContainerOffset() {
 				return MARKER_OFFSET;

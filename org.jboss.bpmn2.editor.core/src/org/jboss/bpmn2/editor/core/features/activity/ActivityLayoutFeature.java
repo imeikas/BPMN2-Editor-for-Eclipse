@@ -14,7 +14,6 @@ import java.util.Iterator;
 
 import org.eclipse.bpmn2.Activity;
 import org.eclipse.bpmn2.BaseElement;
-import org.eclipse.bpmn2.BoundaryEvent;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ILayoutContext;
 import org.eclipse.graphiti.features.impl.AbstractLayoutFeature;
@@ -26,12 +25,13 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.di.DIUtils;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
+import org.jboss.bpmn2.editor.core.features.event.AbstractBoundaryEventOperation;
 import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 
-public class LayoutActivityFeature extends AbstractLayoutFeature {
+public class ActivityLayoutFeature extends AbstractLayoutFeature {
 
-	public LayoutActivityFeature(IFeatureProvider fp) {
+	public ActivityLayoutFeature(IFeatureProvider fp) {
 		super(fp);
 	}
 
@@ -70,13 +70,17 @@ public class LayoutActivityFeature extends AbstractLayoutFeature {
 
 			Object[] objects = getAllBusinessObjectsForPictogramElement(shape);
 			for (Object bo : objects) {
-				if (bo instanceof BoundaryEvent) {
-					layoutPictogramElement(shape);
-					continue;
-				}
 				layoutHook(shape, ga, bo, newWidth, newHeight);
 			}
 		}
+
+		Activity activity = BusinessObjectUtil.getFirstElementOfType(containerShape, Activity.class);
+		new AbstractBoundaryEventOperation(activity, getDiagram()) {
+			@Override
+			protected void doWork(ContainerShape container) {
+				layoutPictogramElement(container);
+			}
+		};
 
 		DIUtils.updateDIShape(getDiagram(), containerShape, Activity.class);
 		return true;

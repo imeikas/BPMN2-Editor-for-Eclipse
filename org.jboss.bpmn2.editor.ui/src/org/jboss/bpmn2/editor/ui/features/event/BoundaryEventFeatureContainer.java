@@ -24,6 +24,7 @@ import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
+import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
 public class BoundaryEventFeatureContainer implements FeatureContainer {
 
@@ -37,12 +38,12 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 
 	@Override
 	public ICreateFeature getCreateFeature(IFeatureProvider fp) {
-		return new CreateBoundaryEventFeature(fp);
+		return new BoundaryEventCreateFeature(fp);
 	}
 
 	@Override
 	public IAddFeature getAddFeature(IFeatureProvider fp) {
-		return new AddBoundaryEventFeature(fp);
+		return new BoundaryEventAddFeature(fp);
 	}
 
 	@Override
@@ -76,7 +77,7 @@ public class BoundaryEventFeatureContainer implements FeatureContainer {
 	}
 
 	@Override
-	public IDeleteFeature getDeleteFeature(IFeatureProvider context) {
-		return null;
+	public IDeleteFeature getDeleteFeature(IFeatureProvider fp) {
+		return new AbstractDefaultDeleteFeature(fp);
 	}
 }

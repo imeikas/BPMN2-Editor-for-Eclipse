@@ -22,7 +22,7 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.jboss.bpmn2.editor.core.features.AbstractBaseElementUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
-import org.jboss.bpmn2.editor.core.features.activity.LayoutActivityFeature;
+import org.jboss.bpmn2.editor.core.features.activity.ActivityLayoutFeature;
 import org.jboss.bpmn2.editor.core.features.activity.task.DirectEditTaskFeature;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 import org.jboss.bpmn2.editor.ui.features.activity.AbstractActivityFeatureContainer;
@@ -51,7 +51,7 @@ public abstract class AbstractTaskFeatureContainer extends AbstractActivityFeatu
 
 	@Override
 	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
-		return new LayoutActivityFeature(fp) {
+		return new ActivityLayoutFeature(fp) {
 			@Override
 			protected boolean layoutHook(Shape shape, GraphicsAlgorithm ga, Object bo, int newWidth, int newHeight) {
 				if (bo != null && bo instanceof Task && ga instanceof MultiText) {

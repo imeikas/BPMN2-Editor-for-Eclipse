@@ -10,17 +10,18 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.event;
 
-import static org.jboss.bpmn2.editor.core.utils.GraphicsUtil.EVENT_SIZE;
-
 import org.eclipse.bpmn2.BoundaryEvent;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ILayoutContext;
 import org.eclipse.graphiti.features.impl.AbstractLayoutFeature;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
-import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
+import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
+import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.di.DIUtils;
+import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
+import org.jboss.bpmn2.editor.ui.features.event.PositionOnLine.LocationType;
 
 public class BoundaryEventLayoutFeature extends AbstractLayoutFeature {
 
@@ -35,21 +36,69 @@ public class BoundaryEventLayoutFeature extends AbstractLayoutFeature {
 
 	@Override
 	public boolean layout(ILayoutContext context) {
+		boolean layout = false;
+
 		PictogramElement element = context.getPictogramElement();
-		GraphicsAlgorithm ga = element.getGraphicsAlgorithm();
+		GraphicsAlgorithm eventGa = element.getGraphicsAlgorithm();
+		BoundaryEvent event = BusinessObjectUtil.getFirstElementOfType(element, BoundaryEvent.class);
 
-		ContainerShape parentContainer = (ContainerShape) element.eContainer();
-		GraphicsAlgorithm parentGa = parentContainer.getGraphicsAlgorithm();
+		PictogramElement activityContainer = BusinessObjectUtil.getElementFromDiagram(getDiagram(),
+		        event.getAttachedToRef());
+		GraphicsAlgorithm activityGa = activityContainer.getGraphicsAlgorithm();
 
-		int y = parentGa.getHeight() - EVENT_SIZE;
+		PositionOnLine pos = BoundaryEventPositionHelper.getPositionOnLineProperty(element);
 
-		DIUtils.updateDIShape(getDiagram(), element, BoundaryEvent.class);
-
-		if (ga.getY() != y) {
-			Graphiti.getGaService().setLocation(ga, ga.getX(), y);
-			return true;
+		switch (pos.getLineType()) {
+		case X:
+			moveX(eventGa, activityGa, pos.getLocationType());
+			layout = true;
+			break;
+		case Y:
+			moveY(eventGa, activityGa, pos.getLocationType());
+			layout = true;
+			break;
+		case XY:
+			moveX(eventGa, activityGa, pos.getLocationType());
+			moveY(eventGa, activityGa, pos.getLocationType());
+			layout = true;
+			break;
+		default:
+			layout = false;
+			break;
 		}
 
-		return false;
+		DIUtils.updateDIShape(getDiagram(), element, BoundaryEvent.class);
+		if (layout) {
+			PositionOnLine newPos = BoundaryEventPositionHelper.getPositionOnLineUsingAbsoluteCoordinates(
+			        (Shape) element, (Shape) activityContainer);
+			BoundaryEventPositionHelper.assignPositionOnLineProperty(element, newPos);
+		}
+		return layout;
+	}
+
+	private void moveX(GraphicsAlgorithm ga, GraphicsAlgorithm parentGa, LocationType locType) {
+		IGaService gaService = Graphiti.getGaService();
+		if (isLeft(locType)) {
+			gaService.setLocation(ga, parentGa.getX() - (ga.getWidth() / 2), ga.getY());
+		} else {
+			gaService.setLocation(ga, parentGa.getX() + parentGa.getWidth() - (ga.getWidth() / 2), ga.getY());
+		}
+	}
+
+	private boolean isLeft(LocationType locType) {
+		return locType == LocationType.TOP_LEFT || locType == LocationType.LEFT || locType == LocationType.BOTTOM_LEFT;
+	}
+
+	private void moveY(GraphicsAlgorithm ga, GraphicsAlgorithm parentGa, LocationType locType) {
+		IGaService gaService = Graphiti.getGaService();
+		if (isTop(locType)) {
+			gaService.setLocation(ga, ga.getX(), parentGa.getY() - (ga.getHeight() / 2));
+		} else {
+			gaService.setLocation(ga, ga.getX(), parentGa.getY() + parentGa.getHeight() - (ga.getHeight() / 2));
+		}
+	}
+
+	private boolean isTop(LocationType locType) {
+		return locType == LocationType.TOP_LEFT || locType == LocationType.TOP || locType == LocationType.TOP_RIGHT;
 	}
 }

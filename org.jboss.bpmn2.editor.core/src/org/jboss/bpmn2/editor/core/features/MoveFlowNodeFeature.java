@@ -53,7 +53,7 @@ public class MoveFlowNodeFeature extends DefaultBpmnMoveFeature {
 			algorithmContainer = getAlgorithmContainer(context);
 
 			if (algorithmContainer.isEmpty()) {
-				return super.canMoveShape(context);
+				return onMoveAlgorithmNotFound(context);
 			}
 
 			return algorithmContainer.isMoveAllowed(getSourceBo(context, handler), getTargetBo(context, handler));
@@ -64,13 +64,17 @@ public class MoveFlowNodeFeature extends DefaultBpmnMoveFeature {
 		return false;
 	}
 
+	protected boolean onMoveAlgorithmNotFound(IMoveShapeContext context) {
+		return super.canMoveShape(context);
+	}
+
 	@Override
 	protected void postMoveShape(IMoveShapeContext context) {
 		try {
 			ModelHandler handler = FeatureSupport.getModelHanderInstance(getDiagram());
 			Object[] node = getAllBusinessObjectsForPictogramElement(context.getShape());
 			for (Object object : node) {
-				if (object instanceof FlowNode) {
+				if (object instanceof FlowNode && !algorithmContainer.isEmpty()) {
 					algorithmContainer.move(((FlowNode) object), getSourceBo(context, handler),
 					        getTargetBo(context, handler));
 				}

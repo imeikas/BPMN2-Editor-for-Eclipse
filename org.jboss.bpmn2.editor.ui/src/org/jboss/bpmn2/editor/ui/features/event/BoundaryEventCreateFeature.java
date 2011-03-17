@@ -19,22 +19,28 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.features.impl.AbstractCreateFeature;
+import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
-public class CreateBoundaryEventFeature extends AbstractCreateFeature {
+public class BoundaryEventCreateFeature extends AbstractCreateFeature {
 
-	public CreateBoundaryEventFeature(IFeatureProvider fp) {
+	public BoundaryEventCreateFeature(IFeatureProvider fp) {
 		super(fp, "Boundary Event", "Adds boundary event to activity, defaults to interrupting");
 	}
 
 	@Override
 	public boolean canCreate(ICreateContext context) {
 		Object o = getBusinessObjectForPictogramElement(context.getTargetContainer());
-		return o != null && o instanceof Activity;
+		if (o == null || !(o instanceof Activity)) {
+			return false;
+		}
+
+		GraphicsAlgorithm ga = context.getTargetContainer().getGraphicsAlgorithm();
+		return BoundaryEventPositionHelper.canCreateEventAt(context, ga, 10);
 	}
 
 	@Override
