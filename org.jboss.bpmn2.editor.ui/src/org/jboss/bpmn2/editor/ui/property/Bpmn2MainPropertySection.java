@@ -14,10 +14,8 @@ import java.io.IOException;
 
 import org.eclipse.bpmn2.Definitions;
 import org.eclipse.bpmn2.di.impl.BPMNDiagramImpl;
-import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.ui.platform.GFPropertySection;
@@ -47,14 +45,7 @@ public class Bpmn2MainPropertySection extends GFPropertySection implements ITabb
 		if (pe != null) {
 			final EObject be = Graphiti.getLinkService().getBusinessObjectForLinkedPictogramElement(pe);
 			final BPMN2Editor diagramEditor = (BPMN2Editor) getDiagramEditor();
-			CommandStack commandStack = diagramEditor.getEditingDomain().getCommandStack();
-			commandStack.execute(new RecordingCommand(diagramEditor.getEditingDomain()) {
-
-				@Override
-				protected void doExecute() {
-					updateComposite(be, diagramEditor);
-				}
-			});
+			updateComposite(be, diagramEditor);
 		}
 	}
 
