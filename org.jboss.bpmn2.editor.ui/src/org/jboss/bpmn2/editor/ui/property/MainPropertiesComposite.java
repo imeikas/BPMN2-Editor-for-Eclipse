@@ -112,20 +112,14 @@ public class MainPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 	}
 
 	public void bindReference(final EReference reference, final String name) {
-		TransactionalEditingDomain domain = bpmn2Editor.getEditingDomain();
-		domain.getCommandStack().execute(new RecordingCommand(domain) {
-			@Override
-			protected void doExecute() {
-				Object eGet = be.eGet(reference);
+		Object eGet = be.eGet(reference);
 
-				createLabel(name);
-				if (eGet instanceof List) {
-					createListEditor(reference, eGet);
-				} else {
-					createSingleItemEditor(reference, eGet, null);
-				}
-			}
-		});
+		createLabel(name);
+		if (eGet instanceof List) {
+			createListEditor(reference, eGet);
+		} else {
+			createSingleItemEditor(reference, eGet, null);
+		}
 	}
 
 	private void createListEditor(final EReference reference, Object eGet) {
