@@ -32,11 +32,8 @@ import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.eclipse.graphiti.features.impl.AbstractUpdateFeature;
 import org.eclipse.graphiti.features.impl.Reason;
-import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Image;
 import org.eclipse.graphiti.mm.algorithms.RoundedRectangle;
-import org.eclipse.graphiti.mm.algorithms.Text;
-import org.eclipse.graphiti.mm.algorithms.styles.Orientation;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
@@ -44,11 +41,9 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
-import org.jboss.bpmn2.editor.core.features.AbstractBaseElementUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.AbstractCreateFlowElementFeature;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
-import org.jboss.bpmn2.editor.core.features.activity.ActivityLayoutFeature;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil.Expand;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
@@ -79,18 +74,6 @@ public class CallActivityFeatureContainer extends AbstractSubProcessFeatureConta
 				CallActivity callActivity = (CallActivity) activity;
 				Graphiti.getPeService().setPropertyValue(container, CALL_ACTIITY_REF_PROPERTY,
 				        getCallableElementStringValue(callActivity.getCalledElementRef()));
-
-				IPeService peService = Graphiti.getPeService();
-				IGaService gaService = Graphiti.getGaService();
-
-				Shape textShape = peService.createShape(container, false);
-				Text text = gaService.createDefaultText(textShape, activity.getName());
-				gaService.setLocationAndSize(text, 5, 5, width - 10, 15);
-				text.setStyle(StyleUtil.getStyleForText(getDiagram()));
-				text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
-				text.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
-				text.getFont().setBold(true);
-				link(textShape, activity);
 			}
 
 			@Override
@@ -117,19 +100,10 @@ public class CallActivityFeatureContainer extends AbstractSubProcessFeatureConta
 
 	@Override
 	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
-		return new ActivityLayoutFeature(fp) {
+		return new SubProcessLayoutFeature(fp) {
 			@Override
 			protected int getMarkerContainerOffset() {
 				return MARKER_OFFSET;
-			}
-
-			@Override
-			protected boolean layoutHook(Shape shape, GraphicsAlgorithm ga, Object bo, int newWidth, int newHeight) {
-				if (bo != null && bo instanceof CallActivity && ga instanceof Text) {
-					Graphiti.getGaService().setLocationAndSize(ga, 5, 5, newWidth - 10, 15);
-					return true;
-				}
-				return false;
 			}
 		};
 	}
@@ -138,21 +112,13 @@ public class CallActivityFeatureContainer extends AbstractSubProcessFeatureConta
 	public MultiUpdateFeature getUpdateFeature(IFeatureProvider fp) {
 		MultiUpdateFeature multiUpdate = super.getUpdateFeature(fp);
 		multiUpdate.addUpdateFeature(new UpdateCallActivityFeature(fp));
-		AbstractBaseElementUpdateFeature nameUpdateFeature = new AbstractBaseElementUpdateFeature(fp) {
-			@Override
-			public boolean canUpdate(IUpdateContext context) {
-				Object bo = getBusinessObjectForPictogramElement(context.getPictogramElement());
-				return bo != null && bo instanceof BaseElement && canApplyTo((BaseElement) bo);
-			}
-		};
-		multiUpdate.addUpdateFeature(nameUpdateFeature);
 		return multiUpdate;
 	}
 
 	public static class CreateCallActivityFeatureContainer extends AbstractCreateFlowElementFeature<CallActivity> {
 
 		public CreateCallActivityFeatureContainer(IFeatureProvider fp) {
-			super(fp, "Call Activity",
+			super(fp, "Expanded Call Activity",
 			        "Identifies a point in the Process where a global Process or a Global Task is used");
 		}
 
