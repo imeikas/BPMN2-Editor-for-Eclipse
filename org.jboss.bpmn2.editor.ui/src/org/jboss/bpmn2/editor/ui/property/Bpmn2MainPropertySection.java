@@ -12,12 +12,13 @@ package org.jboss.bpmn2.editor.ui.property;
 
 import java.io.IOException;
 
+import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Definitions;
+import org.eclipse.bpmn2.di.BPMNShape;
 import org.eclipse.bpmn2.di.impl.BPMNDiagramImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
-import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.ui.platform.GFPropertySection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -25,6 +26,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertyConstants;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
+import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.ui.Activator;
 import org.jboss.bpmn2.editor.ui.editor.BPMN2Editor;
 
@@ -43,26 +45,30 @@ public class Bpmn2MainPropertySection extends GFPropertySection implements ITabb
 	public void refresh() {
 		PictogramElement pe = getSelectedPictogramElement();
 		if (pe != null) {
-			final EObject be = Graphiti.getLinkService().getBusinessObjectForLinkedPictogramElement(pe);
+			final EObject be = BusinessObjectUtil.getFirstElementOfType(pe, BaseElement.class);
+			final BPMNShape shape = BusinessObjectUtil.getFirstElementOfType(pe, BPMNShape.class);
 			final BPMN2Editor diagramEditor = (BPMN2Editor) getDiagramEditor();
-			updateComposite(be, diagramEditor);
+			updateComposite(be, diagramEditor, shape);
 		}
 	}
 
-	private void updateComposite(EObject be, BPMN2Editor diagramEditor) {
+	private void updateComposite(EObject be, BPMN2Editor diagramEditor, BPMNShape shape) {
 		if (be instanceof BPMNDiagramImpl) {
 			try {
 				Resource eResource = be.eResource();
 				if (eResource != null) {
 					Definitions definitions = ModelHandlerLocator.getModelHandler(eResource).getDefinitions();
+					composite.setShape(shape);
 					composite.setEObject(diagramEditor, definitions);
 				} else {
+					composite.setShape(shape);
 					composite.setEObject(diagramEditor, null);
 				}
 			} catch (IOException e) {
 				Activator.showErrorWithLogging(e);
 			}
 		} else {
+			composite.setShape(shape);
 			composite.setEObject(diagramEditor, be);
 		}
 	}

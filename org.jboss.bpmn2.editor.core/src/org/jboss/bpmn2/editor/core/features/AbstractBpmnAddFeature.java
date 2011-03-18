@@ -47,38 +47,42 @@ public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 
 	protected void createDIShape(Shape gShape, BaseElement elem) {
 		try {
-			ILocation loc = Graphiti.getLayoutService().getLocationRelativeToDiagram(gShape);
 			BPMNShape shape = (BPMNShape) ModelHandlerLocator.getModelHandler(getDiagram().eResource()).findDIElement(
-			        getDiagram(), elem);
-			if (shape == null) {
-				EList<EObject> businessObjects = Graphiti.getLinkService().getLinkForPictogramElement(getDiagram())
-				        .getBusinessObjects();
-				for (EObject eObject : businessObjects) {
-					if (eObject instanceof BPMNDiagram) {
-						BPMNDiagram bpmnDiagram = (BPMNDiagram) eObject;
-
-						shape = BpmnDiFactory.eINSTANCE.createBPMNShape();
-						shape.setId(EcoreUtil.generateUUID());
-						shape.setBpmnElement(elem);
-						Bounds bounds = DcFactory.eINSTANCE.createBounds();
-						if (elem instanceof Activity) {
-							bounds.setHeight(gShape.getGraphicsAlgorithm().getHeight());
-						} else {
-							bounds.setHeight(gShape.getGraphicsAlgorithm().getHeight());
-						}
-						bounds.setWidth(gShape.getGraphicsAlgorithm().getWidth());
-						bounds.setX(loc.getX());
-						bounds.setY(loc.getY());
-						shape.setBounds(bounds);
-
-						addShape(shape, bpmnDiagram);
-					}
-				}
-			}
-			link(gShape, new Object[] { elem, shape });
+					getDiagram(), elem);
+			createDIShape(gShape, elem, shape);
 		} catch (IOException e) {
 			Activator.logError(e);
 		}
+	}
+
+	protected void createDIShape(Shape gShape, BaseElement elem, BPMNShape shape) {
+		ILocation loc = Graphiti.getLayoutService().getLocationRelativeToDiagram(gShape);
+		if (shape == null) {
+			EList<EObject> businessObjects = Graphiti.getLinkService().getLinkForPictogramElement(getDiagram())
+					.getBusinessObjects();
+			for (EObject eObject : businessObjects) {
+				if (eObject instanceof BPMNDiagram) {
+					BPMNDiagram bpmnDiagram = (BPMNDiagram) eObject;
+
+					shape = BpmnDiFactory.eINSTANCE.createBPMNShape();
+					shape.setId(EcoreUtil.generateUUID());
+					shape.setBpmnElement(elem);
+					Bounds bounds = DcFactory.eINSTANCE.createBounds();
+					if (elem instanceof Activity) {
+						bounds.setHeight(gShape.getGraphicsAlgorithm().getHeight());
+					} else {
+						bounds.setHeight(gShape.getGraphicsAlgorithm().getHeight());
+					}
+					bounds.setWidth(gShape.getGraphicsAlgorithm().getWidth());
+					bounds.setX(loc.getX());
+					bounds.setY(loc.getY());
+					shape.setBounds(bounds);
+
+					addShape(shape, bpmnDiagram);
+				}
+			}
+		}
+		link(gShape, new Object[] { elem, shape });
 	}
 
 	private void addShape(DiagramElement elem, BPMNDiagram bpmnDiagram) {
@@ -88,58 +92,62 @@ public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 
 	protected void createDIEdge(Connection connection, BaseElement conElement) {
 		try {
-			ModelHandler modelHandler = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
-
-			BPMNEdge edge = (BPMNEdge) modelHandler.findDIElement(getDiagram(), conElement);
-			if (edge == null) {
-				EList<EObject> businessObjects = Graphiti.getLinkService().getLinkForPictogramElement(getDiagram())
-				        .getBusinessObjects();
-				for (EObject eObject : businessObjects) {
-					if (eObject instanceof BPMNDiagram) {
-						BPMNDiagram bpmnDiagram = (BPMNDiagram) eObject;
-
-						edge = BpmnDiFactory.eINSTANCE.createBPMNEdge();
-						edge.setId(EcoreUtil.generateUUID());
-						edge.setBpmnElement(conElement);
-						if (conElement instanceof Association) {
-							edge.setSourceElement(modelHandler.findDIElement(getDiagram(),
-							        ((Association) conElement).getSourceRef()));
-							edge.setTargetElement(modelHandler.findDIElement(getDiagram(),
-							        ((Association) conElement).getTargetRef()));
-						} else if (conElement instanceof MessageFlow) {
-							edge.setSourceElement(modelHandler.findDIElement(getDiagram(),
-							        (BaseElement) ((MessageFlow) conElement).getSourceRef()));
-							edge.setTargetElement(modelHandler.findDIElement(getDiagram(),
-							        (BaseElement) ((MessageFlow) conElement).getTargetRef()));
-						} else if (conElement instanceof SequenceFlow) {
-							edge.setSourceElement(modelHandler.findDIElement(getDiagram(),
-							        ((SequenceFlow) conElement).getSourceRef()));
-							edge.setTargetElement(modelHandler.findDIElement(getDiagram(),
-							        ((SequenceFlow) conElement).getTargetRef()));
-						}
-
-						ILocation sourceLoc = Graphiti.getPeService().getLocationRelativeToDiagram(
-						        connection.getStart());
-						ILocation targetLoc = Graphiti.getPeService().getLocationRelativeToDiagram(connection.getEnd());
-
-						Point point = DcFactory.eINSTANCE.createPoint();
-						point.setX(sourceLoc.getX());
-						point.setY(sourceLoc.getY());
-						edge.getWaypoint().add(point);
-
-						point = DcFactory.eINSTANCE.createPoint();
-						point.setX(targetLoc.getX());
-						point.setY(targetLoc.getY());
-						edge.getWaypoint().add(point);
-
-						addShape(edge, bpmnDiagram);
-					}
-				}
-			}
-			link(connection, new Object[] { conElement, edge });
+			BPMNEdge edge = (BPMNEdge) ModelHandlerLocator.getModelHandler(getDiagram().eResource()).findDIElement(
+					getDiagram(), conElement);
+			createDIEdge(connection, conElement, edge);
 		} catch (IOException e) {
 			Activator.logError(e);
 		}
 
+	}
+
+	protected void createDIEdge(Connection connection, BaseElement conElement, BPMNEdge edge) throws IOException {
+		ModelHandler modelHandler = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
+		if (edge == null) {
+			EList<EObject> businessObjects = Graphiti.getLinkService().getLinkForPictogramElement(getDiagram())
+					.getBusinessObjects();
+			for (EObject eObject : businessObjects) {
+				if (eObject instanceof BPMNDiagram) {
+					BPMNDiagram bpmnDiagram = (BPMNDiagram) eObject;
+
+					edge = BpmnDiFactory.eINSTANCE.createBPMNEdge();
+					edge.setId(EcoreUtil.generateUUID());
+					edge.setBpmnElement(conElement);
+
+					if (conElement instanceof Association) {
+						edge.setSourceElement(modelHandler.findDIElement(getDiagram(),
+								((Association) conElement).getSourceRef()));
+						edge.setTargetElement(modelHandler.findDIElement(getDiagram(),
+								((Association) conElement).getTargetRef()));
+					} else if (conElement instanceof MessageFlow) {
+						edge.setSourceElement(modelHandler.findDIElement(getDiagram(),
+								(BaseElement) ((MessageFlow) conElement).getSourceRef()));
+						edge.setTargetElement(modelHandler.findDIElement(getDiagram(),
+								(BaseElement) ((MessageFlow) conElement).getTargetRef()));
+					} else if (conElement instanceof SequenceFlow) {
+						edge.setSourceElement(modelHandler.findDIElement(getDiagram(),
+								((SequenceFlow) conElement).getSourceRef()));
+						edge.setTargetElement(modelHandler.findDIElement(getDiagram(),
+								((SequenceFlow) conElement).getTargetRef()));
+					}
+
+					ILocation sourceLoc = Graphiti.getPeService().getLocationRelativeToDiagram(connection.getStart());
+					ILocation targetLoc = Graphiti.getPeService().getLocationRelativeToDiagram(connection.getEnd());
+
+					Point point = DcFactory.eINSTANCE.createPoint();
+					point.setX(sourceLoc.getX());
+					point.setY(sourceLoc.getY());
+					edge.getWaypoint().add(point);
+
+					point = DcFactory.eINSTANCE.createPoint();
+					point.setX(targetLoc.getX());
+					point.setY(targetLoc.getY());
+					edge.getWaypoint().add(point);
+
+					addShape(edge, bpmnDiagram);
+				}
+			}
+		}
+		link(connection, new Object[] { conElement, edge });
 	}
 }

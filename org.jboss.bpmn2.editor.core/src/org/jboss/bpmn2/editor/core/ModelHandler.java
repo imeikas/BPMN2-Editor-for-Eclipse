@@ -374,7 +374,7 @@ public class ModelHandler {
 		return findElementOfType(FlowElementsContainer.class, o);
 	}
 
-	public Participant getParticipant(Object o) {
+	public Participant getParticipant(final Object o) {
 		if (o == null || o instanceof Diagram) {
 			return getInternalParticipant();
 		}
@@ -396,7 +396,7 @@ public class ModelHandler {
 			}
 		}
 
-		return null;
+		return getInternalParticipant();
 	}
 
 	@SuppressWarnings("unchecked")

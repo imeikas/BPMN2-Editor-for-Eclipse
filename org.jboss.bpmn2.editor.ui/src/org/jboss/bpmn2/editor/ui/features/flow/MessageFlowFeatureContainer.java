@@ -15,6 +15,7 @@ import java.io.IOException;
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.InteractionNode;
 import org.eclipse.bpmn2.MessageFlow;
+import org.eclipse.bpmn2.Participant;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateConnectionFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -132,7 +133,9 @@ public class MessageFlowFeatureContainer extends ConnectionFeatureContainer {
 			boolean different = false;
 			try {
 				ModelHandler handler = FeatureSupport.getModelHanderInstance(getDiagram());
-				different = !handler.getParticipant(source).equals(handler.getParticipant(target));
+				Participant sourceParticipant = handler.getParticipant(source);
+				Participant targetParticipant = handler.getParticipant(target);
+				different = !sourceParticipant.equals(targetParticipant);
 			} catch (IOException e) {
 				Activator.logError(e);
 			}
