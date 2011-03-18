@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.bpmn2.provider.Bpmn2ItemProviderAdapterFactory;
-import org.eclipse.core.databinding.Binding;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
@@ -82,18 +81,13 @@ public class MainPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 
 			if (preferences.isEnabled(be.eClass(), a)) {
 				IItemPropertyDescriptor propertyDescriptor = itemProviderAdapter.getPropertyDescriptor(be, a);
+
 				if (String.class.equals(a.getEType().getInstanceClass())) {
-					Text t = createTextInput(propertyDescriptor.getDisplayName(be), propertyDescriptor.isMultiLine(be));
-					Binding bind = bind(a, t);
-					bindings.add(bind);
+					bind(a, createTextInput(propertyDescriptor.getDisplayName(be), propertyDescriptor.isMultiLine(be)));
 				} else if (boolean.class.equals(a.getEType().getInstanceClass())) {
-					Button t = createBooleanInput(propertyDescriptor.getDisplayName(be));
-					Binding bind = bindBoolean(a, t);
-					bindings.add(bind);
+					bindBoolean(a, createBooleanInput(propertyDescriptor.getDisplayName(be)));
 				} else if (int.class.equals(a.getEType().getInstanceClass())) {
-					Text t = createIntInput(propertyDescriptor.getDisplayName(be));
-					Binding bind = bindInt(a, t);
-					bindings.add(bind);
+					bindInt(a, createIntInput(propertyDescriptor.getDisplayName(be)));
 				} else if (propertyDescriptor != null) {
 					propertyDescriptor.getChoiceOfValues(be);
 					createLabel(propertyDescriptor.getDisplayName(be));

@@ -66,10 +66,11 @@ public class JbpmPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 
 	@Override
 	public void createBindings() {
-		boolean showCustomButton = be.eClass().getInstanceClass().equals(Task.class);
+		boolean showCustomButton = be.eClass().getInstanceClass()
+				.equals(Task.class);
 		customEditorButton.setVisible(showCustomButton);
 		buttonGridData.exclude = !showCustomButton;
-		
+
 		EList<EAttribute> eAllAttributes = be.eClass().getEAllAttributes();
 
 		for (EAttribute attrib : eAllAttributes) {
@@ -91,9 +92,8 @@ public class JbpmPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 
 				for (EStructuralFeature a : attributes) {
 					if (Object.class.equals(a.getEType().getInstanceClass())) {
-						Text t = createTextInput(a.getName(),false);
-						Binding bind = bind(a, t);
-						bindings.add(bind);
+						Text t = createTextInput(a.getName(), false);
+						bind(a, t);
 					}
 				}
 			}

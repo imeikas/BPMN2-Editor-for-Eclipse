@@ -16,8 +16,6 @@ import org.eclipse.bpmn2.di.provider.BpmnDiItemProviderAdapterFactory;
 import org.eclipse.bpmn2.provider.Bpmn2ItemProviderAdapterFactory;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -25,17 +23,19 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dd.dc.provider.DcItemProviderAdapterFactory;
 import org.eclipse.dd.di.provider.DiItemProviderAdapterFactory;
-import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.transaction.RecordingCommand;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -45,6 +45,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.jboss.bpmn2.editor.ui.Activator;
 import org.jboss.bpmn2.editor.ui.editor.BPMN2Editor;
 
 public abstract class AbstractBpmn2PropertiesComposite extends Composite {
@@ -165,35 +166,36 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 		widgets.add(label);
 	}
 
-	protected Binding bind(final EStructuralFeature a, final Text text) {
-		IObservableValue textObserveTextObserveWidget = SWTObservables.observeText(text, SWT.Modify);
-		IObservableValue holderIdObserveValue = EMFObservables.observeValue(be, a);
-		textObserveTextObserveWidget.addValueChangeListener(new IValueChangeListener() {
-			@SuppressWarnings("restriction")
+	protected void bind(final EStructuralFeature a, final Text text) {
+
+		Object eGet = be.eGet(a);
+		if (eGet != null) {
+			text.setText(eGet.toString());
+		}
+
+		IObservableValue textObserver = SWTObservables.observeText(text, SWT.Modify);
+		textObserver.addValueChangeListener(new IValueChangeListener() {
+
 			@Override
-			public void handleValueChange(ValueChangeEvent event) {
+			public void handleValueChange(final ValueChangeEvent e) {
 
 				if (!text.getText().equals(be.eGet(a))) {
-					bpmn2Editor.getEditingDomain().getCommandStack()
-							.execute(new RecordingCommand(bpmn2Editor.getEditingDomain()) {
-								@Override
-								protected void doExecute() {
-									be.eSet(a, text.getText());
-								}
-							});
+					TransactionalEditingDomain editingDomain = bpmn2Editor.getEditingDomain();
+					editingDomain.getCommandStack().execute(new RecordingCommand(editingDomain) {
+						@Override
+						protected void doExecute() {
+							be.eSet(a, e.diff.getNewValue());
+						}
+					});
 				}
 			}
 		});
-
-		Binding bindValue = bindingContext.bindValue(textObserveTextObserveWidget, holderIdObserveValue,
-				new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), null);
-		return bindValue;
 	}
 
-	protected Binding bindBoolean(final EStructuralFeature a, final Button button) {
-		IObservableValue textObserveTextObserveWidget = SWTObservables.observeSelection(button);
-		IObservableValue holderIdObserveValue = EMFObservables.observeValue(be, a);
-		textObserveTextObserveWidget.addValueChangeListener(new IValueChangeListener() {
+	protected void bindBoolean(final EStructuralFeature a, final Button button) {
+		button.setSelection((Boolean) be.eGet(a));
+		IObservableValue buttonObserver = SWTObservables.observeSelection(button);
+		buttonObserver.addValueChangeListener(new IValueChangeListener() {
 			@SuppressWarnings("restriction")
 			@Override
 			public void handleValueChange(ValueChangeEvent event) {
@@ -209,27 +211,48 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 				}
 			}
 		});
-
-		Binding bindValue = bindingContext.bindValue(textObserveTextObserveWidget, holderIdObserveValue,
-				new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), null);
-		return bindValue;
 	}
 
-	protected Binding bindInt(final EStructuralFeature a, final Text t) {
-		IObservableValue textObserveTextObserveWidget = SWTObservables.observeText(t, SWT.Modify);
-		IObservableValue holderIdObserveValue = EMFObservables.observeValue(be, a);
+	protected void bindInt(final EStructuralFeature a, final Text text) {
 
+		text.addVerifyListener(new VerifyListener() {
+
+			/**
+			 * taken from
+			 * http://dev.eclipse.org/viewcvs/viewvc.cgi/org.eclipse.swt.snippets/src/org/eclipse/swt/snippets
+			 * /Snippet19.java?view=co
+			 */
+			@Override
+			public void verifyText(VerifyEvent e) {
+				String string = e.text;
+				char[] chars = new char[string.length()];
+				string.getChars(0, chars.length, chars, 0);
+				for (int i = 0; i < chars.length; i++) {
+					if (!('0' <= chars[i] && chars[i] <= '9')) {
+						e.doit = false;
+						return;
+					}
+				}
+			}
+		});
+
+		Object eGet = be.eGet(a);
+		if (eGet != null) {
+			text.setText(eGet.toString());
+		}
+
+		IObservableValue textObserveTextObserveWidget = SWTObservables.observeText(text, SWT.Modify);
 		textObserveTextObserveWidget.addValueChangeListener(new IValueChangeListener() {
 			@Override
 			public void handleValueChange(ValueChangeEvent event) {
 
 				try {
-					final int i = Integer.parseInt(t.getText());
+					final int i = Integer.parseInt(text.getText());
 					if (!be.eGet(a).equals(i)) {
 						setFeatureValue(i);
 					}
 				} catch (NumberFormatException e) {
-					resetValue(event);
+					Activator.logError(e);
 				}
 			}
 
@@ -243,29 +266,8 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 				};
 				bpmn2Editor.getEditingDomain().getCommandStack().execute(command);
 			}
-
-			private void resetValue(ValueChangeEvent event) {
-				int caretPosition = t.getCaretPosition();
-				t.setText((String) event.diff.getOldValue());
-				int position = caretPosition - 1;
-				if (position >= 0) {
-					t.setSelection(position);
-				} else {
-					t.setSelection(0);
-				}
-			}
 		});
 
-		Binding bindValue = bindingContext.bindValue(textObserveTextObserveWidget, holderIdObserveValue,
-				new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
-				new UpdateValueStrategy().setConverter(new Converter(int.class, String.class) {
-
-					@Override
-					public Object convert(Object fromObject) {
-						return fromObject.toString();
-					}
-				}));
-		return bindValue;
 	}
 
 	protected void cleanBindings() {
