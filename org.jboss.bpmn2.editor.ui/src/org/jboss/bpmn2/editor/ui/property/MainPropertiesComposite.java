@@ -15,6 +15,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.bpmn2.Participant;
+import org.eclipse.bpmn2.di.BPMNShape;
+import org.eclipse.bpmn2.di.BpmnDiPackage;
 import org.eclipse.bpmn2.provider.Bpmn2ItemProviderAdapterFactory;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
@@ -27,6 +30,7 @@ import org.eclipse.emf.edit.ui.celleditor.FeatureEditorDialog;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -49,6 +53,7 @@ import org.jboss.bpmn2.editor.ui.Activator;
 public class MainPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 	private final AdapterFactoryLabelProvider LABEL_PROVIDER = new AdapterFactoryLabelProvider(ADAPTER_FACTORY);
 	private ModelHandler modelHandler;
+	private BPMNShape shape;
 
 	/**
 	 * Create the composite.
@@ -102,6 +107,15 @@ public class MainPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 				IItemPropertyDescriptor propertyDescriptor = itemProviderAdapter.getPropertyDescriptor(be, e);
 				bindReference(e, propertyDescriptor.getDisplayName(e));
 			}
+		}
+
+		if (be instanceof Participant) {
+			Diagram diagram = bpmn2Editor.getDiagramTypeProvider().getDiagram();
+			if (shape.getParticipantBandKind() != null) {
+				bindBoolean(shape.eClass().getEStructuralFeature(BpmnDiPackage.BPMN_SHAPE__IS_MESSAGE_VISIBLE),
+						createBooleanInput("Is Message Visible"), shape);
+			}
+
 		}
 	}
 
@@ -237,5 +251,9 @@ public class MainPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 		}
 
 		text.setText(listText);
+	}
+
+	public void setShape(BPMNShape shape) {
+		this.shape = shape;
 	}
 }

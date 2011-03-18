@@ -193,19 +193,23 @@ public abstract class AbstractBpmn2PropertiesComposite extends Composite {
 	}
 
 	protected void bindBoolean(final EStructuralFeature a, final Button button) {
-		button.setSelection((Boolean) be.eGet(a));
+		bindBoolean(a, button, be);
+	}
+
+	protected void bindBoolean(final EStructuralFeature a, final Button button, final EObject object) {
+		button.setSelection((Boolean) object.eGet(a));
 		IObservableValue buttonObserver = SWTObservables.observeSelection(button);
 		buttonObserver.addValueChangeListener(new IValueChangeListener() {
 			@SuppressWarnings("restriction")
 			@Override
 			public void handleValueChange(ValueChangeEvent event) {
 
-				if (!be.eGet(a).equals(button.getSelection())) {
+				if (!object.eGet(a).equals(button.getSelection())) {
 					bpmn2Editor.getEditingDomain().getCommandStack()
 							.execute(new RecordingCommand(bpmn2Editor.getEditingDomain()) {
 								@Override
 								protected void doExecute() {
-									be.eSet(a, button.getSelection());
+									object.eSet(a, button.getSelection());
 								}
 							});
 				}

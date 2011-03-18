@@ -374,7 +374,7 @@ public class ModelHandler {
 		return findElementOfType(FlowElementsContainer.class, o);
 	}
 
-	public Participant getParticipant(Object o) {
+	public Participant getParticipant(final Object o) {
 		if (o == null || o instanceof Diagram) {
 			return getInternalParticipant();
 		}
@@ -396,7 +396,7 @@ public class ModelHandler {
 			}
 		}
 
-		return null;
+		return getInternalParticipant();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -433,10 +433,10 @@ public class ModelHandler {
 
 			for (DiagramElement elem : planeElement) {
 				if (elem instanceof BPMNShape && element.getId() != null
-				        && element.getId().equals(((BPMNShape) elem).getBpmnElement().getId())) {
+						&& element.getId().equals(((BPMNShape) elem).getBpmnElement().getId())) {
 					return (elem);
 				} else if (elem instanceof BPMNEdge && element.getId() != null
-				        && element.getId().equals(((BPMNEdge) elem).getBpmnElement().getId())) {
+						&& element.getId().equals(((BPMNEdge) elem).getBpmnElement().getId())) {
 					return (elem);
 				}
 			}

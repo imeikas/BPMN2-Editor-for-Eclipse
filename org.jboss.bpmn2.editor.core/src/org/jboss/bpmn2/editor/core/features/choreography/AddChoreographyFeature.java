@@ -110,48 +110,48 @@ public class AddChoreographyFeature extends AbstractBpmnAddFeature {
 
 		for (BPMNShape shape : shapes) {
 			if (participants.contains(shape.getBpmnElement())
-			        && choreoBpmnShape.equals(shape.getChoreographyActivityShape())) {
+					&& choreoBpmnShape.equals(shape.getChoreographyActivityShape())) {
 				filteredShapes.add(shape);
 			}
 		}
 
-		for (BPMNShape shape : filteredShapes) {
-			ParticipantBandKind bandKind = shape.getParticipantBandKind();
+		for (BPMNShape bpmnShape : filteredShapes) {
+			ParticipantBandKind bandKind = bpmnShape.getParticipantBandKind();
 			Shape createdShape = null;
 			boolean top = false;
 			switch (bandKind) {
 			case TOP_INITIATING:
-				createdShape = createTopShape(container, shape, true);
+				createdShape = createTopShape(container, bpmnShape, true);
 				top = true;
 				break;
 			case TOP_NON_INITIATING:
-				createdShape = createTopShape(container, shape, false);
+				createdShape = createTopShape(container, bpmnShape, false);
 				top = true;
 				break;
 			case MIDDLE_INITIATING:
-				createdShape = createMiddleShape(container, shape, true);
+				createdShape = createMiddleShape(container, bpmnShape, true);
 				break;
 			case MIDDLE_NON_INITIATING:
-				createdShape = createMiddleShape(container, shape, false);
+				createdShape = createMiddleShape(container, bpmnShape, false);
 				break;
 			case BOTTOM_INITIATING:
-				createdShape = createBottomShape(container, shape, true);
+				createdShape = createBottomShape(container, bpmnShape, true);
 				break;
 			case BOTTOM_NON_INITIATING:
-				createdShape = createBottomShape(container, shape, false);
+				createdShape = createBottomShape(container, bpmnShape, false);
 				break;
 			}
-			createDIShape(createdShape, shape.getBpmnElement());
+			createDIShape(createdShape, bpmnShape.getBpmnElement(), bpmnShape);
 			AnchorUtil.addFixedPointAnchors(createdShape, createdShape.getGraphicsAlgorithm());
 
-			if (shape.isIsMessageVisible()) {
+			if (bpmnShape.isIsMessageVisible()) {
 				BoundaryAnchor anchor = AnchorUtil.getBoundaryAnchors(createdShape).get(
-				        top ? AnchorLocation.TOP : AnchorLocation.BOTTOM);
-				Bounds bounds = shape.getBounds();
+						top ? AnchorLocation.TOP : AnchorLocation.BOTTOM);
+				Bounds bounds = bpmnShape.getBounds();
 				int x = (int) (bounds.getX() + bounds.getWidth() / 2) - ENV_W / 2;
 				int y = (int) (top ? bounds.getY() - 30 - ENV_H : bounds.getY() + bounds.getHeight() + 30);
 				boolean filled = bandKind == ParticipantBandKind.TOP_NON_INITIATING
-				        || bandKind == ParticipantBandKind.BOTTOM_NON_INITIATING;
+						|| bandKind == ParticipantBandKind.BOTTOM_NON_INITIATING;
 				drawMessageLink(anchor, x, y, filled);
 			}
 		}
