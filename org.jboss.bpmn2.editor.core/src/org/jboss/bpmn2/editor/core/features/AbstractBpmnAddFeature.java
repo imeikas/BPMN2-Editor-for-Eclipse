@@ -33,7 +33,7 @@ import org.eclipse.graphiti.datatypes.ILocation;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
 import org.eclipse.graphiti.mm.pictograms.Connection;
-import org.eclipse.graphiti.mm.pictograms.ContainerShape;
+import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
@@ -45,9 +45,9 @@ public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 		super(fp);
 	}
 
-	protected void createDIShape(ContainerShape containerShape, BaseElement elem) {
+	protected void createDIShape(Shape gShape, BaseElement elem) {
 		try {
-			ILocation loc = Graphiti.getLayoutService().getLocationRelativeToDiagram(containerShape);
+			ILocation loc = Graphiti.getLayoutService().getLocationRelativeToDiagram(gShape);
 			BPMNShape shape = (BPMNShape) ModelHandlerLocator.getModelHandler(getDiagram().eResource()).findDIElement(
 			        getDiagram(), elem);
 			if (shape == null) {
@@ -62,11 +62,11 @@ public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 						shape.setBpmnElement(elem);
 						Bounds bounds = DcFactory.eINSTANCE.createBounds();
 						if (elem instanceof Activity) {
-							bounds.setHeight(containerShape.getGraphicsAlgorithm().getHeight());
+							bounds.setHeight(gShape.getGraphicsAlgorithm().getHeight());
 						} else {
-							bounds.setHeight(containerShape.getGraphicsAlgorithm().getHeight());
+							bounds.setHeight(gShape.getGraphicsAlgorithm().getHeight());
 						}
-						bounds.setWidth(containerShape.getGraphicsAlgorithm().getWidth());
+						bounds.setWidth(gShape.getGraphicsAlgorithm().getWidth());
 						bounds.setX(loc.getX());
 						bounds.setY(loc.getY());
 						shape.setBounds(bounds);
@@ -75,7 +75,7 @@ public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 					}
 				}
 			}
-			link(containerShape, new Object[] { elem, shape });
+			link(gShape, new Object[] { elem, shape });
 		} catch (IOException e) {
 			Activator.logError(e);
 		}
