@@ -22,15 +22,14 @@ import org.eclipse.graphiti.mm.algorithms.RoundedRectangle;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
-import org.jboss.bpmn2.editor.core.features.activity.ActivityLayoutFeature;
 import org.jboss.bpmn2.editor.core.features.activity.subprocess.AbstractCreateSubProcess;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
 public class TransactionFeatureContainer extends AbstractSubProcessFeatureContainer {
-	
+
 	private static final int offset = 3;
-	
+
 	@Override
 	public boolean canApplyTo(BaseElement element) {
 		return element instanceof Transaction;
@@ -64,17 +63,17 @@ public class TransactionFeatureContainer extends AbstractSubProcessFeatureContai
 
 	@Override
 	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
-		return new ActivityLayoutFeature(fp) {
+		return new SubProcessLayoutFeature(fp) {
 			@Override
 			protected void layoutInRectangle(RoundedRectangle rect) {
 				IGaService gaService = Graphiti.getGaService();
 				RoundedRectangle innerRect = (RoundedRectangle) rect.getGraphicsAlgorithmChildren().get(0);
 				gaService.setSize(innerRect, rect.getWidth() - 6, rect.getHeight() - 6);
 			}
-			
+
 			@Override
 			protected int getMarkerContainerOffset() {
-			    return offset;
+				return offset;
 			}
 		};
 	}
@@ -82,7 +81,7 @@ public class TransactionFeatureContainer extends AbstractSubProcessFeatureContai
 	public static class CreateTransactionFeature extends AbstractCreateSubProcess {
 
 		public CreateTransactionFeature(IFeatureProvider fp) {
-			super(fp, "Transaction",
+			super(fp, "Expanded Transaction",
 			        "Specialized type of sub-process that will have behavior controlled by transaction protocol");
 		}
 

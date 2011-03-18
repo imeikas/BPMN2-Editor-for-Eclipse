@@ -49,17 +49,17 @@ public class AdHocSubProcessFeatureContainer extends AbstractSubProcessFeatureCo
 		return new AddExpandedSubProcessFeature(fp) {
 			@Override
 			protected void hook(Activity activity, ContainerShape container, IAddContext context, int width, int height) {
-			    super.hook(activity, container, context, width, height);
-			    IPeService peService = Graphiti.getPeService();
-			    Iterator<Shape> iterator = peService.getAllContainedShapes(container).iterator();
-			    while (iterator.hasNext()) {
-	                Shape shape = (Shape) iterator.next();
-	                String property = peService.getPropertyValue(shape, GraphicsUtil.ACTIVITY_MARKER_CONTAINER);
-	                if(property != null && new Boolean(property)) {
-	                	Polyline tilde = GraphicsUtil.createActivityMarkerAdHoc((ContainerShape) shape);
-	                	tilde.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
-	                }
-                }
+				super.hook(activity, container, context, width, height);
+				IPeService peService = Graphiti.getPeService();
+				Iterator<Shape> iterator = peService.getAllContainedShapes(container).iterator();
+				while (iterator.hasNext()) {
+					Shape shape = iterator.next();
+					String property = peService.getPropertyValue(shape, GraphicsUtil.ACTIVITY_MARKER_CONTAINER);
+					if (property != null && new Boolean(property)) {
+						Polyline tilde = GraphicsUtil.createActivityMarkerAdHoc((ContainerShape) shape);
+						tilde.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
+					}
+				}
 			}
 		};
 	}
@@ -67,7 +67,7 @@ public class AdHocSubProcessFeatureContainer extends AbstractSubProcessFeatureCo
 	public static class CreateAdHocSubProcessFeature extends AbstractCreateSubProcess {
 
 		public CreateAdHocSubProcessFeature(IFeatureProvider fp) {
-			super(fp, "Ad-Hoc SubProcess",
+			super(fp, "Expanded Ad-Hoc SubProcess",
 			        "A specialized type of Sub-Process that is a group of Activities that have no REQUIRED sequence relationships");
 		}
 
