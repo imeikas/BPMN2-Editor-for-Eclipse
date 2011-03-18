@@ -22,9 +22,6 @@ import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.MoveFlowNodeFeature;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.choreography.LayoutChoreographyFeature;
-import org.jboss.bpmn2.editor.core.features.choreography.UpdateChoreographyNameFeature;
-import org.jboss.bpmn2.editor.core.features.choreography.UpdateChoreographyParticipantRefsFeature;
-import org.jboss.bpmn2.editor.core.features.choreography.UpdateInitiatingParticipantFeature;
 import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
 public abstract class AbstractChoreographyFeatureContainer implements FeatureContainer {
@@ -32,9 +29,9 @@ public abstract class AbstractChoreographyFeatureContainer implements FeatureCon
 	@Override
 	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
 		MultiUpdateFeature updateFeature = new MultiUpdateFeature(fp);
-		updateFeature.addUpdateFeature(new UpdateChoreographyNameFeature(fp));
-		updateFeature.addUpdateFeature(new UpdateChoreographyParticipantRefsFeature(fp));
-		updateFeature.addUpdateFeature(new UpdateInitiatingParticipantFeature(fp));
+		// updateFeature.addUpdateFeature(new UpdateChoreographyNameFeature(fp));
+		// updateFeature.addUpdateFeature(new UpdateChoreographyParticipantRefsFeature(fp));
+		// updateFeature.addUpdateFeature(new UpdateInitiatingParticipantFeature(fp));
 		return updateFeature;
 	}
 
