@@ -9,10 +9,10 @@ import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.di.BPMNShape;
 import org.eclipse.bpmn2.di.ParticipantBandKind;
 import org.eclipse.dd.dc.Bounds;
+import org.eclipse.graphiti.datatypes.IDimension;
 import org.eclipse.graphiti.datatypes.ILocation;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
-import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Polygon;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.eclipse.graphiti.mm.algorithms.Rectangle;
@@ -117,7 +117,7 @@ public class AddChoreographyFeature extends AbstractBpmnAddFeature {
 
 		for (BPMNShape bpmnShape : filteredShapes) {
 			ParticipantBandKind bandKind = bpmnShape.getParticipantBandKind();
-			Shape createdShape = null;
+			ContainerShape createdShape = null;
 			boolean top = false;
 			switch (bandKind) {
 			case TOP_INITIATING:
@@ -154,29 +154,34 @@ public class AddChoreographyFeature extends AbstractBpmnAddFeature {
 						|| bandKind == ParticipantBandKind.BOTTOM_NON_INITIATING;
 				drawMessageLink(anchor, x, y, filled);
 			}
+
+			Participant p = (Participant) bpmnShape.getBpmnElement();
+			if (p.getParticipantMultiplicity() != null && p.getParticipantMultiplicity().getMaximum() > 1) {
+				drawMultiplicityMarkers(createdShape);
+			}
 		}
 	}
 
-	private Shape createTopShape(ContainerShape parent, BPMNShape shape, boolean initiating) {
-		Shape bandShape = peService.createShape(parent, true);
+	private ContainerShape createTopShape(ContainerShape parent, BPMNShape shape, boolean initiating) {
+		ContainerShape bandShape = peService.createContainerShape(parent, true);
 
 		Bounds bounds = shape.getBounds();
 		int w = (int) bounds.getWidth();
 		int h = (int) bounds.getHeight();
 		int[] xy = { 0, h, 0, 0, w, 0, w, h };
-		int[] beforeAfter = { 0, 0, R, R, R, R, R, R };
+		int[] beforeAfter = { 0, 0, R, R, R, R, 0, 0 };
 
 		Polygon band = gaService.createPolygon(bandShape, xy, beforeAfter);
 		band.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 		band.setBackground(initiating ? manageColor(IColorConstant.WHITE) : manageColor(IColorConstant.LIGHT_GRAY));
 
 		Participant p = (Participant) shape.getBpmnElement();
-		addBandLabel(band, p.getName(), w, h);
+		addBandLabel(bandShape, p.getName(), w, h);
 		return bandShape;
 	}
 
-	private Shape createBottomShape(ContainerShape parent, BPMNShape shape, boolean initiating) {
-		Shape bandShape = peService.createShape(parent, true);
+	private ContainerShape createBottomShape(ContainerShape parent, BPMNShape shape, boolean initiating) {
+		ContainerShape bandShape = peService.createContainerShape(parent, true);
 
 		Bounds bounds = shape.getBounds();
 		int w = (int) bounds.getWidth();
@@ -193,12 +198,12 @@ public class AddChoreographyFeature extends AbstractBpmnAddFeature {
 		band.setBackground(initiating ? manageColor(IColorConstant.WHITE) : manageColor(IColorConstant.LIGHT_GRAY));
 
 		Participant p = (Participant) shape.getBpmnElement();
-		addBandLabel(band, p.getName(), w, h);
+		addBandLabel(bandShape, p.getName(), w, h);
 		return bandShape;
 	}
 
-	private Shape createMiddleShape(ContainerShape parent, BPMNShape shape, boolean initiating) {
-		Shape bandShape = peService.createShape(parent, true);
+	private ContainerShape createMiddleShape(ContainerShape parent, BPMNShape shape, boolean initiating) {
+		ContainerShape bandShape = peService.createContainerShape(parent, true);
 
 		Bounds bounds = shape.getBounds();
 		int w = (int) bounds.getWidth();
@@ -213,12 +218,13 @@ public class AddChoreographyFeature extends AbstractBpmnAddFeature {
 		gaService.setLocationAndSize(band, 0, y, w, h);
 
 		Participant p = (Participant) shape.getBpmnElement();
-		addBandLabel(band, p.getName(), w, h);
+		addBandLabel(bandShape, p.getName(), w, h);
 		return bandShape;
 	}
 
-	private void addBandLabel(GraphicsAlgorithm ga, String name, int w, int h) {
-		Text label = gaService.createDefaultText(ga);
+	private void addBandLabel(ContainerShape container, String name, int w, int h) {
+		Shape labelShape = peService.createShape(container, false);
+		Text label = gaService.createDefaultText(labelShape);
 		label.setValue(name);
 		gaService.setLocationAndSize(label, 0, 0, w, h);
 		label.setStyle(StyleUtil.getStyleForText(getDiagram()));
@@ -251,6 +257,25 @@ public class AddChoreographyFeature extends AbstractBpmnAddFeature {
 
 		connection.setStart(boundaryAnchor.anchor);
 		connection.setEnd(AnchorUtil.getBoundaryAnchors(envelope).get(envelopeAnchorLoc).anchor);
+	}
+
+	private void drawMultiplicityMarkers(ContainerShape container) {
+		Shape multiplicityShape = peService.createShape(container, false);
+		Rectangle rect = gaService.createInvisibleRectangle(multiplicityShape);
+
+		IDimension size = gaService.calculateSize(container.getGraphicsAlgorithm());
+		int w = 10;
+		int h = 10;
+		int x = (size.getWidth() / 2) - (w / 2);
+		int y = size.getHeight() - h - 1;
+		gaService.setLocationAndSize(rect, x, y, w, h);
+
+		int[][] coorinates = { new int[] { 0, 0, 0, h }, new int[] { 4, 0, 4, h }, new int[] { 8, 0, 8, h } };
+		for (int[] xy : coorinates) {
+			Polyline line = gaService.createPolyline(rect, xy);
+			line.setLineWidth(2);
+			line.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
+		}
 	}
 
 	protected void addedByUser(IAddContext context) {

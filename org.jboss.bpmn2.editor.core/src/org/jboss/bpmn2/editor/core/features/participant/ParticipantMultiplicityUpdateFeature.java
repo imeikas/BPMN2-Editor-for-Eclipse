@@ -10,7 +10,9 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features.participant;
 
+import org.eclipse.bpmn2.ChoreographyActivity;
 import org.eclipse.bpmn2.Participant;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.IReason;
 import org.eclipse.graphiti.features.context.IUpdateContext;
@@ -20,6 +22,7 @@ import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.eclipse.graphiti.mm.algorithms.Rectangle;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
+import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
@@ -38,22 +41,36 @@ public class ParticipantMultiplicityUpdateFeature extends AbstractUpdateFeature 
 
 	@Override
 	public boolean canUpdate(IUpdateContext context) {
+		EObject container = context.getPictogramElement().eContainer();
+		if (container instanceof PictogramElement) {
+			PictogramElement containerElem = (PictogramElement) container;
+			if (BusinessObjectUtil.containsElementOfType(containerElem, ChoreographyActivity.class)) {
+				return false;
+			}
+		}
 		return BusinessObjectUtil.containsElementOfType(context.getPictogramElement(), Participant.class)
-		        && context.getPictogramElement() instanceof ContainerShape;
+				&& context.getPictogramElement() instanceof ContainerShape;
 	}
 
 	@Override
 	public IReason updateNeeded(IUpdateContext context) {
+		EObject container = context.getPictogramElement().eContainer();
+		if (container instanceof PictogramElement) {
+			PictogramElement containerElem = (PictogramElement) container;
+			if (BusinessObjectUtil.containsElementOfType(containerElem, ChoreographyActivity.class)) {
+				return Reason.createFalseReason();
+			}
+		}
 		if (!(context.getPictogramElement() instanceof ContainerShape)) {
 			return Reason.createFalseReason();
 		}
 		IPeService peService = Graphiti.getPeService();
 		Participant participant = (Participant) BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
-		        Participant.class);
+				Participant.class);
 		ContainerShape containerShape = (ContainerShape) context.getPictogramElement();
 
 		boolean multiplicityProperty = new Boolean(peService.getPropertyValue(containerShape,
-		        AddParticipantFeature.MULTIPLICITY));
+				AddParticipantFeature.MULTIPLICITY));
 		boolean hasMultiplicity = participant.getParticipantMultiplicity() != null;
 
 		return multiplicityProperty != hasMultiplicity ? Reason.createTrueReason() : Reason.createFalseReason();
@@ -65,7 +82,7 @@ public class ParticipantMultiplicityUpdateFeature extends AbstractUpdateFeature 
 		IGaService gaService = Graphiti.getGaService();
 
 		Participant participant = (Participant) BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
-		        Participant.class);
+				Participant.class);
 		ContainerShape containerShape = (ContainerShape) context.getPictogramElement();
 
 		if (participant.getParticipantMultiplicity() != null) {
@@ -94,7 +111,7 @@ public class ParticipantMultiplicityUpdateFeature extends AbstractUpdateFeature 
 		}
 
 		peService.setPropertyValue(containerShape, AddParticipantFeature.MULTIPLICITY,
-		        participant.getParticipantMultiplicity() != null ? Boolean.toString(true) : Boolean.toString(false));
+				participant.getParticipantMultiplicity() != null ? Boolean.toString(true) : Boolean.toString(false));
 		return true;
 	}
 }

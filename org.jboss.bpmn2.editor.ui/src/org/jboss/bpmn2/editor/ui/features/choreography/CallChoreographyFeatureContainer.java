@@ -19,10 +19,7 @@ import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractCreateFlowElementFeature;
-import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.choreography.AddChoreographyFeature;
-import org.jboss.bpmn2.editor.core.features.choreography.UpdateChoreographyParticipantRefsFeature;
-import org.jboss.bpmn2.editor.core.features.choreography.UpdateInitiatingParticipantFeature;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
 public class CallChoreographyFeatureContainer extends AbstractChoreographyFeatureContainer {
@@ -44,22 +41,23 @@ public class CallChoreographyFeatureContainer extends AbstractChoreographyFeatur
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
-		MultiUpdateFeature updateFeature = new MultiUpdateFeature(fp);
-		updateFeature.addUpdateFeature(new UpdateChoreographyParticipantRefsFeature(fp) {
-			@Override
-			protected boolean showNames() {
-				return false;
-			}
-		});
-		updateFeature.addUpdateFeature(new UpdateInitiatingParticipantFeature(fp));
-		return updateFeature;
+		// MultiUpdateFeature updateFeature = new MultiUpdateFeature(fp);
+		// updateFeature.addUpdateFeature(new UpdateChoreographyParticipantRefsFeature(fp) {
+		// @Override
+		// protected boolean showNames() {
+		// return false;
+		// }
+		// });
+		// updateFeature.addUpdateFeature(new UpdateInitiatingParticipantFeature(fp));
+		// return updateFeature;
+		return null;
 	}
 
 	public static class CreateCallChoreographyFeature extends AbstractCreateFlowElementFeature<CallChoreography> {
 
 		public CreateCallChoreographyFeature(IFeatureProvider fp) {
 			super(fp, "Call Choreography",
-			        "Identifies a point in the Process where a global Choreography or a Global Choreography Task is used");
+					"Identifies a point in the Process where a global Choreography or a Global Choreography Task is used");
 		}
 
 		@Override

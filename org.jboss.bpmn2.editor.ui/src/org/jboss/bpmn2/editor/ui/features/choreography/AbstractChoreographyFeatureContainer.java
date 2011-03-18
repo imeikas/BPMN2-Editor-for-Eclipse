@@ -28,11 +28,12 @@ public abstract class AbstractChoreographyFeatureContainer implements FeatureCon
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
-		MultiUpdateFeature updateFeature = new MultiUpdateFeature(fp);
+		// MultiUpdateFeature updateFeature = new MultiUpdateFeature(fp);
 		// updateFeature.addUpdateFeature(new UpdateChoreographyNameFeature(fp));
 		// updateFeature.addUpdateFeature(new UpdateChoreographyParticipantRefsFeature(fp));
 		// updateFeature.addUpdateFeature(new UpdateInitiatingParticipantFeature(fp));
-		return updateFeature;
+		// return updateFeature;
+		return null;
 	}
 
 	@Override
