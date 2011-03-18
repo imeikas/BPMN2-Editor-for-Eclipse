@@ -14,11 +14,14 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Polygon;
+import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.eclipse.graphiti.mm.algorithms.Rectangle;
 import org.eclipse.graphiti.mm.algorithms.RoundedRectangle;
 import org.eclipse.graphiti.mm.algorithms.Text;
+import org.eclipse.graphiti.mm.algorithms.styles.LineStyle;
 import org.eclipse.graphiti.mm.algorithms.styles.Orientation;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
+import org.eclipse.graphiti.mm.pictograms.FreeFormConnection;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
@@ -30,9 +33,17 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.di.DIImport;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
+import org.jboss.bpmn2.editor.core.utils.AnchorUtil.AnchorLocation;
+import org.jboss.bpmn2.editor.core.utils.AnchorUtil.BoundaryAnchor;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
+import org.jboss.bpmn2.editor.core.utils.GraphicsUtil.Envelope;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 
 public class AddChoreographyFeature extends AbstractBpmnAddFeature {
+
+	private static final int R = 10;
+	private static final int ENV_W = 30;
+	private static final int ENV_H = 18;
 
 	protected final IGaService gaService = Graphiti.getGaService();
 	protected final IPeService peService = Graphiti.getPeService();
@@ -54,7 +65,7 @@ public class AddChoreographyFeature extends AbstractBpmnAddFeature {
 		int height = context.getHeight() > 0 ? context.getHeight() : 100;
 
 		ContainerShape containerShape = peService.createContainerShape(context.getTargetContainer(), true);
-		RoundedRectangle containerRect = gaService.createRoundedRectangle(containerShape, 10, 10);
+		RoundedRectangle containerRect = gaService.createRoundedRectangle(containerShape, R, R);
 		gaService.setLocationAndSize(containerRect, context.getX(), context.getY(), width, height);
 		StyleUtil.applyBGStyle(containerRect, this);
 		decorateContainerRect(containerRect);
@@ -66,7 +77,6 @@ public class AddChoreographyFeature extends AbstractBpmnAddFeature {
 			addedByUser(context);
 		}
 
-		link(containerShape, choreography);
 		peService.createChopboxAnchor(containerShape);
 		AnchorUtil.addFixedPointAnchors(containerShape, containerRect);
 		createDIShape(containerShape, choreography);
@@ -108,12 +118,15 @@ public class AddChoreographyFeature extends AbstractBpmnAddFeature {
 		for (BPMNShape shape : filteredShapes) {
 			ParticipantBandKind bandKind = shape.getParticipantBandKind();
 			Shape createdShape = null;
+			boolean top = false;
 			switch (bandKind) {
 			case TOP_INITIATING:
 				createdShape = createTopShape(container, shape, true);
+				top = true;
 				break;
 			case TOP_NON_INITIATING:
 				createdShape = createTopShape(container, shape, false);
+				top = true;
 				break;
 			case MIDDLE_INITIATING:
 				createdShape = createMiddleShape(container, shape, true);
@@ -128,8 +141,19 @@ public class AddChoreographyFeature extends AbstractBpmnAddFeature {
 				createdShape = createBottomShape(container, shape, false);
 				break;
 			}
-			link(createdShape, shape.getBpmnElement());
 			createDIShape(createdShape, shape.getBpmnElement());
+			AnchorUtil.addFixedPointAnchors(createdShape, createdShape.getGraphicsAlgorithm());
+
+			if (shape.isIsMessageVisible()) {
+				BoundaryAnchor anchor = AnchorUtil.getBoundaryAnchors(createdShape).get(
+				        top ? AnchorLocation.TOP : AnchorLocation.BOTTOM);
+				Bounds bounds = shape.getBounds();
+				int x = (int) (bounds.getX() + bounds.getWidth() / 2) - ENV_W / 2;
+				int y = (int) (top ? bounds.getY() - 30 - ENV_H : bounds.getY() + bounds.getHeight() + 30);
+				boolean filled = bandKind == ParticipantBandKind.TOP_NON_INITIATING
+				        || bandKind == ParticipantBandKind.BOTTOM_NON_INITIATING;
+				drawMessageLink(anchor, x, y, filled);
+			}
 		}
 	}
 
@@ -140,7 +164,7 @@ public class AddChoreographyFeature extends AbstractBpmnAddFeature {
 		int w = (int) bounds.getWidth();
 		int h = (int) bounds.getHeight();
 		int[] xy = { 0, h, 0, 0, w, 0, w, h };
-		int[] beforeAfter = { 0, 0, 10, 10, 10, 10, 0, 0 };
+		int[] beforeAfter = { 0, 0, R, R, R, R, R, R };
 
 		Polygon band = gaService.createPolygon(bandShape, xy, beforeAfter);
 		band.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
@@ -160,10 +184,9 @@ public class AddChoreographyFeature extends AbstractBpmnAddFeature {
 
 		ILocation parentLoc = peService.getLocationRelativeToDiagram(parent);
 		int y = (int) bounds.getY() - parentLoc.getY();
-		System.out.println(y);
 
 		int[] xy = { 0, y, w, y, w, y + h, 0, y + h };
-		int[] beforeAfter = { 0, 0, 0, 0, 10, 10, 10, 10 };
+		int[] beforeAfter = { 0, 0, 0, 0, R, R, R, R };
 
 		Polygon band = gaService.createPolygon(bandShape, xy, beforeAfter);
 		band.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
@@ -183,7 +206,6 @@ public class AddChoreographyFeature extends AbstractBpmnAddFeature {
 
 		ILocation parentLoc = peService.getLocationRelativeToDiagram(parent);
 		int y = (int) bounds.getY() - parentLoc.getY();
-		System.out.println(y);
 
 		Rectangle band = gaService.createRectangle(bandShape);
 		band.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
@@ -202,6 +224,33 @@ public class AddChoreographyFeature extends AbstractBpmnAddFeature {
 		label.setStyle(StyleUtil.getStyleForText(getDiagram()));
 		label.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		label.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
+	}
+
+	private void drawMessageLink(BoundaryAnchor boundaryAnchor, int x, int y, boolean filled) {
+		FreeFormConnection connection = peService.createFreeFormConnection(getDiagram());
+		Polyline connectionLine = gaService.createPolyline(connection);
+		connectionLine.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
+		connectionLine.setLineStyle(LineStyle.DOT);
+		connectionLine.setLineWidth(2);
+
+		ContainerShape envelope = peService.createContainerShape(getDiagram(), true);
+		Envelope envelopeGa = GraphicsUtil.createEnvelope(envelope, x, y, ENV_W, ENV_H);
+		IColorConstant color = filled ? IColorConstant.LIGHT_GRAY : IColorConstant.WHITE;
+		envelopeGa.rect.setFilled(true);
+		envelopeGa.rect.setBackground(manageColor(color));
+		envelopeGa.rect.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
+		envelopeGa.line.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
+		AnchorUtil.addFixedPointAnchors(envelope, envelopeGa.rect);
+
+		AnchorLocation envelopeAnchorLoc = null;
+		if (boundaryAnchor.locationType == AnchorLocation.TOP) {
+			envelopeAnchorLoc = AnchorLocation.BOTTOM;
+		} else {
+			envelopeAnchorLoc = AnchorLocation.TOP;
+		}
+
+		connection.setStart(boundaryAnchor.anchor);
+		connection.setEnd(AnchorUtil.getBoundaryAnchors(envelope).get(envelopeAnchorLoc).anchor);
 	}
 
 	protected void addedByUser(IAddContext context) {

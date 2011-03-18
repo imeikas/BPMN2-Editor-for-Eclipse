@@ -20,6 +20,7 @@ import org.eclipse.bpmn2.di.BPMNEdge;
 import org.eclipse.bpmn2.di.BPMNShape;
 import org.eclipse.dd.di.DiagramElement;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.graphiti.datatypes.IDimension;
 import org.eclipse.graphiti.datatypes.ILocation;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.styles.Point;
@@ -114,7 +115,7 @@ public class AnchorUtil {
 
 	@SuppressWarnings("restriction")
 	public static Tuple<FixPointAnchor, FixPointAnchor> getSourceAndTargetBoundaryAnchors(Shape source, Shape target,
-			Connection connection) {
+	        Connection connection) {
 		Map<AnchorLocation, BoundaryAnchor> sourceBoundaryAnchors = getBoundaryAnchors(source);
 		Map<AnchorLocation, BoundaryAnchor> targetBoundaryAnchors = getBoundaryAnchors(target);
 
@@ -123,7 +124,7 @@ public class AnchorUtil {
 			if (bendpoints.size() > 0) {
 				FixPointAnchor sourceAnchor = getCorrectAnchor(sourceBoundaryAnchors, bendpoints.get(0));
 				FixPointAnchor targetAnchor = getCorrectAnchor(targetBoundaryAnchors,
-						bendpoints.get(bendpoints.size() - 1));
+				        bendpoints.get(bendpoints.size() - 1));
 				return new Tuple<FixPointAnchor, FixPointAnchor>(sourceAnchor, targetAnchor);
 			}
 		}
@@ -147,14 +148,14 @@ public class AnchorUtil {
 				return new Tuple<FixPointAnchor, FixPointAnchor>(sourceTop.anchor, targetBottom.anchor);
 			} else if (sLeft) {
 				FixPointAnchor fromTopAnchor = getCorrectAnchor(targetBoundaryAnchors,
-						peService.getLocationRelativeToDiagram(sourceTop.anchor));
+				        peService.getLocationRelativeToDiagram(sourceTop.anchor));
 				FixPointAnchor fromRightAnchor = getCorrectAnchor(targetBoundaryAnchors,
-						peService.getLocationRelativeToDiagram(sourceRight.anchor));
+				        peService.getLocationRelativeToDiagram(sourceRight.anchor));
 
 				double topLength = getLength(peService.getLocationRelativeToDiagram(fromTopAnchor),
-						peService.getLocationRelativeToDiagram(sourceTop.anchor));
+				        peService.getLocationRelativeToDiagram(sourceTop.anchor));
 				double rightLength = getLength(peService.getLocationRelativeToDiagram(fromRightAnchor),
-						peService.getLocationRelativeToDiagram(sourceRight.anchor));
+				        peService.getLocationRelativeToDiagram(sourceRight.anchor));
 
 				if (topLength < rightLength) {
 					return new Tuple<FixPointAnchor, FixPointAnchor>(sourceBottom.anchor, fromTopAnchor);
@@ -163,14 +164,14 @@ public class AnchorUtil {
 				}
 			} else {
 				FixPointAnchor fromTopAnchor = getCorrectAnchor(targetBoundaryAnchors,
-						peService.getLocationRelativeToDiagram(sourceTop.anchor));
+				        peService.getLocationRelativeToDiagram(sourceTop.anchor));
 				FixPointAnchor fromLeftAnchor = getCorrectAnchor(targetBoundaryAnchors,
-						peService.getLocationRelativeToDiagram(sourceLeft.anchor));
+				        peService.getLocationRelativeToDiagram(sourceLeft.anchor));
 
 				double topLength = getLength(peService.getLocationRelativeToDiagram(fromTopAnchor),
-						peService.getLocationRelativeToDiagram(sourceTop.anchor));
+				        peService.getLocationRelativeToDiagram(sourceTop.anchor));
 				double leftLength = getLength(peService.getLocationRelativeToDiagram(fromLeftAnchor),
-						peService.getLocationRelativeToDiagram(sourceLeft.anchor));
+				        peService.getLocationRelativeToDiagram(sourceLeft.anchor));
 				if (topLength < leftLength) {
 					return new Tuple<FixPointAnchor, FixPointAnchor>(sourceTop.anchor, fromTopAnchor);
 				} else {
@@ -185,14 +186,14 @@ public class AnchorUtil {
 				return new Tuple<FixPointAnchor, FixPointAnchor>(sourceBottom.anchor, targetTop.anchor);
 			} else if (sLeft) {
 				FixPointAnchor fromBottomAnchor = getCorrectAnchor(targetBoundaryAnchors,
-						peService.getLocationRelativeToDiagram(sourceBottom.anchor));
+				        peService.getLocationRelativeToDiagram(sourceBottom.anchor));
 				FixPointAnchor fromRightAnchor = getCorrectAnchor(targetBoundaryAnchors,
-						peService.getLocationRelativeToDiagram(sourceRight.anchor));
+				        peService.getLocationRelativeToDiagram(sourceRight.anchor));
 
 				double bottomLength = getLength(peService.getLocationRelativeToDiagram(fromBottomAnchor),
-						peService.getLocationRelativeToDiagram(sourceBottom.anchor));
+				        peService.getLocationRelativeToDiagram(sourceBottom.anchor));
 				double rightLength = getLength(peService.getLocationRelativeToDiagram(fromRightAnchor),
-						peService.getLocationRelativeToDiagram(sourceRight.anchor));
+				        peService.getLocationRelativeToDiagram(sourceRight.anchor));
 				System.out.println(bottomLength + " " + rightLength);
 
 				if (bottomLength < rightLength) {
@@ -202,14 +203,14 @@ public class AnchorUtil {
 				}
 			} else {
 				FixPointAnchor fromBottomAnchor = getCorrectAnchor(targetBoundaryAnchors,
-						peService.getLocationRelativeToDiagram(sourceBottom.anchor));
+				        peService.getLocationRelativeToDiagram(sourceBottom.anchor));
 				FixPointAnchor fromLeftAnchor = getCorrectAnchor(targetBoundaryAnchors,
-						peService.getLocationRelativeToDiagram(sourceLeft.anchor));
+				        peService.getLocationRelativeToDiagram(sourceLeft.anchor));
 
 				double bottomLength = getLength(peService.getLocationRelativeToDiagram(fromBottomAnchor),
-						peService.getLocationRelativeToDiagram(sourceBottom.anchor));
+				        peService.getLocationRelativeToDiagram(sourceBottom.anchor));
 				double leftLength = getLength(peService.getLocationRelativeToDiagram(fromLeftAnchor),
-						peService.getLocationRelativeToDiagram(sourceLeft.anchor));
+				        peService.getLocationRelativeToDiagram(sourceLeft.anchor));
 				if (bottomLength < leftLength) {
 					return new Tuple<FixPointAnchor, FixPointAnchor>(sourceBottom.anchor, fromBottomAnchor);
 				} else {
@@ -232,7 +233,7 @@ public class AnchorUtil {
 	}
 
 	private static FixPointAnchor getCorrectAnchor(Map<AnchorLocation, BoundaryAnchor> targetBoundaryAnchors,
-			ILocation loc) {
+	        ILocation loc) {
 		return getCorrectAnchor(targetBoundaryAnchors, gaService.createPoint(loc.getX(), loc.getY()));
 	}
 
@@ -335,9 +336,9 @@ public class AnchorUtil {
 
 	private static void updateEdge(BPMNEdge edge, Diagram diagram) {
 		ContainerShape source = (ContainerShape) Graphiti.getLinkService()
-				.getPictogramElements(diagram, edge.getSourceElement()).get(0);
+		        .getPictogramElements(diagram, edge.getSourceElement()).get(0);
 		ContainerShape target = (ContainerShape) Graphiti.getLinkService()
-				.getPictogramElements(diagram, edge.getTargetElement()).get(0);
+		        .getPictogramElements(diagram, edge.getTargetElement()).get(0);
 		Connection connection = (Connection) Graphiti.getLinkService().getPictogramElements(diagram, edge).get(0);
 		Tuple<FixPointAnchor, FixPointAnchor> anchors = getSourceAndTargetBoundaryAnchors(source, target, connection);
 
@@ -357,7 +358,7 @@ public class AnchorUtil {
 	}
 
 	private static void relocateConnection(EList<Anchor> anchors, Tuple<FixPointAnchor, FixPointAnchor> newAnchors,
-			ContainerShape target) {
+	        ContainerShape target) {
 
 		List<Connection> connectionsToBeUpdated = new ArrayList<Connection>();
 
@@ -389,7 +390,7 @@ public class AnchorUtil {
 			}
 
 			if (peService.getProperty(a, BOUNDARY_FIXPOINT_ANCHOR) == null && a.getIncomingConnections().isEmpty()
-					&& a.getOutgoingConnections().isEmpty()) {
+			        && a.getOutgoingConnections().isEmpty()) {
 				indexes.add(i);
 			}
 		}
@@ -400,8 +401,9 @@ public class AnchorUtil {
 	}
 
 	public static void addFixedPointAnchors(Shape shape, GraphicsAlgorithm ga) {
-		int w = ga.getWidth();
-		int h = ga.getHeight();
+		IDimension size = gaService.calculateSize(ga);
+		int w = size.getWidth();
+		int h = size.getHeight();
 		AnchorUtil.createAnchor(shape, AnchorLocation.TOP, w / 2, 0);
 		AnchorUtil.createAnchor(shape, AnchorLocation.RIGHT, w, h / 2);
 		AnchorUtil.createAnchor(shape, AnchorLocation.BOTTOM, w / 2, h);
