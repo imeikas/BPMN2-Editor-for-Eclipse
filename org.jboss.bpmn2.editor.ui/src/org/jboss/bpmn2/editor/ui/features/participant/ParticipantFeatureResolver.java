@@ -25,14 +25,14 @@ import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
-import org.jboss.bpmn2.editor.core.features.DefaultBPMNResizeFeature;
-import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureResolver;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.participant.AddParticipantFeature;
 import org.jboss.bpmn2.editor.core.features.participant.DirectEditParticipantFeature;
 import org.jboss.bpmn2.editor.core.features.participant.LayoutParticipantFeature;
+import org.jboss.bpmn2.editor.core.features.participant.MoveParticipantFeature;
 import org.jboss.bpmn2.editor.core.features.participant.ParticipantMultiplicityUpdateFeature;
+import org.jboss.bpmn2.editor.core.features.participant.ResizeParticipantFeature;
 import org.jboss.bpmn2.editor.core.features.participant.UpdateParticipantFeature;
 import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
@@ -88,7 +88,7 @@ public class ParticipantFeatureResolver implements FeatureResolver {
 	@Override
 	public IMoveShapeFeature getMoveFeature(IFeatureProvider fp, BaseElement e) {
 		if (e instanceof Participant) {
-			return new DefaultBpmnMoveFeature(fp);
+			return new MoveParticipantFeature(fp);
 		}
 		return null;
 	}
@@ -96,7 +96,7 @@ public class ParticipantFeatureResolver implements FeatureResolver {
 	@Override
 	public IResizeShapeFeature getResizeFeature(IFeatureProvider fp, BaseElement e) {
 		if (e instanceof Participant) {
-			return new DefaultBPMNResizeFeature(fp);
+			return new ResizeParticipantFeature(fp);
 		}
 		return null;
 	}
