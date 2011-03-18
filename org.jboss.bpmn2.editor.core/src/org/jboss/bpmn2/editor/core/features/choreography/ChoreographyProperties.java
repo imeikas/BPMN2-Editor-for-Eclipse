@@ -12,7 +12,7 @@ package org.jboss.bpmn2.editor.core.features.choreography;
 
 public interface ChoreographyProperties {
 
-	int PARTICIPANT_BAND_HEIGHT = 25;
+	int PARTICIPANT_BAND_HEIGHT = 20;
 
 	static final String CHOREOGRAPHY_ACTIVITY_PROPERTY = "choreography.activity";
 	static final String PARTICIPANT_REF = "choreography.activity.participant.ref";

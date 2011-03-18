@@ -92,6 +92,10 @@ public class ModelHandler {
 		}
 	}
 
+	public static ModelHandler getInstance(Diagram diagram) throws IOException {
+		return ModelHandlerLocator.getModelHandler(diagram.eResource());
+	}
+
 	/**
 	 * @param <T>
 	 * @param target
@@ -429,10 +433,10 @@ public class ModelHandler {
 
 			for (DiagramElement elem : planeElement) {
 				if (elem instanceof BPMNShape && element.getId() != null
-						&& element.getId().equals(((BPMNShape) elem).getBpmnElement().getId())) {
+				        && element.getId().equals(((BPMNShape) elem).getBpmnElement().getId())) {
 					return (elem);
 				} else if (elem instanceof BPMNEdge && element.getId() != null
-						&& element.getId().equals(((BPMNEdge) elem).getBpmnElement().getId())) {
+				        && element.getId().equals(((BPMNEdge) elem).getBpmnElement().getId())) {
 					return (elem);
 				}
 			}

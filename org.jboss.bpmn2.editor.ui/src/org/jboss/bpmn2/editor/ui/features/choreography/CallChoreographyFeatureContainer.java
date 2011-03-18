@@ -20,7 +20,7 @@ import org.eclipse.graphiti.features.context.ICreateContext;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractCreateFlowElementFeature;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
-import org.jboss.bpmn2.editor.core.features.choreography.AddCallChoreographyFeature;
+import org.jboss.bpmn2.editor.core.features.choreography.AddChoreographyFeature;
 import org.jboss.bpmn2.editor.core.features.choreography.UpdateChoreographyParticipantRefsFeature;
 import org.jboss.bpmn2.editor.core.features.choreography.UpdateInitiatingParticipantFeature;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
@@ -39,7 +39,7 @@ public class CallChoreographyFeatureContainer extends AbstractChoreographyFeatur
 
 	@Override
 	public IAddFeature getAddFeature(IFeatureProvider fp) {
-		return new AddCallChoreographyFeature(fp);
+		return new AddChoreographyFeature(fp);
 	}
 
 	@Override

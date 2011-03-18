@@ -74,6 +74,14 @@ public class FeatureSupport {
 		return lane.getChildLaneSet() == null || lane.getChildLaneSet().getLanes().isEmpty();
 	}
 
+	/**
+	 * Use ModelHandler.getInstance(diagram) instead
+	 * 
+	 * @param diagram
+	 * @return
+	 * @throws IOException
+	 */
+	@Deprecated
 	public static ModelHandler getModelHanderInstance(Diagram diagram) throws IOException {
 		return ModelHandlerLocator.getModelHandler(diagram.eResource());
 	}
