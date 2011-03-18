@@ -12,9 +12,12 @@ import org.eclipse.dd.dc.Bounds;
 import org.eclipse.graphiti.datatypes.ILocation;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
+import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Polygon;
 import org.eclipse.graphiti.mm.algorithms.Rectangle;
 import org.eclipse.graphiti.mm.algorithms.RoundedRectangle;
+import org.eclipse.graphiti.mm.algorithms.Text;
+import org.eclipse.graphiti.mm.algorithms.styles.Orientation;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
@@ -126,6 +129,7 @@ public class AddChoreographyFeature extends AbstractBpmnAddFeature {
 				break;
 			}
 			link(createdShape, shape.getBpmnElement());
+			createDIShape(createdShape, shape.getBpmnElement());
 		}
 	}
 
@@ -142,6 +146,8 @@ public class AddChoreographyFeature extends AbstractBpmnAddFeature {
 		band.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 		band.setBackground(initiating ? manageColor(IColorConstant.WHITE) : manageColor(IColorConstant.LIGHT_GRAY));
 
+		Participant p = (Participant) shape.getBpmnElement();
+		addBandLabel(band, p.getName(), w, h);
 		return bandShape;
 	}
 
@@ -163,6 +169,8 @@ public class AddChoreographyFeature extends AbstractBpmnAddFeature {
 		band.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 		band.setBackground(initiating ? manageColor(IColorConstant.WHITE) : manageColor(IColorConstant.LIGHT_GRAY));
 
+		Participant p = (Participant) shape.getBpmnElement();
+		addBandLabel(band, p.getName(), w, h);
 		return bandShape;
 	}
 
@@ -182,7 +190,18 @@ public class AddChoreographyFeature extends AbstractBpmnAddFeature {
 		band.setBackground(initiating ? manageColor(IColorConstant.WHITE) : manageColor(IColorConstant.LIGHT_GRAY));
 		gaService.setLocationAndSize(band, 0, y, w, h);
 
+		Participant p = (Participant) shape.getBpmnElement();
+		addBandLabel(band, p.getName(), w, h);
 		return bandShape;
+	}
+
+	private void addBandLabel(GraphicsAlgorithm ga, String name, int w, int h) {
+		Text label = gaService.createDefaultText(ga);
+		label.setValue(name);
+		gaService.setLocationAndSize(label, 0, 0, w, h);
+		label.setStyle(StyleUtil.getStyleForText(getDiagram()));
+		label.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
+		label.setVerticalAlignment(Orientation.ALIGNMENT_CENTER);
 	}
 
 	protected void addedByUser(IAddContext context) {
