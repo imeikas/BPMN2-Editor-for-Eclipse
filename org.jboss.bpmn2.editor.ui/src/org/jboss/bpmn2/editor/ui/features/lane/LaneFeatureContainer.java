@@ -10,13 +10,9 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.lane;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.graphiti.features.IAddFeature;
-import org.eclipse.graphiti.features.ICreateConnectionFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IDeleteFeature;
 import org.eclipse.graphiti.features.IDirectEditingFeature;
@@ -25,7 +21,7 @@ import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
-import org.jboss.bpmn2.editor.core.features.FeatureResolver;
+import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.lane.AddLaneFeature;
 import org.jboss.bpmn2.editor.core.features.lane.DirectEditLaneFeature;
 import org.jboss.bpmn2.editor.core.features.lane.LayoutLaneFeature;
@@ -34,73 +30,51 @@ import org.jboss.bpmn2.editor.core.features.lane.ResizeLaneFeature;
 import org.jboss.bpmn2.editor.core.features.lane.UpdateLaneFeature;
 import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
-public class LaneFeatureResolver implements FeatureResolver {
+public class LaneFeatureContainer implements FeatureContainer {
 
 	@Override
-	public List<ICreateConnectionFeature> getCreateConnectionFeatures(IFeatureProvider fp) {
-		return new ArrayList<ICreateConnectionFeature>();
+	public boolean canApplyTo(BaseElement element) {
+		return element instanceof Lane;
 	}
 
 	@Override
-	public List<ICreateFeature> getCreateFeatures(IFeatureProvider fp) {
-		List<ICreateFeature> list = new ArrayList<ICreateFeature>();
-		list.add(new CreateLaneFeature(fp));
-		return list;
+	public ICreateFeature getCreateFeature(IFeatureProvider fp) {
+		return new CreateLaneFeature(fp);
 	}
 
 	@Override
-	public IAddFeature getAddFeature(IFeatureProvider fp, BaseElement e) {
-		if (e instanceof Lane) {
-			return new AddLaneFeature(fp);
-		}
-		return null;
+	public IAddFeature getAddFeature(IFeatureProvider fp) {
+		return new AddLaneFeature(fp);
 	}
 
 	@Override
-	public IDirectEditingFeature getDirectEditingFeature(IFeatureProvider fp, BaseElement e) {
-		if (e instanceof Lane) {
-			return new DirectEditLaneFeature(fp);
-		}
-		return null;
+	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
+		return new UpdateLaneFeature(fp);
 	}
 
 	@Override
-	public ILayoutFeature getLayoutFeature(IFeatureProvider fp, BaseElement e) {
-		if (e instanceof Lane) {
-			return new LayoutLaneFeature(fp);
-		}
-		return null;
+	public IDirectEditingFeature getDirectEditingFeature(IFeatureProvider fp) {
+		return new DirectEditLaneFeature(fp);
 	}
 
 	@Override
-	public IUpdateFeature getUpdateFeature(IFeatureProvider fp, BaseElement e) {
-		if (e instanceof Lane) {
-			return new UpdateLaneFeature(fp);
-		}
-		return null;
+	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
+		return new LayoutLaneFeature(fp);
 	}
 
 	@Override
-	public IMoveShapeFeature getMoveFeature(IFeatureProvider fp, BaseElement e) {
-		if (e instanceof Lane) {
-			return new MoveLaneFeature(fp);
-		}
-		return null;
+	public IMoveShapeFeature getMoveFeature(IFeatureProvider fp) {
+		return new MoveLaneFeature(fp);
 	}
 
 	@Override
-	public IResizeShapeFeature getResizeFeature(IFeatureProvider fp, BaseElement e) {
-		if (e instanceof Lane) {
-			return new ResizeLaneFeature(fp);
-		}
-		return null;
+	public IResizeShapeFeature getResizeFeature(IFeatureProvider fp) {
+		return new ResizeLaneFeature(fp);
 	}
 
 	@Override
-	public IDeleteFeature getDeleteFeature(IFeatureProvider fp, BaseElement e) {
-		if (e instanceof Lane) {
-			return new AbstractDefaultDeleteFeature(fp);
-		}
-		return null;
+	public IDeleteFeature getDeleteFeature(IFeatureProvider fp) {
+		return new AbstractDefaultDeleteFeature(fp);
 	}
+
 }
