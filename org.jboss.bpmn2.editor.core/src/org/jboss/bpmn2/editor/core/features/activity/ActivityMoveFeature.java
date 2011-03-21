@@ -33,10 +33,9 @@ public class ActivityMoveFeature extends MoveFlowNodeFeature {
 	protected void postMoveShape(final IMoveShapeContext context) {
 		super.postMoveShape(context);
 		Activity activity = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(), Activity.class);
-		new AbstractBoundaryEventOperation(activity, getDiagram()) {
-
+		new AbstractBoundaryEventOperation() {
 			@Override
-			protected void doWork(ContainerShape container) {
+			protected void doWorkInternal(ContainerShape container) {
 				GraphicsAlgorithm ga = container.getGraphicsAlgorithm();
 
 				MoveShapeContext newContext = new MoveShapeContext(container);
@@ -53,6 +52,6 @@ public class ActivityMoveFeature extends MoveFlowNodeFeature {
 					moveFeature.moveShape(newContext);
 				}
 			}
-		};
+		}.doWork(activity, getDiagram());
 	}
 }

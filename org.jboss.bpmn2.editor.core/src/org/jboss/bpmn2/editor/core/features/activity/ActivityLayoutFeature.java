@@ -56,7 +56,7 @@ public class ActivityLayoutFeature extends AbstractLayoutFeature {
 			int newHeight = parentGa.getHeight();
 
 			String markerProperty = Graphiti.getPeService().getPropertyValue(shape,
-			        GraphicsUtil.ACTIVITY_MARKER_CONTAINER);
+					GraphicsUtil.ACTIVITY_MARKER_CONTAINER);
 			if (markerProperty != null && new Boolean(markerProperty)) {
 				int x = (newWidth / 2) - (ga.getWidth() / 2);
 				int y = newHeight - ga.getHeight() - 3 - getMarkerContainerOffset();
@@ -75,12 +75,12 @@ public class ActivityLayoutFeature extends AbstractLayoutFeature {
 		}
 
 		Activity activity = BusinessObjectUtil.getFirstElementOfType(containerShape, Activity.class);
-		new AbstractBoundaryEventOperation(activity, getDiagram()) {
+		new AbstractBoundaryEventOperation() {
 			@Override
-			protected void doWork(ContainerShape container) {
+			protected void doWorkInternal(ContainerShape container) {
 				layoutPictogramElement(container);
 			}
-		};
+		}.doWork(activity, getDiagram());
 
 		DIUtils.updateDIShape(getDiagram(), containerShape, Activity.class);
 		return true;

@@ -23,17 +23,17 @@ import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 
 public abstract class AbstractBoundaryEventOperation {
 
-	public AbstractBoundaryEventOperation(Activity activity, Diagram diagram) {
+	public void doWork(Activity activity, Diagram diagram) {
 		IPeService peService = Graphiti.getPeService();
 		Collection<PictogramElement> elements = peService.getAllContainedPictogramElements(diagram);
 		for (PictogramElement e : elements) {
 			BoundaryEvent boundaryEvent = BusinessObjectUtil.getFirstElementOfType(e, BoundaryEvent.class);
 			if (boundaryEvent != null && activity.getBoundaryEventRefs().contains(boundaryEvent)) {
 				ContainerShape container = (ContainerShape) e;
-				doWork(container);
+				doWorkInternal(container);
 			}
 		}
 	}
 
-	protected abstract void doWork(ContainerShape container);
+	protected abstract void doWorkInternal(ContainerShape container);
 }

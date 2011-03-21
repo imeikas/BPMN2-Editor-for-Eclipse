@@ -59,13 +59,13 @@ public abstract class AbstractActivityFeatureContainer extends BaseElementFeatur
 			public void delete(final IDeleteContext context) {
 				Activity activity = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
 						Activity.class);
-				new AbstractBoundaryEventOperation(activity, getDiagram()) {
+				new AbstractBoundaryEventOperation() {
 					@Override
-					protected void doWork(ContainerShape container) {
+					protected void doWorkInternal(ContainerShape container) {
 						IDeleteContext delete = new DeleteContext(container);
 						getFeatureProvider().getDeleteFeature(delete).delete(delete);
 					}
-				};
+				}.doWork(activity, getDiagram());
 				super.delete(context);
 			}
 		};
