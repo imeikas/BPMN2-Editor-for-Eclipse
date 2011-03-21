@@ -45,7 +45,6 @@ public class ParticipantLayoutFeature extends AbstractLayoutFeature {
 	@Override
 	public boolean layout(ILayoutContext context) {
 		ContainerShape containerShape = (ContainerShape) context.getPictogramElement();
-		DIUtils.updateDIShape(getDiagram(), containerShape, Participant.class);
 
 		GraphicsAlgorithm containerGa = containerShape.getGraphicsAlgorithm();
 		IGaService gaService = Graphiti.getGaService();
@@ -69,7 +68,7 @@ public class ParticipantLayoutFeature extends AbstractLayoutFeature {
 		}
 
 		Shape shape = FeatureSupport.getShape(containerShape, ParticipantMultiplicityUpdateFeature.MULTIPLICITY_MARKER,
-		        Boolean.toString(true));
+				Boolean.toString(true));
 		if (shape != null) {
 			GraphicsAlgorithm ga = shape.getGraphicsAlgorithm();
 			int x = (containerGa.getWidth() / 2) - 10;
@@ -77,6 +76,7 @@ public class ParticipantLayoutFeature extends AbstractLayoutFeature {
 			gaService.setLocation(ga, x, y);
 		}
 
+		DIUtils.updateDIShape(getDiagram(), containerShape, Participant.class);
 		return true;
 	}
 }

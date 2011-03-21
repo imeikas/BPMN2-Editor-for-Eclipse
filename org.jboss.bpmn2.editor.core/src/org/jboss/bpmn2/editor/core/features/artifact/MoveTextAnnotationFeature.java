@@ -31,6 +31,5 @@ public class MoveTextAnnotationFeature extends DefaultBpmnMoveFeature {
 	@Override
 	protected void internalMove(IMoveShapeContext context) {
 		super.internalMove(context);
-		//DIUtils.updateDIShape(getDiagram(), context.getPictogramElement(), TextAnnotation.class);
 	}
 }

@@ -28,6 +28,7 @@ import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.PictogramLink;
+import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.mm.pictograms.impl.FreeFormConnectionImpl;
 import org.eclipse.graphiti.services.Graphiti;
 import org.jboss.bpmn2.editor.core.Activator;
@@ -47,6 +48,10 @@ public class DIUtils {
 					.eResource());
 
 			EObject be = BusinessObjectUtil.getFirstElementOfType(element, clazz);
+			if (be == null) {
+				return;
+			}
+
 			BPMNShape shape = (BPMNShape) modelHandler.findDIElement(diagram, (BaseElement) be);
 
 			ILocation loc = Graphiti.getLayoutService().getLocationRelativeToDiagram((ContainerShape) element);
@@ -61,6 +66,23 @@ public class DIUtils {
 		} catch (IOException e) {
 			Activator.logError(e);
 		}
+
+		// Update all sub-elements.
+		if (element instanceof ContainerShape) {
+			EList<Shape> children = ((ContainerShape) element).getChildren();
+			for (Shape shape : children) {
+
+				if (shape instanceof ContainerShape) {
+					BaseElement be = BusinessObjectUtil.getFirstElementOfType(shape, BaseElement.class);
+
+					if (be != null) {
+						Class<?> instanceClass = be.eClass().getInstanceClass();
+						updateDIShape(diagram, shape, instanceClass);
+					}
+				}
+			}
+		}
+
 	}
 
 	public static void updateDIEdge(Diagram diagram, Connection connection, Class clazz) {

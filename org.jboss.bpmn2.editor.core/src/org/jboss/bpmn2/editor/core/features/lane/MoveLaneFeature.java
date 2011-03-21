@@ -13,7 +13,6 @@ package org.jboss.bpmn2.editor.core.features.lane;
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
-import org.jboss.bpmn2.editor.core.di.DIUtils;
 import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
 import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 
@@ -46,7 +45,6 @@ public class MoveLaneFeature extends DefaultBpmnMoveFeature {
 		if (moveStrategy != null) {
 			moveStrategy.internalMove(context);
 		}
-		DIUtils.updateDIShape(getDiagram(), context.getPictogramElement(), Lane.class);
 	}
 
 	private MoveLaneFeature getStrategy(IMoveShapeContext context) {
