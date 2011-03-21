@@ -41,6 +41,7 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.ModelHandlerLocator;
+import org.jboss.bpmn2.editor.core.di.DIUtils;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 
 public class FeatureSupport {
@@ -90,6 +91,15 @@ public class FeatureSupport {
 		ContainerShape root = getRootContainer(container);
 		resizeRecursively(root);
 		postResizeFixLenghts(root);
+		updateDI(root);
+	}
+
+	private static void updateDI(ContainerShape root) {
+		Diagram diagram = Graphiti.getPeService().getDiagramForPictogramElement(root);
+
+		Class<?> instanceClass = BusinessObjectUtil.getFirstElementOfType(root, BaseElement.class).eClass()
+				.getInstanceClass();
+		DIUtils.updateDIShape(diagram, root, instanceClass);
 	}
 
 	private static ContainerShape getRootContainer(ContainerShape container) {

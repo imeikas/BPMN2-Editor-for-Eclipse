@@ -33,13 +33,25 @@ public class AbstractDefaultDeleteFeature extends DefaultDeleteFeature {
 		IFeatureProvider fp = getFeatureProvider();
 		PictogramElement pictogramElement = context.getPictogramElement();
 		if (pictogramElement instanceof ContainerShape) {
-			EList<Anchor> anchors = ((ContainerShape) pictogramElement).getAnchors();
+			ContainerShape cShape = (ContainerShape) pictogramElement;
+			EList<Anchor> anchors = cShape.getAnchors();
 			for (Anchor anchor : anchors) {
 				deleteConnections(fp, anchor.getIncomingConnections());
 				deleteConnections(fp, anchor.getOutgoingConnections());
 			}
+			deleteContainer(fp, cShape);
 		}
 		super.delete(context);
+	}
+
+	private void deleteContainer(IFeatureProvider fp, ContainerShape cShape) {
+		Object[] children = cShape.getChildren().toArray();
+		for (Object shape : children) {
+			if (shape instanceof ContainerShape) {
+				DeleteContext context = new DeleteContext((PictogramElement) shape);
+				fp.getDeleteFeature(context).delete(context);
+			}
+		}
 	}
 
 	private void deleteConnections(IFeatureProvider fp, EList<Connection> connections) {

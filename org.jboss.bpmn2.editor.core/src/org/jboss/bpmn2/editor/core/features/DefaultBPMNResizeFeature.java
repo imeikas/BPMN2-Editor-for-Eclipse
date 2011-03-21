@@ -35,7 +35,6 @@ public class DefaultBPMNResizeFeature extends DefaultResizeShapeFeature {
 	@Override
 	public void resizeShape(IResizeShapeContext context) {
 		super.resizeShape(context);
-		DIUtils.updateDIShape(getDiagram(), context.getPictogramElement(), BaseElement.class);
 		if (context.getPictogramElement() instanceof Shape) {
 			Shape shape = (Shape) context.getPictogramElement();
 			IGaService gaService = Graphiti.getGaService();
@@ -65,5 +64,6 @@ public class DefaultBPMNResizeFeature extends DefaultResizeShapeFeature {
 				}
 			}
 		}
+		DIUtils.updateDIShape(getDiagram(), context.getPictogramElement(), BaseElement.class);
 	}
 }

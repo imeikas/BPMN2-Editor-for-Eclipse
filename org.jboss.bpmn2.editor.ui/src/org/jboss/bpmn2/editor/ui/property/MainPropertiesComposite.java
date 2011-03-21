@@ -111,7 +111,7 @@ public class MainPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 
 		if (be instanceof Participant) {
 			Diagram diagram = bpmn2Editor.getDiagramTypeProvider().getDiagram();
-			if (shape.getParticipantBandKind() != null) {
+			if (shape != null && shape.getParticipantBandKind() != null) {
 				bindBoolean(shape.eClass().getEStructuralFeature(BpmnDiPackage.BPMN_SHAPE__IS_MESSAGE_VISIBLE),
 						createBooleanInput("Is Message Visible"), shape);
 			}

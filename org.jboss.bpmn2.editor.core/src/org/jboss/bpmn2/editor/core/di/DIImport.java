@@ -25,6 +25,7 @@ import org.eclipse.bpmn2.MessageFlow;
 import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.Process;
 import org.eclipse.bpmn2.SequenceFlow;
+import org.eclipse.bpmn2.SubChoreography;
 import org.eclipse.bpmn2.SubProcess;
 import org.eclipse.bpmn2.di.BPMNDiagram;
 import org.eclipse.bpmn2.di.BPMNEdge;
@@ -236,6 +237,11 @@ public class DIImport {
 					cont = (ContainerShape) elements.get(be);
 					break;
 				}
+			} else if (be instanceof Process) {
+				if (be.getId().equals(parent.getId())) {
+					cont = (ContainerShape) elements.get(be);
+					break;
+				}
 			} else if (be instanceof Lane) {
 				if (be.getId().equals(parent.getId())) {
 					cont = (ContainerShape) elements.get(be);
@@ -256,7 +262,8 @@ public class DIImport {
 
 		// find a correct container element
 		List<Lane> lanes = node.getLanes();
-		if (node.eContainer() instanceof SubProcess || (node.eContainer() instanceof Process && lanes.isEmpty())) {
+		if ((node.eContainer() instanceof SubProcess || (node.eContainer() instanceof Process || node.eContainer() instanceof SubChoreography)
+				&& lanes.isEmpty())) {
 			ContainerShape containerShape = (ContainerShape) elements.get(node.eContainer());
 			if (containerShape != null) {
 				target = containerShape;
