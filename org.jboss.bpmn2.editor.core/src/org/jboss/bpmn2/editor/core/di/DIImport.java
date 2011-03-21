@@ -90,6 +90,8 @@ public class DIImport {
 
 				if (diagrams.size() == 0) {
 					BPMNPlane plane = BpmnDiFactory.eINSTANCE.createBPMNPlane();
+					plane.setBpmnElement(modelHandler.getOrCreateProcess(modelHandler.getInternalParticipant()));
+
 					BPMNDiagram d = BpmnDiFactory.eINSTANCE.createBPMNDiagram();
 					d.setPlane(plane);
 
@@ -99,7 +101,11 @@ public class DIImport {
 
 				for (BPMNDiagram d : diagrams) {
 					featureProvider.link(diagram, d);
-					List<DiagramElement> ownedElement = d.getPlane().getPlaneElement();
+					BPMNPlane plane = d.getPlane();
+					if (plane.getBpmnElement() == null) {
+						plane.setBpmnElement(modelHandler.getOrCreateProcess(modelHandler.getInternalParticipant()));
+					}
+					List<DiagramElement> ownedElement = plane.getPlaneElement();
 
 					// FIXME: here we should create a new diagram and an editor page
 					importShapes(ownedElement);

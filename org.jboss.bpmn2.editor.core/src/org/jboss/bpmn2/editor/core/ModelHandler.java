@@ -192,7 +192,7 @@ public class ModelHandler {
 		}
 	}
 
-	private Process getOrCreateProcess(Participant participant) {
+	public Process getOrCreateProcess(Participant participant) {
 		if (participant.getProcessRef() == null) {
 			Process process = FACTORY.createProcess();
 			process.setId(EcoreUtil.generateUUID());
@@ -433,10 +433,10 @@ public class ModelHandler {
 
 			for (DiagramElement elem : planeElement) {
 				if (elem instanceof BPMNShape && element.getId() != null
-				        && element.getId().equals(((BPMNShape) elem).getBpmnElement().getId())) {
+						&& element.getId().equals(((BPMNShape) elem).getBpmnElement().getId())) {
 					return (elem);
 				} else if (elem instanceof BPMNEdge && element.getId() != null
-				        && element.getId().equals(((BPMNEdge) elem).getBpmnElement().getId())) {
+						&& element.getId().equals(((BPMNEdge) elem).getBpmnElement().getId())) {
 					return (elem);
 				}
 			}

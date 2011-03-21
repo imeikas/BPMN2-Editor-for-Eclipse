@@ -122,13 +122,17 @@ public class BPMN2Editor extends DiagramEditor {
 	protected void setInput(IEditorInput input) {
 		super.setInput(input);
 		BasicCommandStack basicCommandStack = (BasicCommandStack) getEditingDomain().getCommandStack();
+
 		if (input instanceof DiagramEditorInput) {
 			ResourceSet resourceSet = getEditingDomain().getResourceSet();
 			Bpmn2ResourceImpl bpmnResource = (Bpmn2ResourceImpl) resourceSet.createResource(modelUri,
 					"org.eclipse.bpmn2.content-type.xml");
+
 			resourceSet.setURIConverter(new ProxyURIConverterImplExtension());
+
 			modelHandler = ModelHandlerLocator.createModelHandler(modelUri, bpmnResource);
 			ModelHandlerLocator.put(diagramUri, modelHandler);
+
 			try {
 				if (modelFile.exists()) {
 					bpmnResource.load(null);
