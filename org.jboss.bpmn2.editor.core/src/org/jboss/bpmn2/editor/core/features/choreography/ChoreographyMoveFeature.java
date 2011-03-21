@@ -45,15 +45,28 @@ public class ChoreographyMoveFeature extends MoveFlowNodeFeature {
 			Participant participant = BusinessObjectUtil.getFirstElementOfType(s, Participant.class);
 			if (participant != null) {
 				ContainerShape container = (ContainerShape) s;
-				Polygon polygon = (Polygon) container.getGraphicsAlgorithm();
-				Point point = polygon.getPoints().get(0);
+
+				int dx = 0;
+				int dy = 0;
+
+				if (container.getGraphicsAlgorithm() instanceof Polygon) {
+					Polygon polygon = (Polygon) container.getGraphicsAlgorithm();
+					Point point = polygon.getPoints().get(0);
+					dx = point.getX();
+					dy = point.getY();
+				} else {
+					GraphicsAlgorithm ga = container.getGraphicsAlgorithm();
+					dx = ga.getX();
+					dy = ga.getY();
+				}
 
 				BPMNShape bpmnShape = BusinessObjectUtil.getFirstElementOfType(s, BPMNShape.class);
 				ILocation loc = Graphiti.getLayoutService().getLocationRelativeToDiagram(context.getShape());
 				int yBeforeMove = loc.getY();
+
 				Bounds bounds = bpmnShape.getBounds();
-				bounds.setX(loc.getX() + point.getX());
-				bounds.setY(yBeforeMove + point.getY());
+				bounds.setX(loc.getX() + dx);
+				bounds.setY(yBeforeMove + dy);
 
 				List<Connection> connections = peService.getOutgoingConnections(container);
 				for (Connection connection : connections) {
