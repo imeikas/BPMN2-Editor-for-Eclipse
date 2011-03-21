@@ -40,7 +40,6 @@ import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
 import org.jboss.bpmn2.editor.core.features.ConnectionFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
-import org.jboss.bpmn2.editor.core.features.FeatureResolver;
 import org.jboss.bpmn2.editor.core.features.bendpoint.AddBendpointFeature;
 import org.jboss.bpmn2.editor.core.features.bendpoint.MoveBendpointFeature;
 import org.jboss.bpmn2.editor.core.features.bendpoint.RemoveBendpointFeature;
@@ -56,8 +55,8 @@ import org.jboss.bpmn2.editor.ui.features.activity.task.SendTaskFeatureContainer
 import org.jboss.bpmn2.editor.ui.features.activity.task.ServiceTaskFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.activity.task.TaskFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.activity.task.UserTaskFeatureContainer;
-import org.jboss.bpmn2.editor.ui.features.artifact.ArtifactFeatureResolver;
 import org.jboss.bpmn2.editor.ui.features.artifact.GroupFeatureContainer;
+import org.jboss.bpmn2.editor.ui.features.artifact.TextAnnotationFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.choreography.CallChoreographyFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.choreography.ChoreographyTaskFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.choreography.SubChoreographyFeatureContainer;
@@ -94,8 +93,8 @@ import org.jboss.bpmn2.editor.ui.features.gateway.EventBasedGatewayFeatureContai
 import org.jboss.bpmn2.editor.ui.features.gateway.ExclusiveGatewayFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.gateway.InclusiveGatewayFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.gateway.ParallelGatewayFeatureContainer;
-import org.jboss.bpmn2.editor.ui.features.lane.LaneFeatureResolver;
-import org.jboss.bpmn2.editor.ui.features.participant.ParticipantFeatureResolver;
+import org.jboss.bpmn2.editor.ui.features.lane.LaneFeatureContainer;
+import org.jboss.bpmn2.editor.ui.features.participant.ParticipantFeatureContainer;
 
 /**
  * Determines what kinds of business objects can be added to a diagram.
@@ -107,20 +106,12 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 	private final List<FeatureContainer> containers;
 
-	private final List<FeatureResolver> resolvers;
-
 	private final ICreateFeature[] createFeatures;
 
 	private final ICreateConnectionFeature[] createConnectionFeatures;
 
 	public BPMNFeatureProvider(IDiagramTypeProvider dtp) {
 		super(dtp);
-
-		// TODO convert resolvers to containers, provides better decoupling
-		resolvers = new ArrayList<FeatureResolver>();
-		resolvers.add(new LaneFeatureResolver());
-		resolvers.add(new ParticipantFeatureResolver());
-		resolvers.add(new ArtifactFeatureResolver());
 
 		containers = new ArrayList<FeatureContainer>();
 		containers.add(new GroupFeatureContainer());
@@ -172,12 +163,11 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers.add(new DataOutputAssociationFeatureContainer());
 		containers.add(new SubChoreographyFeatureContainer());
 		containers.add(new CallChoreographyFeatureContainer());
+		containers.add(new ParticipantFeatureContainer());
+		containers.add(new LaneFeatureContainer());
+		containers.add(new TextAnnotationFeatureContainer());
 
 		List<ICreateFeature> createFeaturesList = new ArrayList<ICreateFeature>();
-
-		for (FeatureResolver r : resolvers) {
-			createFeaturesList.addAll(r.getCreateFeatures(this));
-		}
 
 		for (FeatureContainer container : containers) {
 			ICreateFeature createFeature = container.getCreateFeature(this);
@@ -216,14 +206,6 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 		BaseElement element = (BaseElement) o;
 
-		// TODO remove after refactoring all remaining resolvers -> containers
-		for (FeatureResolver r : resolvers) {
-			IAddFeature f = r.getAddFeature(this, element);
-			if (f != null) {
-				return f;
-			}
-		}
-
 		for (FeatureContainer container : containers) {
 			if (container.canApplyTo(element)) {
 				IAddFeature feature = container.getAddFeature(this);
@@ -251,14 +233,6 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		}
 
 		BaseElement element = (BaseElement) o;
-
-		// TODO remove after refactoring all remaining resolvers -> containers
-		for (FeatureResolver r : resolvers) {
-			IUpdateFeature f = r.getUpdateFeature(this, element);
-			if (f != null) {
-				return f;
-			}
-		}
 
 		for (FeatureContainer container : containers) {
 			if (container.canApplyTo(element)) {
@@ -288,14 +262,6 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 		BaseElement element = (BaseElement) o;
 
-		// TODO remove after refactoring all remaining resolvers -> containers
-		for (FeatureResolver r : resolvers) {
-			IDirectEditingFeature f = r.getDirectEditingFeature(this, (BaseElement) o);
-			if (f != null) {
-				return f;
-			}
-		}
-
 		for (FeatureContainer container : containers) {
 			if (container.canApplyTo(element)) {
 				IDirectEditingFeature feature = container.getDirectEditingFeature(this);
@@ -318,14 +284,6 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		}
 
 		BaseElement element = (BaseElement) o;
-
-		// TODO remove after refactoring all remaining resolvers -> containers
-		for (FeatureResolver r : resolvers) {
-			ILayoutFeature f = r.getLayoutFeature(this, (BaseElement) o);
-			if (f != null) {
-				return f;
-			}
-		}
 
 		for (FeatureContainer container : containers) {
 			if (container.canApplyTo(element)) {
@@ -350,14 +308,6 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 		BaseElement element = (BaseElement) o;
 
-		// TODO remove after refactoring all remaining resolvers -> containers
-		for (FeatureResolver r : resolvers) {
-			IMoveShapeFeature f = r.getMoveFeature(this, (BaseElement) o);
-			if (f != null) {
-				return f;
-			}
-		}
-
 		for (FeatureContainer container : containers) {
 			if (container.canApplyTo(element)) {
 				IMoveShapeFeature feature = container.getMoveFeature(this);
@@ -380,14 +330,6 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		}
 
 		BaseElement element = (BaseElement) o;
-
-		// TODO remove after refactoring all remaining resolvers -> containers
-		for (FeatureResolver r : resolvers) {
-			IResizeShapeFeature f = r.getResizeFeature(this, (BaseElement) o);
-			if (f != null) {
-				return f;
-			}
-		}
 
 		for (FeatureContainer container : containers) {
 			if (container.canApplyTo(element)) {
@@ -430,14 +372,6 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		}
 
 		BaseElement element = (BaseElement) o;
-
-		// TODO remove after refactoring all remaining resolvers -> containers
-		for (FeatureResolver r : resolvers) {
-			IDeleteFeature f = r.getDeleteFeature(this, (BaseElement) o);
-			if (f != null) {
-				return f;
-			}
-		}
 
 		for (FeatureContainer container : containers) {
 			if (container.canApplyTo(element)) {
