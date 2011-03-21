@@ -95,7 +95,7 @@ import org.jboss.bpmn2.editor.ui.features.gateway.ExclusiveGatewayFeatureContain
 import org.jboss.bpmn2.editor.ui.features.gateway.InclusiveGatewayFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.gateway.ParallelGatewayFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.lane.LaneFeatureResolver;
-import org.jboss.bpmn2.editor.ui.features.participant.ParticipantFeatureResolver;
+import org.jboss.bpmn2.editor.ui.features.participant.ParticipantFeatureContainer;
 
 /**
  * Determines what kinds of business objects can be added to a diagram.
@@ -119,7 +119,6 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		// TODO convert resolvers to containers, provides better decoupling
 		resolvers = new ArrayList<FeatureResolver>();
 		resolvers.add(new LaneFeatureResolver());
-		resolvers.add(new ParticipantFeatureResolver());
 		resolvers.add(new ArtifactFeatureResolver());
 
 		containers = new ArrayList<FeatureContainer>();
@@ -172,6 +171,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers.add(new DataOutputAssociationFeatureContainer());
 		containers.add(new SubChoreographyFeatureContainer());
 		containers.add(new CallChoreographyFeatureContainer());
+		containers.add(new ParticipantFeatureContainer());
 
 		List<ICreateFeature> createFeaturesList = new ArrayList<ICreateFeature>();
 

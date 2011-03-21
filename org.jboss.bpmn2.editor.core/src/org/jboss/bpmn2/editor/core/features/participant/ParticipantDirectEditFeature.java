@@ -19,9 +19,9 @@ import org.eclipse.graphiti.mm.algorithms.Text;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 
-public class DirectEditParticipantFeature extends AbstractDirectEditingFeature {
+public class ParticipantDirectEditFeature extends AbstractDirectEditingFeature {
 
-	public DirectEditParticipantFeature(IFeatureProvider fp) {
+	public ParticipantDirectEditFeature(IFeatureProvider fp) {
 	    super(fp);
     }
 

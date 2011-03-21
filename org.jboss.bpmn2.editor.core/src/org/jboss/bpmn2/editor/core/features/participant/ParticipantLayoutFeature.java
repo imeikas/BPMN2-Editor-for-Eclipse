@@ -30,9 +30,9 @@ import org.jboss.bpmn2.editor.core.di.DIUtils;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 
-public class LayoutParticipantFeature extends AbstractLayoutFeature {
+public class ParticipantLayoutFeature extends AbstractLayoutFeature {
 
-	public LayoutParticipantFeature(IFeatureProvider fp) {
+	public ParticipantLayoutFeature(IFeatureProvider fp) {
 		super(fp);
 	}
 

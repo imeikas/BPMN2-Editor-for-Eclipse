@@ -73,7 +73,7 @@ public class CallActivityFeatureContainer extends AbstractSubProcessFeatureConta
 				super.hook(activity, container, context, width, height);
 				CallActivity callActivity = (CallActivity) activity;
 				Graphiti.getPeService().setPropertyValue(container, CALL_ACTIITY_REF_PROPERTY,
-				        getCallableElementStringValue(callActivity.getCalledElementRef()));
+						getCallableElementStringValue(callActivity.getCalledElementRef()));
 			}
 
 			@Override
@@ -118,8 +118,8 @@ public class CallActivityFeatureContainer extends AbstractSubProcessFeatureConta
 	public static class CreateCallActivityFeatureContainer extends AbstractCreateFlowElementFeature<CallActivity> {
 
 		public CreateCallActivityFeatureContainer(IFeatureProvider fp) {
-			super(fp, "Expanded Call Activity",
-			        "Identifies a point in the Process where a global Process or a Global Task is used");
+			super(fp, "Call Activity",
+					"Identifies a point in the Process where a global Process or a Global Task is used");
 		}
 
 		@Override
@@ -149,7 +149,7 @@ public class CallActivityFeatureContainer extends AbstractSubProcessFeatureConta
 		@Override
 		public boolean canUpdate(IUpdateContext context) {
 			CallActivity callActivity = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
-			        CallActivity.class);
+					CallActivity.class);
 			return callActivity != null && context.getPictogramElement() instanceof ContainerShape;
 		}
 
@@ -162,7 +162,7 @@ public class CallActivityFeatureContainer extends AbstractSubProcessFeatureConta
 				return Reason.createFalseReason();
 			}
 			CallActivity callActivity = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
-			        CallActivity.class);
+					CallActivity.class);
 			String value = getCallableElementStringValue(callActivity.getCalledElementRef());
 			boolean changed = !value.equals(property);
 			return changed ? Reason.createTrueReason() : Reason.createFalseReason();
@@ -175,10 +175,10 @@ public class CallActivityFeatureContainer extends AbstractSubProcessFeatureConta
 
 			ContainerShape container = (ContainerShape) context.getPictogramElement();
 			CallActivity callActivity = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
-			        CallActivity.class);
+					CallActivity.class);
 
 			ContainerShape markerContainer = (ContainerShape) getShape(container,
-			        GraphicsUtil.ACTIVITY_MARKER_CONTAINER);
+					GraphicsUtil.ACTIVITY_MARKER_CONTAINER);
 			Shape globalTaskShape = getShape(container, GLOBAL_TASK_SHAPE_PROPERTY);
 
 			if (callActivity.getCalledElementRef() == null) {
@@ -213,7 +213,7 @@ public class CallActivityFeatureContainer extends AbstractSubProcessFeatureConta
 			}
 
 			peService.setPropertyValue(container, CALL_ACTIITY_REF_PROPERTY,
-			        getCallableElementStringValue(callActivity.getCalledElementRef()));
+					getCallableElementStringValue(callActivity.getCalledElementRef()));
 			return true;
 		}
 	}
