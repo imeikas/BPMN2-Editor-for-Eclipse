@@ -37,12 +37,12 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 
-public class LayoutChoreographyFeature extends AbstractLayoutFeature {
+public class ChoreographyLayoutFeature extends AbstractLayoutFeature {
 
 	protected static IPeService peService = Graphiti.getPeService();
 	protected static IGaService gaService = Graphiti.getGaService();
 
-	public LayoutChoreographyFeature(IFeatureProvider fp) {
+	public ChoreographyLayoutFeature(IFeatureProvider fp) {
 		super(fp);
 	}
 

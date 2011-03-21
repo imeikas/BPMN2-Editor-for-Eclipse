@@ -61,7 +61,7 @@ public class MoveFromParticipantToLaneFeature extends MoveLaneFeature {
 		Lane toLane = getTargetLane(context);
 
 		try {
-			ModelHandler handler = FeatureSupport.getModelHanderInstance(getDiagram());
+			ModelHandler handler = ModelHandler.getInstance(getDiagram());
 			Participant participant = handler.getParticipant(toLane);
 			handler.moveLane(movedLane, participant);
 		} catch (IOException e) {

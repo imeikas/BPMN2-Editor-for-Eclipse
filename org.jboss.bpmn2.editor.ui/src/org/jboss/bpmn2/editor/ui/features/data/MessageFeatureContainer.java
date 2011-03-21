@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.data;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Message;
 import org.eclipse.bpmn2.RootElement;
 import org.eclipse.graphiti.features.IAddFeature;
@@ -36,8 +35,8 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
+import org.jboss.bpmn2.editor.core.features.BaseElementFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
-import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.UpdateBaseElementNameFeature;
 import org.jboss.bpmn2.editor.core.features.data.AbstractCreateRootElementFeature;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
@@ -47,11 +46,11 @@ import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 import org.jboss.bpmn2.editor.ui.features.LayoutBaseElementTextFeature;
 
-public class MessageFeatureContainer implements FeatureContainer {
+public class MessageFeatureContainer extends BaseElementFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof Message;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof Message;
 	}
 
 	@Override
@@ -89,7 +88,7 @@ public class MessageFeatureContainer implements FeatureContainer {
 
 				Shape textShape = peService.createShape(container, false);
 				peService
-				        .setPropertyValue(textShape, UpdateBaseElementNameFeature.TEXT_ELEMENT, Boolean.toString(true));
+						.setPropertyValue(textShape, UpdateBaseElementNameFeature.TEXT_ELEMENT, Boolean.toString(true));
 				Text text = gaService.createDefaultText(textShape, msg.getName());
 				text.setStyle(StyleUtil.getStyleForText(getDiagram()));
 				text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);

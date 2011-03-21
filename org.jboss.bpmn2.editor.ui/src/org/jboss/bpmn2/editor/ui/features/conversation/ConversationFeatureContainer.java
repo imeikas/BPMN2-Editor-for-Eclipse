@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.conversation;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Conversation;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
@@ -23,16 +22,16 @@ import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
+import org.jboss.bpmn2.editor.core.features.BaseElementFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
-import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.conversation.AddConversationFeature;
 import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
-public class ConversationFeatureContainer implements FeatureContainer {
+public class ConversationFeatureContainer extends BaseElementFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof Conversation;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof Conversation;
 	}
 
 	@Override

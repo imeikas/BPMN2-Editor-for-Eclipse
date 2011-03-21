@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.event.definitions;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.Event;
 import org.eclipse.bpmn2.EventDefinition;
@@ -33,8 +32,8 @@ import org.jboss.bpmn2.editor.ui.ImageProvider;
 public class TerminateEventDefinitionFeatureContainer extends EventDefinitionFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof TerminateEventDefinition;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof TerminateEventDefinition;
 	}
 
 	@Override
@@ -79,8 +78,9 @@ public class TerminateEventDefinitionFeatureContainer extends EventDefinitionFea
 
 		@Override
 		public boolean canCreate(ICreateContext context) {
-			if (!super.canCreate(context))
+			if (!super.canCreate(context)) {
 				return false;
+			}
 
 			Event e = (Event) getBusinessObjectForPictogramElement(context.getTargetContainer());
 

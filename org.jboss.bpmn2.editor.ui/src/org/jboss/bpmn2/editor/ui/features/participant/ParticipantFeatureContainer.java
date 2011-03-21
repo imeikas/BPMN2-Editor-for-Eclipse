@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.participant;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Participant;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
@@ -21,7 +20,7 @@ import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
-import org.jboss.bpmn2.editor.core.features.FeatureContainer;
+import org.jboss.bpmn2.editor.core.features.BaseElementFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.participant.AddParticipantFeature;
 import org.jboss.bpmn2.editor.core.features.participant.ParticipantDirectEditFeature;
@@ -32,11 +31,11 @@ import org.jboss.bpmn2.editor.core.features.participant.ParticipantResizeFeature
 import org.jboss.bpmn2.editor.core.features.participant.UpdateParticipantFeature;
 import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
-public class ParticipantFeatureContainer implements FeatureContainer {
+public class ParticipantFeatureContainer extends BaseElementFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof Participant;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof Participant;
 	}
 
 	@Override

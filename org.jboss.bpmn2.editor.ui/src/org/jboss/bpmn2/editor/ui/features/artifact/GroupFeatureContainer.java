@@ -11,7 +11,6 @@
 package org.jboss.bpmn2.editor.ui.features.artifact;
 
 import org.eclipse.bpmn2.Artifact;
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Group;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IAddFeature;
@@ -34,20 +33,20 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
+import org.jboss.bpmn2.editor.core.features.BaseElementFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.DefaultBPMNResizeFeature;
 import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
-import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.artifact.AbstractCreateArtifactFeature;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
-public class GroupFeatureContainer implements FeatureContainer {
+public class GroupFeatureContainer extends BaseElementFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof Group;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof Group;
 	}
 
 	@Override

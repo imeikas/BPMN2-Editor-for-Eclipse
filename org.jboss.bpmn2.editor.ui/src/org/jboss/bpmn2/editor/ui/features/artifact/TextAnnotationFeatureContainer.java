@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.artifact;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.TextAnnotation;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
@@ -21,8 +20,8 @@ import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
+import org.jboss.bpmn2.editor.core.features.BaseElementFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.DefaultBPMNResizeFeature;
-import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.artifact.AddTextAnnotationFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.DirectEditTextAnnotationFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.LayoutTextAnnotationFeature;
@@ -30,11 +29,11 @@ import org.jboss.bpmn2.editor.core.features.artifact.MoveTextAnnotationFeature;
 import org.jboss.bpmn2.editor.core.features.artifact.UpdateTextAnnotationFeature;
 import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
-public class TextAnnotationFeatureContainer implements FeatureContainer {
+public class TextAnnotationFeatureContainer extends BaseElementFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof TextAnnotation;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof TextAnnotation;
 	}
 
 	@Override

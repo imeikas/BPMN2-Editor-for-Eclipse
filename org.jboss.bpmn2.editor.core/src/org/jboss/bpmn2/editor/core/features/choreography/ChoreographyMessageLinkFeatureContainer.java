@@ -8,8 +8,10 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package org.jboss.bpmn2.editor.ui.features.gateway;
+package org.jboss.bpmn2.editor.core.features.choreography;
 
+import org.eclipse.graphiti.features.IAddFeature;
+import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IDeleteFeature;
 import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -17,41 +19,65 @@ import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
+import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.eclipse.graphiti.features.context.IResizeShapeContext;
+import org.eclipse.graphiti.features.impl.AbstractMoveShapeFeature;
 import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
-import org.jboss.bpmn2.editor.core.features.BaseElementFeatureContainer;
-import org.jboss.bpmn2.editor.core.features.MoveFlowNodeFeature;
-import org.jboss.bpmn2.editor.core.features.UpdateBaseElementNameFeature;
-import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
-import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
-import org.jboss.bpmn2.editor.ui.features.LayoutBaseElementTextFeature;
+import org.jboss.bpmn2.editor.core.features.PropertyBasedFeatureContainer;
 
-public abstract class AbstractGatewayFeatureContainer extends BaseElementFeatureContainer {
+public class ChoreographyMessageLinkFeatureContainer extends PropertyBasedFeatureContainer {
+
+	public static final String MESSAGE_LINK_PROPERTY = ChoreographyMessageLinkFeatureContainer.class.getSimpleName()
+			+ ".messageLink";
+
+	@Override
+	protected String getPropertyKey() {
+		return MESSAGE_LINK_PROPERTY;
+	}
+
+	@Override
+	protected boolean canApplyToProperty(String value) {
+		return new Boolean(value);
+	}
+
+	@Override
+	public ICreateFeature getCreateFeature(IFeatureProvider fp) {
+		return null;
+	}
+
+	@Override
+	public IAddFeature getAddFeature(IFeatureProvider fp) {
+		return null;
+	}
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
-		return new UpdateBaseElementNameFeature(fp);
+		return null;
 	}
 
 	@Override
 	public IDirectEditingFeature getDirectEditingFeature(IFeatureProvider fp) {
-		return null; // TODO
+		return null;
 	}
 
 	@Override
 	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
-		return new LayoutBaseElementTextFeature(fp) {
-
-			@Override
-			public int getMinimumWidth() {
-				return 2 * GraphicsUtil.GATEWAY_RADIUS;
-			}
-		};
+		return null;
 	}
 
 	@Override
 	public IMoveShapeFeature getMoveFeature(IFeatureProvider fp) {
-		return new MoveFlowNodeFeature(fp);
+		return new AbstractMoveShapeFeature(fp) {
+
+			@Override
+			public void moveShape(IMoveShapeContext context) {
+			}
+
+			@Override
+			public boolean canMoveShape(IMoveShapeContext context) {
+				return false;
+			}
+		};
 	}
 
 	@Override
@@ -66,6 +92,7 @@ public abstract class AbstractGatewayFeatureContainer extends BaseElementFeature
 
 	@Override
 	public IDeleteFeature getDeleteFeature(IFeatureProvider fp) {
-		return new AbstractDefaultDeleteFeature(fp);
+		return null;
 	}
+
 }

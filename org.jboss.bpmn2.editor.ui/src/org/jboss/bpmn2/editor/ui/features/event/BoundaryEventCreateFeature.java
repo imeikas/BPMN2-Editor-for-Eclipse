@@ -23,7 +23,6 @@ import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
-import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
 public class BoundaryEventCreateFeature extends AbstractCreateFeature {
@@ -48,7 +47,7 @@ public class BoundaryEventCreateFeature extends AbstractCreateFeature {
 		BoundaryEvent event = null;
 		try {
 			Activity activity = (Activity) getBusinessObjectForPictogramElement(context.getTargetContainer());
-			ModelHandler handler = FeatureSupport.getModelHanderInstance(getDiagram());
+			ModelHandler handler = ModelHandler.getInstance(getDiagram());
 			event = ModelHandler.FACTORY.createBoundaryEvent();
 			event.setId(EcoreUtil.generateUUID());
 			event.setAttachedToRef(activity);

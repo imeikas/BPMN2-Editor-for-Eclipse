@@ -13,7 +13,6 @@ package org.jboss.bpmn2.editor.ui.features.activity.subprocess;
 import java.util.Iterator;
 
 import org.eclipse.bpmn2.Activity;
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.CallActivity;
 import org.eclipse.bpmn2.CallableElement;
 import org.eclipse.bpmn2.GlobalBusinessRuleTask;
@@ -56,8 +55,8 @@ public class CallActivityFeatureContainer extends AbstractSubProcessFeatureConta
 	private static final String GLOBAL_TASK_SHAPE_PROPERTY = "global.task.shape";
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof CallActivity;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof CallActivity;
 	}
 
 	@Override

@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.event.definitions;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.EventDefinition;
 import org.eclipse.bpmn2.SignalEventDefinition;
 import org.eclipse.graphiti.features.ICreateFeature;
@@ -31,71 +30,71 @@ import org.jboss.bpmn2.editor.ui.ImageProvider;
 public class SignalEventDefinitionContainer extends EventDefinitionFeatureContainer {
 
 	@Override
-    public boolean canApplyTo(BaseElement element) {
-	    return element instanceof SignalEventDefinition;
-    }
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof SignalEventDefinition;
+	}
 
 	@Override
-    public ICreateFeature getCreateFeature(IFeatureProvider fp) {
-	    return new CreateSignalEventDefinition(fp);
-    }
+	public ICreateFeature getCreateFeature(IFeatureProvider fp) {
+		return new CreateSignalEventDefinition(fp);
+	}
 
 	@Override
-    protected Shape drawForStart(DecorationAlgorithm algorithm, ContainerShape shape) {
+	protected Shape drawForStart(DecorationAlgorithm algorithm, ContainerShape shape) {
 		return draw(algorithm, shape);
-    }
+	}
 
 	@Override
-    protected Shape drawForEnd(DecorationAlgorithm algorithm, ContainerShape shape) {
+	protected Shape drawForEnd(DecorationAlgorithm algorithm, ContainerShape shape) {
 		return drawFilled(algorithm, shape);
-    }
-	
-	@Override
-    protected Shape drawForThrow(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    return drawFilled(algorithm, shape);
-    }
+	}
 
 	@Override
-    protected Shape drawForCatch(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    return draw(algorithm, shape);
-    }
-	
+	protected Shape drawForThrow(DecorationAlgorithm algorithm, ContainerShape shape) {
+		return drawFilled(algorithm, shape);
+	}
+
 	@Override
-    protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    return draw(algorithm, shape);
-    }
-	
+	protected Shape drawForCatch(DecorationAlgorithm algorithm, ContainerShape shape) {
+		return draw(algorithm, shape);
+	}
+
+	@Override
+	protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
+		return draw(algorithm, shape);
+	}
+
 	private Shape draw(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape signalShape = Graphiti.getPeService().createShape(shape, false);
 		Polygon signal = GraphicsUtil.createEventSignal(signalShape);
 		signal.setFilled(false);
 		signal.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
-	    return signalShape;
+		return signalShape;
 	}
-	
+
 	private Shape drawFilled(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape signalShape = Graphiti.getPeService().createShape(shape, false);
 		Polygon signal = GraphicsUtil.createEventSignal(signalShape);
 		signal.setFilled(true);
 		signal.setBackground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		signal.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
-	    return signalShape;
+		return signalShape;
 	}
-	
+
 	public static class CreateSignalEventDefinition extends CreateEventDefinition {
 
 		public CreateSignalEventDefinition(IFeatureProvider fp) {
-	        super(fp, "Signal Definition", "Adds signal definition to event");
-        }
+			super(fp, "Signal Definition", "Adds signal definition to event");
+		}
 
 		@Override
-        protected EventDefinition createEventDefinition(ICreateContext context) {
-	        return ModelHandler.FACTORY.createSignalEventDefinition();
-        }
+		protected EventDefinition createEventDefinition(ICreateContext context) {
+			return ModelHandler.FACTORY.createSignalEventDefinition();
+		}
 
 		@Override
-        protected String getStencilImageId() {
-	        return ImageProvider.IMG_16_SIGNAL;
-        }
+		protected String getStencilImageId() {
+			return ImageProvider.IMG_16_SIGNAL;
+		}
 	}
 }

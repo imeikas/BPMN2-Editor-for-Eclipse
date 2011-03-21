@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.lane;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
@@ -21,7 +20,7 @@ import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
-import org.jboss.bpmn2.editor.core.features.FeatureContainer;
+import org.jboss.bpmn2.editor.core.features.BaseElementFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.lane.AddLaneFeature;
 import org.jboss.bpmn2.editor.core.features.lane.DirectEditLaneFeature;
 import org.jboss.bpmn2.editor.core.features.lane.LayoutLaneFeature;
@@ -30,11 +29,11 @@ import org.jboss.bpmn2.editor.core.features.lane.ResizeLaneFeature;
 import org.jboss.bpmn2.editor.core.features.lane.UpdateLaneFeature;
 import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
-public class LaneFeatureContainer implements FeatureContainer {
+public class LaneFeatureContainer extends BaseElementFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof Lane;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof Lane;
 	}
 
 	@Override

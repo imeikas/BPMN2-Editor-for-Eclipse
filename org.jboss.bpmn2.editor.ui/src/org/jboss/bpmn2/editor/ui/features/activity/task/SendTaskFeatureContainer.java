@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.activity.task;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.SendTask;
 import org.eclipse.bpmn2.Task;
 import org.eclipse.graphiti.features.IAddFeature;
@@ -30,8 +29,8 @@ import org.jboss.bpmn2.editor.ui.ImageProvider;
 public class SendTaskFeatureContainer extends AbstractTaskFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof SendTask;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof SendTask;
 	}
 
 	@Override

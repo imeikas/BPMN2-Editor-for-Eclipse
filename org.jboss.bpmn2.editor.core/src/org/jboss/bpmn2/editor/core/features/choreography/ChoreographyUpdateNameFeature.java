@@ -28,11 +28,11 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 
-public class UpdateChoreographyNameFeature extends AbstractUpdateFeature {
+public class ChoreographyUpdateNameFeature extends AbstractUpdateFeature {
 
 	private static final IPeService peService = Graphiti.getPeService();
 
-	public UpdateChoreographyNameFeature(IFeatureProvider fp) {
+	public ChoreographyUpdateNameFeature(IFeatureProvider fp) {
 		super(fp);
 	}
 

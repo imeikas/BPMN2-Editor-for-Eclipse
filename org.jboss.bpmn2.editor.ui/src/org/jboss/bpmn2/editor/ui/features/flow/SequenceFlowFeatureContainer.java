@@ -39,8 +39,8 @@ import org.eclipse.graphiti.services.IPeService;
 import org.eclipse.graphiti.util.IColorConstant;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
+import org.jboss.bpmn2.editor.core.features.BaseElementConnectionFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
-import org.jboss.bpmn2.editor.core.features.ConnectionFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.flow.AbstractAddFlowFeature;
 import org.jboss.bpmn2.editor.core.features.flow.AbstractCreateFlowFeature;
@@ -48,7 +48,7 @@ import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.core.utils.Tuple;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
-public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
+public class SequenceFlowFeatureContainer extends BaseElementConnectionFeatureContainer {
 
 	private static final String IS_DEFAULT_FLOW_PROPERTY = "is.default.flow";
 	private static final String IS_CONDITIONAL_FLOW_PROPERTY = "is.conditional.flow";
@@ -56,8 +56,8 @@ public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
 	private static final String CONDITIONAL_MARKER_PROPERTY = "conditional.marker";
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof SequenceFlow;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof SequenceFlow;
 	}
 
 	@Override
@@ -148,7 +148,7 @@ public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
 
 		@Override
 		public boolean canUpdate(IUpdateContext context) {
-			SequenceFlow flow = (SequenceFlow) BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
+			SequenceFlow flow = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
 					SequenceFlow.class);
 			boolean canUpdate = flow != null && isDefaultAttributeSupported(flow.getSourceRef());
 			return canUpdate;
@@ -161,7 +161,7 @@ public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
 			if (property == null || !canUpdate(context)) {
 				return Reason.createFalseReason();
 			}
-			SequenceFlow flow = (SequenceFlow) BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
+			SequenceFlow flow = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
 					SequenceFlow.class);
 			SequenceFlow defaultFlow = getDefaultFlow(flow.getSourceRef());
 			boolean isDefault = defaultFlow == null ? false : defaultFlow.equals(flow);
@@ -173,7 +173,7 @@ public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
 		public boolean update(IUpdateContext context) {
 			IPeService peService = Graphiti.getPeService();
 			Connection connection = (Connection) context.getPictogramElement();
-			SequenceFlow flow = (SequenceFlow) BusinessObjectUtil.getFirstElementOfType(connection, SequenceFlow.class);
+			SequenceFlow flow = BusinessObjectUtil.getFirstElementOfType(connection, SequenceFlow.class);
 			SequenceFlow defaultFlow = getDefaultFlow(flow.getSourceRef());
 			boolean isDefault = defaultFlow == null ? false : defaultFlow.equals(flow);
 
@@ -215,7 +215,7 @@ public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
 
 		@Override
 		public boolean canUpdate(IUpdateContext context) {
-			SequenceFlow flow = (SequenceFlow) BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
+			SequenceFlow flow = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
 					SequenceFlow.class);
 			boolean canUpdate = flow != null && flow.getSourceRef() instanceof Activity;
 			return canUpdate;
@@ -225,7 +225,7 @@ public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
 		public IReason updateNeeded(IUpdateContext context) {
 			IPeService peService = Graphiti.getPeService();
 			Connection connection = (Connection) context.getPictogramElement();
-			SequenceFlow flow = (SequenceFlow) BusinessObjectUtil.getFirstElementOfType(connection, SequenceFlow.class);
+			SequenceFlow flow = BusinessObjectUtil.getFirstElementOfType(connection, SequenceFlow.class);
 			String property = peService.getPropertyValue(connection, IS_CONDITIONAL_FLOW_PROPERTY);
 			if (property == null || !canUpdate(context)) {
 				return Reason.createFalseReason();
@@ -238,7 +238,7 @@ public class SequenceFlowFeatureContainer extends ConnectionFeatureContainer {
 		public boolean update(IUpdateContext context) {
 			IPeService peService = Graphiti.getPeService();
 			Connection connection = (Connection) context.getPictogramElement();
-			SequenceFlow flow = (SequenceFlow) BusinessObjectUtil.getFirstElementOfType(connection, SequenceFlow.class);
+			SequenceFlow flow = BusinessObjectUtil.getFirstElementOfType(connection, SequenceFlow.class);
 
 			Tuple<ConnectionDecorator, ConnectionDecorator> decorators = getConnectionDecorators(connection);
 			ConnectionDecorator def = decorators.getFirst();

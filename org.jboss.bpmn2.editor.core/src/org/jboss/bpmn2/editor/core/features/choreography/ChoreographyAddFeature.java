@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features.choreography;
 
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyMessageLinkFeatureContainer.MESSAGE_LINK_PROPERTY;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +51,7 @@ import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil.Envelope;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 
-public class AddChoreographyFeature extends AbstractBpmnAddFeature {
+public class ChoreographyAddFeature extends AbstractBpmnAddFeature {
 
 	private static final int R = 10;
 	private static final int ENV_W = 30;
@@ -58,7 +60,7 @@ public class AddChoreographyFeature extends AbstractBpmnAddFeature {
 	protected final IGaService gaService = Graphiti.getGaService();
 	protected final IPeService peService = Graphiti.getPeService();
 
-	public AddChoreographyFeature(IFeatureProvider fp) {
+	public ChoreographyAddFeature(IFeatureProvider fp) {
 		super(fp);
 	}
 
@@ -178,8 +180,8 @@ public class AddChoreographyFeature extends AbstractBpmnAddFeature {
 		Bounds bounds = shape.getBounds();
 		int w = (int) bounds.getWidth();
 		int h = (int) bounds.getHeight();
-		int[] xy = { 0, h, 0, 0, w, 0, w, h };
-		int[] beforeAfter = { 0, 0, R, R, R, R, 0, 0 };
+		int[] xy = { 0, 0, w, 0, w, h, 0, h };
+		int[] beforeAfter = { R, R, R, R, 0, 0, 0, 0 };
 
 		Polygon band = gaService.createPolygon(bandShape, xy, beforeAfter);
 		band.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
@@ -267,6 +269,7 @@ public class AddChoreographyFeature extends AbstractBpmnAddFeature {
 
 		connection.setStart(boundaryAnchor.anchor);
 		connection.setEnd(AnchorUtil.getBoundaryAnchors(envelope).get(envelopeAnchorLoc).anchor);
+		peService.setPropertyValue(envelope, MESSAGE_LINK_PROPERTY, Boolean.toString(true));
 	}
 
 	private void drawMultiplicityMarkers(ContainerShape container) {

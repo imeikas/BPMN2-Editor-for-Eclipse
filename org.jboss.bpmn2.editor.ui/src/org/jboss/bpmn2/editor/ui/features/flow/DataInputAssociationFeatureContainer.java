@@ -22,15 +22,15 @@ import org.eclipse.graphiti.mm.pictograms.ConnectionDecorator;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
-import org.jboss.bpmn2.editor.core.features.ConnectionFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.BaseElementConnectionFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.flow.AbstractAddFlowFeature;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 
-public class DataInputAssociationFeatureContainer extends ConnectionFeatureContainer {
+public class DataInputAssociationFeatureContainer extends BaseElementConnectionFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof DataInputAssociation;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof DataInputAssociation;
 	}
 
 	@Override

@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.data;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.DataObjectReference;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
@@ -26,8 +25,8 @@ import org.jboss.bpmn2.editor.ui.ImageProvider;
 public class DataObjectReferenceFeatureContainer extends AbstractDataFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof DataObjectReference;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof DataObjectReference;
 	}
 
 	@Override
@@ -55,7 +54,7 @@ public class DataObjectReferenceFeatureContainer extends AbstractDataFeatureCont
 
 		public CreateDataObjectReferenceFeature(IFeatureProvider fp) {
 			super(fp, "Data Object Ref",
-			        "Provides ref information about what activities require to be performed or what they produce");
+					"Provides ref information about what activities require to be performed or what they produce");
 		}
 
 		@Override

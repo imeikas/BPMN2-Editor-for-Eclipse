@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.event.definitions;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.EscalationEventDefinition;
 import org.eclipse.bpmn2.Event;
 import org.eclipse.bpmn2.EventDefinition;
@@ -36,8 +35,8 @@ import org.jboss.bpmn2.editor.ui.ImageProvider;
 public class EscalationEventDefinitionContainer extends EventDefinitionFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof EscalationEventDefinition;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof EscalationEventDefinition;
 	}
 
 	@Override
@@ -95,11 +94,12 @@ public class EscalationEventDefinitionContainer extends EventDefinitionFeatureCo
 
 		@Override
 		public boolean canCreate(ICreateContext context) {
-			if (!super.canCreate(context))
+			if (!super.canCreate(context)) {
 				return false;
+			}
 
 			Event e = (Event) getBusinessObjectForPictogramElement(context.getTargetContainer());
-			
+
 			if (e instanceof StartEvent) {
 				EObject container = context.getTargetContainer().eContainer();
 				if (container instanceof Shape) {
@@ -109,9 +109,10 @@ public class EscalationEventDefinitionContainer extends EventDefinitionFeatureCo
 
 				return false;
 			}
-			
-			if (e instanceof IntermediateCatchEvent)
+
+			if (e instanceof IntermediateCatchEvent) {
 				return false;
+			}
 
 			return true;
 		}

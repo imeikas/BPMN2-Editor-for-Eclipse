@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IDeleteFeature;
@@ -20,10 +19,13 @@ import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
+import org.eclipse.graphiti.features.context.IContext;
 
 public interface FeatureContainer {
 
-	boolean canApplyTo(BaseElement element);
+	Object getApplyObject(IContext context);
+
+	boolean canApplyTo(Object o);
 
 	ICreateFeature getCreateFeature(IFeatureProvider fp);
 
@@ -40,4 +42,5 @@ public interface FeatureContainer {
 	IResizeShapeFeature getResizeFeature(IFeatureProvider fp);
 
 	IDeleteFeature getDeleteFeature(IFeatureProvider fp);
+
 }

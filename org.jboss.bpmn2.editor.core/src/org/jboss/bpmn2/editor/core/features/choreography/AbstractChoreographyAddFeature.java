@@ -36,12 +36,12 @@ import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 
-public abstract class AbstractAddChoreographyFeature extends AbstractBpmnAddFeature {
+public abstract class AbstractChoreographyAddFeature extends AbstractBpmnAddFeature {
 
 	protected static final IGaService gaService = Graphiti.getGaService();
 	protected static final IPeService peService = Graphiti.getPeService();
 
-	public AbstractAddChoreographyFeature(IFeatureProvider fp) {
+	public AbstractChoreographyAddFeature(IFeatureProvider fp) {
 		super(fp);
 	}
 

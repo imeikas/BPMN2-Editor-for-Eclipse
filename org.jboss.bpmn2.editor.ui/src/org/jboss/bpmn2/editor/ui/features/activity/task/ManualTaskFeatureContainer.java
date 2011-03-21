@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.activity.task;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.ManualTask;
 import org.eclipse.bpmn2.Task;
 import org.eclipse.graphiti.features.IAddFeature;
@@ -30,8 +29,8 @@ import org.jboss.bpmn2.editor.ui.ImageProvider;
 public class ManualTaskFeatureContainer extends AbstractTaskFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof ManualTask;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof ManualTask;
 	}
 
 	@Override
@@ -55,7 +54,7 @@ public class ManualTaskFeatureContainer extends AbstractTaskFeatureContainer {
 
 		public CreateManualTaskFeature(IFeatureProvider fp) {
 			super(fp, "Manual Task",
-	        "Task that is expected to perform without the aid of any business process execution engine or any application");
+					"Task that is expected to perform without the aid of any business process execution engine or any application");
 		}
 
 		@Override

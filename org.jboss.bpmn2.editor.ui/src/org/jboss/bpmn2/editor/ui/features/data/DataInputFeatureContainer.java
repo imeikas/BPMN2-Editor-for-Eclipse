@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.data;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.DataInput;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IAddFeature;
@@ -27,8 +26,8 @@ import org.jboss.bpmn2.editor.ui.ImageProvider;
 public class DataInputFeatureContainer extends AbstractDataFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof DataInput;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof DataInput;
 	}
 
 	@Override
@@ -52,9 +51,9 @@ public class DataInputFeatureContainer extends AbstractDataFeatureContainer {
 			}
 
 			@Override
-            public String getName(DataInput t) {
-	            return t.getName();
-            }
+			public String getName(DataInput t) {
+				return t.getName();
+			}
 		};
 	}
 

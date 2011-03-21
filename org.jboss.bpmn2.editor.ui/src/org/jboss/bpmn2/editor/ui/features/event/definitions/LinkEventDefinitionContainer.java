@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.event.definitions;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Event;
 import org.eclipse.bpmn2.EventDefinition;
 import org.eclipse.bpmn2.IntermediateCatchEvent;
@@ -34,41 +33,41 @@ import org.jboss.bpmn2.editor.ui.ImageProvider;
 public class LinkEventDefinitionContainer extends EventDefinitionFeatureContainer {
 
 	@Override
-    public boolean canApplyTo(BaseElement element) {
-	    return element instanceof LinkEventDefinition;
-    }
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof LinkEventDefinition;
+	}
 
 	@Override
-    public ICreateFeature getCreateFeature(IFeatureProvider fp) {
-	    return new CreateLinkEventDefinition(fp);
-    }
+	public ICreateFeature getCreateFeature(IFeatureProvider fp) {
+		return new CreateLinkEventDefinition(fp);
+	}
 
 	@Override
-    protected Shape drawForStart(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    return null; // NOT ALLOWED ACCORDING TO SPEC
-    }
+	protected Shape drawForStart(DecorationAlgorithm algorithm, ContainerShape shape) {
+		return null; // NOT ALLOWED ACCORDING TO SPEC
+	}
 
 	@Override
-    protected Shape drawForEnd(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    return null; // NOT ALLOWED ACCORDING TO SPEC
-    }
+	protected Shape drawForEnd(DecorationAlgorithm algorithm, ContainerShape shape) {
+		return null; // NOT ALLOWED ACCORDING TO SPEC
+	}
 
 	@Override
-    protected Shape drawForThrow(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    return drawFilled(algorithm, shape);
-    }
+	protected Shape drawForThrow(DecorationAlgorithm algorithm, ContainerShape shape) {
+		return drawFilled(algorithm, shape);
+	}
 
 	@Override
-    protected Shape drawForCatch(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    return draw(algorithm, shape);
-    }
-	
+	protected Shape drawForCatch(DecorationAlgorithm algorithm, ContainerShape shape) {
+		return draw(algorithm, shape);
+	}
+
 	@Override
-    protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    // TODO Auto-generated method stub
-	    return null;
-    }
-	
+	protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	private Shape draw(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape linkShape = Graphiti.getPeService().createShape(shape, false);
 		Polygon link = GraphicsUtil.createEventLink(linkShape);
@@ -76,7 +75,7 @@ public class LinkEventDefinitionContainer extends EventDefinitionFeatureContaine
 		link.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		return linkShape;
 	}
-	
+
 	private Shape drawFilled(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape linkShape = Graphiti.getPeService().createShape(shape, false);
 		Polygon link = GraphicsUtil.createEventLink(linkShape);
@@ -85,7 +84,7 @@ public class LinkEventDefinitionContainer extends EventDefinitionFeatureContaine
 		link.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		return linkShape;
 	}
-	
+
 	public static class CreateLinkEventDefinition extends CreateEventDefinition {
 
 		public CreateLinkEventDefinition(IFeatureProvider fp) {
@@ -94,13 +93,15 @@ public class LinkEventDefinitionContainer extends EventDefinitionFeatureContaine
 
 		@Override
 		public boolean canCreate(ICreateContext context) {
-			if (!super.canCreate(context))
+			if (!super.canCreate(context)) {
 				return false;
+			}
 
 			Event e = (Event) getBusinessObjectForPictogramElement(context.getTargetContainer());
-			
-			if (e instanceof IntermediateCatchEvent || e instanceof IntermediateThrowEvent)
+
+			if (e instanceof IntermediateCatchEvent || e instanceof IntermediateThrowEvent) {
 				return true;
+			}
 
 			return false;
 		}

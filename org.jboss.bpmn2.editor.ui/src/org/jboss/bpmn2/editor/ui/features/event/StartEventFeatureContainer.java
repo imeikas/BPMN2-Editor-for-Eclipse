@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.event;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Event;
 import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.graphiti.features.IAddFeature;
@@ -39,8 +38,8 @@ public class StartEventFeatureContainer extends AbstractEventFeatureContainer {
 	static final String INTERRUPTING = "interrupting";
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof StartEvent;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof StartEvent;
 	}
 
 	@Override
@@ -103,15 +102,16 @@ public class StartEventFeatureContainer extends AbstractEventFeatureContainer {
 		public IReason updateNeeded(IUpdateContext context) {
 			IPeService peService = Graphiti.getPeService();
 			PictogramElement element = context.getPictogramElement();
-			
+
 			String prop = peService.getPropertyValue(element, INTERRUPTING);
-			if(prop == null) {
+			if (prop == null) {
 				return Reason.createFalseReason();
 			}
-			
+
 			StartEvent event = (StartEvent) getBusinessObjectForPictogramElement(element);
 			boolean interrupting = Boolean.parseBoolean(prop);
-			IReason reason = event.isIsInterrupting() == interrupting ? Reason.createFalseReason() : Reason.createTrueReason();
+			IReason reason = event.isIsInterrupting() == interrupting ? Reason.createFalseReason() : Reason
+					.createTrueReason();
 			return reason;
 		}
 
@@ -122,7 +122,7 @@ public class StartEventFeatureContainer extends AbstractEventFeatureContainer {
 			StartEvent event = (StartEvent) getBusinessObjectForPictogramElement(container);
 
 			Ellipse ellipse = (Ellipse) peService.getAllContainedShapes(container).iterator().next()
-			        .getGraphicsAlgorithm();
+					.getGraphicsAlgorithm();
 			LineStyle style = event.isIsInterrupting() ? LineStyle.SOLID : LineStyle.DASH;
 			ellipse.setLineStyle(style);
 

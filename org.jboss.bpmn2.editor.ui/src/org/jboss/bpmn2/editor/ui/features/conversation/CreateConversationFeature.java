@@ -19,7 +19,6 @@ import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.features.impl.AbstractCreateFeature;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
-import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
 public class CreateConversationFeature extends AbstractCreateFeature {
@@ -37,7 +36,7 @@ public class CreateConversationFeature extends AbstractCreateFeature {
 	public Object[] create(ICreateContext context) {
 		Conversation c = null;
 		try {
-			ModelHandler handler = FeatureSupport.getModelHanderInstance(getDiagram());
+			ModelHandler handler = ModelHandler.getInstance(getDiagram());
 			c = ModelHandler.FACTORY.createConversation();
 			c.setId(EcoreUtil.generateUUID());
 			c.setName("Conversation");
@@ -48,12 +47,12 @@ public class CreateConversationFeature extends AbstractCreateFeature {
 		addGraphicalRepresentation(context, c);
 		return new Object[] { c };
 	}
-	
+
 	@Override
 	public String getCreateImageId() {
 		return ImageProvider.IMG_16_CONVERSATION;
 	}
-	
+
 	@Override
 	public String getCreateLargeImageId() {
 		return ImageProvider.IMG_16_CONVERSATION;

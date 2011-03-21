@@ -18,9 +18,9 @@ import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.context.IDeleteContext;
 import org.eclipse.graphiti.features.context.impl.DeleteContext;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
+import org.jboss.bpmn2.editor.core.features.BaseElementFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.DefaultBPMNResizeFeature;
-import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.activity.ActivityCompensateMarkerUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.activity.ActivityLoopAndMultiInstanceMarkerUpdateFeature;
@@ -28,14 +28,14 @@ import org.jboss.bpmn2.editor.core.features.activity.ActivityMoveFeature;
 import org.jboss.bpmn2.editor.core.features.event.AbstractBoundaryEventOperation;
 import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
-public abstract class AbstractActivityFeatureContainer implements FeatureContainer {
+public abstract class AbstractActivityFeatureContainer extends BaseElementFeatureContainer {
 
 	@Override
 	public MultiUpdateFeature getUpdateFeature(IFeatureProvider fp) {
 		ActivityCompensateMarkerUpdateFeature compensateMarkerUpdateFeature = new ActivityCompensateMarkerUpdateFeature(
-		        fp);
+				fp);
 		ActivityLoopAndMultiInstanceMarkerUpdateFeature loopAndMultiInstanceUpdateFeature = new ActivityLoopAndMultiInstanceMarkerUpdateFeature(
-		        fp);
+				fp);
 		MultiUpdateFeature multiUpdate = new MultiUpdateFeature(fp);
 		multiUpdate.addUpdateFeature(compensateMarkerUpdateFeature);
 		multiUpdate.addUpdateFeature(loopAndMultiInstanceUpdateFeature);
@@ -58,7 +58,7 @@ public abstract class AbstractActivityFeatureContainer implements FeatureContain
 			@Override
 			public void delete(final IDeleteContext context) {
 				Activity activity = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
-				        Activity.class);
+						Activity.class);
 				new AbstractBoundaryEventOperation(activity, getDiagram()) {
 					@Override
 					protected void doWork(ContainerShape container) {

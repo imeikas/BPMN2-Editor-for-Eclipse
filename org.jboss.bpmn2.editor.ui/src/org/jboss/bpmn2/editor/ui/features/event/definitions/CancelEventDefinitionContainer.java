@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.event.definitions;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.BoundaryEvent;
 import org.eclipse.bpmn2.CancelEventDefinition;
 import org.eclipse.bpmn2.CatchEvent;
@@ -36,8 +35,8 @@ import org.jboss.bpmn2.editor.ui.ImageProvider;
 public class CancelEventDefinitionContainer extends EventDefinitionFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof CancelEventDefinition;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof CancelEventDefinition;
 	}
 
 	@Override

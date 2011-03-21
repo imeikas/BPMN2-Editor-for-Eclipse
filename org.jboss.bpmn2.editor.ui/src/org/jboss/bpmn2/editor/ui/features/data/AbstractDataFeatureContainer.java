@@ -19,14 +19,14 @@ import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
+import org.jboss.bpmn2.editor.core.features.BaseElementFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
-import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.UpdateBaseElementNameFeature;
 import org.jboss.bpmn2.editor.core.utils.GraphicsUtil;
 import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 import org.jboss.bpmn2.editor.ui.features.LayoutBaseElementTextFeature;
 
-public abstract class AbstractDataFeatureContainer implements FeatureContainer {
+public abstract class AbstractDataFeatureContainer extends BaseElementFeatureContainer {
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {

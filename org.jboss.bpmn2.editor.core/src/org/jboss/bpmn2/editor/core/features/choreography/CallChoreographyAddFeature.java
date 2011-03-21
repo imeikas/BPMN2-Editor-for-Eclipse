@@ -26,9 +26,9 @@ import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 
-public class AddCallChoreographyFeature extends AbstractAddChoreographyFeature {
+public class CallChoreographyAddFeature extends AbstractChoreographyAddFeature {
 
-	public AddCallChoreographyFeature(IFeatureProvider fp) {
+	public CallChoreographyAddFeature(IFeatureProvider fp) {
 		super(fp);
 	}
 

@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.event.definitions;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.ConditionalEventDefinition;
 import org.eclipse.bpmn2.Event;
 import org.eclipse.bpmn2.EventDefinition;
@@ -31,8 +30,8 @@ import org.jboss.bpmn2.editor.ui.ImageProvider;
 public class ConditionalEventDefinitionContainer extends EventDefinitionFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof ConditionalEventDefinition;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof ConditionalEventDefinition;
 	}
 
 	@Override
@@ -51,20 +50,20 @@ public class ConditionalEventDefinitionContainer extends EventDefinitionFeatureC
 	}
 
 	@Override
-    protected Shape drawForThrow(DecorationAlgorithm decorationAlgorithm, ContainerShape shape) {
-	    return null; // NOT ALLOWED ACCORDING TO SPEC
-    }
+	protected Shape drawForThrow(DecorationAlgorithm decorationAlgorithm, ContainerShape shape) {
+		return null; // NOT ALLOWED ACCORDING TO SPEC
+	}
 
 	@Override
-    protected Shape drawForCatch(DecorationAlgorithm decorationAlgorithm, ContainerShape shape) {
-	    return draw(shape);
-    }
-		
+	protected Shape drawForCatch(DecorationAlgorithm decorationAlgorithm, ContainerShape shape) {
+		return draw(shape);
+	}
+
 	@Override
-    protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    return draw(shape);
-    }
-	
+	protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
+		return draw(shape);
+	}
+
 	private Shape draw(ContainerShape shape) {
 		Shape conditionShape = Graphiti.getPeService().createShape(shape, false);
 		GraphicsUtil.createEventImage(conditionShape, ImageProvider.IMG_20_CONDITION);
@@ -75,12 +74,14 @@ public class ConditionalEventDefinitionContainer extends EventDefinitionFeatureC
 
 		@Override
 		public boolean canCreate(ICreateContext context) {
-			if (!super.canCreate(context))
+			if (!super.canCreate(context)) {
 				return false;
+			}
 
 			Event e = (Event) getBusinessObjectForPictogramElement(context.getTargetContainer());
-			if (e instanceof ThrowEvent)
+			if (e instanceof ThrowEvent) {
 				return false;
+			}
 
 			return true;
 		}

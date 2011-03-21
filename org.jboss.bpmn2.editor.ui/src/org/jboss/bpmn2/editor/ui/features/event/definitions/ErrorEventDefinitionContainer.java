@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.event.definitions;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.BoundaryEvent;
 import org.eclipse.bpmn2.CatchEvent;
 import org.eclipse.bpmn2.ErrorEventDefinition;
@@ -38,8 +37,8 @@ import org.jboss.bpmn2.editor.ui.ImageProvider;
 public class ErrorEventDefinitionContainer extends EventDefinitionFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof ErrorEventDefinition;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof ErrorEventDefinition;
 	}
 
 	@Override
@@ -97,8 +96,9 @@ public class ErrorEventDefinitionContainer extends EventDefinitionFeatureContain
 
 		@Override
 		public boolean canCreate(ICreateContext context) {
-			if (!super.canCreate(context))
+			if (!super.canCreate(context)) {
 				return false;
+			}
 
 			Event e = (Event) getBusinessObjectForPictogramElement(context.getTargetContainer());
 
@@ -121,8 +121,9 @@ public class ErrorEventDefinitionContainer extends EventDefinitionFeatureContain
 				return false;
 			}
 
-			if (e instanceof CatchEvent || e instanceof IntermediateThrowEvent)
+			if (e instanceof CatchEvent || e instanceof IntermediateThrowEvent) {
 				return false;
+			}
 
 			return true;
 		}

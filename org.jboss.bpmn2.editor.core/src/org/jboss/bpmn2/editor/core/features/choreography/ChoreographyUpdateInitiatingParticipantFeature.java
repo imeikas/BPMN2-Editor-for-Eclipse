@@ -36,11 +36,11 @@ import org.eclipse.graphiti.util.IColorConstant;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.utils.Tuple;
 
-public class UpdateInitiatingParticipantFeature extends AbstractUpdateFeature {
+public class ChoreographyUpdateInitiatingParticipantFeature extends AbstractUpdateFeature {
 
 	private static IPeService peService = Graphiti.getPeService();
 
-	public UpdateInitiatingParticipantFeature(IFeatureProvider fp) {
+	public ChoreographyUpdateInitiatingParticipantFeature(IFeatureProvider fp) {
 		super(fp);
 	}
 

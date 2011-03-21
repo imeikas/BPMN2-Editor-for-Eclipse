@@ -19,27 +19,27 @@ import org.eclipse.graphiti.features.ICreateConnectionFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.jboss.bpmn2.editor.core.ModelHandler;
-import org.jboss.bpmn2.editor.core.features.ConnectionFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.BaseElementConnectionFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.flow.AbstractAddFlowFeature;
 import org.jboss.bpmn2.editor.core.features.flow.AbstractCreateFlowFeature;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
-public class ConversationLinkFeatureContainer extends ConnectionFeatureContainer {
+public class ConversationLinkFeatureContainer extends BaseElementConnectionFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof ConversationLink;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof ConversationLink;
 	}
 
 	@Override
 	public IAddFeature getAddFeature(IFeatureProvider fp) {
 		return new AbstractAddFlowFeature(fp) {
-			
+
 			@Override
 			protected void decorateConnectionLine(Polyline connectionLine) {
 				connectionLine.setLineWidth(3);
 			}
-			
+
 			@Override
 			protected Class<? extends BaseElement> getBoClass() {
 				return ConversationLink.class;
@@ -59,25 +59,25 @@ public class ConversationLinkFeatureContainer extends ConnectionFeatureContainer
 		}
 
 		@Override
-        protected String getStencilImageId() {
-	        return ImageProvider.IMG_16_CONVERSATION_LINK;
-        }
+		protected String getStencilImageId() {
+			return ImageProvider.IMG_16_CONVERSATION_LINK;
+		}
 
 		@Override
-        protected BaseElement createFlow(ModelHandler mh, Conversation source, Participant target) {
+		protected BaseElement createFlow(ModelHandler mh, Conversation source, Participant target) {
 			ConversationLink conversationLink = mh.createConversationLink(source, target);
 			conversationLink.setName("Conversation Link");
-	        return conversationLink;
-        }
+			return conversationLink;
+		}
 
 		@Override
-        protected Class<Conversation> getSourceClass() {
-	        return Conversation.class;
-        }
+		protected Class<Conversation> getSourceClass() {
+			return Conversation.class;
+		}
 
 		@Override
-        protected Class<Participant> getTargetClass() {
-	        return Participant.class;
-        }
+		protected Class<Participant> getTargetClass() {
+			return Participant.class;
+		}
 	}
 }

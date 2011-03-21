@@ -23,6 +23,8 @@ import org.jboss.bpmn2.editor.core.features.event.AbstractBoundaryEventOperation
 
 public class ActivityMoveFeature extends MoveFlowNodeFeature {
 
+	public static final String ACTIVITY_MOVE_PROPERTY = "activity.move";
+
 	public ActivityMoveFeature(IFeatureProvider fp) {
 		super(fp);
 	}
@@ -44,7 +46,7 @@ public class ActivityMoveFeature extends MoveFlowNodeFeature {
 				newContext.setTargetContainer(context.getTargetContainer());
 				newContext.setTargetConnection(context.getTargetConnection());
 				newContext.setLocation(ga.getX(), ga.getY());
-				newContext.putProperty("activity.move", true);
+				newContext.putProperty(ACTIVITY_MOVE_PROPERTY, true);
 
 				IMoveShapeFeature moveFeature = getFeatureProvider().getMoveShapeFeature(newContext);
 				if (moveFeature.canMoveShape(newContext)) {

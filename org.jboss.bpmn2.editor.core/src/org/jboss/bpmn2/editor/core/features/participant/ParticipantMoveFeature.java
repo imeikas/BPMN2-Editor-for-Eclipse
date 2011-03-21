@@ -26,13 +26,20 @@ public class ParticipantMoveFeature extends DefaultBpmnMoveFeature {
 
 	@Override
 	public boolean canMoveShape(IMoveShapeContext context) {
+		if (isChoreographyParticipantBand(context)) {
+			return false;
+		}
+		return super.canMoveShape(context);
+	}
+
+	private boolean isChoreographyParticipantBand(IMoveShapeContext context) {
 		EObject container = context.getShape().eContainer();
 		if (container instanceof PictogramElement) {
 			PictogramElement containerElem = (PictogramElement) container;
 			if (BusinessObjectUtil.containsElementOfType(containerElem, ChoreographyActivity.class)) {
-				return false;
+				return true;
 			}
 		}
-		return super.canMoveShape(context);
+		return false;
 	}
 }

@@ -14,7 +14,6 @@ import java.util.Iterator;
 
 import org.eclipse.bpmn2.Activity;
 import org.eclipse.bpmn2.AdHocSubProcess;
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.SubProcess;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
@@ -35,8 +34,8 @@ import org.jboss.bpmn2.editor.ui.ImageProvider;
 public class AdHocSubProcessFeatureContainer extends AbstractSubProcessFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof AdHocSubProcess;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof AdHocSubProcess;
 	}
 
 	@Override
@@ -68,7 +67,7 @@ public class AdHocSubProcessFeatureContainer extends AbstractSubProcessFeatureCo
 
 		public CreateAdHocSubProcessFeature(IFeatureProvider fp) {
 			super(fp, "Expanded Ad-Hoc SubProcess",
-			        "A specialized type of Sub-Process that is a group of Activities that have no REQUIRED sequence relationships");
+					"A specialized type of Sub-Process that is a group of Activities that have no REQUIRED sequence relationships");
 		}
 
 		@Override

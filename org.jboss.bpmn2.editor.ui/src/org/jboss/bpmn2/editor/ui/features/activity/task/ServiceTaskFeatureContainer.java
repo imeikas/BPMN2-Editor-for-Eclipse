@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.activity.task;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.ServiceTask;
 import org.eclipse.bpmn2.Task;
 import org.eclipse.graphiti.features.IAddFeature;
@@ -30,27 +29,27 @@ import org.jboss.bpmn2.editor.ui.ImageProvider;
 public class ServiceTaskFeatureContainer extends AbstractTaskFeatureContainer {
 
 	@Override
-    public boolean canApplyTo(BaseElement element) {
-	    return element instanceof ServiceTask;
-    }
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof ServiceTask;
+	}
 
 	@Override
-    public ICreateFeature getCreateFeature(IFeatureProvider fp) {
-	    return new CreateServiceTaskFeature(fp);
-    }
+	public ICreateFeature getCreateFeature(IFeatureProvider fp) {
+		return new CreateServiceTaskFeature(fp);
+	}
 
 	@Override
-    public IAddFeature getAddFeature(IFeatureProvider fp) {
-	    return new AddTaskFeature(fp){
-	    	@Override
-	    	protected void decorateActivityRectangle(RoundedRectangle rect) {
-	    		IGaService service = Graphiti.getGaService();
-	    		Image img = service.createImage(rect, ImageProvider.IMG_16_SERVICE_TASK);
-	    		service.setLocationAndSize(img, 2, 2, GraphicsUtil.TASK_IMAGE_SIZE, GraphicsUtil.TASK_IMAGE_SIZE);
-	    	}
-	    };
-    }
-	
+	public IAddFeature getAddFeature(IFeatureProvider fp) {
+		return new AddTaskFeature(fp) {
+			@Override
+			protected void decorateActivityRectangle(RoundedRectangle rect) {
+				IGaService service = Graphiti.getGaService();
+				Image img = service.createImage(rect, ImageProvider.IMG_16_SERVICE_TASK);
+				service.setLocationAndSize(img, 2, 2, GraphicsUtil.TASK_IMAGE_SIZE, GraphicsUtil.TASK_IMAGE_SIZE);
+			}
+		};
+	}
+
 	public static class CreateServiceTaskFeature extends AbstractCreateTaskFeature {
 
 		public CreateServiceTaskFeature(IFeatureProvider fp) {
@@ -60,9 +59,9 @@ public class ServiceTaskFeatureContainer extends AbstractTaskFeatureContainer {
 		@Override
 		protected Task createFlowElement(ICreateContext context) {
 			ServiceTask task = ModelHandler.FACTORY.createServiceTask();
-		    task.setName("Service Task");
-		    task.setImplementation("##unspecified");
-		    return task;
+			task.setName("Service Task");
+			task.setImplementation("##unspecified");
+			return task;
 		}
 
 		@Override

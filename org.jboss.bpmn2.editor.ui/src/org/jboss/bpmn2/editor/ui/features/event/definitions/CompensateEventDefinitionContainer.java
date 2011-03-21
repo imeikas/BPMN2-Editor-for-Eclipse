@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.event.definitions;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.BoundaryEvent;
 import org.eclipse.bpmn2.CatchEvent;
 import org.eclipse.bpmn2.CompensateEventDefinition;
@@ -37,8 +36,8 @@ import org.jboss.bpmn2.editor.ui.ImageProvider;
 public class CompensateEventDefinitionContainer extends EventDefinitionFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof CompensateEventDefinition;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof CompensateEventDefinition;
 	}
 
 	@Override
@@ -65,12 +64,12 @@ public class CompensateEventDefinitionContainer extends EventDefinitionFeatureCo
 	protected Shape drawForCatch(DecorationAlgorithm algorithm, ContainerShape shape) {
 		return null; // NOT ALLOWED ACCORDING TO SPEC
 	}
-	
+
 	@Override
-    protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    return draw(algorithm, shape);
-    }
-	
+	protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
+		return draw(algorithm, shape);
+	}
+
 	private Shape draw(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape compensateShape = Graphiti.getPeService().createShape(shape, false);
 		Compensation compensation = GraphicsUtil.createEventCompensation(compensateShape);
@@ -80,7 +79,7 @@ public class CompensateEventDefinitionContainer extends EventDefinitionFeatureCo
 		compensation.arrow2.setForeground(algorithm.manageColor(StyleUtil.CLASS_FOREGROUND));
 		return compensateShape;
 	}
-	
+
 	private Shape drawFilled(DecorationAlgorithm algorithm, ContainerShape shape) {
 		Shape compensateShape = Graphiti.getPeService().createShape(shape, false);
 		Compensation compensation = GraphicsUtil.createEventCompensation(compensateShape);
@@ -101,16 +100,17 @@ public class CompensateEventDefinitionContainer extends EventDefinitionFeatureCo
 
 		@Override
 		public boolean canCreate(ICreateContext context) {
-			if (!super.canCreate(context))
+			if (!super.canCreate(context)) {
 				return false;
+			}
 
 			Event e = (Event) getBusinessObjectForPictogramElement(context.getTargetContainer());
 
-			if(e instanceof BoundaryEvent) {
+			if (e instanceof BoundaryEvent) {
 				BoundaryEvent be = (BoundaryEvent) e;
 				return be.isCancelActivity();
 			}
-			
+
 			if (e instanceof StartEvent) {
 				if (((StartEvent) e).isIsInterrupting() == false) {
 					return false;
@@ -124,10 +124,11 @@ public class CompensateEventDefinitionContainer extends EventDefinitionFeatureCo
 
 				return false;
 			}
-			
-			if (e instanceof CatchEvent)
+
+			if (e instanceof CatchEvent) {
 				return false;
-			
+			}
+
 			return true;
 		}
 

@@ -23,10 +23,9 @@ import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
-import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 
 public abstract class AbstractCreateFlowFeature<A extends EObject, B extends EObject> extends
-        AbstractCreateConnectionFeature {
+		AbstractCreateConnectionFeature {
 
 	public AbstractCreateFlowFeature(IFeatureProvider fp, String name, String description) {
 		super(fp, name, description);
@@ -44,9 +43,9 @@ public abstract class AbstractCreateFlowFeature<A extends EObject, B extends EOb
 		try {
 			A source = getSourceBo(context);
 			B target = getTargetBo(context);
-			ModelHandler mh = FeatureSupport.getModelHanderInstance(getDiagram());
+			ModelHandler mh = ModelHandler.getInstance(getDiagram());
 			AddConnectionContext addContext = new AddConnectionContext(context.getSourceAnchor(),
-			        context.getTargetAnchor());
+					context.getTargetAnchor());
 			BaseElement flow = createFlow(mh, source, target);
 			flow.setId(EcoreUtil.generateUUID());
 			addContext.setNewObject(flow);
@@ -76,20 +75,16 @@ public abstract class AbstractCreateFlowFeature<A extends EObject, B extends EOb
 
 	protected abstract BaseElement createFlow(ModelHandler mh, A source, B target);
 
-	@SuppressWarnings("unchecked")
 	protected A getSourceBo(ICreateConnectionContext context) {
 		if (context.getSourceAnchor() != null) {
-			return (A) BusinessObjectUtil
-			        .getFirstElementOfType(context.getSourceAnchor().getParent(), getSourceClass());
+			return BusinessObjectUtil.getFirstElementOfType(context.getSourceAnchor().getParent(), getSourceClass());
 		}
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	protected B getTargetBo(ICreateConnectionContext context) {
 		if (context.getTargetAnchor() != null) {
-			return (B) BusinessObjectUtil
-			        .getFirstElementOfType(context.getTargetAnchor().getParent(), getTargetClass());
+			return BusinessObjectUtil.getFirstElementOfType(context.getTargetAnchor().getParent(), getTargetClass());
 		}
 		return null;
 	}

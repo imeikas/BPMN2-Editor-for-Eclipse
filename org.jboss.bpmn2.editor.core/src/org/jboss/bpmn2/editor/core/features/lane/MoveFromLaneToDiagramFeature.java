@@ -20,7 +20,7 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 
 public class MoveFromLaneToDiagramFeature extends MoveLaneFeature {
-	
+
 	public MoveFromLaneToDiagramFeature(IFeatureProvider fp) {
 		super(fp);
 	}
@@ -40,11 +40,11 @@ public class MoveFromLaneToDiagramFeature extends MoveLaneFeature {
 		Lane parentLane = (Lane) getBusinessObjectForPictogramElement(context.getSourceContainer());
 		Lane movedLane = (Lane) getBusinessObjectForPictogramElement(context.getShape());
 		parentLane.getChildLaneSet().getLanes().remove(movedLane);
-        try {
-        	ModelHandler mh = FeatureSupport.getModelHanderInstance(getDiagram());
-	        mh.laneToTop(movedLane);
-        } catch (IOException e) {
-        	Activator.logError(e);
-        }
-    }
+		try {
+			ModelHandler mh = ModelHandler.getInstance(getDiagram());
+			mh.laneToTop(movedLane);
+		} catch (IOException e) {
+			Activator.logError(e);
+		}
+	}
 }

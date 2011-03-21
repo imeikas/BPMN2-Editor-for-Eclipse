@@ -39,8 +39,8 @@ import org.jboss.bpmn2.editor.ui.ImageProvider;
 public class DataObjectFeatureContainer extends AbstractDataFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof DataObject;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof DataObject;
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class DataObjectFeatureContainer extends AbstractDataFeatureContainer {
 		@Override
 		public boolean canUpdate(IUpdateContext context) {
 			Object o = getBusinessObjectForPictogramElement(context.getPictogramElement());
-			return o != null && o instanceof BaseElement && canApplyTo((BaseElement) o);
+			return o != null && o instanceof BaseElement && canApplyTo(o);
 		}
 
 		@Override
@@ -86,7 +86,7 @@ public class DataObjectFeatureContainer extends AbstractDataFeatureContainer {
 			ContainerShape container = (ContainerShape) context.getPictogramElement();
 			DataObject data = (DataObject) getBusinessObjectForPictogramElement(container);
 			boolean isCollection = Boolean.parseBoolean(peService.getPropertyValue(container,
-			        Properties.COLLECTION_PROPERTY));
+					Properties.COLLECTION_PROPERTY));
 			return data.isIsCollection() != isCollection ? Reason.createTrueReason() : Reason.createFalseReason();
 		}
 
@@ -109,7 +109,7 @@ public class DataObjectFeatureContainer extends AbstractDataFeatureContainer {
 			}
 
 			peService.setPropertyValue(container, Properties.COLLECTION_PROPERTY,
-			        Boolean.toString(data.isIsCollection()));
+					Boolean.toString(data.isIsCollection()));
 			return true;
 		}
 	}
@@ -118,7 +118,7 @@ public class DataObjectFeatureContainer extends AbstractDataFeatureContainer {
 
 		public CreateDataObjectFeature(IFeatureProvider fp) {
 			super(fp, "Data Object",
-			        "Provides information about what activities require to be performed or what they produce");
+					"Provides information about what activities require to be performed or what they produce");
 		}
 
 		@Override

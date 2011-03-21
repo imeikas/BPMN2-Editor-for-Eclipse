@@ -31,18 +31,17 @@ import org.eclipse.graphiti.services.IPeService;
 import org.eclipse.graphiti.util.IColorConstant;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
-import org.jboss.bpmn2.editor.core.features.ConnectionFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.BaseElementConnectionFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.flow.AbstractAddFlowFeature;
 import org.jboss.bpmn2.editor.core.features.flow.AbstractCreateFlowFeature;
-import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
-public class MessageFlowFeatureContainer extends ConnectionFeatureContainer {
+public class MessageFlowFeatureContainer extends BaseElementConnectionFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof MessageFlow;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof MessageFlow;
 	}
 
 	@Override
@@ -132,7 +131,7 @@ public class MessageFlowFeatureContainer extends ConnectionFeatureContainer {
 			}
 			boolean different = false;
 			try {
-				ModelHandler handler = FeatureSupport.getModelHanderInstance(getDiagram());
+				ModelHandler handler = ModelHandler.getInstance(getDiagram());
 				Participant sourceParticipant = handler.getParticipant(source);
 				Participant targetParticipant = handler.getParticipant(target);
 				different = !sourceParticipant.equals(targetParticipant);

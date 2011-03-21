@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.gateway;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Gateway;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.graphiti.features.IAddFeature;
@@ -29,8 +28,8 @@ import org.jboss.bpmn2.editor.ui.ImageProvider;
 public class ParallelGatewayFeatureContainer extends AbstractGatewayFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof ParallelGateway;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof ParallelGateway;
 	}
 
 	@Override

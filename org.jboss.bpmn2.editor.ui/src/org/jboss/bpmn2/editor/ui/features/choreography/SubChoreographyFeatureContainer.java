@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.choreography;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.SubChoreography;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
@@ -20,15 +19,15 @@ import org.eclipse.graphiti.features.context.ICreateContext;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractCreateFlowElementFeature;
-import org.jboss.bpmn2.editor.core.features.choreography.AddChoreographyFeature;
-import org.jboss.bpmn2.editor.core.features.choreography.LayoutChoreographyFeature;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyAddFeature;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyLayoutFeature;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
 public class SubChoreographyFeatureContainer extends AbstractChoreographyFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof SubChoreography;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof SubChoreography;
 	}
 
 	@Override
@@ -38,12 +37,12 @@ public class SubChoreographyFeatureContainer extends AbstractChoreographyFeature
 
 	@Override
 	public IAddFeature getAddFeature(IFeatureProvider fp) {
-		return new AddChoreographyFeature(fp);
+		return new ChoreographyAddFeature(fp);
 	}
 
 	@Override
 	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
-		return new LayoutChoreographyFeature(fp) {
+		return new ChoreographyLayoutFeature(fp) {
 			@Override
 			protected void layoutBodyText(GraphicsAlgorithm ga, int w, int h, int bandHeight, int y) {
 				gaService.setLocationAndSize(ga, 0, y, w, 15);

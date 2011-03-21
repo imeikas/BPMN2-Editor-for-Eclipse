@@ -33,7 +33,6 @@ import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.ILayoutService;
 import org.eclipse.graphiti.services.IPeCreateService;
-import org.eclipse.graphiti.util.ILocationInfo;
 import org.jboss.bpmn2.editor.core.di.DIImport;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
@@ -86,8 +85,6 @@ public class AddLaneFeature extends AbstractBpmnAddFeature {
 					// gaService.setLocationAndSize(rect, context.getX(), context.getY(), width, height);
 				} else {
 					ILayoutService layoutService = Graphiti.getLayoutService();
-					ILocationInfo locationInfo = layoutService.getLocationInfo(getDiagram(), context.getX(),
-							context.getHeight());
 					ILocation loc = layoutService.getLocationRelativeToDiagram(containerShape);
 					int x = context.getX() - loc.getX();
 					int y = context.getY() - loc.getY();

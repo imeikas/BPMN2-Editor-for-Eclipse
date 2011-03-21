@@ -28,9 +28,9 @@ import org.eclipse.graphiti.mm.algorithms.styles.Color;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.util.IColorConstant;
-import org.jboss.bpmn2.editor.core.features.FeatureContainer;
+import org.jboss.bpmn2.editor.core.features.BaseElementFeatureContainer;
 
-public abstract class EventDefinitionFeatureContainer implements FeatureContainer {
+public abstract class EventDefinitionFeatureContainer extends BaseElementFeatureContainer {
 
 	@Override
 	public IAddFeature getAddFeature(IFeatureProvider fp) {

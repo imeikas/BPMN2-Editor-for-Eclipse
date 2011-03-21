@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.event;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.BoundaryEvent;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
@@ -23,17 +22,17 @@ import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
-import org.jboss.bpmn2.editor.core.features.FeatureContainer;
+import org.jboss.bpmn2.editor.core.features.BaseElementFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
-public class BoundaryEventFeatureContainer implements FeatureContainer {
+public class BoundaryEventFeatureContainer extends BaseElementFeatureContainer {
 
 	public static String BOUNDARY_EVENT_CANCEL = "cancel.activity";
 	public static String BOUNDARY_EVENT_DISTANCE = "boundary.distance";
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof BoundaryEvent;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof BoundaryEvent;
 	}
 
 	@Override

@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.event;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.EndEvent;
 import org.eclipse.bpmn2.Event;
 import org.eclipse.graphiti.features.IAddFeature;
@@ -26,8 +25,8 @@ import org.jboss.bpmn2.editor.ui.ImageProvider;
 public class EndEventFeatureContainer extends AbstractEventFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof EndEvent;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof EndEvent;
 	}
 
 	@Override

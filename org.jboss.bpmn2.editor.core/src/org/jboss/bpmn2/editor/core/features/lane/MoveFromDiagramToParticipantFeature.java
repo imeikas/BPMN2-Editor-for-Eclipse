@@ -58,7 +58,7 @@ public class MoveFromDiagramToParticipantFeature extends MoveLaneFeature {
 		try {
 			Participant targetParticipant = (Participant) getBusinessObjectForPictogramElement(context
 					.getTargetContainer());
-			ModelHandler handler = FeatureSupport.getModelHanderInstance(getDiagram());
+			ModelHandler handler = ModelHandler.getInstance(getDiagram());
 			Lane movedLane = getMovedLane(context);
 			handler.moveLane(movedLane, targetParticipant);
 			Participant internalParticipant = handler.getParticipant(getDiagram());

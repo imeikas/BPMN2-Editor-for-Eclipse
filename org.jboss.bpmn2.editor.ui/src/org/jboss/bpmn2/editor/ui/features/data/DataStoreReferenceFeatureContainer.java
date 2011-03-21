@@ -12,7 +12,6 @@ package org.jboss.bpmn2.editor.ui.features.data;
 
 import java.io.IOException;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.DataStore;
 import org.eclipse.bpmn2.DataStoreReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -43,21 +42,20 @@ import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
 import org.jboss.bpmn2.editor.core.features.AbstractCreateFlowElementFeature;
+import org.jboss.bpmn2.editor.core.features.BaseElementFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
-import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.UpdateBaseElementNameFeature;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
-import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.ui.Activator;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 import org.jboss.bpmn2.editor.ui.features.LayoutBaseElementTextFeature;
 
-public class DataStoreReferenceFeatureContainer implements FeatureContainer {
+public class DataStoreReferenceFeatureContainer extends BaseElementFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof DataStoreReference;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof DataStoreReference;
 	}
 
 	@Override
@@ -113,7 +111,7 @@ public class DataStoreReferenceFeatureContainer implements FeatureContainer {
 
 				Shape textShape = peService.createShape(container, false);
 				peService
-				        .setPropertyValue(textShape, UpdateBaseElementNameFeature.TEXT_ELEMENT, Boolean.toString(true));
+						.setPropertyValue(textShape, UpdateBaseElementNameFeature.TEXT_ELEMENT, Boolean.toString(true));
 				Text text = gaService.createDefaultText(textShape, store.getName());
 				text.setStyle(StyleUtil.getStyleForText(getDiagram()));
 				text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
@@ -180,7 +178,7 @@ public class DataStoreReferenceFeatureContainer implements FeatureContainer {
 				DataStore dataStore = ModelHandler.FACTORY.createDataStore();
 				dataStore.setName("Data Store");
 				dataStore.setId(EcoreUtil.generateUUID());
-				FeatureSupport.getModelHanderInstance(getDiagram()).addRootElement(dataStore);
+				ModelHandler.getInstance(getDiagram()).addRootElement(dataStore);
 			} catch (IOException e) {
 				Activator.showErrorWithLogging(e);
 			}

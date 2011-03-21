@@ -36,7 +36,7 @@ public abstract class AbstractCreateFlowElementFeature<T extends FlowElement> ex
 		boolean intoLane = FeatureSupport.isTargetLane(context) && FeatureSupport.isTargetLaneOnTop(context);
 		boolean intoParticipant = FeatureSupport.isTargetParticipant(context);
 		boolean intoFlowElementContainer = BusinessObjectUtil.containsElementOfType(context.getTargetContainer(),
-		        FlowElementsContainer.class);
+				FlowElementsContainer.class);
 		return intoDiagram || intoLane || intoParticipant || intoFlowElementContainer;
 	}
 
@@ -44,12 +44,12 @@ public abstract class AbstractCreateFlowElementFeature<T extends FlowElement> ex
 	public Object[] create(ICreateContext context) {
 		T element = null;
 		try {
-			ModelHandler handler = FeatureSupport.getModelHanderInstance(getDiagram());
+			ModelHandler handler = ModelHandler.getInstance(getDiagram());
 			element = createFlowElement(context);
 			element.setId(EcoreUtil.generateUUID());
 			if (FeatureSupport.isTargetLane(context) && element instanceof FlowNode) {
 				((FlowNode) element).getLanes().add(
-				        (Lane) getBusinessObjectForPictogramElement(context.getTargetContainer()));
+						(Lane) getBusinessObjectForPictogramElement(context.getTargetContainer()));
 			}
 
 			handler.addFlowElement(getBusinessObjectForPictogramElement(context.getTargetContainer()), element);

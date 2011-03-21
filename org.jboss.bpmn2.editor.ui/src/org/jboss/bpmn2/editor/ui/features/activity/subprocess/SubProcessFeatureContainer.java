@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.activity.subprocess;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.SubProcess;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
@@ -26,8 +25,8 @@ public class SubProcessFeatureContainer extends AbstractSubProcessFeatureContain
 	public static final String TRIGGERED_BY_EVENT = "triggered-by-event-key";
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof SubProcess;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof SubProcess;
 	}
 
 	@Override

@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.choreography;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.CallChoreography;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
@@ -19,14 +18,14 @@ import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractCreateFlowElementFeature;
-import org.jboss.bpmn2.editor.core.features.choreography.AddChoreographyFeature;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyAddFeature;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
 public class CallChoreographyFeatureContainer extends AbstractChoreographyFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof CallChoreography;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof CallChoreography;
 	}
 
 	@Override
@@ -36,19 +35,19 @@ public class CallChoreographyFeatureContainer extends AbstractChoreographyFeatur
 
 	@Override
 	public IAddFeature getAddFeature(IFeatureProvider fp) {
-		return new AddChoreographyFeature(fp);
+		return new ChoreographyAddFeature(fp);
 	}
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
 		// MultiUpdateFeature updateFeature = new MultiUpdateFeature(fp);
-		// updateFeature.addUpdateFeature(new UpdateChoreographyParticipantRefsFeature(fp) {
+		// updateFeature.addUpdateFeature(new ChoreographyUpdateParticipantRefsFeature(fp) {
 		// @Override
 		// protected boolean showNames() {
 		// return false;
 		// }
 		// });
-		// updateFeature.addUpdateFeature(new UpdateInitiatingParticipantFeature(fp));
+		// updateFeature.addUpdateFeature(new ChoreographyUpdateInitiatingParticipantFeature(fp));
 		// return updateFeature;
 		return null;
 	}

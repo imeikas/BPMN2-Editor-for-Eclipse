@@ -48,12 +48,12 @@ import org.jboss.bpmn2.editor.core.utils.FeatureSupport;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 import org.jboss.bpmn2.editor.core.utils.Tuple;
 
-public class UpdateChoreographyParticipantRefsFeature extends AbstractUpdateFeature {
+public class ChoreographyUpdateParticipantRefsFeature extends AbstractUpdateFeature {
 
 	private static final IPeService peService = Graphiti.getPeService();
 	private static final IGaService gaService = Graphiti.getGaService();
 
-	public UpdateChoreographyParticipantRefsFeature(IFeatureProvider fp) {
+	public ChoreographyUpdateParticipantRefsFeature(IFeatureProvider fp) {
 		super(fp);
 	}
 

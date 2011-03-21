@@ -17,21 +17,20 @@ import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
+import org.jboss.bpmn2.editor.core.features.BaseElementFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.DefaultBPMNResizeFeature;
-import org.jboss.bpmn2.editor.core.features.FeatureContainer;
-import org.jboss.bpmn2.editor.core.features.MoveFlowNodeFeature;
-import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
-import org.jboss.bpmn2.editor.core.features.choreography.LayoutChoreographyFeature;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyLayoutFeature;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyMoveFeature;
 import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
-public abstract class AbstractChoreographyFeatureContainer implements FeatureContainer {
+public abstract class AbstractChoreographyFeatureContainer extends BaseElementFeatureContainer {
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
 		// MultiUpdateFeature updateFeature = new MultiUpdateFeature(fp);
-		// updateFeature.addUpdateFeature(new UpdateChoreographyNameFeature(fp));
-		// updateFeature.addUpdateFeature(new UpdateChoreographyParticipantRefsFeature(fp));
-		// updateFeature.addUpdateFeature(new UpdateInitiatingParticipantFeature(fp));
+		// updateFeature.addUpdateFeature(new ChoreographyUpdateNameFeature(fp));
+		// updateFeature.addUpdateFeature(new ChoreographyUpdateParticipantRefsFeature(fp));
+		// updateFeature.addUpdateFeature(new ChoreographyUpdateInitiatingParticipantFeature(fp));
 		// return updateFeature;
 		return null;
 	}
@@ -43,12 +42,12 @@ public abstract class AbstractChoreographyFeatureContainer implements FeatureCon
 
 	@Override
 	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
-		return new LayoutChoreographyFeature(fp);
+		return new ChoreographyLayoutFeature(fp);
 	}
 
 	@Override
 	public IMoveShapeFeature getMoveFeature(IFeatureProvider fp) {
-		return new MoveFlowNodeFeature(fp);
+		return new ChoreographyMoveFeature(fp);
 	}
 
 	@Override

@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.activity.subprocess;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.SubProcess;
 import org.eclipse.bpmn2.Transaction;
 import org.eclipse.graphiti.features.IAddFeature;
@@ -31,8 +30,8 @@ public class TransactionFeatureContainer extends AbstractSubProcessFeatureContai
 	private static final int offset = 3;
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof Transaction;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof Transaction;
 	}
 
 	@Override
@@ -51,7 +50,7 @@ public class TransactionFeatureContainer extends AbstractSubProcessFeatureContai
 				innerRect.setFilled(false);
 				innerRect.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 				gaService.setLocationAndSize(innerRect, offset, offset, rect.getWidth() - (2 * offset),
-				        rect.getHeight() - (2 * offset));
+						rect.getHeight() - (2 * offset));
 			}
 
 			@Override
@@ -82,7 +81,7 @@ public class TransactionFeatureContainer extends AbstractSubProcessFeatureContai
 
 		public CreateTransactionFeature(IFeatureProvider fp) {
 			super(fp, "Expanded Transaction",
-			        "Specialized type of sub-process that will have behavior controlled by transaction protocol");
+					"Specialized type of sub-process that will have behavior controlled by transaction protocol");
 		}
 
 		@Override

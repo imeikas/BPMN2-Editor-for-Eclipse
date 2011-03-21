@@ -46,7 +46,7 @@ public class MoveFromParticipantToDiagramFeature extends MoveLaneFeature {
 		Participant internalParticipant = null;
 
 		try {
-			ModelHandler handler = FeatureSupport.getModelHanderInstance(getDiagram());
+			ModelHandler handler = ModelHandler.getInstance(getDiagram());
 			internalParticipant = handler.getInternalParticipant();
 			handler.moveLane(movedLane, internalParticipant);
 		} catch (IOException e) {

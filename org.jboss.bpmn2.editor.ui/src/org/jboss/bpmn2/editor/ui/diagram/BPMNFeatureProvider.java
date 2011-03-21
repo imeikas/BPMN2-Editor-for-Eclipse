@@ -13,7 +13,6 @@ package org.jboss.bpmn2.editor.ui.diagram;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.graphiti.dt.IDiagramTypeProvider;
 import org.eclipse.graphiti.features.IAddBendpointFeature;
 import org.eclipse.graphiti.features.IAddFeature;
@@ -43,6 +42,7 @@ import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.bendpoint.AddBendpointFeature;
 import org.jboss.bpmn2.editor.core.features.bendpoint.MoveBendpointFeature;
 import org.jboss.bpmn2.editor.core.features.bendpoint.RemoveBendpointFeature;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyMessageLinkFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.activity.subprocess.AdHocSubProcessFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.activity.subprocess.CallActivityFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.activity.subprocess.SubProcessFeatureContainer;
@@ -166,6 +166,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		containers.add(new ParticipantFeatureContainer());
 		containers.add(new LaneFeatureContainer());
 		containers.add(new TextAnnotationFeatureContainer());
+		containers.add(new ChoreographyMessageLinkFeatureContainer());
 
 		List<ICreateFeature> createFeaturesList = new ArrayList<ICreateFeature>();
 
@@ -198,16 +199,9 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 	@Override
 	public IAddFeature getAddFeature(IAddContext context) {
-		Object o = context.getNewObject();
-
-		if (isNotBaseElement(o)) {
-			return super.getAddFeature(context);
-		}
-
-		BaseElement element = (BaseElement) o;
-
 		for (FeatureContainer container : containers) {
-			if (container.canApplyTo(element)) {
+			Object o = container.getApplyObject(context);
+			if (o != null && container.canApplyTo(o)) {
 				IAddFeature feature = container.getAddFeature(this);
 				if (feature == null) {
 					break;
@@ -215,7 +209,6 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 				return feature;
 			}
 		}
-
 		return super.getAddFeature(context);
 	}
 
@@ -226,16 +219,9 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IUpdateContext context) {
-		Object o = getBusinessObjectForPictogramElement(context.getPictogramElement());
-
-		if (isNotBaseElement(o)) {
-			return super.getUpdateFeature(context);
-		}
-
-		BaseElement element = (BaseElement) o;
-
 		for (FeatureContainer container : containers) {
-			if (container.canApplyTo(element)) {
+			Object o = container.getApplyObject(context);
+			if (o != null && container.canApplyTo(o)) {
 				IUpdateFeature feature = container.getUpdateFeature(this);
 				if (feature == null) {
 					break;
@@ -254,16 +240,9 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 	@Override
 	public IDirectEditingFeature getDirectEditingFeature(IDirectEditingContext context) {
-		Object o = getBusinessObjectForPictogramElement(context.getPictogramElement());
-
-		if (isNotBaseElement(o)) {
-			return super.getDirectEditingFeature(context);
-		}
-
-		BaseElement element = (BaseElement) o;
-
 		for (FeatureContainer container : containers) {
-			if (container.canApplyTo(element)) {
+			Object o = container.getApplyObject(context);
+			if (o != null && container.canApplyTo(o)) {
 				IDirectEditingFeature feature = container.getDirectEditingFeature(this);
 				if (feature == null) {
 					break;
@@ -277,16 +256,9 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 	@Override
 	public ILayoutFeature getLayoutFeature(ILayoutContext context) {
-		Object o = getBusinessObjectForPictogramElement(context.getPictogramElement());
-
-		if (isNotBaseElement(o)) {
-			return super.getLayoutFeature(context);
-		}
-
-		BaseElement element = (BaseElement) o;
-
 		for (FeatureContainer container : containers) {
-			if (container.canApplyTo(element)) {
+			Object o = container.getApplyObject(context);
+			if (o != null && container.canApplyTo(o)) {
 				ILayoutFeature feature = container.getLayoutFeature(this);
 				if (feature == null) {
 					break;
@@ -300,16 +272,9 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 	@Override
 	public IMoveShapeFeature getMoveShapeFeature(IMoveShapeContext context) {
-		Object o = getBusinessObjectForPictogramElement(context.getPictogramElement());
-
-		if (isNotBaseElement(o)) {
-			return super.getMoveShapeFeature(context);
-		}
-
-		BaseElement element = (BaseElement) o;
-
 		for (FeatureContainer container : containers) {
-			if (container.canApplyTo(element)) {
+			Object o = container.getApplyObject(context);
+			if (o != null && container.canApplyTo(o)) {
 				IMoveShapeFeature feature = container.getMoveFeature(this);
 				if (feature == null) {
 					break;
@@ -323,16 +288,9 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 
 	@Override
 	public IResizeShapeFeature getResizeShapeFeature(IResizeShapeContext context) {
-		Object o = getBusinessObjectForPictogramElement(context.getPictogramElement());
-
-		if (isNotBaseElement(o)) {
-			return super.getResizeShapeFeature(context);
-		}
-
-		BaseElement element = (BaseElement) o;
-
 		for (FeatureContainer container : containers) {
-			if (container.canApplyTo(element)) {
+			Object o = container.getApplyObject(context);
+			if (o != null && container.canApplyTo(o)) {
 				IResizeShapeFeature feature = container.getResizeFeature(this);
 				if (feature == null) {
 					break;
@@ -359,22 +317,11 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 		return new RemoveBendpointFeature(this);
 	}
 
-	private boolean isNotBaseElement(Object o) {
-		return !(o instanceof BaseElement);
-	}
-
 	@Override
 	public IDeleteFeature getDeleteFeature(IDeleteContext context) {
-		Object o = getBusinessObjectForPictogramElement(context.getPictogramElement());
-
-		if (isNotBaseElement(o)) {
-			return super.getDeleteFeature(context);
-		}
-
-		BaseElement element = (BaseElement) o;
-
 		for (FeatureContainer container : containers) {
-			if (container.canApplyTo(element)) {
+			Object o = container.getApplyObject(context);
+			if (o != null && container.canApplyTo(o)) {
 				IDeleteFeature feature = container.getDeleteFeature(this);
 				if (feature != null) {
 					return feature;

@@ -48,7 +48,7 @@ public class MoveFlowNodeFeature extends DefaultBpmnMoveFeature {
 		}
 
 		try {
-			ModelHandler handler = FeatureSupport.getModelHanderInstance(getDiagram());
+			ModelHandler handler = ModelHandler.getInstance(getDiagram());
 
 			algorithmContainer = getAlgorithmContainer(context);
 
@@ -71,12 +71,12 @@ public class MoveFlowNodeFeature extends DefaultBpmnMoveFeature {
 	@Override
 	protected void postMoveShape(IMoveShapeContext context) {
 		try {
-			ModelHandler handler = FeatureSupport.getModelHanderInstance(getDiagram());
+			ModelHandler handler = ModelHandler.getInstance(getDiagram());
 			Object[] node = getAllBusinessObjectsForPictogramElement(context.getShape());
 			for (Object object : node) {
 				if (object instanceof FlowNode && !algorithmContainer.isEmpty()) {
 					algorithmContainer.move(((FlowNode) object), getSourceBo(context, handler),
-					        getTargetBo(context, handler));
+							getTargetBo(context, handler));
 				}
 			}
 		} catch (Exception e) {
@@ -87,12 +87,12 @@ public class MoveFlowNodeFeature extends DefaultBpmnMoveFeature {
 
 	private Object getSourceBo(IMoveShapeContext context, ModelHandler handler) {
 		return context.getSourceContainer().equals(getDiagram()) ? handler.getInternalParticipant()
-		        : getBusinessObjectForPictogramElement(context.getSourceContainer());
+				: getBusinessObjectForPictogramElement(context.getSourceContainer());
 	}
 
 	private Object getTargetBo(IMoveShapeContext context, ModelHandler handler) {
 		return context.getTargetContainer().equals(getDiagram()) ? handler.getInternalParticipant()
-		        : getBusinessObjectForPictogramElement(context.getTargetContainer());
+				: getBusinessObjectForPictogramElement(context.getTargetContainer());
 	}
 
 	private boolean isSourceParticipant(IMoveShapeContext context) {
@@ -173,7 +173,7 @@ public class MoveFlowNodeFeature extends DefaultBpmnMoveFeature {
 		@Override
 		public void move(FlowNode node, Object source, Object target) {
 			try {
-				ModelHandler handler = FeatureSupport.getModelHanderInstance(getDiagram());
+				ModelHandler handler = ModelHandler.getInstance(getDiagram());
 				handler.moveFlowNode(node, source, target);
 			} catch (IOException e) {
 				Activator.logError(e);
@@ -262,7 +262,7 @@ public class MoveFlowNodeFeature extends DefaultBpmnMoveFeature {
 		public boolean isMoveAllowed(Object source, Object target) {
 			try {
 				Participant p = (Participant) target;
-				if (p.equals(FeatureSupport.getModelHanderInstance(getDiagram()).getInternalParticipant())) {
+				if (p.equals(ModelHandler.getInstance(getDiagram()).getInternalParticipant())) {
 					return true;
 				}
 				if (p.getProcessRef() == null) {

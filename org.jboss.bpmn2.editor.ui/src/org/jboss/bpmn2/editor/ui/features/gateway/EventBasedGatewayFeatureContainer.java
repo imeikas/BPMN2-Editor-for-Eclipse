@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.gateway;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.EventBasedGateway;
 import org.eclipse.bpmn2.EventBasedGatewayType;
 import org.eclipse.bpmn2.Gateway;
@@ -40,8 +39,8 @@ public class EventBasedGatewayFeatureContainer extends AbstractGatewayFeatureCon
 	static final String EVENT_GATEWAY_TYPE_PROPERTY = "eventGatewayType";
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof EventBasedGateway;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof EventBasedGateway;
 	}
 
 	@Override
@@ -69,7 +68,7 @@ public class EventBasedGatewayFeatureContainer extends AbstractGatewayFeatureCon
 				IPeService service = Graphiti.getPeService();
 				service.setPropertyValue(element, INSTANTIATE_PROPERTY, "false");
 				service.setPropertyValue(element, EVENT_GATEWAY_TYPE_PROPERTY,
-				        EventBasedGatewayType.EXCLUSIVE.getName());
+						EventBasedGatewayType.EXCLUSIVE.getName());
 				return element;
 			}
 		};

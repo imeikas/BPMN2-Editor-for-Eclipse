@@ -26,6 +26,7 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.MoveFlowNodeFeature;
+import org.jboss.bpmn2.editor.core.features.activity.ActivityMoveFeature;
 
 public class BoundaryEventMoveFeature extends MoveFlowNodeFeature {
 
@@ -37,7 +38,7 @@ public class BoundaryEventMoveFeature extends MoveFlowNodeFeature {
 	protected void preMoveShape(IMoveShapeContext context) {
 		ContainerShape targetContainer = context.getTargetContainer();
 		Activity activity = BusinessObjectUtil.getFirstElementOfType(targetContainer, Activity.class);
-		Object property = context.getProperty("activity.move");
+		Object property = context.getProperty(ActivityMoveFeature.ACTIVITY_MOVE_PROPERTY);
 		if (activity != null && property == null) {
 			ContainerShape taskContainer = context.getTargetContainer();
 			ContainerShape parentContainer = (ContainerShape) context.getPictogramElement().eContainer();
@@ -87,9 +88,9 @@ public class BoundaryEventMoveFeature extends MoveFlowNodeFeature {
 		} else {
 			BoundaryEvent event = BusinessObjectUtil.getFirstElementOfType(containerShape, BoundaryEvent.class);
 			PictogramElement activityContainer = BusinessObjectUtil.getElementFromDiagram(getDiagram(),
-			        event.getAttachedToRef());
+					event.getAttachedToRef());
 			PositionOnLine newPos = BoundaryEventPositionHelper.getPositionOnLineUsingAbsoluteCoordinates(
-			        containerShape, (Shape) activityContainer);
+					containerShape, (Shape) activityContainer);
 			BoundaryEventPositionHelper.assignPositionOnLineProperty(containerShape, newPos);
 		}
 

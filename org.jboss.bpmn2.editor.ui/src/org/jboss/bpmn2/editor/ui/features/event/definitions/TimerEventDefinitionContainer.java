@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.event.definitions;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.Event;
 import org.eclipse.bpmn2.EventDefinition;
 import org.eclipse.bpmn2.ThrowEvent;
@@ -31,8 +30,8 @@ import org.jboss.bpmn2.editor.ui.ImageProvider;
 public class TimerEventDefinitionContainer extends EventDefinitionFeatureContainer {
 
 	@Override
-	public boolean canApplyTo(BaseElement element) {
-		return element instanceof TimerEventDefinition;
+	public boolean canApplyTo(Object o) {
+		return super.canApplyTo(o) && o instanceof TimerEventDefinition;
 	}
 
 	@Override
@@ -49,21 +48,21 @@ public class TimerEventDefinitionContainer extends EventDefinitionFeatureContain
 	protected Shape drawForEnd(DecorationAlgorithm algorithm, ContainerShape shape) {
 		return draw(shape);
 	}
-	
-	@Override
-    protected Shape drawForThrow(DecorationAlgorithm decorationAlgorithm, ContainerShape shape) {
-	    return null; // NOT ALLOWED ACCORDING TO SPEC
-    }
 
 	@Override
-    protected Shape drawForCatch(DecorationAlgorithm decorationAlgorithm, ContainerShape shape) {
-	    return draw(shape);
-    }
-	
+	protected Shape drawForThrow(DecorationAlgorithm decorationAlgorithm, ContainerShape shape) {
+		return null; // NOT ALLOWED ACCORDING TO SPEC
+	}
+
 	@Override
-    protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
-	    return draw(shape);
-    }
+	protected Shape drawForCatch(DecorationAlgorithm decorationAlgorithm, ContainerShape shape) {
+		return draw(shape);
+	}
+
+	@Override
+	protected Shape drawForBoundary(DecorationAlgorithm algorithm, ContainerShape shape) {
+		return draw(shape);
+	}
 
 	private Shape draw(ContainerShape shape) {
 		Shape timerShape = Graphiti.getPeService().createShape(shape, false);
@@ -76,15 +75,17 @@ public class TimerEventDefinitionContainer extends EventDefinitionFeatureContain
 		public CreateTimerEventDefinition(IFeatureProvider fp) {
 			super(fp, "Timer Definition", "Adds time condition to event");
 		}
-		
+
 		@Override
 		public boolean canCreate(ICreateContext context) {
-			if (!super.canCreate(context))
+			if (!super.canCreate(context)) {
 				return false;
-			
+			}
+
 			Event e = (Event) getBusinessObjectForPictogramElement(context.getTargetContainer());
-			if (e instanceof ThrowEvent)
+			if (e instanceof ThrowEvent) {
 				return false;
+			}
 
 			return true;
 		}
