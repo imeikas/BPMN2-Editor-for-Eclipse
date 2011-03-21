@@ -158,7 +158,7 @@ public class AnchorUtil {
 						peService.getLocationRelativeToDiagram(sourceRight.anchor));
 
 				if (topLength < rightLength) {
-					return new Tuple<FixPointAnchor, FixPointAnchor>(sourceBottom.anchor, fromTopAnchor);
+					return new Tuple<FixPointAnchor, FixPointAnchor>(sourceTop.anchor, fromTopAnchor);
 				} else {
 					return new Tuple<FixPointAnchor, FixPointAnchor>(sourceRight.anchor, fromRightAnchor);
 				}
@@ -194,7 +194,6 @@ public class AnchorUtil {
 						peService.getLocationRelativeToDiagram(sourceBottom.anchor));
 				double rightLength = getLength(peService.getLocationRelativeToDiagram(fromRightAnchor),
 						peService.getLocationRelativeToDiagram(sourceRight.anchor));
-				System.out.println(bottomLength + " " + rightLength);
 
 				if (bottomLength < rightLength) {
 					return new Tuple<FixPointAnchor, FixPointAnchor>(sourceBottom.anchor, fromBottomAnchor);
