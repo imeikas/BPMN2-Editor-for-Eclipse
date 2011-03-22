@@ -13,7 +13,6 @@ package org.jboss.bpmn2.editor.core.features.choreography;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.CHOREOGRAPHY_ACTIVITY_PROPERTY;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.INITIATING_PARTICIPANT_REF;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.PARTICIPANT_BAND_HEIGHT;
-import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.PARTICIPANT_REF_NUM;
 
 import org.eclipse.bpmn2.ChoreographyActivity;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -85,7 +84,7 @@ public abstract class AbstractChoreographyAddFeature extends AbstractBpmnAddFeat
 		createTexts(containerShape, choreography, width, height, bandHeight);
 		decorate(containerShape, width, height, bandHeight);
 
-		peService.setPropertyValue(containerShape, PARTICIPANT_REF_NUM, Integer.toString(0));
+		peService.setPropertyValue(containerShape, ChoreographyProperties.PARTICIPANT_REF_IDS, Integer.toString(0));
 		peService.setPropertyValue(containerShape, INITIATING_PARTICIPANT_REF, Boolean.toString(false));
 
 		link(containerShape, choreography);

@@ -16,12 +16,13 @@ public interface ChoreographyProperties {
 	int ENV_W = 30;
 	int ENV_H = 18;
 	int ENVELOPE_HEIGHT_MODIFIER = 30;
+	int R = 10;
 
 	static final String CHOREOGRAPHY_ACTIVITY_PROPERTY = "choreography.activity";
 
 	static final String PARTICIPANT_REF = "choreography.activity.participant.ref";
 	static final String PARTICIPANT_REF_ID = "choreography.activity.participant.ref.id";
-	static final String PARTICIPANT_REF_NUM = "choreography.activity.participant.ref.number";
+	static final String PARTICIPANT_REF_IDS = "choreography.activity.participant.ref.ids";
 	static final String INITIATING_PARTICIPANT_REF = "choreography.activity.initiating.participant.ref";
 
 	static final String BAND = "choreography.activity.band";

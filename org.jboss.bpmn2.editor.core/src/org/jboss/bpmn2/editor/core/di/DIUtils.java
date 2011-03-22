@@ -14,15 +14,20 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.bpmn2.BaseElement;
+import org.eclipse.bpmn2.di.BPMNDiagram;
 import org.eclipse.bpmn2.di.BPMNEdge;
 import org.eclipse.bpmn2.di.BPMNShape;
+import org.eclipse.bpmn2.di.BpmnDiFactory;
 import org.eclipse.dd.dc.Bounds;
 import org.eclipse.dd.dc.DcFactory;
 import org.eclipse.dd.dc.Point;
+import org.eclipse.dd.di.DiagramElement;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.datatypes.IDimension;
 import org.eclipse.graphiti.datatypes.ILocation;
+import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
@@ -121,5 +126,37 @@ public class DIUtils {
 
 	static void addBendPoint(FreeFormConnectionImpl freeForm, Point point) {
 		freeForm.getBendpoints().add(Graphiti.getGaService().createPoint((int) point.getX(), (int) point.getY()));
+	}
+
+	public static BPMNShape createDIShape(Shape shape, BaseElement elem, int x, int y, int w, int h,
+			IFeatureProvider fp, Diagram diagram) {
+
+		EList<EObject> businessObjects = Graphiti.getLinkService().getLinkForPictogramElement(diagram)
+				.getBusinessObjects();
+		BPMNShape bpmnShape = null;
+
+		for (EObject eObject : businessObjects) {
+			if (eObject instanceof BPMNDiagram) {
+				BPMNDiagram bpmnDiagram = (BPMNDiagram) eObject;
+
+				bpmnShape = BpmnDiFactory.eINSTANCE.createBPMNShape();
+				bpmnShape.setId(EcoreUtil.generateUUID());
+				bpmnShape.setBpmnElement(elem);
+				Bounds bounds = DcFactory.eINSTANCE.createBounds();
+				bounds.setX(x);
+				bounds.setY(y);
+				bounds.setWidth(w);
+				bounds.setHeight(h);
+				bpmnShape.setBounds(bounds);
+
+				List<DiagramElement> elements = bpmnDiagram.getPlane().getPlaneElement();
+				elements.add(bpmnShape);
+
+				fp.link(shape, new Object[] { elem, bpmnShape });
+				break;
+			}
+		}
+
+		return bpmnShape;
 	}
 }

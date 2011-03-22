@@ -18,20 +18,22 @@ import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.BaseElementFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyMoveFeature;
 import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyResizeFeature;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUpdateParticipantRefsFeature;
 import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
 public abstract class AbstractChoreographyFeatureContainer extends BaseElementFeatureContainer {
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
-		// MultiUpdateFeature updateFeature = new MultiUpdateFeature(fp);
+		MultiUpdateFeature multiUpdate = new MultiUpdateFeature(fp);
 		// updateFeature.addUpdateFeature(new ChoreographyUpdateNameFeature(fp));
-		// updateFeature.addUpdateFeature(new ChoreographyUpdateParticipantRefsFeature(fp));
+		multiUpdate.addUpdateFeature(new ChoreographyUpdateParticipantRefsFeature(fp));
 		// updateFeature.addUpdateFeature(new ChoreographyUpdateInitiatingParticipantFeature(fp));
 		// return updateFeature;
-		return null;
+		return multiUpdate;
 	}
 
 	@Override
