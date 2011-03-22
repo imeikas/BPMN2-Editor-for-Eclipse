@@ -18,9 +18,8 @@ import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.BaseElementFeatureContainer;
-import org.jboss.bpmn2.editor.core.features.DefaultBPMNResizeFeature;
-import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyLayoutFeature;
 import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyMoveFeature;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyResizeFeature;
 import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
 public abstract class AbstractChoreographyFeatureContainer extends BaseElementFeatureContainer {
@@ -42,7 +41,7 @@ public abstract class AbstractChoreographyFeatureContainer extends BaseElementFe
 
 	@Override
 	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
-		return new ChoreographyLayoutFeature(fp);
+		return null;// new ChoreographyLayoutFeature(fp);
 	}
 
 	@Override
@@ -52,7 +51,7 @@ public abstract class AbstractChoreographyFeatureContainer extends BaseElementFe
 
 	@Override
 	public IResizeShapeFeature getResizeFeature(IFeatureProvider fp) {
-		return new DefaultBPMNResizeFeature(fp);
+		return new ChoreographyResizeFeature(fp);
 	}
 
 	@Override

@@ -87,7 +87,7 @@ public class BoundaryEventMoveFeature extends MoveFlowNodeFeature {
 			gaService.setLocation(ga, ga.getX() + context.getDeltaX(), ga.getY() + context.getDeltaY());
 		} else {
 			BoundaryEvent event = BusinessObjectUtil.getFirstElementOfType(containerShape, BoundaryEvent.class);
-			PictogramElement activityContainer = BusinessObjectUtil.getElementFromDiagram(getDiagram(),
+			PictogramElement activityContainer = BusinessObjectUtil.getFirstBaseElementFromDiagram(getDiagram(),
 					event.getAttachedToRef());
 			PositionOnLine newPos = BoundaryEventPositionHelper.getPositionOnLineUsingAbsoluteCoordinates(
 					containerShape, (Shape) activityContainer);

@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features.lane;
 
-import org.eclipse.bpmn2.Lane;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ILayoutContext;
 import org.eclipse.graphiti.features.impl.AbstractLayoutFeature;
@@ -32,7 +31,7 @@ public class LayoutLaneFeature extends AbstractLayoutFeature {
 	@Override
 	public boolean layout(ILayoutContext context) {
 		FeatureSupport.redraw((ContainerShape) context.getPictogramElement());
-		DIUtils.updateDIShape(getDiagram(), context.getPictogramElement(), Lane.class);
+		DIUtils.updateDIShape(context.getPictogramElement());
 		return true;
 	}
 }

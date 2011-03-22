@@ -76,7 +76,7 @@ public class ParticipantLayoutFeature extends AbstractLayoutFeature {
 			gaService.setLocation(ga, x, y);
 		}
 
-		DIUtils.updateDIShape(getDiagram(), containerShape, Participant.class);
+		DIUtils.updateDIShape(containerShape);
 		return true;
 	}
 }

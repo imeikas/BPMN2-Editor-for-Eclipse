@@ -13,6 +13,7 @@ package org.jboss.bpmn2.editor.core.features;
 import java.util.Collection;
 
 import org.eclipse.bpmn2.BaseElement;
+import org.eclipse.bpmn2.di.BPMNShape;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
@@ -50,7 +51,7 @@ public class BusinessObjectUtil {
 		return null;
 	}
 
-	public static PictogramElement getElementFromDiagram(Diagram diagram, BaseElement e) {
+	public static PictogramElement getFirstBaseElementFromDiagram(Diagram diagram, BaseElement e) {
 		PictogramElement foundElem = null;
 
 		IPeService peService = Graphiti.getPeService();
@@ -58,6 +59,22 @@ public class BusinessObjectUtil {
 		for (PictogramElement pe : elements) {
 			BaseElement be = getFirstElementOfType(pe, e.getClass());
 			if (be != null && be.equals(e)) {
+				foundElem = pe;
+				break;
+			}
+		}
+
+		return foundElem;
+	}
+
+	public static PictogramElement getPictogramElementFromDiagram(Diagram diagram, BPMNShape bpmnShape) {
+		PictogramElement foundElem = null;
+
+		IPeService peService = Graphiti.getPeService();
+		Collection<PictogramElement> elements = peService.getAllContainedPictogramElements(diagram);
+		for (PictogramElement pe : elements) {
+			BPMNShape s = getFirstElementOfType(pe, BPMNShape.class);
+			if (s != null && s.equals(bpmnShape)) {
 				foundElem = pe;
 				break;
 			}

@@ -21,6 +21,7 @@ import org.eclipse.dd.dc.DcFactory;
 import org.eclipse.dd.dc.Point;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.graphiti.datatypes.IDimension;
 import org.eclipse.graphiti.datatypes.ILocation;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.pictograms.Connection;
@@ -38,51 +39,37 @@ import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 
 public class DIUtils {
 
-	public static void updateDIShape(Diagram diagram, PictogramElement element, Class clazz) {
-		try {
-			PictogramLink link = element.getLink();
-			if (link == null) {
-				return;
-			}
-			ModelHandler modelHandler = ModelHandlerLocator.getModelHandler(link.getBusinessObjects().get(0)
-					.eResource());
+	public static void updateDIShape(PictogramElement element) {
 
-			EObject be = BusinessObjectUtil.getFirstElementOfType(element, clazz);
-			if (be == null) {
-				return;
-			}
-
-			BPMNShape shape = (BPMNShape) modelHandler.findDIElement(diagram, (BaseElement) be);
-
-			ILocation loc = Graphiti.getLayoutService().getLocationRelativeToDiagram((ContainerShape) element);
-			Bounds bounds = shape.getBounds();
-
-			bounds.setX(loc.getX());
-			bounds.setY(loc.getY());
-
-			GraphicsAlgorithm graphicsAlgorithm = element.getGraphicsAlgorithm();
-			bounds.setHeight(graphicsAlgorithm.getHeight());
-			bounds.setWidth(graphicsAlgorithm.getWidth());
-		} catch (IOException e) {
-			Activator.logError(e);
+		PictogramLink link = element.getLink();
+		if (link == null) {
+			return;
 		}
 
-		// Update all sub-elements.
+		BPMNShape bpmnShape = BusinessObjectUtil.getFirstElementOfType(element, BPMNShape.class);
+		if (bpmnShape == null) {
+			return;
+		}
+
+		ILocation loc = Graphiti.getLayoutService().getLocationRelativeToDiagram((Shape) element);
+		Bounds bounds = bpmnShape.getBounds();
+
+		bounds.setX(loc.getX());
+		bounds.setY(loc.getY());
+
+		GraphicsAlgorithm graphicsAlgorithm = element.getGraphicsAlgorithm();
+		IDimension size = Graphiti.getGaService().calculateSize(graphicsAlgorithm);
+		bounds.setHeight(size.getHeight());
+		bounds.setWidth(size.getWidth());
+
 		if (element instanceof ContainerShape) {
 			EList<Shape> children = ((ContainerShape) element).getChildren();
 			for (Shape shape : children) {
-
 				if (shape instanceof ContainerShape) {
-					BaseElement be = BusinessObjectUtil.getFirstElementOfType(shape, BaseElement.class);
-
-					if (be != null) {
-						Class<?> instanceClass = be.eClass().getInstanceClass();
-						updateDIShape(diagram, shape, instanceClass);
-					}
+					updateDIShape(shape);
 				}
 			}
 		}
-
 	}
 
 	public static void updateDIEdge(Diagram diagram, Connection connection, Class clazz) {

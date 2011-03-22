@@ -89,7 +89,7 @@ public class BoundaryEventAddFeature extends AbstractBpmnAddFeature {
 		AnchorUtil.addFixedPointAnchors(containerShape, ellipse);
 
 		Activity activity = event.getAttachedToRef();
-		PictogramElement foundElem = BusinessObjectUtil.getElementFromDiagram(getDiagram(), activity);
+		PictogramElement foundElem = BusinessObjectUtil.getFirstBaseElementFromDiagram(getDiagram(), activity);
 		if (foundElem != null && foundElem instanceof ContainerShape) {
 			ContainerShape activityContainer = (ContainerShape) foundElem;
 			PositionOnLine pos = BoundaryEventPositionHelper.getPositionOnLineUsingBPMNShape(containerShape,

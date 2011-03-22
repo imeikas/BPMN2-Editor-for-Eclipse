@@ -10,10 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features.choreography;
 
-import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.BODY_BAND_TEXT;
-import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.BOTTOM_BAND_TEXT;
-import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.TOP_BAND_TEXT;
-
 import org.eclipse.bpmn2.ChoreographyActivity;
 import org.eclipse.bpmn2.FlowElementsContainer;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -30,15 +26,15 @@ public class ChoreographyTaskAddFeature extends AbstractChoreographyAddFeature {
 	@Override
 	public boolean canAdd(IAddContext context) {
 		return super.canAdd(context)
-		        || BusinessObjectUtil.containsElementOfType(context.getTargetContainer(), FlowElementsContainer.class);
+				|| BusinessObjectUtil.containsElementOfType(context.getTargetContainer(), FlowElementsContainer.class);
 	}
 
 	@Override
 	protected void createTexts(ContainerShape containerShape, ChoreographyActivity choreography, int w, int h,
-	        int bandHeight) {
-		createText(containerShape, "Participant A", 0, 0, w, bandHeight, TOP_BAND_TEXT);
-		createText(containerShape, "Participant B", 0, h - bandHeight, w, bandHeight, BOTTOM_BAND_TEXT);
-		createText(containerShape, choreography.getName(), 0, bandHeight - 5, w, h - (2 * bandHeight) + 10,
-		        BODY_BAND_TEXT);
+			int bandHeight) {
+		// createText(containerShape, "Participant A", 0, 0, w, bandHeight, TOP_BAND_TEXT);
+		// createText(containerShape, "Participant B", 0, h - bandHeight, w, bandHeight, BOTTOM_BAND_TEXT);
+		// createText(containerShape, choreography.getName(), 0, bandHeight - 5, w, h - (2 * bandHeight) + 10,
+		// BODY_BAND_TEXT);
 	}
 }

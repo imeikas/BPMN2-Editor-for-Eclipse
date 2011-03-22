@@ -42,7 +42,7 @@ public class BoundaryEventLayoutFeature extends AbstractLayoutFeature {
 		GraphicsAlgorithm eventGa = element.getGraphicsAlgorithm();
 		BoundaryEvent event = BusinessObjectUtil.getFirstElementOfType(element, BoundaryEvent.class);
 
-		PictogramElement activityContainer = BusinessObjectUtil.getElementFromDiagram(getDiagram(),
+		PictogramElement activityContainer = BusinessObjectUtil.getFirstBaseElementFromDiagram(getDiagram(),
 		        event.getAttachedToRef());
 		GraphicsAlgorithm activityGa = activityContainer.getGraphicsAlgorithm();
 
@@ -67,7 +67,7 @@ public class BoundaryEventLayoutFeature extends AbstractLayoutFeature {
 			break;
 		}
 
-		DIUtils.updateDIShape(getDiagram(), element, BoundaryEvent.class);
+		DIUtils.updateDIShape(element);
 		if (layout) {
 			PositionOnLine newPos = BoundaryEventPositionHelper.getPositionOnLineUsingAbsoluteCoordinates(
 			        (Shape) element, (Shape) activityContainer);

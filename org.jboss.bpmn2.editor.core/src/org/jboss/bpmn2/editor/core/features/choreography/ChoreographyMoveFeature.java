@@ -11,7 +11,6 @@
 package org.jboss.bpmn2.editor.core.features.choreography;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.di.BPMNShape;
@@ -20,9 +19,6 @@ import org.eclipse.graphiti.datatypes.ILocation;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
-import org.eclipse.graphiti.mm.algorithms.Polygon;
-import org.eclipse.graphiti.mm.algorithms.styles.Point;
-import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
@@ -45,23 +41,16 @@ public class ChoreographyMoveFeature extends MoveFlowNodeFeature {
 			Participant participant = BusinessObjectUtil.getFirstElementOfType(s, Participant.class);
 			if (participant != null) {
 				ContainerShape container = (ContainerShape) s;
-				Polygon polygon = (Polygon) container.getGraphicsAlgorithm();
-				Point point = polygon.getPoints().get(0);
+				GraphicsAlgorithm ga = container.getGraphicsAlgorithm();
 
 				BPMNShape bpmnShape = BusinessObjectUtil.getFirstElementOfType(s, BPMNShape.class);
 				ILocation loc = Graphiti.getLayoutService().getLocationRelativeToDiagram(context.getShape());
-				int yBeforeMove = loc.getY();
-				Bounds bounds = bpmnShape.getBounds();
-				bounds.setX(loc.getX() + point.getX());
-				bounds.setY(yBeforeMove + point.getY());
 
-				List<Connection> connections = peService.getOutgoingConnections(container);
-				for (Connection connection : connections) {
-					ContainerShape envelope = (ContainerShape) connection.getEnd().getParent();
-					GraphicsAlgorithm envelopeGa = envelope.getGraphicsAlgorithm();
-					Graphiti.getGaService().setLocation(envelopeGa, envelopeGa.getX() + context.getDeltaX(),
-							envelopeGa.getY() + context.getDeltaY());
-				}
+				Bounds bounds = bpmnShape.getBounds();
+				bounds.setX(loc.getX() + ga.getX());
+				bounds.setY(loc.getY() + ga.getY());
+
+				ChoreographyUtil.moveParticipantBandConnections(container, context.getDeltaX(), context.getDeltaY());
 			}
 		}
 	}

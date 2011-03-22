@@ -99,7 +99,7 @@ public class FeatureSupport {
 
 		Class<?> instanceClass = BusinessObjectUtil.getFirstElementOfType(root, BaseElement.class).eClass()
 				.getInstanceClass();
-		DIUtils.updateDIShape(diagram, root, instanceClass);
+		DIUtils.updateDIShape(root);
 	}
 
 	private static ContainerShape getRootContainer(ContainerShape container) {
