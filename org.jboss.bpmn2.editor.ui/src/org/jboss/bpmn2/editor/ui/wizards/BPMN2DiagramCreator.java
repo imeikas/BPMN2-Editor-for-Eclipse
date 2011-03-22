@@ -31,9 +31,6 @@ import org.jboss.bpmn2.editor.ui.Activator;
 import org.jboss.bpmn2.editor.ui.editor.BPMN2Editor;
 import org.jboss.bpmn2.editor.ui.util.ErrorUtils;
 
-/**
- * 
- */
 public class BPMN2DiagramCreator {
 
 	private IFolder diagramFolder;
@@ -56,7 +53,8 @@ public class BPMN2DiagramCreator {
 		TransactionalEditingDomain domain = FileService.createEmfFileForDiagram(uri, diagram);
 
 		String providerId = GraphitiUi.getExtensionManager().getDiagramTypeProviderId(diagram.getDiagramTypeId());
-		final DiagramEditorInput editorInput = new DiagramEditorInput(EcoreUtil.getURI(diagram), domain, providerId);
+		final DiagramEditorInput editorInput = new Bpmn2DiagramEditorInput(EcoreUtil.getURI(diagram), domain,
+				providerId);
 
 		if (openEditor) {
 			openEditor(editorInput);
