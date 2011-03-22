@@ -20,8 +20,6 @@ import org.eclipse.graphiti.datatypes.ILocation;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
-import org.eclipse.graphiti.mm.algorithms.Polygon;
-import org.eclipse.graphiti.mm.algorithms.styles.Point;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.Shape;
@@ -45,28 +43,14 @@ public class ChoreographyMoveFeature extends MoveFlowNodeFeature {
 			Participant participant = BusinessObjectUtil.getFirstElementOfType(s, Participant.class);
 			if (participant != null) {
 				ContainerShape container = (ContainerShape) s;
-
-				int dx = 0;
-				int dy = 0;
-
-				if (container.getGraphicsAlgorithm() instanceof Polygon) {
-					Polygon polygon = (Polygon) container.getGraphicsAlgorithm();
-					Point point = polygon.getPoints().get(0);
-					dx = point.getX();
-					dy = point.getY();
-				} else {
-					GraphicsAlgorithm ga = container.getGraphicsAlgorithm();
-					dx = ga.getX();
-					dy = ga.getY();
-				}
+				GraphicsAlgorithm ga = container.getGraphicsAlgorithm();
 
 				BPMNShape bpmnShape = BusinessObjectUtil.getFirstElementOfType(s, BPMNShape.class);
 				ILocation loc = Graphiti.getLayoutService().getLocationRelativeToDiagram(context.getShape());
-				int yBeforeMove = loc.getY();
 
 				Bounds bounds = bpmnShape.getBounds();
-				bounds.setX(loc.getX() + dx);
-				bounds.setY(yBeforeMove + dy);
+				bounds.setX(loc.getX() + ga.getX());
+				bounds.setY(loc.getY() + ga.getY());
 
 				List<Connection> connections = peService.getOutgoingConnections(container);
 				for (Connection connection : connections) {

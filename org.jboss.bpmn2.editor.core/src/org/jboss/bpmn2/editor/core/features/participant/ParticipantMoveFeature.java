@@ -10,13 +10,10 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features.participant;
 
-import org.eclipse.bpmn2.ChoreographyActivity;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
-import org.eclipse.graphiti.mm.pictograms.PictogramElement;
-import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUtil;
 
 public class ParticipantMoveFeature extends DefaultBpmnMoveFeature {
 
@@ -26,20 +23,10 @@ public class ParticipantMoveFeature extends DefaultBpmnMoveFeature {
 
 	@Override
 	public boolean canMoveShape(IMoveShapeContext context) {
-		if (isChoreographyParticipantBand(context)) {
+		if (ChoreographyUtil.isChoreographyParticipantBand(context.getShape())) {
 			return false;
 		}
 		return super.canMoveShape(context);
 	}
 
-	private boolean isChoreographyParticipantBand(IMoveShapeContext context) {
-		EObject container = context.getShape().eContainer();
-		if (container instanceof PictogramElement) {
-			PictogramElement containerElem = (PictogramElement) container;
-			if (BusinessObjectUtil.containsElementOfType(containerElem, ChoreographyActivity.class)) {
-				return true;
-			}
-		}
-		return false;
-	}
 }

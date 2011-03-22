@@ -158,7 +158,7 @@ public class DIImport {
 		for (DiagramElement diagramElement : ownedElement) {
 			if (diagramElement instanceof BPMNShape && ((BPMNShape) diagramElement).getBpmnElement() instanceof Lane) {
 				BaseElement lane = ((BPMNShape) diagramElement).getBpmnElement();
-				ContainerShape shape = (ContainerShape) BusinessObjectUtil.getElementFromDiagram(diagram, lane);
+				ContainerShape shape = (ContainerShape) BusinessObjectUtil.getFirstBaseElementFromDiagram(diagram, lane);
 				FeatureSupport.redraw(shape);
 			}
 		}

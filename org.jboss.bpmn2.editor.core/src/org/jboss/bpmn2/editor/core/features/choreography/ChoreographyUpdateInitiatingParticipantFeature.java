@@ -10,12 +10,10 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features.choreography;
 
-import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.BOTTOM_BAND;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.CHOREOGRAPHY_ACTIVITY_PROPERTY;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.INITIATING_PARTICIPANT_REF;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.PARTICIPANT_REF;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.PARTICIPANT_REF_ID;
-import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.TOP_BAND;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -52,7 +50,7 @@ public class ChoreographyUpdateInitiatingParticipantFeature extends AbstractUpda
 	@Override
 	public IReason updateNeeded(IUpdateContext context) {
 		ChoreographyActivity activity = (ChoreographyActivity) BusinessObjectUtil.getFirstElementOfType(
-		        context.getPictogramElement(), ChoreographyActivity.class);
+				context.getPictogramElement(), ChoreographyActivity.class);
 
 		String property = peService.getPropertyValue(context.getPictogramElement(), INITIATING_PARTICIPANT_REF);
 		Participant participant = activity.getInitiatingParticipantRef();
@@ -71,7 +69,7 @@ public class ChoreographyUpdateInitiatingParticipantFeature extends AbstractUpda
 	@Override
 	public boolean update(IUpdateContext context) {
 		ChoreographyActivity task = (ChoreographyActivity) BusinessObjectUtil.getFirstElementOfType(
-		        context.getPictogramElement(), ChoreographyActivity.class);
+				context.getPictogramElement(), ChoreographyActivity.class);
 
 		List<Shape> shapeList = new ArrayList<Shape>();
 
@@ -101,7 +99,7 @@ public class ChoreographyUpdateInitiatingParticipantFeature extends AbstractUpda
 		}
 
 		String propertyVal = task.getInitiatingParticipantRef() == null ? Boolean.toString(false) : task
-		        .getInitiatingParticipantRef().getId();
+				.getInitiatingParticipantRef().getId();
 		peService.setPropertyValue(context.getPictogramElement(), INITIATING_PARTICIPANT_REF, propertyVal);
 		return true;
 	}
@@ -110,18 +108,18 @@ public class ChoreographyUpdateInitiatingParticipantFeature extends AbstractUpda
 		Shape top = null;
 		Shape bottom = null;
 		Iterator<Shape> iterator = peService.getAllContainedShapes((ContainerShape) context.getPictogramElement())
-		        .iterator();
+				.iterator();
 		while (iterator.hasNext()) {
 			Shape shape = (Shape) iterator.next();
 			String property = peService.getPropertyValue(shape, CHOREOGRAPHY_ACTIVITY_PROPERTY);
 			if (property == null) {
 				continue;
 			}
-			if (property.equals(TOP_BAND)) {
-				top = shape;
-			} else if (property.equals(BOTTOM_BAND)) {
-				bottom = shape;
-			}
+			// if (property.equals(TOP_BAND)) {
+			// top = shape;
+			// } else if (property.equals(BOTTOM_BAND)) {
+			// bottom = shape;
+			// }
 			if (top != null && bottom != null) {
 				break;
 			}

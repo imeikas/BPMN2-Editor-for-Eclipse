@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features.choreography;
 
-import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.BODY_BAND_TEXT;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.CHOREOGRAPHY_ACTIVITY_PROPERTY;
 
 import java.util.Iterator;
@@ -44,7 +43,7 @@ public class ChoreographyUpdateNameFeature extends AbstractUpdateFeature {
 	@Override
 	public IReason updateNeeded(IUpdateContext context) {
 		ChoreographyActivity activity = (ChoreographyActivity) BusinessObjectUtil.getFirstElementOfType(
-		        context.getPictogramElement(), ChoreographyActivity.class);
+				context.getPictogramElement(), ChoreographyActivity.class);
 		if (activity.getName().equals(getBodyText(context).getValue())) {
 			return Reason.createFalseReason();
 		} else {
@@ -55,20 +54,20 @@ public class ChoreographyUpdateNameFeature extends AbstractUpdateFeature {
 	@Override
 	public boolean update(IUpdateContext context) {
 		ChoreographyActivity task = (ChoreographyActivity) BusinessObjectUtil.getFirstElementOfType(
-		        context.getPictogramElement(), ChoreographyActivity.class);
+				context.getPictogramElement(), ChoreographyActivity.class);
 		getBodyText(context).setValue(task.getName());
 		return true;
 	}
 
 	private Text getBodyText(IUpdateContext context) {
 		Iterator<Shape> iterator = peService.getAllContainedShapes((ContainerShape) context.getPictogramElement())
-		        .iterator();
+				.iterator();
 		while (iterator.hasNext()) {
 			Shape shape = (Shape) iterator.next();
 			String property = peService.getPropertyValue(shape, CHOREOGRAPHY_ACTIVITY_PROPERTY);
-			if (property != null && property.equals(BODY_BAND_TEXT)) {
-				return (Text) shape.getGraphicsAlgorithm();
-			}
+			// if (property != null && property.equals(BODY_BAND_TEXT)) {
+			// return (Text) shape.getGraphicsAlgorithm();
+			// }
 		}
 		return null;
 	}

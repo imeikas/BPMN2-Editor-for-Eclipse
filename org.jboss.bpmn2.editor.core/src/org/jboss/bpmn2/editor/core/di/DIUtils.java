@@ -21,6 +21,7 @@ import org.eclipse.dd.dc.DcFactory;
 import org.eclipse.dd.dc.Point;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.graphiti.datatypes.IDimension;
 import org.eclipse.graphiti.datatypes.ILocation;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.pictograms.Connection;
@@ -61,8 +62,9 @@ public class DIUtils {
 			bounds.setY(loc.getY());
 
 			GraphicsAlgorithm graphicsAlgorithm = element.getGraphicsAlgorithm();
-			bounds.setHeight(graphicsAlgorithm.getHeight());
-			bounds.setWidth(graphicsAlgorithm.getWidth());
+			IDimension size = Graphiti.getGaService().calculateSize(graphicsAlgorithm);
+			bounds.setHeight(size.getHeight());
+			bounds.setWidth(size.getWidth());
 		} catch (IOException e) {
 			Activator.logError(e);
 		}
@@ -83,6 +85,39 @@ public class DIUtils {
 			}
 		}
 
+	}
+
+	public static void updateDIShape(PictogramElement element) {
+
+		PictogramLink link = element.getLink();
+		if (link == null) {
+			return;
+		}
+
+		BPMNShape bpmnShape = BusinessObjectUtil.getFirstElementOfType(element, BPMNShape.class);
+		if (bpmnShape == null) {
+			return;
+		}
+
+		ILocation loc = Graphiti.getLayoutService().getLocationRelativeToDiagram((Shape) element);
+		Bounds bounds = bpmnShape.getBounds();
+
+		bounds.setX(loc.getX());
+		bounds.setY(loc.getY());
+
+		GraphicsAlgorithm graphicsAlgorithm = element.getGraphicsAlgorithm();
+		IDimension size = Graphiti.getGaService().calculateSize(graphicsAlgorithm);
+		bounds.setHeight(size.getHeight());
+		bounds.setWidth(size.getWidth());
+
+		if (element instanceof ContainerShape) {
+			EList<Shape> children = ((ContainerShape) element).getChildren();
+			for (Shape shape : children) {
+				if (shape instanceof ContainerShape) {
+					updateDIShape(shape);
+				}
+			}
+		}
 	}
 
 	public static void updateDIEdge(Diagram diagram, Connection connection, Class clazz) {

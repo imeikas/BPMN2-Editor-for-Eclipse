@@ -10,13 +10,10 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features.choreography;
 
-import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.BODY_BAND;
-import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.BOTTOM_BAND;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.CHOREOGRAPHY_ACTIVITY_PROPERTY;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.INITIATING_PARTICIPANT_REF;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.PARTICIPANT_BAND_HEIGHT;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.PARTICIPANT_REF_NUM;
-import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.TOP_BAND;
 
 import org.eclipse.bpmn2.ChoreographyActivity;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -69,7 +66,7 @@ public abstract class AbstractChoreographyAddFeature extends AbstractBpmnAddFeat
 		topRect.setFilled(true);
 		topRect.setBackground(manageColor(IColorConstant.LIGHT_GRAY));
 		topRect.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
-		peService.setPropertyValue(topRectShape, CHOREOGRAPHY_ACTIVITY_PROPERTY, TOP_BAND);
+		// peService.setPropertyValue(topRectShape, CHOREOGRAPHY_ACTIVITY_PROPERTY, TOP_BAND);
 
 		Shape bottomRectShape = peService.createShape(containerShape, false);
 		RoundedRectangle bottomRect = gaService.createRoundedRectangle(bottomRectShape, 5, 5);
@@ -77,13 +74,13 @@ public abstract class AbstractChoreographyAddFeature extends AbstractBpmnAddFeat
 		bottomRect.setFilled(true);
 		bottomRect.setBackground(manageColor(IColorConstant.LIGHT_GRAY));
 		bottomRect.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
-		peService.setPropertyValue(bottomRectShape, CHOREOGRAPHY_ACTIVITY_PROPERTY, BOTTOM_BAND);
+		// peService.setPropertyValue(bottomRectShape, CHOREOGRAPHY_ACTIVITY_PROPERTY, BOTTOM_BAND);
 
 		Shape bodyShape = peService.createShape(containerShape, false);
 		Rectangle body = gaService.createRectangle(bodyShape);
 		gaService.setLocationAndSize(body, 0, bandHeight - 5, width, height - (2 * bandHeight) + 10);
 		StyleUtil.applyBGStyle(body, this);
-		peService.setPropertyValue(bodyShape, CHOREOGRAPHY_ACTIVITY_PROPERTY, BODY_BAND);
+		// peService.setPropertyValue(bodyShape, CHOREOGRAPHY_ACTIVITY_PROPERTY, BODY_BAND);
 
 		createTexts(containerShape, choreography, width, height, bandHeight);
 		decorate(containerShape, width, height, bandHeight);
@@ -101,7 +98,7 @@ public abstract class AbstractChoreographyAddFeature extends AbstractBpmnAddFeat
 	}
 
 	protected void createTexts(ContainerShape containerShape, ChoreographyActivity choreography, int w, int h,
-	        int bandHeight) {
+			int bandHeight) {
 	}
 
 	protected Text createText(ContainerShape container, String text, int x, int y, int w, int h, String propertyValue) {

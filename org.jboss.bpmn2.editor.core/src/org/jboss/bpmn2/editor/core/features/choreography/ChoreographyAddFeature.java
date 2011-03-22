@@ -25,7 +25,6 @@ import org.eclipse.graphiti.datatypes.IDimension;
 import org.eclipse.graphiti.datatypes.ILocation;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
-import org.eclipse.graphiti.mm.algorithms.Polygon;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.eclipse.graphiti.mm.algorithms.Rectangle;
 import org.eclipse.graphiti.mm.algorithms.RoundedRectangle;
@@ -155,6 +154,7 @@ public class ChoreographyAddFeature extends AbstractBpmnAddFeature {
 			}
 			createDIShape(createdShape, bpmnShape.getBpmnElement(), bpmnShape);
 			AnchorUtil.addFixedPointAnchors(createdShape, createdShape.getGraphicsAlgorithm());
+			peService.setPropertyValue(createdShape, ChoreographyProperties.BAND, Boolean.toString(true));
 
 			if (bpmnShape.isIsMessageVisible()) {
 				BoundaryAnchor anchor = AnchorUtil.getBoundaryAnchors(createdShape).get(
@@ -180,12 +180,13 @@ public class ChoreographyAddFeature extends AbstractBpmnAddFeature {
 		Bounds bounds = shape.getBounds();
 		int w = (int) bounds.getWidth();
 		int h = (int) bounds.getHeight();
-		int[] xy = { 0, 0, w, 0, w, h, 0, h };
-		int[] beforeAfter = { R, R, R, R, 0, 0, 0, 0 };
+		// int[] xy = { 0, 0, w, 0, w, h, 0, h };
+		// int[] beforeAfter = { R, R, R, R, 0, 0, 0, 0 };
 
-		Polygon band = gaService.createPolygon(bandShape, xy, beforeAfter);
+		RoundedRectangle band = gaService.createRoundedRectangle(bandShape, R, R);
 		band.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 		band.setBackground(initiating ? manageColor(IColorConstant.WHITE) : manageColor(IColorConstant.LIGHT_GRAY));
+		gaService.setLocationAndSize(band, 0, 0, w, h);
 
 		Participant p = (Participant) shape.getBpmnElement();
 		addBandLabel(bandShape, p.getName(), w, h);
@@ -202,12 +203,13 @@ public class ChoreographyAddFeature extends AbstractBpmnAddFeature {
 		ILocation parentLoc = peService.getLocationRelativeToDiagram(parent);
 		int y = (int) bounds.getY() - parentLoc.getY();
 
-		int[] xy = { 0, y, w, y, w, y + h, 0, y + h };
-		int[] beforeAfter = { 0, 0, 0, 0, R, R, R, R };
+		// int[] xy = { 0, y, w, y, w, y + h, 0, y + h };
+		// int[] beforeAfter = { 0, 0, 0, 0, R, R, R, R };
 
-		Polygon band = gaService.createPolygon(bandShape, xy, beforeAfter);
+		RoundedRectangle band = gaService.createRoundedRectangle(bandShape, R, R);
 		band.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 		band.setBackground(initiating ? manageColor(IColorConstant.WHITE) : manageColor(IColorConstant.LIGHT_GRAY));
+		gaService.setLocationAndSize(band, 0, y, w, h);
 
 		Participant p = (Participant) shape.getBpmnElement();
 		addBandLabel(bandShape, p.getName(), w, h);

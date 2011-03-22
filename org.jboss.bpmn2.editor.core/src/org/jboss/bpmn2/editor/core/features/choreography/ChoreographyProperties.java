@@ -15,16 +15,11 @@ public interface ChoreographyProperties {
 	int PARTICIPANT_BAND_HEIGHT = 20;
 
 	static final String CHOREOGRAPHY_ACTIVITY_PROPERTY = "choreography.activity";
+
 	static final String PARTICIPANT_REF = "choreography.activity.participant.ref";
 	static final String PARTICIPANT_REF_ID = "choreography.activity.participant.ref.id";
 	static final String PARTICIPANT_REF_NUM = "choreography.activity.participant.ref.number";
 	static final String INITIATING_PARTICIPANT_REF = "choreography.activity.initiating.participant.ref";
-	static final String TOP_BAND = "choreography.activity.band.top";
-	static final String TOP_BAND_TEXT = "choreography.activity.band.top.text";
-	static final String BOTTOM_BAND = "choreography.activity.band.bottom";
-	static final String BOTTOM_BAND_TEXT = "choreography.activity.band.bottom.text";
-	static final String BODY_BAND = "choreography.activity.band.body";
-	static final String BODY_BAND_TEXT = "choreography.activity.band.body.text";
-	static final String BODY_LINE_LEFT = "choreography.activity.band.body.line.left";
-	static final String BODY_LINE_RIGHT = "choreography.activity.band.body.line.right";
+
+	static final String BAND = "choreography.activity.band";
 }
