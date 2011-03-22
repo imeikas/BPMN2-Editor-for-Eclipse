@@ -70,6 +70,10 @@ public class ChoreographyUpdateParticipantRefsFeature extends AbstractUpdateFeat
 	}
 
 	private String getParticipantRefIds(IUpdateContext context) {
-		return peService.getPropertyValue(context.getPictogramElement(), PARTICIPANT_REF_IDS);
+		String property = peService.getPropertyValue(context.getPictogramElement(), PARTICIPANT_REF_IDS);
+		if (property == null) {
+			return new String(); // return empty string
+		}
+		return property;
 	}
 }

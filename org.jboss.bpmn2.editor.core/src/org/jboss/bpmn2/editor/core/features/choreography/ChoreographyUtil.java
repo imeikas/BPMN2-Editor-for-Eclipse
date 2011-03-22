@@ -346,7 +346,8 @@ public class ChoreographyUtil {
 
 	private static ParticipantBandKind getNewParticipantBandKind(ChoreographyActivity choreography,
 			Participant participant, boolean first, boolean last) {
-		boolean initiating = choreography.getInitiatingParticipantRef().equals(participant);
+		boolean initiating = choreography.getInitiatingParticipantRef() != null
+				&& choreography.getInitiatingParticipantRef().equals(participant);
 		if (first) {
 			return initiating ? ParticipantBandKind.TOP_INITIATING : ParticipantBandKind.TOP_NON_INITIATING;
 		} else if (last) {

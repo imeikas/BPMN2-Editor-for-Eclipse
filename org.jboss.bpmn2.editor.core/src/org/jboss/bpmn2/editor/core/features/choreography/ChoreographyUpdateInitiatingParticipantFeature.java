@@ -50,11 +50,11 @@ public class ChoreographyUpdateInitiatingParticipantFeature extends AbstractUpda
 		String id = peService.getPropertyValue(context.getPictogramElement(), INITIATING_PARTICIPANT_REF);
 		Participant participant = choreography.getInitiatingParticipantRef();
 
-		if (id.equals("null") && participant == null) {
+		if ((id == null || id.equals("null")) && participant == null) {
 			return Reason.createFalseReason();
 		}
 
-		if (participant != null && id.equals(participant.getId())) {
+		if (participant != null && (id != null && id.equals(participant.getId()))) {
 			return Reason.createFalseReason();
 		}
 
