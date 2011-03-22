@@ -10,10 +10,10 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features.choreography;
 
-import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyMessageLinkFeatureContainer.MESSAGE_LINK_PROPERTY;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.ENVELOPE_HEIGHT_MODIFIER;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.ENV_H;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.ENV_W;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.MESSAGE_LINK;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.R;
 
 import java.util.ArrayList;
@@ -411,7 +411,7 @@ public class ChoreographyUtil {
 
 		connection.setStart(boundaryAnchor.anchor);
 		connection.setEnd(AnchorUtil.getBoundaryAnchors(envelope).get(envelopeAnchorLoc).anchor);
-		peService.setPropertyValue(envelope, MESSAGE_LINK_PROPERTY, Boolean.toString(true));
+		peService.setPropertyValue(envelope, MESSAGE_LINK, Boolean.toString(true));
 	}
 
 	public static void drawMultiplicityMarkers(ContainerShape container) {
@@ -478,7 +478,7 @@ public class ChoreographyUtil {
 			Connection connection = topConnections.get(i);
 			EObject container = connection.getEnd().eContainer();
 			if (container instanceof PropertyContainer) {
-				String property = peService.getPropertyValue((PropertyContainer) container, MESSAGE_LINK_PROPERTY);
+				String property = peService.getPropertyValue((PropertyContainer) container, MESSAGE_LINK);
 				if (property != null && new Boolean(property)) {
 					topConnectionIndex = i;
 					hasTopMessage = true;
@@ -493,7 +493,7 @@ public class ChoreographyUtil {
 			Connection connection = bottomConnections.get(i);
 			EObject container = connection.getEnd().eContainer();
 			if (container instanceof PropertyContainer) {
-				String property = peService.getPropertyValue((PropertyContainer) container, MESSAGE_LINK_PROPERTY);
+				String property = peService.getPropertyValue((PropertyContainer) container, MESSAGE_LINK);
 				if (property != null && new Boolean(property)) {
 					bottomConnectionIndex = i;
 					hasBottomMessage = true;
@@ -569,7 +569,7 @@ public class ChoreographyUtil {
 		for (Connection connection : topBoundaryAnchor.anchor.getOutgoingConnections()) {
 			EObject container = connection.getEnd().eContainer();
 			if (container instanceof PropertyContainer) {
-				String property = peService.getPropertyValue((PropertyContainer) container, MESSAGE_LINK_PROPERTY);
+				String property = peService.getPropertyValue((PropertyContainer) container, MESSAGE_LINK);
 				if (property != null && new Boolean(property)) {
 					int y = (int) (bounds.getY() - ENVELOPE_HEIGHT_MODIFIER - ENV_H);
 					gaService.setLocation(((ContainerShape) container).getGraphicsAlgorithm(), x, y);
@@ -581,7 +581,7 @@ public class ChoreographyUtil {
 		for (Connection connection : bottomBoundaryAnchor.anchor.getOutgoingConnections()) {
 			EObject container = connection.getEnd().eContainer();
 			if (container instanceof PropertyContainer) {
-				String property = peService.getPropertyValue((PropertyContainer) container, MESSAGE_LINK_PROPERTY);
+				String property = peService.getPropertyValue((PropertyContainer) container, MESSAGE_LINK);
 				if (property != null && new Boolean(property)) {
 					int y = (int) (bounds.getY() + bounds.getHeight() + ENVELOPE_HEIGHT_MODIFIER);
 					gaService.setLocation(((ContainerShape) container).getGraphicsAlgorithm(), x, y);

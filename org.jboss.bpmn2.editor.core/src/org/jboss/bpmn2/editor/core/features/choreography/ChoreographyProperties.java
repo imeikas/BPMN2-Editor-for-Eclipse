@@ -25,4 +25,5 @@ public interface ChoreographyProperties {
 	String INITIATING_PARTICIPANT_REF = "choreography.activity.initiating.participant.ref";
 	String MESSAGE_VISIBLE = "choreography.activity.band.message.visible";
 	String BAND = "choreography.activity.band";
+	String MESSAGE_LINK = "choreography.messageLink";
 }

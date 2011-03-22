@@ -8,8 +8,14 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package org.jboss.bpmn2.editor.core.features.choreography;
+package org.jboss.bpmn2.editor.ui.features.choreography;
 
+import java.util.List;
+import java.util.Map;
+
+import org.eclipse.bpmn2.ChoreographyActivity;
+import org.eclipse.bpmn2.di.BPMNShape;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IDeleteFeature;
@@ -19,20 +25,29 @@ import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
+import org.eclipse.graphiti.features.context.IDeleteContext;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.features.impl.AbstractMoveShapeFeature;
 import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
+import org.eclipse.graphiti.mm.pictograms.Connection;
+import org.eclipse.graphiti.mm.pictograms.ContainerShape;
+import org.eclipse.graphiti.mm.pictograms.PictogramElement;
+import org.eclipse.graphiti.ui.features.DefaultDeleteFeature;
+import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.PropertyBasedFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUtil;
+import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
+import org.jboss.bpmn2.editor.core.utils.AnchorUtil.AnchorLocation;
+import org.jboss.bpmn2.editor.core.utils.AnchorUtil.BoundaryAnchor;
+import org.jboss.bpmn2.editor.core.utils.Tuple;
 
 public class ChoreographyMessageLinkFeatureContainer extends PropertyBasedFeatureContainer {
 
-	public static final String MESSAGE_LINK_PROPERTY = ChoreographyMessageLinkFeatureContainer.class.getSimpleName()
-			+ ".messageLink";
-
 	@Override
 	protected String getPropertyKey() {
-		return MESSAGE_LINK_PROPERTY;
+		return ChoreographyProperties.MESSAGE_LINK;
 	}
 
 	@Override
@@ -92,7 +107,50 @@ public class ChoreographyMessageLinkFeatureContainer extends PropertyBasedFeatur
 
 	@Override
 	public IDeleteFeature getDeleteFeature(IFeatureProvider fp) {
-		return null;
-	}
+		return new DefaultDeleteFeature(fp) {
 
+			@Override
+			public void delete(IDeleteContext context) {
+				ContainerShape envelope = (ContainerShape) context.getPictogramElement();
+				Map<AnchorLocation, BoundaryAnchor> boundaryAnchors = AnchorUtil.getBoundaryAnchors(envelope);
+				BoundaryAnchor topBoundaryAnchor = boundaryAnchors.get(AnchorLocation.TOP);
+				BoundaryAnchor bottomBoundaryAnchor = boundaryAnchors.get(AnchorLocation.BOTTOM);
+				modifyAffectedBands(topBoundaryAnchor);
+				modifyAffectedBands(bottomBoundaryAnchor);
+				super.delete(context);
+			}
+
+			private void modifyAffectedBands(BoundaryAnchor anchor) {
+
+				for (Connection connection : anchor.anchor.getIncomingConnections()) {
+
+					EObject start = connection.getStart().eContainer();
+
+					if (!(start instanceof ContainerShape)) {
+						continue;
+					}
+
+					if (!BusinessObjectUtil.containsElementOfType((PictogramElement) start, ChoreographyActivity.class)) {
+						continue;
+					}
+
+					List<ContainerShape> bands = ChoreographyUtil
+							.getParticipantBandContainerShapes((ContainerShape) start);
+
+					Tuple<List<ContainerShape>, List<ContainerShape>> topAndBottomBands = ChoreographyUtil
+							.getTopAndBottomBands(bands);
+
+					List<ContainerShape> affectedBands = anchor.locationType == AnchorLocation.BOTTOM ? topAndBottomBands
+							.getFirst() : topAndBottomBands.getSecond();
+
+					for (ContainerShape bottomBand : affectedBands) {
+						BPMNShape bpmnShape = BusinessObjectUtil.getFirstElementOfType(bottomBand, BPMNShape.class);
+						bpmnShape.setIsMessageVisible(false);
+					}
+
+					break;
+				}
+			}
+		};
+	}
 }

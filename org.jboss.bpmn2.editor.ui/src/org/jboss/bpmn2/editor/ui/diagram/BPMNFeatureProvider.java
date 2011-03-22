@@ -42,7 +42,6 @@ import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.bendpoint.AddBendpointFeature;
 import org.jboss.bpmn2.editor.core.features.bendpoint.MoveBendpointFeature;
 import org.jboss.bpmn2.editor.core.features.bendpoint.RemoveBendpointFeature;
-import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyMessageLinkFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.activity.subprocess.AdHocSubProcessFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.activity.subprocess.CallActivityFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.activity.subprocess.SubProcessFeatureContainer;
@@ -58,6 +57,7 @@ import org.jboss.bpmn2.editor.ui.features.activity.task.UserTaskFeatureContainer
 import org.jboss.bpmn2.editor.ui.features.artifact.GroupFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.artifact.TextAnnotationFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.choreography.CallChoreographyFeatureContainer;
+import org.jboss.bpmn2.editor.ui.features.choreography.ChoreographyMessageLinkFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.choreography.ChoreographyTaskFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.choreography.SubChoreographyFeatureContainer;
 import org.jboss.bpmn2.editor.ui.features.conversation.ConversationFeatureContainer;
