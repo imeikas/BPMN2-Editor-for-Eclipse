@@ -30,7 +30,7 @@ public class UpdateTextAnnotationFeature extends AbstractBaseElementUpdateFeatur
 	@Override
 	public boolean update(IUpdateContext context) {
 		boolean ret = super.update(context);
-		DIUtils.updateDIShape(getDiagram(), context.getPictogramElement(), TextAnnotation.class);
+		DIUtils.updateDIShape(context.getPictogramElement());
 		return ret;
 	}
 

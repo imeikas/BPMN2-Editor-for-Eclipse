@@ -67,7 +67,7 @@ public class BoundaryEventLayoutFeature extends AbstractLayoutFeature {
 			break;
 		}
 
-		DIUtils.updateDIShape(getDiagram(), element, BoundaryEvent.class);
+		DIUtils.updateDIShape(element);
 		if (layout) {
 			PositionOnLine newPos = BoundaryEventPositionHelper.getPositionOnLineUsingAbsoluteCoordinates(
 			        (Shape) element, (Shape) activityContainer);

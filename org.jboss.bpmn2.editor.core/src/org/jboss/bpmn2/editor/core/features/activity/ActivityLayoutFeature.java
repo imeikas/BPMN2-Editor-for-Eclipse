@@ -82,7 +82,7 @@ public class ActivityLayoutFeature extends AbstractLayoutFeature {
 			}
 		}.doWork(activity, getDiagram());
 
-		DIUtils.updateDIShape(getDiagram(), containerShape, Activity.class);
+		DIUtils.updateDIShape(containerShape);
 		return true;
 	}
 

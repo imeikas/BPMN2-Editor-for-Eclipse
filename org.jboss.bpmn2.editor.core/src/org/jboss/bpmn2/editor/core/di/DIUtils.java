@@ -39,54 +39,6 @@ import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 
 public class DIUtils {
 
-	public static void updateDIShape(Diagram diagram, PictogramElement element, Class clazz) {
-		try {
-			PictogramLink link = element.getLink();
-			if (link == null) {
-				return;
-			}
-			ModelHandler modelHandler = ModelHandlerLocator.getModelHandler(link.getBusinessObjects().get(0)
-					.eResource());
-
-			EObject be = BusinessObjectUtil.getFirstElementOfType(element, clazz);
-			if (be == null) {
-				return;
-			}
-
-			BPMNShape shape = (BPMNShape) modelHandler.findDIElement(diagram, (BaseElement) be);
-
-			ILocation loc = Graphiti.getLayoutService().getLocationRelativeToDiagram((ContainerShape) element);
-			Bounds bounds = shape.getBounds();
-
-			bounds.setX(loc.getX());
-			bounds.setY(loc.getY());
-
-			GraphicsAlgorithm graphicsAlgorithm = element.getGraphicsAlgorithm();
-			IDimension size = Graphiti.getGaService().calculateSize(graphicsAlgorithm);
-			bounds.setHeight(size.getHeight());
-			bounds.setWidth(size.getWidth());
-		} catch (IOException e) {
-			Activator.logError(e);
-		}
-
-		// Update all sub-elements.
-		if (element instanceof ContainerShape) {
-			EList<Shape> children = ((ContainerShape) element).getChildren();
-			for (Shape shape : children) {
-
-				if (shape instanceof ContainerShape) {
-					BaseElement be = BusinessObjectUtil.getFirstElementOfType(shape, BaseElement.class);
-
-					if (be != null) {
-						Class<?> instanceClass = be.eClass().getInstanceClass();
-						updateDIShape(diagram, shape, instanceClass);
-					}
-				}
-			}
-		}
-
-	}
-
 	public static void updateDIShape(PictogramElement element) {
 
 		PictogramLink link = element.getLink();

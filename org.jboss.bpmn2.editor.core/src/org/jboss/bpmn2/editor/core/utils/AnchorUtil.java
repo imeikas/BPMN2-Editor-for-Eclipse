@@ -408,4 +408,20 @@ public class AnchorUtil {
 		AnchorUtil.createAnchor(shape, AnchorLocation.BOTTOM, w / 2, h);
 		AnchorUtil.createAnchor(shape, AnchorLocation.LEFT, 0, h / 2);
 	}
+
+	public static void relocateFixPointAnchors(Shape shape, int w, int h) {
+		Map<AnchorLocation, BoundaryAnchor> anchors = AnchorUtil.getBoundaryAnchors(shape);
+
+		FixPointAnchor anchor = anchors.get(AnchorLocation.TOP).anchor;
+		anchor.setLocation(gaService.createPoint(w / 2, 0));
+
+		anchor = anchors.get(AnchorLocation.RIGHT).anchor;
+		anchor.setLocation(gaService.createPoint(w, h / 2));
+
+		anchor = anchors.get(AnchorLocation.BOTTOM).anchor;
+		anchor.setLocation(gaService.createPoint(w / 2, h));
+
+		anchor = anchors.get(AnchorLocation.LEFT).anchor;
+		anchor.setLocation(gaService.createPoint(0, h / 2));
+	}
 }

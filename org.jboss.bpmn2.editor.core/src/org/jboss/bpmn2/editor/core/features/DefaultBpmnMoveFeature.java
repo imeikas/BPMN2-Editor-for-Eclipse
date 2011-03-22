@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features;
 
-import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.di.BPMNShape;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
@@ -26,7 +25,7 @@ public class DefaultBpmnMoveFeature extends DefaultMoveShapeFeature {
 
 	@Override
 	protected void postMoveShape(IMoveShapeContext context) {
-		DIUtils.updateDIShape(getDiagram(), context.getPictogramElement(), BaseElement.class);
+		DIUtils.updateDIShape(context.getPictogramElement());
 
 		Object[] node = getAllBusinessObjectsForPictogramElement(context.getShape());
 		for (Object object : node) {

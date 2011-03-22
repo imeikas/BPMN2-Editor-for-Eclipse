@@ -10,7 +10,11 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features.choreography;
 
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyMessageLinkFeatureContainer.MESSAGE_LINK_LOCATION;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyMessageLinkFeatureContainer.MESSAGE_LINK_PROPERTY;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.ENVELOPE_HEIGHT_MODIFIER;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.ENV_H;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.ENV_W;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,8 +57,6 @@ import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 public class ChoreographyAddFeature extends AbstractBpmnAddFeature {
 
 	private static final int R = 10;
-	private static final int ENV_W = 30;
-	private static final int ENV_H = 18;
 
 	protected final IGaService gaService = Graphiti.getGaService();
 	protected final IPeService peService = Graphiti.getPeService();
@@ -160,10 +162,14 @@ public class ChoreographyAddFeature extends AbstractBpmnAddFeature {
 				BoundaryAnchor anchor = AnchorUtil.getBoundaryAnchors(createdShape).get(
 						top ? AnchorLocation.TOP : AnchorLocation.BOTTOM);
 				Bounds bounds = bpmnShape.getBounds();
+
 				int x = (int) (bounds.getX() + bounds.getWidth() / 2) - ENV_W / 2;
-				int y = (int) (top ? bounds.getY() - 30 - ENV_H : bounds.getY() + bounds.getHeight() + 30);
+				int y = (int) (top ? bounds.getY() - ENVELOPE_HEIGHT_MODIFIER - ENV_H : bounds.getY()
+						+ bounds.getHeight() + ENVELOPE_HEIGHT_MODIFIER);
+
 				boolean filled = bandKind == ParticipantBandKind.TOP_NON_INITIATING
 						|| bandKind == ParticipantBandKind.BOTTOM_NON_INITIATING;
+
 				drawMessageLink(anchor, x, y, filled);
 			}
 
@@ -272,6 +278,7 @@ public class ChoreographyAddFeature extends AbstractBpmnAddFeature {
 		connection.setStart(boundaryAnchor.anchor);
 		connection.setEnd(AnchorUtil.getBoundaryAnchors(envelope).get(envelopeAnchorLoc).anchor);
 		peService.setPropertyValue(envelope, MESSAGE_LINK_PROPERTY, Boolean.toString(true));
+		peService.setPropertyValue(envelope, MESSAGE_LINK_LOCATION, envelopeAnchorLoc.toString());
 	}
 
 	private void drawMultiplicityMarkers(ContainerShape container) {

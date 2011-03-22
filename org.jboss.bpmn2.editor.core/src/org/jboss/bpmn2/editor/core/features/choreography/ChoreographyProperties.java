@@ -13,6 +13,9 @@ package org.jboss.bpmn2.editor.core.features.choreography;
 public interface ChoreographyProperties {
 
 	int PARTICIPANT_BAND_HEIGHT = 20;
+	int ENV_W = 30;
+	int ENV_H = 18;
+	int ENVELOPE_HEIGHT_MODIFIER = 30;
 
 	static final String CHOREOGRAPHY_ACTIVITY_PROPERTY = "choreography.activity";
 
