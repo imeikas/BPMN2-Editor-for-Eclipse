@@ -60,8 +60,8 @@ public class ChoreographyAddFeature extends AbstractBpmnAddFeature {
 	public PictogramElement add(IAddContext context) {
 		ChoreographyActivity choreography = (ChoreographyActivity) context.getNewObject();
 
-		int width = context.getWidth() > 0 ? context.getWidth() : 100;
-		int height = context.getHeight() > 0 ? context.getHeight() : 100;
+		int width = context.getWidth() > 0 ? context.getWidth() : 150;
+		int height = context.getHeight() > 0 ? context.getHeight() : 150;
 
 		ContainerShape choreographyContainer = peService.createContainerShape(context.getTargetContainer(), true);
 		RoundedRectangle containerRect = gaService.createRoundedRectangle(choreographyContainer, R, R);
@@ -83,6 +83,26 @@ public class ChoreographyAddFeature extends AbstractBpmnAddFeature {
 		text.getFont().setBold(false);
 		setTextLocation(choreographyContainer, text, width, height);
 		peService.setPropertyValue(nameShape, ChoreographyProperties.CHOREOGRAPHY_NAME, Boolean.toString(true));
+
+		// use it when property editor supports enums
+		// ContainerShape markerShape = peService.createContainerShape(choreographyContainer, false);
+		// Rectangle markerRectangle = gaService.createInvisibleRectangle(markerShape);
+		// List<ContainerShape> bands = ChoreographyUtil.getParticipantBandContainerShapes(choreographyContainer);
+		// List<ContainerShape> bottomBands = ChoreographyUtil.getTopAndBottomBands(bands).getSecond();
+		// int x = (width / 2) - (MARKER_H / 2);
+		// int y = height - MARKER_H;
+		// if (!bottomBands.isEmpty()) {
+		// ContainerShape b = bottomBands.get(0);
+		// y = b.getGraphicsAlgorithm().getY() - MARKER_H;
+		// }
+		// gaService.setLocationAndSize(markerRectangle, x, y, MARKER_H, MARKER_H);
+		// ChoreographyUtil.drawChoreographyLoopType(markerShape, choreography.getLoopType());
+		//
+		// String loopType = choreography.getLoopType() == null ? "null" : choreography.getLoopType().getName();
+		// peService.setPropertyValue(choreographyContainer, ChoreographyProperties.CHOREOGRAPHY_MARKER, loopType);
+		//
+		// peService.setPropertyValue(markerShape, ChoreographyProperties.CHOREOGRAPHY_MARKER_SHAPE,
+		// Boolean.toString(true));
 
 		peService.createChopboxAnchor(choreographyContainer);
 		createDIShape(choreographyContainer, choreography);

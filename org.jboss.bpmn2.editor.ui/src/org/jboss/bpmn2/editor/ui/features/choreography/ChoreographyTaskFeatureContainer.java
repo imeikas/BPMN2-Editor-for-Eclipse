@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.choreography;
 
+import org.eclipse.bpmn2.ChoreographyLoopType;
 import org.eclipse.bpmn2.ChoreographyTask;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
@@ -47,6 +48,7 @@ public class ChoreographyTaskFeatureContainer extends AbstractChoreographyFeatur
 		protected ChoreographyTask createFlowElement(ICreateContext context) {
 			ChoreographyTask task = ModelHandler.FACTORY.createChoreographyTask();
 			task.setName("Choreography Task");
+			task.setLoopType(ChoreographyLoopType.NONE);
 			return task;
 		}
 

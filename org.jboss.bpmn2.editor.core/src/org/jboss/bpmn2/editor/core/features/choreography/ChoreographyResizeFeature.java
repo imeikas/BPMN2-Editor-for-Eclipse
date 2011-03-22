@@ -31,7 +31,7 @@ public class ChoreographyResizeFeature extends DefaultBPMNResizeFeature {
 		try {
 			List<BPMNShape> bands = ChoreographyUtil.getParicipantBandBpmnShapes((ContainerShape) context
 					.getPictogramElement());
-			int h = ChoreographyProperties.TEXT_H;
+			int h = ChoreographyProperties.TEXT_H; // + ChoreographyProperties.MARKER_H;
 
 			for (BPMNShape shape : bands) {
 				h += shape.getBounds().getHeight();

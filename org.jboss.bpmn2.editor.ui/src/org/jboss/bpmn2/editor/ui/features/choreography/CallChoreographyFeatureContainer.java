@@ -11,6 +11,7 @@
 package org.jboss.bpmn2.editor.ui.features.choreography;
 
 import org.eclipse.bpmn2.CallChoreography;
+import org.eclipse.bpmn2.ChoreographyLoopType;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -53,6 +54,8 @@ public class CallChoreographyFeatureContainer extends AbstractChoreographyFeatur
 			}
 		});
 		multiUpdate.addUpdateFeature(new ChoreographyUpdateInitiatingParticipantFeature(fp));
+		// multiUpdate.addUpdateFeature(new ChoreographyMarkerUpdateFeature(fp)); use it when property editor supports
+		// enums
 		return multiUpdate;
 	}
 
@@ -67,6 +70,7 @@ public class CallChoreographyFeatureContainer extends AbstractChoreographyFeatur
 		protected CallChoreography createFlowElement(ICreateContext context) {
 			CallChoreography callChoreography = ModelHandler.FACTORY.createCallChoreography();
 			callChoreography.setName("Call Choreography");
+			callChoreography.setLoopType(ChoreographyLoopType.NONE);
 			return callChoreography;
 		}
 

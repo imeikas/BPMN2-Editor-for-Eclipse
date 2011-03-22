@@ -14,6 +14,7 @@ import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProp
 
 import java.util.List;
 
+import org.eclipse.bpmn2.ChoreographyLoopType;
 import org.eclipse.bpmn2.SubChoreography;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
@@ -81,6 +82,7 @@ public class SubChoreographyFeatureContainer extends AbstractChoreographyFeature
 		protected SubChoreography createFlowElement(ICreateContext context) {
 			SubChoreography subChoreography = ModelHandler.FACTORY.createSubChoreography();
 			subChoreography.setName("Sub-Choreography");
+			subChoreography.setLoopType(ChoreographyLoopType.NONE);
 			return subChoreography;
 		}
 

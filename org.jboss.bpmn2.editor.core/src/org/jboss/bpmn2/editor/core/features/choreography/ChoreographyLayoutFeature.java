@@ -59,6 +59,19 @@ public class ChoreographyLayoutFeature extends AbstractLayoutFeature {
 				gaService.setSize(ga, newWidth, newHeight);
 				peService.sendToFront(s);
 			}
+			// use it when property editor supports enums
+			// property = peService.getPropertyValue(s, ChoreographyProperties.CHOREOGRAPHY_MARKER_SHAPE);
+			// if (property != null && new Boolean(property)) {
+			// List<ContainerShape> bands = ChoreographyUtil.getParticipantBandContainerShapes(choreographyContainer);
+			// List<ContainerShape> bottomBands = ChoreographyUtil.getTopAndBottomBands(bands).getSecond();
+			// int x = (newWidth / 2) - (MARKER_H / 2);
+			// int y = newHeight - MARKER_H;
+			// if (!bottomBands.isEmpty()) {
+			// ContainerShape b = bottomBands.get(0);
+			// y = b.getGraphicsAlgorithm().getY() - MARKER_H;
+			// }
+			// gaService.setLocation(s.getGraphicsAlgorithm(), x, y);
+			// }
 		}
 
 		return true;

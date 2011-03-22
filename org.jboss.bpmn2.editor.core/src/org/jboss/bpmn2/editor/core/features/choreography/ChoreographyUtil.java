@@ -13,6 +13,7 @@ package org.jboss.bpmn2.editor.core.features.choreography;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.ENVELOPE_HEIGHT_MODIFIER;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.ENV_H;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.ENV_W;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.MARKER_H;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.MESSAGE_LINK;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.R;
 
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.bpmn2.ChoreographyActivity;
+import org.eclipse.bpmn2.ChoreographyLoopType;
 import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.di.BPMNDiagram;
 import org.eclipse.bpmn2.di.BPMNShape;
@@ -568,6 +570,44 @@ public class ChoreographyUtil {
 					break;
 				}
 			}
+		}
+	}
+
+	public static void drawChoreographyLoopType(ContainerShape markerShape, ChoreographyLoopType type) {
+		Collection<Shape> shapes = peService.getAllContainedShapes(markerShape);
+		Shape drawingShape = null;
+
+		if (shapes.size() == 1) { // remove previous shape
+			Iterator<Shape> iterator = shapes.iterator();
+			while (iterator.hasNext()) {
+				Shape shape = (Shape) iterator.next();
+				drawingShape = shape;
+				break;
+			}
+		}
+
+		if (drawingShape != null) {
+			peService.deletePictogramElement(drawingShape);
+		}
+
+		drawingShape = peService.createShape(markerShape, false);
+		Rectangle rectangle = gaService.createInvisibleRectangle(drawingShape);
+		gaService.setLocationAndSize(rectangle, 0, 0, MARKER_H, MARKER_H);
+
+		if (type == null || type == ChoreographyLoopType.NONE) {
+			return;
+		}
+
+		switch (type) {
+		case STANDARD:
+			// TODO implement when property editors supports enums
+			break;
+		case MULTI_INSTANCE_PARALLEL:
+			// TODO implement when property editors supports enums
+			break;
+		case MULTI_INSTANCE_SEQUENTIAL:
+			// TODO implement when property editors supports enums
+			break;
 		}
 	}
 }
