@@ -142,9 +142,6 @@ public class ChoreographyAddFeature extends AbstractBpmnAddFeature {
 		peService.setPropertyValue(choreographyContainer, INITIATING_PARTICIPANT_REF, id);
 	}
 
-	protected void addedByUser(IAddContext context) {
-	}
-
 	protected void setTextLocation(ContainerShape choreographyContainer, Text text, int w, int h) {
 		int y = (h / 2) - (TEXT_H / 2);
 		gaService.setLocationAndSize(text, 0, y, w, TEXT_H);

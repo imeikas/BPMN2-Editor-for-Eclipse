@@ -10,14 +10,25 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.choreography;
 
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.TEXT_H;
+
+import java.util.List;
+
 import org.eclipse.bpmn2.SubChoreography;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
+import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.context.ICreateContext;
+import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
+import org.eclipse.graphiti.mm.algorithms.Text;
+import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractCreateFlowElementFeature;
-import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyAddFeature;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyLayoutFeature;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUtil;
+import org.jboss.bpmn2.editor.core.features.choreography.SubChoreographyAddFeature;
+import org.jboss.bpmn2.editor.core.utils.Tuple;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
 public class SubChoreographyFeatureContainer extends AbstractChoreographyFeatureContainer {
@@ -34,18 +45,31 @@ public class SubChoreographyFeatureContainer extends AbstractChoreographyFeature
 
 	@Override
 	public IAddFeature getAddFeature(IFeatureProvider fp) {
-		return new ChoreographyAddFeature(fp);
+		return new SubChoreographyAddFeature(fp);
 	}
 
-	// @Override
-	// public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
-	// // return new ChoreographyLayoutFeature(fp) {
-	// // @Override
-	// // protected void layoutBodyText(GraphicsAlgorithm ga, int w, int h, int bandHeight, int y) {
-	// // gaService.setLocationAndSize(ga, 0, y, w, 15);
-	// // }
-	// // }
-	// }
+	@Override
+	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
+		return new ChoreographyLayoutFeature(fp) {
+			@Override
+			protected void setTextLocation(ContainerShape choreographyContainer, Text text, int w, int h) {
+				List<ContainerShape> bandContainers = ChoreographyUtil
+						.getParticipantBandContainerShapes(choreographyContainer);
+				Tuple<List<ContainerShape>, List<ContainerShape>> topAndBottomBands = ChoreographyUtil
+						.getTopAndBottomBands(bandContainers);
+				List<ContainerShape> topBands = topAndBottomBands.getFirst();
+
+				int y = 3;
+				if (!topBands.isEmpty()) {
+					ContainerShape containerShape = topBands.get(topBands.size() - 1);
+					GraphicsAlgorithm ga = containerShape.getGraphicsAlgorithm();
+					y = ga.getY() + ga.getHeight() + 3;
+				}
+
+				gaService.setLocationAndSize(text, 0, y, w, TEXT_H);
+			}
+		};
+	}
 
 	public static class CreateSubChoreographyFeature extends AbstractCreateFlowElementFeature<SubChoreography> {
 
