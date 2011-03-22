@@ -171,8 +171,8 @@ public class BPMN2DiagramWizardPage extends WizardPage {
 		int dotLoc = fileName.lastIndexOf('.');
 		if (dotLoc != -1) {
 			String ext = fileName.substring(dotLoc + 1);
-			if (ext.equalsIgnoreCase("bpmn2") == false) {
-				updateStatus("File extension must be \"bpmn2\"");
+			if (ext.equalsIgnoreCase("bpmn") == false && ext.equalsIgnoreCase("bpmn2") == false) {
+				updateStatus("File extension must be \"bpmn\" or \"bpmn2\"");
 				return;
 			}
 		}
