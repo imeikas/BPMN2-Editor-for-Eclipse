@@ -122,7 +122,7 @@ public class BPMN2DiagramWizardPage extends WizardPage {
 				containerText.setText(container.getFullPath().toString());
 			}
 		}
-		fileText.setText("new_file.bpmn2");
+		fileText.setText("new_file.bpmn");
 	}
 
 	/**
