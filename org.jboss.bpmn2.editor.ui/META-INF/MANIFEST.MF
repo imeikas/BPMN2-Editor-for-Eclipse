@@ -11,11 +11,12 @@ Require-Bundle: org.eclipse.ui.ide,
  org.jboss.bpmn2.editor.core,
  org.eclipse.emf.transaction;bundle-version="1.4.0",
  org.eclipse.ui.views.properties.tabbed;bundle-version="3.5.100",
- org.eclipse.gef;bundle-version="3.6.1",
+ org.eclipse.gef,
  org.eclipse.bpmn2.edit,
  org.eclipse.jface.databinding,
  org.eclipse.emf.databinding,
- org.eclipse.emf.edit.ui;bundle-version="2.6.0"
+ org.eclipse.emf.edit.ui,
+ org.apache.xerces
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.jboss.bpmn2.editor.ui,
@@ -38,5 +39,3 @@ Export-Package: org.jboss.bpmn2.editor.ui,
  org.jboss.bpmn2.editor.ui.util,
  org.jboss.bpmn2.editor.ui.views,
  org.jboss.bpmn2.editor.ui.wizards
-Import-Package: org.apache.xerces.parsers,
- org.apache.xerces.xni
