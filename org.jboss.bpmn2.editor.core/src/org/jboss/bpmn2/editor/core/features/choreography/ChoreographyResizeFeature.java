@@ -57,6 +57,7 @@ public class ChoreographyResizeFeature extends DefaultBPMNResizeFeature {
 			Activator.logError(e);
 		}
 		super.resizeShape(context);
+		ChoreographyUtil.moveChoreographyMessageLinks((ContainerShape) context.getPictogramElement());
 	}
 
 }

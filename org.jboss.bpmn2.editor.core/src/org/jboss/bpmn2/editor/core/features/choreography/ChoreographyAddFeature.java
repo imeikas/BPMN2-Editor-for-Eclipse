@@ -10,13 +10,9 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features.choreography;
 
-import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.ENVELOPE_HEIGHT_MODIFIER;
-import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.ENV_H;
-import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.ENV_W;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.INITIATING_PARTICIPANT_REF;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.PARTICIPANT_REF_IDS;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.R;
-import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUtil.drawMessageLink;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUtil.drawMultiplicityMarkers;
 
 import java.io.IOException;
@@ -27,7 +23,6 @@ import org.eclipse.bpmn2.ChoreographyActivity;
 import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.di.BPMNShape;
 import org.eclipse.bpmn2.di.ParticipantBandKind;
-import org.eclipse.dd.dc.Bounds;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.mm.algorithms.RoundedRectangle;
@@ -41,8 +36,6 @@ import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.di.DIImport;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
-import org.jboss.bpmn2.editor.core.utils.AnchorUtil.AnchorLocation;
-import org.jboss.bpmn2.editor.core.utils.AnchorUtil.BoundaryAnchor;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 
 public class ChoreographyAddFeature extends AbstractBpmnAddFeature {
@@ -66,29 +59,31 @@ public class ChoreographyAddFeature extends AbstractBpmnAddFeature {
 		int width = context.getWidth() > 0 ? context.getWidth() : 100;
 		int height = context.getHeight() > 0 ? context.getHeight() : 100;
 
-		ContainerShape containerShape = peService.createContainerShape(context.getTargetContainer(), true);
-		RoundedRectangle containerRect = gaService.createRoundedRectangle(containerShape, R, R);
+		ContainerShape choreographyContainer = peService.createContainerShape(context.getTargetContainer(), true);
+		RoundedRectangle containerRect = gaService.createRoundedRectangle(choreographyContainer, R, R);
 		gaService.setLocationAndSize(containerRect, context.getX(), context.getY(), width, height);
 		StyleUtil.applyBGStyle(containerRect, this);
 		decorateContainerRect(containerRect);
 
 		Object importProperty = context.getProperty(DIImport.IMPORT_PROPERTY);
 		if (importProperty != null && (Boolean) importProperty) {
-			addedFromImport(choreography, containerShape, context);
+			addedFromImport(choreography, choreographyContainer, context);
 		} else {
 			addedByUser(context);
 		}
 
-		peService.createChopboxAnchor(containerShape);
-		AnchorUtil.addFixedPointAnchors(containerShape, containerRect);
-		createDIShape(containerShape, choreography);
-		return containerShape;
+		peService.createChopboxAnchor(choreographyContainer);
+		createDIShape(choreographyContainer, choreography);
+		AnchorUtil.addFixedPointAnchors(choreographyContainer, containerRect);
+		ChoreographyUtil.drawMessageLinks(choreographyContainer);
+		return choreographyContainer;
 	}
 
 	protected void decorateContainerRect(RoundedRectangle containerRect) {
 	}
 
-	protected void addedFromImport(ChoreographyActivity choreography, ContainerShape container, IAddContext context) {
+	protected void addedFromImport(ChoreographyActivity choreography, ContainerShape choreographyContainer,
+			IAddContext context) {
 		ModelHandler mh = null;
 
 		try {
@@ -119,40 +114,20 @@ public class ChoreographyAddFeature extends AbstractBpmnAddFeature {
 
 		for (BPMNShape bpmnShape : filteredShapes) {
 			ParticipantBandKind bandKind = bpmnShape.getParticipantBandKind();
-			ContainerShape createdShape = ChoreographyUtil.createParticipantBandContainerShape(bandKind, container,
-					bpmnShape);
+			ContainerShape createdShape = ChoreographyUtil.createParticipantBandContainerShape(bandKind,
+					choreographyContainer, bpmnShape);
 			createDIShape(createdShape, bpmnShape.getBpmnElement(), bpmnShape);
-
-			if (bpmnShape.isIsMessageVisible()) {
-
-				boolean top = bandKind == ParticipantBandKind.TOP_INITIATING
-						|| bandKind == ParticipantBandKind.TOP_NON_INITIATING;
-
-				BoundaryAnchor anchor = AnchorUtil.getBoundaryAnchors(createdShape).get(
-						top ? AnchorLocation.TOP : AnchorLocation.BOTTOM);
-
-				Bounds bounds = bpmnShape.getBounds();
-
-				int x = (int) (bounds.getX() + bounds.getWidth() / 2) - ENV_W / 2;
-				int y = (int) (top ? bounds.getY() - ENVELOPE_HEIGHT_MODIFIER - ENV_H : bounds.getY()
-						+ bounds.getHeight() + ENVELOPE_HEIGHT_MODIFIER);
-
-				boolean filled = bandKind == ParticipantBandKind.TOP_NON_INITIATING
-						|| bandKind == ParticipantBandKind.BOTTOM_NON_INITIATING;
-
-				drawMessageLink(anchor, x, y, filled);
-			}
-
 			Participant p = (Participant) bpmnShape.getBpmnElement();
 			if (p.getParticipantMultiplicity() != null && p.getParticipantMultiplicity().getMaximum() > 1) {
 				drawMultiplicityMarkers(createdShape);
 			}
 		}
 
-		peService.setPropertyValue(container, PARTICIPANT_REF_IDS, ChoreographyUtil.getParticipantRefIds(choreography));
+		peService.setPropertyValue(choreographyContainer, PARTICIPANT_REF_IDS,
+				ChoreographyUtil.getParticipantRefIds(choreography));
 		Participant initiatingParticipant = choreography.getInitiatingParticipantRef();
 		String id = initiatingParticipant == null ? "null" : initiatingParticipant.getId();
-		peService.setPropertyValue(container, INITIATING_PARTICIPANT_REF, id);
+		peService.setPropertyValue(choreographyContainer, INITIATING_PARTICIPANT_REF, id);
 	}
 
 	protected void addedByUser(IAddContext context) {

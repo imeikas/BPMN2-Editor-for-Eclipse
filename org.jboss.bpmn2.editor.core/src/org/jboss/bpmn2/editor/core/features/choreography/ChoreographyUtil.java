@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features.choreography;
 
-import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyMessageLinkFeatureContainer.MESSAGE_LINK_LOCATION;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyMessageLinkFeatureContainer.MESSAGE_LINK_PROPERTY;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.ENVELOPE_HEIGHT_MODIFIER;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.ENV_H;
@@ -23,6 +22,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.bpmn2.ChoreographyActivity;
 import org.eclipse.bpmn2.Participant;
@@ -31,10 +31,12 @@ import org.eclipse.bpmn2.di.BPMNShape;
 import org.eclipse.bpmn2.di.ParticipantBandKind;
 import org.eclipse.dd.dc.Bounds;
 import org.eclipse.dd.di.DiagramElement;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.datatypes.IDimension;
 import org.eclipse.graphiti.datatypes.ILocation;
 import org.eclipse.graphiti.features.IFeatureProvider;
+import org.eclipse.graphiti.mm.PropertyContainer;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.eclipse.graphiti.mm.algorithms.Rectangle;
@@ -140,7 +142,6 @@ public class ChoreographyUtil {
 			DIUtils.updateDIShape(container);
 			AnchorUtil.relocateFixPointAnchors(container, w, (int) bounds.getHeight());
 			AnchorUtil.reConnect(bpmnShape, diagram);
-			moveParticipantBandConnections(container);
 		}
 
 		Collections.reverse(bottom); // start from bottom towards center
@@ -154,7 +155,6 @@ public class ChoreographyUtil {
 			DIUtils.updateDIShape(container);
 			AnchorUtil.relocateFixPointAnchors(container, w, (int) bounds.getHeight());
 			AnchorUtil.reConnect(bpmnShape, diagram);
-			moveParticipantBandConnections(container);
 		}
 	}
 
@@ -169,33 +169,33 @@ public class ChoreographyUtil {
 		}
 	}
 
-	public static void moveParticipantBandConnections(ContainerShape participantBandContainer, int dx, int dy) {
-		List<Connection> connections = Graphiti.getPeService().getOutgoingConnections(participantBandContainer);
-		for (Connection connection : connections) {
-			ContainerShape envelope = (ContainerShape) connection.getEnd().getParent();
-			GraphicsAlgorithm envelopeGa = envelope.getGraphicsAlgorithm();
-			Graphiti.getGaService().setLocation(envelopeGa, envelopeGa.getX() + dx, envelopeGa.getY() + dy);
-		}
-	}
-
-	public static void moveParticipantBandConnections(ContainerShape participantBandContainer) {
-		BPMNShape bpmnShape = BusinessObjectUtil.getFirstElementOfType(participantBandContainer, BPMNShape.class);
-		Bounds bounds = bpmnShape.getBounds();
-
-		List<Connection> connections = peService.getOutgoingConnections(participantBandContainer);
-		for (Connection connection : connections) {
-			ContainerShape envelope = (ContainerShape) connection.getEnd().getParent();
-			AnchorLocation location = AnchorLocation.valueOf(peService
-					.getPropertyValue(envelope, MESSAGE_LINK_LOCATION));
-			GraphicsAlgorithm envelopeGa = envelope.getGraphicsAlgorithm();
-
-			int newX = (int) (bounds.getX() + ((bounds.getWidth() / 2) - (envelopeGa.getWidth() / 2)));
-			int newY = (int) (location == AnchorLocation.BOTTOM ? bounds.getY() - ENVELOPE_HEIGHT_MODIFIER - ENV_H
-					: bounds.getY() + bounds.getHeight() + ENVELOPE_HEIGHT_MODIFIER);
-
-			gaService.setLocation(envelopeGa, newX, newY);
-		}
-	}
+	// public static void moveParticipantBandConnections(ContainerShape participantBandContainer, int dx, int dy) {
+	// List<Connection> connections = Graphiti.getPeService().getOutgoingConnections(participantBandContainer);
+	// for (Connection connection : connections) {
+	// ContainerShape envelope = (ContainerShape) connection.getEnd().getParent();
+	// GraphicsAlgorithm envelopeGa = envelope.getGraphicsAlgorithm();
+	// Graphiti.getGaService().setLocation(envelopeGa, envelopeGa.getX() + dx, envelopeGa.getY() + dy);
+	// }
+	// }
+	//
+	// public static void moveParticipantBandConnections(ContainerShape participantBandContainer) {
+	// BPMNShape bpmnShape = BusinessObjectUtil.getFirstElementOfType(participantBandContainer, BPMNShape.class);
+	// Bounds bounds = bpmnShape.getBounds();
+	//
+	// List<Connection> connections = peService.getOutgoingConnections(participantBandContainer);
+	// for (Connection connection : connections) {
+	// ContainerShape envelope = (ContainerShape) connection.getEnd().getParent();
+	// AnchorLocation location = AnchorLocation.valueOf(peService
+	// .getPropertyValue(envelope, MESSAGE_LINK_LOCATION));
+	// GraphicsAlgorithm envelopeGa = envelope.getGraphicsAlgorithm();
+	//
+	// int newX = (int) (bounds.getX() + ((bounds.getWidth() / 2) - (envelopeGa.getWidth() / 2)));
+	// int newY = (int) (location == AnchorLocation.BOTTOM ? bounds.getY() - ENVELOPE_HEIGHT_MODIFIER - ENV_H
+	// : bounds.getY() + bounds.getHeight() + ENVELOPE_HEIGHT_MODIFIER);
+	//
+	// gaService.setLocation(envelopeGa, newX, newY);
+	// }
+	// }
 
 	public static String getParticipantRefIds(ChoreographyActivity choreography) {
 		Iterator<Participant> iterator = choreography.getParticipantRefs().iterator();
@@ -297,6 +297,8 @@ public class ChoreographyUtil {
 		addBandLabel(bandShape, p.getName(), w, h);
 		AnchorUtil.addFixedPointAnchors(bandShape, band);
 		peService.setPropertyValue(bandShape, ChoreographyProperties.BAND, Boolean.toString(true));
+		peService.setPropertyValue(bandShape, ChoreographyProperties.MESSAGE_VISIBLE,
+				Boolean.toString(bpmnShape.isIsMessageVisible()));
 		return bandShape;
 	}
 
@@ -325,6 +327,8 @@ public class ChoreographyUtil {
 		addBandLabel(bandShape, p.getName(), w, h);
 		AnchorUtil.addFixedPointAnchors(bandShape, band);
 		peService.setPropertyValue(bandShape, ChoreographyProperties.BAND, Boolean.toString(true));
+		peService.setPropertyValue(bandShape, ChoreographyProperties.MESSAGE_VISIBLE,
+				Boolean.toString(bpmnShape.isIsMessageVisible()));
 		return bandShape;
 	}
 
@@ -353,6 +357,8 @@ public class ChoreographyUtil {
 		addBandLabel(bandShape, p.getName(), w, h);
 		AnchorUtil.addFixedPointAnchors(bandShape, band);
 		peService.setPropertyValue(bandShape, ChoreographyProperties.BAND, Boolean.toString(true));
+		peService.setPropertyValue(bandShape, ChoreographyProperties.MESSAGE_VISIBLE,
+				Boolean.toString(bpmnShape.isIsMessageVisible()));
 		return bandShape;
 	}
 
@@ -406,7 +412,6 @@ public class ChoreographyUtil {
 		connection.setStart(boundaryAnchor.anchor);
 		connection.setEnd(AnchorUtil.getBoundaryAnchors(envelope).get(envelopeAnchorLoc).anchor);
 		peService.setPropertyValue(envelope, MESSAGE_LINK_PROPERTY, Boolean.toString(true));
-		peService.setPropertyValue(envelope, MESSAGE_LINK_LOCATION, envelopeAnchorLoc.toString());
 	}
 
 	public static void drawMultiplicityMarkers(ContainerShape container) {
@@ -453,5 +458,136 @@ public class ChoreographyUtil {
 	public static ContainerShape createParticipantBandContainerShape(ParticipantBandKind bandKind,
 			ContainerShape container, BPMNShape bpmnShape) {
 		return createParticipantBandContainerShape(bandKind, container, null, bpmnShape);
+	}
+
+	public static void drawMessageLinks(ContainerShape choreographyContainer) {
+
+		List<ContainerShape> bandContainers = getParticipantBandContainerShapes(choreographyContainer);
+		Tuple<List<ContainerShape>, List<ContainerShape>> topAndBottom = getTopAndBottomBands(bandContainers);
+		List<ContainerShape> shapesWithVisileMessages = new ArrayList<ContainerShape>();
+
+		Map<AnchorLocation, BoundaryAnchor> boundaryAnchors = AnchorUtil.getBoundaryAnchors(choreographyContainer);
+		BoundaryAnchor topBoundaryAnchor = boundaryAnchors.get(AnchorLocation.TOP);
+		BoundaryAnchor bottomBoundaryAnchor = boundaryAnchors.get(AnchorLocation.BOTTOM);
+		int topConnectionIndex = 0;
+		int bottomConnectionIndex = 0;
+
+		boolean hasTopMessage = false;
+		EList<Connection> topConnections = topBoundaryAnchor.anchor.getOutgoingConnections();
+		for (int i = 0; i < topConnections.size(); i++) {
+			Connection connection = topConnections.get(i);
+			EObject container = connection.getEnd().eContainer();
+			if (container instanceof PropertyContainer) {
+				String property = peService.getPropertyValue((PropertyContainer) container, MESSAGE_LINK_PROPERTY);
+				if (property != null && new Boolean(property)) {
+					topConnectionIndex = i;
+					hasTopMessage = true;
+					break;
+				}
+			}
+		}
+
+		boolean hasBottomMessage = false;
+		EList<Connection> bottomConnections = bottomBoundaryAnchor.anchor.getOutgoingConnections();
+		for (int i = 0; i < bottomConnections.size(); i++) {
+			Connection connection = bottomConnections.get(i);
+			EObject container = connection.getEnd().eContainer();
+			if (container instanceof PropertyContainer) {
+				String property = peService.getPropertyValue((PropertyContainer) container, MESSAGE_LINK_PROPERTY);
+				if (property != null && new Boolean(property)) {
+					bottomConnectionIndex = i;
+					hasBottomMessage = true;
+					break;
+				}
+			}
+		}
+
+		Iterator<ContainerShape> iterator = bandContainers.iterator();
+		while (iterator.hasNext()) {
+			ContainerShape bandContainer = (ContainerShape) iterator.next();
+			BPMNShape bpmnShape = BusinessObjectUtil.getFirstElementOfType(bandContainer, BPMNShape.class);
+			if (bpmnShape.isIsMessageVisible()) {
+				shapesWithVisileMessages.add(bandContainer);
+			}
+		}
+
+		boolean shouldDrawTopMessage = !Collections.disjoint(topAndBottom.getFirst(), shapesWithVisileMessages);
+		boolean shouldDrawBottomMessage = !Collections.disjoint(topAndBottom.getSecond(), shapesWithVisileMessages);
+
+		BPMNShape bpmnShape = BusinessObjectUtil.getFirstElementOfType(choreographyContainer, BPMNShape.class);
+		Bounds bounds = bpmnShape.getBounds();
+		int x = (int) ((bounds.getX() + bounds.getWidth() / 2) - (ENV_W / 2));
+
+		if (!hasTopMessage && shouldDrawTopMessage) {
+			int y = (int) (bounds.getY() - ENVELOPE_HEIGHT_MODIFIER - ENV_H);
+			drawMessageLink(topBoundaryAnchor, x, y, isFilled(topAndBottom.getFirst()));
+		} else if (hasTopMessage && !shouldDrawTopMessage) {
+			PictogramElement envelope = (PictogramElement) topConnections.get(topConnectionIndex).getEnd().eContainer();
+			peService.deletePictogramElement(topConnections.get(topConnectionIndex));
+			peService.deletePictogramElement(envelope);
+		}
+
+		if (!hasBottomMessage && shouldDrawBottomMessage) {
+			int y = (int) (bounds.getY() + bounds.getHeight() + ENVELOPE_HEIGHT_MODIFIER);
+			drawMessageLink(bottomBoundaryAnchor, x, y, isFilled(topAndBottom.getSecond()));
+		} else if (hasBottomMessage && !shouldDrawBottomMessage) {
+			PictogramElement envelope = (PictogramElement) bottomConnections.get(bottomConnectionIndex).getEnd()
+					.eContainer();
+			peService.deletePictogramElement(bottomConnections.get(bottomConnectionIndex));
+			peService.deletePictogramElement(envelope);
+		}
+
+		return;
+	}
+
+	private static boolean isFilled(List<ContainerShape> bands) {
+		boolean filled = true;
+		for (ContainerShape band : bands) {
+			BPMNShape bpmnShape = BusinessObjectUtil.getFirstElementOfType(band, BPMNShape.class);
+			if (!bpmnShape.isIsMessageVisible()) {
+				continue;
+			}
+			ParticipantBandKind bandKind = bpmnShape.getParticipantBandKind();
+			if (bandKind == ParticipantBandKind.TOP_INITIATING || bandKind == ParticipantBandKind.BOTTOM_INITIATING
+					|| bandKind == ParticipantBandKind.MIDDLE_INITIATING) {
+				filled = false;
+				break;
+			}
+		}
+		return filled;
+	}
+
+	public static void moveChoreographyMessageLinks(ContainerShape choreographyContainer) {
+		BPMNShape bpmnShape = BusinessObjectUtil.getFirstElementOfType(choreographyContainer, BPMNShape.class);
+		Bounds bounds = bpmnShape.getBounds();
+		int x = (int) ((bounds.getX() + bounds.getWidth() / 2) - (ENV_W / 2));
+
+		Map<AnchorLocation, BoundaryAnchor> boundaryAnchors = AnchorUtil.getBoundaryAnchors(choreographyContainer);
+		BoundaryAnchor topBoundaryAnchor = boundaryAnchors.get(AnchorLocation.TOP);
+		BoundaryAnchor bottomBoundaryAnchor = boundaryAnchors.get(AnchorLocation.BOTTOM);
+
+		for (Connection connection : topBoundaryAnchor.anchor.getOutgoingConnections()) {
+			EObject container = connection.getEnd().eContainer();
+			if (container instanceof PropertyContainer) {
+				String property = peService.getPropertyValue((PropertyContainer) container, MESSAGE_LINK_PROPERTY);
+				if (property != null && new Boolean(property)) {
+					int y = (int) (bounds.getY() - ENVELOPE_HEIGHT_MODIFIER - ENV_H);
+					gaService.setLocation(((ContainerShape) container).getGraphicsAlgorithm(), x, y);
+					break;
+				}
+			}
+		}
+
+		for (Connection connection : bottomBoundaryAnchor.anchor.getOutgoingConnections()) {
+			EObject container = connection.getEnd().eContainer();
+			if (container instanceof PropertyContainer) {
+				String property = peService.getPropertyValue((PropertyContainer) container, MESSAGE_LINK_PROPERTY);
+				if (property != null && new Boolean(property)) {
+					int y = (int) (bounds.getY() + bounds.getHeight() + ENVELOPE_HEIGHT_MODIFIER);
+					gaService.setLocation(((ContainerShape) container).getGraphicsAlgorithm(), x, y);
+					break;
+				}
+			}
+		}
 	}
 }

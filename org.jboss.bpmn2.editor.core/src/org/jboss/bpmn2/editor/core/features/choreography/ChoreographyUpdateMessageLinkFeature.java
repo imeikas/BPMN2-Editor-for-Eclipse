@@ -1,0 +1,51 @@
+package org.jboss.bpmn2.editor.core.features.choreography;
+
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.MESSAGE_VISIBLE;
+
+import org.eclipse.bpmn2.di.BPMNShape;
+import org.eclipse.graphiti.features.IFeatureProvider;
+import org.eclipse.graphiti.features.IReason;
+import org.eclipse.graphiti.features.context.IUpdateContext;
+import org.eclipse.graphiti.features.impl.AbstractUpdateFeature;
+import org.eclipse.graphiti.features.impl.Reason;
+import org.eclipse.graphiti.mm.pictograms.ContainerShape;
+import org.eclipse.graphiti.services.Graphiti;
+import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
+
+public class ChoreographyUpdateMessageLinkFeature extends AbstractUpdateFeature {
+
+	public ChoreographyUpdateMessageLinkFeature(IFeatureProvider fp) {
+		super(fp);
+	}
+
+	@Override
+	public boolean canUpdate(IUpdateContext context) {
+		return ChoreographyUtil.isChoreographyParticipantBand(context.getPictogramElement());
+	}
+
+	@Override
+	public IReason updateNeeded(IUpdateContext context) {
+		if (!ChoreographyUtil.isChoreographyParticipantBand(context.getPictogramElement())) {
+			return Reason.createFalseReason();
+		}
+
+		BPMNShape bpmnShape = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(), BPMNShape.class);
+		boolean visible = new Boolean(Graphiti.getPeService().getPropertyValue(context.getPictogramElement(),
+				MESSAGE_VISIBLE));
+
+		return bpmnShape.isIsMessageVisible() != visible ? Reason.createTrueReason() : Reason.createFalseReason();
+	}
+
+	@Override
+	public boolean update(IUpdateContext context) {
+
+		ChoreographyUtil.drawMessageLinks((ContainerShape) context.getPictogramElement().eContainer());
+
+		BPMNShape bpmnShape = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(), BPMNShape.class);
+		Graphiti.getPeService().setPropertyValue(context.getPictogramElement(), MESSAGE_VISIBLE,
+				Boolean.toString(bpmnShape.isIsMessageVisible()));
+
+		return true;
+	}
+
+}

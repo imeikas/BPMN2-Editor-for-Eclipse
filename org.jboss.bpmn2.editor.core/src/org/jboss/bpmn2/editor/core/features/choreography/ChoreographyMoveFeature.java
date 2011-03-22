@@ -49,9 +49,8 @@ public class ChoreographyMoveFeature extends MoveFlowNodeFeature {
 				Bounds bounds = bpmnShape.getBounds();
 				bounds.setX(loc.getX() + ga.getX());
 				bounds.setY(loc.getY() + ga.getY());
-
-				ChoreographyUtil.moveParticipantBandConnections(container, context.getDeltaX(), context.getDeltaY());
 			}
 		}
+		ChoreographyUtil.moveChoreographyMessageLinks((ContainerShape) context.getPictogramElement());
 	}
 }

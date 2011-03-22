@@ -29,8 +29,6 @@ public class ChoreographyMessageLinkFeatureContainer extends PropertyBasedFeatur
 
 	public static final String MESSAGE_LINK_PROPERTY = ChoreographyMessageLinkFeatureContainer.class.getSimpleName()
 			+ ".messageLink";
-	public static final String MESSAGE_LINK_LOCATION = ChoreographyMessageLinkFeatureContainer.class.getSimpleName()
-			+ ".messageLink.location";
 
 	@Override
 	protected String getPropertyKey() {
