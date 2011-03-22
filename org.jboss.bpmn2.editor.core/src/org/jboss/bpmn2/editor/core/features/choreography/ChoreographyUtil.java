@@ -169,34 +169,6 @@ public class ChoreographyUtil {
 		}
 	}
 
-	// public static void moveParticipantBandConnections(ContainerShape participantBandContainer, int dx, int dy) {
-	// List<Connection> connections = Graphiti.getPeService().getOutgoingConnections(participantBandContainer);
-	// for (Connection connection : connections) {
-	// ContainerShape envelope = (ContainerShape) connection.getEnd().getParent();
-	// GraphicsAlgorithm envelopeGa = envelope.getGraphicsAlgorithm();
-	// Graphiti.getGaService().setLocation(envelopeGa, envelopeGa.getX() + dx, envelopeGa.getY() + dy);
-	// }
-	// }
-	//
-	// public static void moveParticipantBandConnections(ContainerShape participantBandContainer) {
-	// BPMNShape bpmnShape = BusinessObjectUtil.getFirstElementOfType(participantBandContainer, BPMNShape.class);
-	// Bounds bounds = bpmnShape.getBounds();
-	//
-	// List<Connection> connections = peService.getOutgoingConnections(participantBandContainer);
-	// for (Connection connection : connections) {
-	// ContainerShape envelope = (ContainerShape) connection.getEnd().getParent();
-	// AnchorLocation location = AnchorLocation.valueOf(peService
-	// .getPropertyValue(envelope, MESSAGE_LINK_LOCATION));
-	// GraphicsAlgorithm envelopeGa = envelope.getGraphicsAlgorithm();
-	//
-	// int newX = (int) (bounds.getX() + ((bounds.getWidth() / 2) - (envelopeGa.getWidth() / 2)));
-	// int newY = (int) (location == AnchorLocation.BOTTOM ? bounds.getY() - ENVELOPE_HEIGHT_MODIFIER - ENV_H
-	// : bounds.getY() + bounds.getHeight() + ENVELOPE_HEIGHT_MODIFIER);
-	//
-	// gaService.setLocation(envelopeGa, newX, newY);
-	// }
-	// }
-
 	public static String getParticipantRefIds(ChoreographyActivity choreography) {
 		Iterator<Participant> iterator = choreography.getParticipantRefs().iterator();
 		String delim = ":";

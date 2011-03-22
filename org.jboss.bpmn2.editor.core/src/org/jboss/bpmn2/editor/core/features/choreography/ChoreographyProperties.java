@@ -17,6 +17,7 @@ public interface ChoreographyProperties {
 	int ENV_H = 18;
 	int ENVELOPE_HEIGHT_MODIFIER = 30;
 	int R = 10;
+	int TEXT_H = 15;
 
 	String CHOREOGRAPHY_ACTIVITY_PROPERTY = "choreography.activity";
 	String PARTICIPANT_REF = "choreography.activity.participant.ref";
@@ -26,4 +27,5 @@ public interface ChoreographyProperties {
 	String MESSAGE_VISIBLE = "choreography.activity.band.message.visible";
 	String BAND = "choreography.activity.band";
 	String MESSAGE_LINK = "choreography.messageLink";
+	String CHOREOGRAPHY_NAME = "choreography.name";
 }

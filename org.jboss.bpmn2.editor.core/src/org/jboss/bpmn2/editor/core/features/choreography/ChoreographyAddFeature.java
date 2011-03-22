@@ -13,6 +13,7 @@ package org.jboss.bpmn2.editor.core.features.choreography;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.INITIATING_PARTICIPANT_REF;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.PARTICIPANT_REF_IDS;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.R;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.TEXT_H;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUtil.drawMultiplicityMarkers;
 
 import java.io.IOException;
@@ -26,8 +27,11 @@ import org.eclipse.bpmn2.di.ParticipantBandKind;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.mm.algorithms.RoundedRectangle;
+import org.eclipse.graphiti.mm.algorithms.Text;
+import org.eclipse.graphiti.mm.algorithms.styles.Orientation;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
+import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
@@ -68,9 +72,17 @@ public class ChoreographyAddFeature extends AbstractBpmnAddFeature {
 		Object importProperty = context.getProperty(DIImport.IMPORT_PROPERTY);
 		if (importProperty != null && (Boolean) importProperty) {
 			addedFromImport(choreography, choreographyContainer, context);
-		} else {
-			addedByUser(context);
 		}
+
+		Shape nameShape = peService.createShape(choreographyContainer, false);
+		Text text = gaService.createDefaultText(nameShape);
+		text.setValue(choreography.getName());
+		text.setStyle(StyleUtil.getStyleForText(getDiagram()));
+		text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
+		text.setVerticalAlignment(Orientation.ALIGNMENT_TOP);
+		text.getFont().setBold(false);
+		setTextLocation(choreographyContainer, text, width, height);
+		peService.setPropertyValue(nameShape, ChoreographyProperties.CHOREOGRAPHY_NAME, Boolean.toString(true));
 
 		peService.createChopboxAnchor(choreographyContainer);
 		createDIShape(choreographyContainer, choreography);
@@ -131,5 +143,10 @@ public class ChoreographyAddFeature extends AbstractBpmnAddFeature {
 	}
 
 	protected void addedByUser(IAddContext context) {
+	}
+
+	protected void setTextLocation(ContainerShape choreographyContainer, Text text, int w, int h) {
+		int y = (h / 2) - (TEXT_H / 2);
+		gaService.setLocationAndSize(text, 0, y, w, TEXT_H);
 	}
 }

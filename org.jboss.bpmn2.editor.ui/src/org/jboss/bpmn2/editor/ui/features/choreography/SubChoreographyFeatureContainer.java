@@ -14,7 +14,6 @@ import org.eclipse.bpmn2.SubChoreography;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
-import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractCreateFlowElementFeature;
@@ -38,16 +37,15 @@ public class SubChoreographyFeatureContainer extends AbstractChoreographyFeature
 		return new ChoreographyAddFeature(fp);
 	}
 
-	@Override
-	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
-		// return new ChoreographyLayoutFeature(fp) {
-		// @Override
-		// protected void layoutBodyText(GraphicsAlgorithm ga, int w, int h, int bandHeight, int y) {
-		// gaService.setLocationAndSize(ga, 0, y, w, 15);
-		// }
-		// }
-		return null;
-	}
+	// @Override
+	// public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
+	// // return new ChoreographyLayoutFeature(fp) {
+	// // @Override
+	// // protected void layoutBodyText(GraphicsAlgorithm ga, int w, int h, int bandHeight, int y) {
+	// // gaService.setLocationAndSize(ga, 0, y, w, 15);
+	// // }
+	// // }
+	// }
 
 	public static class CreateSubChoreographyFeature extends AbstractCreateFlowElementFeature<SubChoreography> {
 

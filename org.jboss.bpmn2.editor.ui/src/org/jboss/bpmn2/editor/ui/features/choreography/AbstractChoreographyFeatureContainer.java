@@ -19,6 +19,7 @@ import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.BaseElementFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyLayoutFeature;
 import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyMoveFeature;
 import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyResizeFeature;
 import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUpdateInitiatingParticipantFeature;
@@ -44,7 +45,7 @@ public abstract class AbstractChoreographyFeatureContainer extends BaseElementFe
 
 	@Override
 	public ILayoutFeature getLayoutFeature(IFeatureProvider fp) {
-		return null;// new ChoreographyLayoutFeature(fp);
+		return new ChoreographyLayoutFeature(fp);
 	}
 
 	@Override
