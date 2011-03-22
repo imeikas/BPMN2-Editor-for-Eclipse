@@ -13,6 +13,7 @@ package org.jboss.bpmn2.editor.core.features.choreography;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.ENVELOPE_HEIGHT_MODIFIER;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.ENV_H;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.ENV_W;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.INITIATING_PARTICIPANT_REF;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.PARTICIPANT_REF_IDS;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.R;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUtil.drawMessageLink;
@@ -149,6 +150,9 @@ public class ChoreographyAddFeature extends AbstractBpmnAddFeature {
 		}
 
 		peService.setPropertyValue(container, PARTICIPANT_REF_IDS, ChoreographyUtil.getParticipantRefIds(choreography));
+		Participant initiatingParticipant = choreography.getInitiatingParticipantRef();
+		String id = initiatingParticipant == null ? "null" : initiatingParticipant.getId();
+		peService.setPropertyValue(container, INITIATING_PARTICIPANT_REF, id);
 	}
 
 	protected void addedByUser(IAddContext context) {

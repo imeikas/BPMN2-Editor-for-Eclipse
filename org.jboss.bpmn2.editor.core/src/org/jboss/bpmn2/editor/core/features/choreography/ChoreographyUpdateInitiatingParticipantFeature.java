@@ -10,29 +10,23 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features.choreography;
 
-import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.CHOREOGRAPHY_ACTIVITY_PROPERTY;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.INITIATING_PARTICIPANT_REF;
-import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.PARTICIPANT_REF;
-import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.PARTICIPANT_REF_ID;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.bpmn2.ChoreographyActivity;
 import org.eclipse.bpmn2.Participant;
+import org.eclipse.bpmn2.di.BPMNShape;
+import org.eclipse.bpmn2.di.ParticipantBandKind;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.IReason;
 import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.eclipse.graphiti.features.impl.AbstractUpdateFeature;
 import org.eclipse.graphiti.features.impl.Reason;
+import org.eclipse.graphiti.mm.algorithms.styles.Color;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
-import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IPeService;
 import org.eclipse.graphiti.util.IColorConstant;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
-import org.jboss.bpmn2.editor.core.utils.Tuple;
 
 public class ChoreographyUpdateInitiatingParticipantFeature extends AbstractUpdateFeature {
 
@@ -49,81 +43,67 @@ public class ChoreographyUpdateInitiatingParticipantFeature extends AbstractUpda
 
 	@Override
 	public IReason updateNeeded(IUpdateContext context) {
-		ChoreographyActivity activity = (ChoreographyActivity) BusinessObjectUtil.getFirstElementOfType(
+
+		ChoreographyActivity choreography = (ChoreographyActivity) BusinessObjectUtil.getFirstElementOfType(
 				context.getPictogramElement(), ChoreographyActivity.class);
 
-		String property = peService.getPropertyValue(context.getPictogramElement(), INITIATING_PARTICIPANT_REF);
-		Participant participant = activity.getInitiatingParticipantRef();
+		String id = peService.getPropertyValue(context.getPictogramElement(), INITIATING_PARTICIPANT_REF);
+		Participant participant = choreography.getInitiatingParticipantRef();
 
-		if (property.equals("false") && participant == null) {
+		if (id.equals("null") && participant == null) {
 			return Reason.createFalseReason();
 		}
 
-		if (participant != null && property.equals(participant.getId())) {
+		if (participant != null && id.equals(participant.getId())) {
 			return Reason.createFalseReason();
-		} else {
-			return Reason.createTrueReason();
 		}
+
+		return Reason.createTrueReason();
 	}
 
 	@Override
 	public boolean update(IUpdateContext context) {
-		ChoreographyActivity task = (ChoreographyActivity) BusinessObjectUtil.getFirstElementOfType(
-				context.getPictogramElement(), ChoreographyActivity.class);
 
-		List<Shape> shapeList = new ArrayList<Shape>();
+		ContainerShape container = (ContainerShape) context.getPictogramElement();
 
-		Tuple<Shape, Shape> topAndBottomBands = getTopAndBottomBands(context);
-		shapeList.add(topAndBottomBands.getFirst());
-		shapeList.add(topAndBottomBands.getSecond());
+		ChoreographyActivity choreography = (ChoreographyActivity) BusinessObjectUtil.getFirstElementOfType(container,
+				ChoreographyActivity.class);
 
-		for (Shape shape : peService.getAllContainedShapes((ContainerShape) context.getPictogramElement())) {
-			String property = peService.getPropertyValue(shape, PARTICIPANT_REF);
-			if (property != null && new Boolean(property)) {
-				shapeList.add(shape);
-			}
+		boolean hasInitiatingParticipant = choreography.getInitiatingParticipantRef() != null;
+
+		for (ContainerShape band : ChoreographyUtil.getParticipantBandContainerShapes(container)) {
+			Participant participant = BusinessObjectUtil.getFirstElementOfType(band, Participant.class);
+			boolean isInitiating = hasInitiatingParticipant
+					&& participant.equals(choreography.getInitiatingParticipantRef());
+			Color color = manageColor(isInitiating ? IColorConstant.WHITE : IColorConstant.LIGHT_GRAY);
+			band.getGraphicsAlgorithm().setBackground(color);
+			BPMNShape bpmnShape = BusinessObjectUtil.getFirstElementOfType(band, BPMNShape.class);
+			bpmnShape.setParticipantBandKind(getParticipantBandKind(isInitiating, bpmnShape.getParticipantBandKind()));
 		}
 
-		for (Shape shape : shapeList) {
-			if (task.getInitiatingParticipantRef() == null) {
-				shape.getGraphicsAlgorithm().setBackground(manageColor(IColorConstant.LIGHT_GRAY));
-				continue;
-			}
+		Participant initiatingParticipant = choreography.getInitiatingParticipantRef();
+		String id = initiatingParticipant == null ? "null" : initiatingParticipant.getId();
+		peService.setPropertyValue(context.getPictogramElement(), INITIATING_PARTICIPANT_REF, id);
 
-			String id = peService.getPropertyValue(shape, PARTICIPANT_REF_ID);
-			if (id.equals(task.getInitiatingParticipantRef().getId())) {
-				shape.getGraphicsAlgorithm().setBackground(manageColor(IColorConstant.WHITE));
-			} else {
-				shape.getGraphicsAlgorithm().setBackground(manageColor(IColorConstant.LIGHT_GRAY));
-			}
-		}
-
-		String propertyVal = task.getInitiatingParticipantRef() == null ? Boolean.toString(false) : task
-				.getInitiatingParticipantRef().getId();
-		peService.setPropertyValue(context.getPictogramElement(), INITIATING_PARTICIPANT_REF, propertyVal);
 		return true;
 	}
 
-	private Tuple<Shape, Shape> getTopAndBottomBands(IUpdateContext context) {
-		Shape top = null;
-		Shape bottom = null;
-		Iterator<Shape> iterator = peService.getAllContainedShapes((ContainerShape) context.getPictogramElement())
-				.iterator();
-		while (iterator.hasNext()) {
-			Shape shape = (Shape) iterator.next();
-			String property = peService.getPropertyValue(shape, CHOREOGRAPHY_ACTIVITY_PROPERTY);
-			if (property == null) {
-				continue;
-			}
-			// if (property.equals(TOP_BAND)) {
-			// top = shape;
-			// } else if (property.equals(BOTTOM_BAND)) {
-			// bottom = shape;
-			// }
-			if (top != null && bottom != null) {
-				break;
-			}
+	private ParticipantBandKind getParticipantBandKind(boolean initiating, ParticipantBandKind currentBandKind) {
+		switch (currentBandKind) {
+		case TOP_INITIATING:
+			return initiating ? currentBandKind : ParticipantBandKind.TOP_NON_INITIATING;
+		case MIDDLE_INITIATING:
+			return initiating ? currentBandKind : ParticipantBandKind.MIDDLE_NON_INITIATING;
+		case BOTTOM_INITIATING:
+			return initiating ? currentBandKind : ParticipantBandKind.BOTTOM_NON_INITIATING;
+		case TOP_NON_INITIATING:
+			return initiating ? ParticipantBandKind.TOP_INITIATING : currentBandKind;
+		case MIDDLE_NON_INITIATING:
+			return initiating ? ParticipantBandKind.MIDDLE_INITIATING : currentBandKind;
+		case BOTTOM_NON_INITIATING:
+			return initiating ? ParticipantBandKind.BOTTOM_INITIATING : currentBandKind;
+		default:
+			return currentBandKind;
 		}
-		return new Tuple<Shape, Shape>(top, bottom);
 	}
 }

@@ -21,6 +21,7 @@ import org.jboss.bpmn2.editor.core.features.BaseElementFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyMoveFeature;
 import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyResizeFeature;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUpdateInitiatingParticipantFeature;
 import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUpdateParticipantRefsFeature;
 import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
@@ -31,7 +32,7 @@ public abstract class AbstractChoreographyFeatureContainer extends BaseElementFe
 		MultiUpdateFeature multiUpdate = new MultiUpdateFeature(fp);
 		// updateFeature.addUpdateFeature(new ChoreographyUpdateNameFeature(fp));
 		multiUpdate.addUpdateFeature(new ChoreographyUpdateParticipantRefsFeature(fp));
-		// updateFeature.addUpdateFeature(new ChoreographyUpdateInitiatingParticipantFeature(fp));
+		multiUpdate.addUpdateFeature(new ChoreographyUpdateInitiatingParticipantFeature(fp));
 		// return updateFeature;
 		return multiUpdate;
 	}
