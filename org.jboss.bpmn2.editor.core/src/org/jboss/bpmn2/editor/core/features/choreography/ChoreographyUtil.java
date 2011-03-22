@@ -184,7 +184,8 @@ public class ChoreographyUtil {
 	}
 
 	public static void updateParticipantReferences(ContainerShape choreographyContainer,
-			List<ContainerShape> currentParticipantContainers, List<Participant> newParticipants, IFeatureProvider fp) {
+			List<ContainerShape> currentParticipantContainers, List<Participant> newParticipants, IFeatureProvider fp,
+			boolean showNames) {
 
 		Diagram diagram = peService.getDiagramForShape(choreographyContainer);
 		ChoreographyActivity choreography = BusinessObjectUtil.getFirstElementOfType(choreographyContainer,
@@ -232,7 +233,7 @@ public class ChoreographyUtil {
 					BPMNShape.class));
 			bpmnShape.setIsMarkerVisible(multiple);
 			bpmnShape.setParticipantBandKind(bandKind);
-			createParticipantBandContainerShape(bandKind, choreographyContainer, bandShape, bpmnShape);
+			createParticipantBandContainerShape(bandKind, choreographyContainer, bandShape, bpmnShape, showNames);
 			if (multiple) {
 				drawMultiplicityMarkers(bandShape);
 			}
@@ -247,8 +248,8 @@ public class ChoreographyUtil {
 				topAndBottom.getSecond(), diagram);
 	}
 
-	public static ContainerShape createTopShape(ContainerShape parent, ContainerShape bandShape, BPMNShape bpmnShape,
-			boolean initiating) {
+	private static ContainerShape createTopShape(ContainerShape parent, ContainerShape bandShape, BPMNShape bpmnShape,
+			boolean initiating, boolean showNames) {
 
 		if (bandShape == null) {
 			bandShape = peService.createContainerShape(parent, true);
@@ -266,7 +267,9 @@ public class ChoreographyUtil {
 		gaService.setLocationAndSize(band, 0, 0, w, h);
 
 		Participant p = (Participant) bpmnShape.getBpmnElement();
-		addBandLabel(bandShape, p.getName(), w, h);
+		if (showNames) {
+			addBandLabel(bandShape, p.getName(), w, h);
+		}
 		AnchorUtil.addFixedPointAnchors(bandShape, band);
 		peService.setPropertyValue(bandShape, ChoreographyProperties.BAND, Boolean.toString(true));
 		peService.setPropertyValue(bandShape, ChoreographyProperties.MESSAGE_VISIBLE,
@@ -274,8 +277,8 @@ public class ChoreographyUtil {
 		return bandShape;
 	}
 
-	public static ContainerShape createBottomShape(ContainerShape parent, ContainerShape bandShape,
-			BPMNShape bpmnShape, boolean initiating) {
+	private static ContainerShape createBottomShape(ContainerShape parent, ContainerShape bandShape,
+			BPMNShape bpmnShape, boolean initiating, boolean showNames) {
 
 		if (bandShape == null) {
 			bandShape = peService.createContainerShape(parent, true);
@@ -296,7 +299,9 @@ public class ChoreographyUtil {
 		gaService.setLocationAndSize(band, 0, y, w, h);
 
 		Participant p = (Participant) bpmnShape.getBpmnElement();
-		addBandLabel(bandShape, p.getName(), w, h);
+		if (showNames) {
+			addBandLabel(bandShape, p.getName(), w, h);
+		}
 		AnchorUtil.addFixedPointAnchors(bandShape, band);
 		peService.setPropertyValue(bandShape, ChoreographyProperties.BAND, Boolean.toString(true));
 		peService.setPropertyValue(bandShape, ChoreographyProperties.MESSAGE_VISIBLE,
@@ -304,8 +309,8 @@ public class ChoreographyUtil {
 		return bandShape;
 	}
 
-	public static ContainerShape createMiddleShape(ContainerShape parent, ContainerShape bandShape,
-			BPMNShape bpmnShape, boolean initiating) {
+	private static ContainerShape createMiddleShape(ContainerShape parent, ContainerShape bandShape,
+			BPMNShape bpmnShape, boolean initiating, boolean showNames) {
 
 		if (bandShape == null) {
 			bandShape = peService.createContainerShape(parent, true);
@@ -326,7 +331,9 @@ public class ChoreographyUtil {
 		gaService.setLocationAndSize(band, 0, y, w, h);
 
 		Participant p = (Participant) bpmnShape.getBpmnElement();
-		addBandLabel(bandShape, p.getName(), w, h);
+		if (showNames) {
+			addBandLabel(bandShape, p.getName(), w, h);
+		}
 		AnchorUtil.addFixedPointAnchors(bandShape, band);
 		peService.setPropertyValue(bandShape, ChoreographyProperties.BAND, Boolean.toString(true));
 		peService.setPropertyValue(bandShape, ChoreographyProperties.MESSAGE_VISIBLE,
@@ -408,29 +415,29 @@ public class ChoreographyUtil {
 	}
 
 	public static ContainerShape createParticipantBandContainerShape(ParticipantBandKind bandKind,
-			ContainerShape container, ContainerShape bandContainer, BPMNShape bpmnShape) {
+			ContainerShape container, ContainerShape bandContainer, BPMNShape bpmnShape, boolean showNames) {
 
 		switch (bandKind) {
 		case TOP_INITIATING:
-			return createTopShape(container, bandContainer, bpmnShape, true);
+			return createTopShape(container, bandContainer, bpmnShape, true, showNames);
 		case TOP_NON_INITIATING:
-			return createTopShape(container, bandContainer, bpmnShape, false);
+			return createTopShape(container, bandContainer, bpmnShape, false, showNames);
 		case MIDDLE_INITIATING:
-			return createMiddleShape(container, bandContainer, bpmnShape, true);
+			return createMiddleShape(container, bandContainer, bpmnShape, true, showNames);
 		case MIDDLE_NON_INITIATING:
-			return createMiddleShape(container, bandContainer, bpmnShape, false);
+			return createMiddleShape(container, bandContainer, bpmnShape, false, showNames);
 		case BOTTOM_INITIATING:
-			return createBottomShape(container, bandContainer, bpmnShape, true);
+			return createBottomShape(container, bandContainer, bpmnShape, true, showNames);
 		case BOTTOM_NON_INITIATING:
-			return createBottomShape(container, bandContainer, bpmnShape, false);
+			return createBottomShape(container, bandContainer, bpmnShape, false, showNames);
 		}
 
 		return bandContainer;
 	}
 
 	public static ContainerShape createParticipantBandContainerShape(ParticipantBandKind bandKind,
-			ContainerShape container, BPMNShape bpmnShape) {
-		return createParticipantBandContainerShape(bandKind, container, null, bpmnShape);
+			ContainerShape container, BPMNShape bpmnShape, boolean showNames) {
+		return createParticipantBandContainerShape(bandKind, container, null, bpmnShape, showNames);
 	}
 
 	public static void drawMessageLinks(ContainerShape choreographyContainer) {

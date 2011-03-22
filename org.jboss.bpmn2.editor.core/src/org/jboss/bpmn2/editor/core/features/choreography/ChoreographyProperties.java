@@ -28,4 +28,5 @@ public interface ChoreographyProperties {
 	String BAND = "choreography.activity.band";
 	String MESSAGE_LINK = "choreography.messageLink";
 	String CHOREOGRAPHY_NAME = "choreography.name";
+	String CALL_CHOREO_BORDER = "call.choreography.border";
 }

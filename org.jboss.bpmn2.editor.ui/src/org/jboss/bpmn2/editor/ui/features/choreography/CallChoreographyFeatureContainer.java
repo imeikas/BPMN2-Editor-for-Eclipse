@@ -18,7 +18,11 @@ import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractCreateFlowElementFeature;
+import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.choreography.CallChoreographyAddFeature;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUpdateInitiatingParticipantFeature;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUpdateNameFeature;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUpdateParticipantRefsFeature;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
 public class CallChoreographyFeatureContainer extends AbstractChoreographyFeatureContainer {
@@ -40,16 +44,16 @@ public class CallChoreographyFeatureContainer extends AbstractChoreographyFeatur
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
-		// MultiUpdateFeature updateFeature = new MultiUpdateFeature(fp);
-		// updateFeature.addUpdateFeature(new ChoreographyUpdateParticipantRefsFeature(fp) {
-		// @Override
-		// protected boolean showNames() {
-		// return false;
-		// }
-		// });
-		// updateFeature.addUpdateFeature(new ChoreographyUpdateInitiatingParticipantFeature(fp));
-		// return updateFeature;
-		return null;
+		MultiUpdateFeature multiUpdate = new MultiUpdateFeature(fp);
+		multiUpdate.addUpdateFeature(new ChoreographyUpdateNameFeature(fp));
+		multiUpdate.addUpdateFeature(new ChoreographyUpdateParticipantRefsFeature(fp) {
+			@Override
+			protected boolean isShowNames() {
+				return false;
+			}
+		});
+		multiUpdate.addUpdateFeature(new ChoreographyUpdateInitiatingParticipantFeature(fp));
+		return multiUpdate;
 	}
 
 	public static class CreateCallChoreographyFeature extends AbstractCreateFlowElementFeature<CallChoreography> {

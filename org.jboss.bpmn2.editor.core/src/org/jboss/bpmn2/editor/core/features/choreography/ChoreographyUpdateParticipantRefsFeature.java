@@ -61,7 +61,7 @@ public class ChoreographyUpdateParticipantRefsFeature extends AbstractUpdateFeat
 				.getParticipantBandContainerShapes((ContainerShape) context.getPictogramElement());
 
 		ChoreographyUtil.updateParticipantReferences(containerShape, bandContainerShapes, participants,
-				getFeatureProvider());
+				getFeatureProvider(), isShowNames());
 
 		peService.setPropertyValue(context.getPictogramElement(), PARTICIPANT_REF_IDS,
 				ChoreographyUtil.getParticipantRefIds(choreography));
@@ -75,5 +75,9 @@ public class ChoreographyUpdateParticipantRefsFeature extends AbstractUpdateFeat
 			return new String(); // return empty string
 		}
 		return property;
+	}
+
+	protected boolean isShowNames() {
+		return true;
 	}
 }

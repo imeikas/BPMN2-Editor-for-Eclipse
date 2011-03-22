@@ -33,21 +33,9 @@ public class CallChoreographyAddFeature extends ChoreographyAddFeature {
 		containerRect.setLineWidth(2);
 	}
 
-	// @Override
-	// protected void decorate(ContainerShape containerShape, int w, int h, int bandHeight) {
-	// // Shape shape = FeatureSupport.getShape(containerShape, CHOREOGRAPHY_ACTIVITY_PROPERTY, TOP_BAND);
-	// // shape.getGraphicsAlgorithm().setLineWidth(3);
-	// // shape = FeatureSupport.getShape(containerShape, CHOREOGRAPHY_ACTIVITY_PROPERTY, BOTTOM_BAND);
-	// // shape.getGraphicsAlgorithm().setLineWidth(3);
-	// // addLine(containerShape, BODY_LINE_LEFT, new int[] { 0, 5, 0, h - 5 });
-	// // addLine(containerShape, BODY_LINE_RIGHT, new int[] { w - 3, 5, w - 3, h - 5 });
-	// }
-	//
-	// private void addLine(ContainerShape containerShape, String propertyValue, int[] xy) {
-	// Shape shape = peService.createShape(containerShape, false);
-	// peService.setPropertyValue(shape, CHOREOGRAPHY_ACTIVITY_PROPERTY, propertyValue);
-	// Polyline lineLeft = gaService.createPolyline(shape, xy);
-	// lineLeft.setLineWidth(3);
-	// lineLeft.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
-	// }
+	@Override
+	protected boolean isShowNames() {
+		return false;
+	}
+
 }

@@ -127,7 +127,7 @@ public class ChoreographyAddFeature extends AbstractBpmnAddFeature {
 		for (BPMNShape bpmnShape : filteredShapes) {
 			ParticipantBandKind bandKind = bpmnShape.getParticipantBandKind();
 			ContainerShape createdShape = ChoreographyUtil.createParticipantBandContainerShape(bandKind,
-					choreographyContainer, bpmnShape);
+					choreographyContainer, bpmnShape, isShowNames());
 			createDIShape(createdShape, bpmnShape.getBpmnElement(), bpmnShape);
 			Participant p = (Participant) bpmnShape.getBpmnElement();
 			if (p.getParticipantMultiplicity() != null && p.getParticipantMultiplicity().getMaximum() > 1) {
@@ -145,5 +145,9 @@ public class ChoreographyAddFeature extends AbstractBpmnAddFeature {
 	protected void setTextLocation(ContainerShape choreographyContainer, Text text, int w, int h) {
 		int y = (h / 2) - (TEXT_H / 2);
 		gaService.setLocationAndSize(text, 0, y, w, TEXT_H);
+	}
+
+	protected boolean isShowNames() {
+		return true;
 	}
 }

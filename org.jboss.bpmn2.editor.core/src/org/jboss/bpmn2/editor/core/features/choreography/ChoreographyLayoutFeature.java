@@ -53,6 +53,12 @@ public class ChoreographyLayoutFeature extends AbstractLayoutFeature {
 				GraphicsAlgorithm ga = s.getGraphicsAlgorithm();
 				setTextLocation(choreographyContainer, (Text) ga, newWidth, newHeight);
 			}
+			property = peService.getPropertyValue(s, ChoreographyProperties.CALL_CHOREO_BORDER);
+			if (property != null && new Boolean(property)) {
+				GraphicsAlgorithm ga = s.getGraphicsAlgorithm();
+				gaService.setSize(ga, newWidth, newHeight);
+				peService.sendToFront(s);
+			}
 		}
 
 		return true;
