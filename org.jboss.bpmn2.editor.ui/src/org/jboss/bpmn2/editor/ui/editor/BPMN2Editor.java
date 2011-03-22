@@ -43,7 +43,6 @@ import org.jboss.bpmn2.editor.ui.util.ErrorUtils;
 import org.jboss.bpmn2.editor.ui.wizards.BPMN2DiagramCreator;
 
 /**
- * @author if
  * 
  */
 @SuppressWarnings("restriction")
@@ -95,8 +94,6 @@ public class BPMN2Editor extends DiagramEditor {
 	 * Beware, creates a new input and changes this editor!
 	 */
 	private IEditorInput createNewDiagramEditorInput() throws CoreException {
-		IEditorInput input;
-		BPMN2DiagramCreator creator = new BPMN2DiagramCreator();
 		IPath fullPath = modelFile.getFullPath();
 		modelUri = URI.createPlatformResourceURI(fullPath.toString(), true);
 
@@ -105,10 +102,12 @@ public class BPMN2Editor extends DiagramEditor {
 				.getTempFile(fullPath.removeFileExtension().addFileExtension("bpmn2d"), folder);
 
 		// Create new temporary diagram file
+		BPMN2DiagramCreator creator = new BPMN2DiagramCreator();
 		creator.setDiagramFile(diagramFile);
-		input = creator.createDiagram(false);
 
+		IEditorInput input = creator.createDiagram(false);
 		diagramUri = creator.getUri();
+
 		return input;
 	}
 
