@@ -10,8 +10,6 @@
  ******************************************************************************/
 package org.jboss.bpmn2.editor.core.features.choreography;
 
-import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.CHOREOGRAPHY_ACTIVITY_PROPERTY;
-
 import java.util.Iterator;
 
 import org.eclipse.bpmn2.ChoreographyActivity;
@@ -64,10 +62,10 @@ public class ChoreographyUpdateNameFeature extends AbstractUpdateFeature {
 				.iterator();
 		while (iterator.hasNext()) {
 			Shape shape = (Shape) iterator.next();
-			String property = peService.getPropertyValue(shape, CHOREOGRAPHY_ACTIVITY_PROPERTY);
-			// if (property != null && property.equals(BODY_BAND_TEXT)) {
-			// return (Text) shape.getGraphicsAlgorithm();
-			// }
+			String property = peService.getPropertyValue(shape, ChoreographyProperties.CHOREOGRAPHY_NAME);
+			if (property != null && new Boolean(property)) {
+				return (Text) shape.getGraphicsAlgorithm();
+			}
 		}
 		return null;
 	}
