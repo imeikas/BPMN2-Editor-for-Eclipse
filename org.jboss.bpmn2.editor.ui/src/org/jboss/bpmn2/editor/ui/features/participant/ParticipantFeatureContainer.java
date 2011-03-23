@@ -30,7 +30,6 @@ import org.jboss.bpmn2.editor.core.features.participant.ParticipantMoveFeature;
 import org.jboss.bpmn2.editor.core.features.participant.ParticipantMultiplicityUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.participant.ParticipantResizeFeature;
 import org.jboss.bpmn2.editor.core.features.participant.UpdateParticipantFeature;
-import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
 public class ParticipantFeatureContainer extends BaseElementFeatureContainer {
 
@@ -80,6 +79,6 @@ public class ParticipantFeatureContainer extends BaseElementFeatureContainer {
 
 	@Override
 	public IDeleteFeature getDeleteFeature(IFeatureProvider fp) {
-		return new AbstractDefaultDeleteFeature(fp);
+		return new ParticipantDeleteFeature(fp);
 	}
 }
