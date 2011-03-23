@@ -28,6 +28,7 @@ import java.util.Map;
 import org.eclipse.bpmn2.ChoreographyActivity;
 import org.eclipse.bpmn2.ChoreographyLoopType;
 import org.eclipse.bpmn2.ChoreographyTask;
+import org.eclipse.bpmn2.InteractionNode;
 import org.eclipse.bpmn2.MessageFlow;
 import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.di.BPMNDiagram;
@@ -111,11 +112,27 @@ public class ChoreographyUtil {
 
 	public static Tuple<List<ContainerShape>, List<ContainerShape>> getTopAndBottomBands(
 			List<ContainerShape> participantBands) {
-		Collections.sort(participantBands, getParticipantBandComparator());
-		int n = participantBands.size();
-		int divider = n / 2;
-		List<ContainerShape> top = participantBands.subList(0, divider);
-		List<ContainerShape> bottom = participantBands.subList(divider, n);
+		List<ContainerShape> top = new ArrayList<ContainerShape>();
+		List<ContainerShape> bottom = new ArrayList<ContainerShape>();
+
+		if (participantBands.size() == 1) {
+			BPMNShape bpmnShape = BusinessObjectUtil.getFirstElementOfType(participantBands.get(0), BPMNShape.class);
+			ParticipantBandKind bandKind = bpmnShape.getParticipantBandKind();
+			if (bandKind == ParticipantBandKind.TOP_INITIATING || bandKind == ParticipantBandKind.TOP_NON_INITIATING) {
+				top.add(participantBands.get(0));
+			} else if (bandKind == ParticipantBandKind.BOTTOM_INITIATING
+					|| bandKind == ParticipantBandKind.BOTTOM_NON_INITIATING) {
+				bottom.add(participantBands.get(0));
+			} else {
+				top.add(participantBands.get(0));
+			}
+		} else {
+			Collections.sort(participantBands, getParticipantBandComparator());
+			int n = participantBands.size();
+			int divider = n / 2;
+			top.addAll(participantBands.subList(0, divider));
+			bottom.addAll(participantBands.subList(divider, n));
+		}
 		return new Tuple<List<ContainerShape>, List<ContainerShape>>(top, bottom);
 	}
 
@@ -239,6 +256,13 @@ public class ChoreographyUtil {
 		int y = 0;
 		boolean first = true;
 
+		List<InteractionNode> sources = new ArrayList<InteractionNode>();
+		if (choreography instanceof ChoreographyTask) {
+			for (MessageFlow message : ((ChoreographyTask) choreography).getMessageFlowRef()) {
+				sources.add(message.getSourceRef());
+			}
+		}
+
 		Iterator<Participant> iterator = newParticipants.iterator();
 		while (iterator.hasNext()) {
 			Participant participant = iterator.next();
@@ -259,6 +283,7 @@ public class ChoreographyUtil {
 					BPMNShape.class));
 			bpmnShape.setIsMarkerVisible(multiple);
 			bpmnShape.setParticipantBandKind(bandKind);
+			bpmnShape.setIsMessageVisible(sources.contains(participant));
 			createParticipantBandContainerShape(bandKind, choreographyContainer, bandShape, bpmnShape, showNames);
 			if (multiple) {
 				drawMultiplicityMarkers(bandShape);

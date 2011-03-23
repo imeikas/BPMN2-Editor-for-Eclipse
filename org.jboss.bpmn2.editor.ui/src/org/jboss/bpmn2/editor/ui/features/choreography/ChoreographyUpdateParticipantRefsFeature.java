@@ -41,8 +41,8 @@ public class ChoreographyUpdateParticipantRefsFeature extends AbstractUpdateFeat
 
 	@Override
 	public IReason updateNeeded(IUpdateContext context) {
-		ChoreographyActivity choreography = (ChoreographyActivity) BusinessObjectUtil.getFirstElementOfType(
-				context.getPictogramElement(), ChoreographyActivity.class);
+		ChoreographyActivity choreography = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
+				ChoreographyActivity.class);
 
 		if (!ChoreographyUtil.getParticipantRefIds(choreography).equals(getParticipantRefIds(context))) {
 			return Reason.createTrueReason();
@@ -53,8 +53,8 @@ public class ChoreographyUpdateParticipantRefsFeature extends AbstractUpdateFeat
 
 	@Override
 	public boolean update(IUpdateContext context) {
-		ChoreographyActivity choreography = (ChoreographyActivity) BusinessObjectUtil.getFirstElementOfType(
-				context.getPictogramElement(), ChoreographyActivity.class);
+		ChoreographyActivity choreography = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
+				ChoreographyActivity.class);
 		ContainerShape containerShape = (ContainerShape) context.getPictogramElement();
 		List<Participant> participants = choreography.getParticipantRefs();
 		List<ContainerShape> bandContainerShapes = ChoreographyUtil
@@ -66,6 +66,7 @@ public class ChoreographyUpdateParticipantRefsFeature extends AbstractUpdateFeat
 		peService.setPropertyValue(context.getPictogramElement(), PARTICIPANT_REF_IDS,
 				ChoreographyUtil.getParticipantRefIds(choreography));
 
+		ChoreographyUtil.drawMessageLinks((ContainerShape) context.getPictogramElement());
 		return true;
 	}
 
