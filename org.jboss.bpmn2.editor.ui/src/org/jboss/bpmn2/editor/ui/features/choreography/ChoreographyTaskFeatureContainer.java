@@ -18,6 +18,7 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractCreateFlowElementFeature;
+import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
 public class ChoreographyTaskFeatureContainer extends AbstractChoreographyFeatureContainer {
@@ -35,6 +36,13 @@ public class ChoreographyTaskFeatureContainer extends AbstractChoreographyFeatur
 	@Override
 	public IAddFeature getAddFeature(IFeatureProvider fp) {
 		return new ChoreographyTaskAddFeature(fp);
+	}
+
+	@Override
+	public MultiUpdateFeature getUpdateFeature(IFeatureProvider fp) {
+		MultiUpdateFeature multiUpdate = super.getUpdateFeature(fp);
+		multiUpdate.addUpdateFeature(new ChoreographyUpdateMessageFlowFeature(fp));
+		return multiUpdate;
 	}
 
 	public static class CreateChoreographyTaskFeature extends AbstractCreateFlowElementFeature<ChoreographyTask> {

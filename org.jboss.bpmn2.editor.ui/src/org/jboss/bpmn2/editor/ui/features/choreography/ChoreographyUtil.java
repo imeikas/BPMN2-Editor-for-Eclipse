@@ -176,12 +176,32 @@ public class ChoreographyUtil {
 	}
 
 	public static String getParticipantRefIds(ChoreographyActivity choreography) {
+		if (choreography.getParticipantRefs() == null) {
+			return new String();
+		}
 		Iterator<Participant> iterator = choreography.getParticipantRefs().iterator();
 		String delim = ":";
 		StringBuilder sb = new StringBuilder();
 		while (iterator.hasNext()) {
 			Participant participant = iterator.next();
 			sb.append(participant.getId());
+			if (iterator.hasNext()) {
+				sb.append(delim);
+			}
+		}
+		return sb.toString();
+	}
+
+	public static String getMessageRefIds(ChoreographyTask choreography) {
+		if (choreography.getMessageFlowRef() == null) {
+			return new String();
+		}
+		Iterator<MessageFlow> iterator = choreography.getMessageFlowRef().iterator();
+		String delim = ":";
+		StringBuilder sb = new StringBuilder();
+		while (iterator.hasNext()) {
+			MessageFlow message = iterator.next();
+			sb.append(message.getId());
 			if (iterator.hasNext()) {
 				sb.append(delim);
 			}
@@ -548,6 +568,9 @@ public class ChoreographyUtil {
 			PictogramElement envelope = (PictogramElement) topConnections.get(topConnectionIndex).getEnd().eContainer();
 			peService.deletePictogramElement(topConnections.get(topConnectionIndex));
 			peService.deletePictogramElement(envelope);
+		} else if (hasTopMessage && shouldDrawTopMessage) {
+			PictogramElement envelope = (PictogramElement) topConnections.get(topConnectionIndex).getEnd().eContainer();
+			setMessageLabel(topMessageName, envelope);
 		}
 
 		if (!hasBottomMessage && shouldDrawBottomMessage) {
@@ -558,6 +581,10 @@ public class ChoreographyUtil {
 					.eContainer();
 			peService.deletePictogramElement(bottomConnections.get(bottomConnectionIndex));
 			peService.deletePictogramElement(envelope);
+		} else if (hasBottomMessage && shouldDrawBottomMessage) {
+			PictogramElement envelope = (PictogramElement) bottomConnections.get(bottomConnectionIndex).getEnd()
+					.eContainer();
+			setMessageLabel(bottomMessageName, envelope);
 		}
 
 		return;
@@ -578,6 +605,22 @@ public class ChoreographyUtil {
 			}
 		}
 		return filled;
+	}
+
+	private static void setMessageLabel(String label, PictogramElement message) {
+		ContainerShape containerShape = (ContainerShape) message;
+		Iterator<Shape> iterator = peService.getAllContainedShapes(containerShape).iterator();
+		while (iterator.hasNext()) {
+			Shape shape = iterator.next();
+			if (shape.getGraphicsAlgorithm() instanceof Text) {
+				Text text = (Text) shape.getGraphicsAlgorithm();
+				text.setValue(label);
+				IDimension size = GraphitiUi.getUiLayoutService().calculateTextSize(label, text.getFont());
+				gaService.setSize(containerShape.getGraphicsAlgorithm(), ENV_W + size.getWidth() + 3, ENV_H);
+				gaService.setSize(text, size.getWidth(), size.getHeight());
+				break;
+			}
+		}
 	}
 
 	private static String getMessageName(List<MessageFlow> messageFlows, List<ContainerShape> bands) {

@@ -15,7 +15,6 @@ import org.eclipse.bpmn2.ChoreographyLoopType;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
-import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractCreateFlowElementFeature;
@@ -41,7 +40,7 @@ public class CallChoreographyFeatureContainer extends AbstractChoreographyFeatur
 	}
 
 	@Override
-	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
+	public MultiUpdateFeature getUpdateFeature(IFeatureProvider fp) {
 		MultiUpdateFeature multiUpdate = new MultiUpdateFeature(fp);
 		multiUpdate.addUpdateFeature(new ChoreographyUpdateNameFeature(fp));
 		multiUpdate.addUpdateFeature(new ChoreographyUpdateParticipantRefsFeature(fp) {

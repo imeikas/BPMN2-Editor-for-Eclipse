@@ -32,4 +32,5 @@ public interface ChoreographyProperties {
 	String CALL_CHOREO_BORDER = "call.choreography.border";
 	String CHOREOGRAPHY_MARKER = "choreography.marker";
 	String CHOREOGRAPHY_MARKER_SHAPE = "choreography.marker.shape";
+	String MESSAGE_REF_IDS = "choreography.message.ref.ids";
 }

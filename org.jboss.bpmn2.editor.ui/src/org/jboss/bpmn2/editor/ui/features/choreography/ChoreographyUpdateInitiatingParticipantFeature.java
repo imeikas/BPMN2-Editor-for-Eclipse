@@ -30,7 +30,7 @@ import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 
 public class ChoreographyUpdateInitiatingParticipantFeature extends AbstractUpdateFeature {
 
-	private static IPeService peService = Graphiti.getPeService();
+	private final IPeService peService = Graphiti.getPeService();
 
 	public ChoreographyUpdateInitiatingParticipantFeature(IFeatureProvider fp) {
 		super(fp);
@@ -44,8 +44,8 @@ public class ChoreographyUpdateInitiatingParticipantFeature extends AbstractUpda
 	@Override
 	public IReason updateNeeded(IUpdateContext context) {
 
-		ChoreographyActivity choreography = (ChoreographyActivity) BusinessObjectUtil.getFirstElementOfType(
-				context.getPictogramElement(), ChoreographyActivity.class);
+		ChoreographyActivity choreography = BusinessObjectUtil.getFirstElementOfType(context.getPictogramElement(),
+				ChoreographyActivity.class);
 
 		String id = peService.getPropertyValue(context.getPictogramElement(), INITIATING_PARTICIPANT_REF);
 		Participant participant = choreography.getInitiatingParticipantRef();
@@ -66,7 +66,7 @@ public class ChoreographyUpdateInitiatingParticipantFeature extends AbstractUpda
 
 		ContainerShape container = (ContainerShape) context.getPictogramElement();
 
-		ChoreographyActivity choreography = (ChoreographyActivity) BusinessObjectUtil.getFirstElementOfType(container,
+		ChoreographyActivity choreography = BusinessObjectUtil.getFirstElementOfType(container,
 				ChoreographyActivity.class);
 
 		boolean hasInitiatingParticipant = choreography.getInitiatingParticipantRef() != null;

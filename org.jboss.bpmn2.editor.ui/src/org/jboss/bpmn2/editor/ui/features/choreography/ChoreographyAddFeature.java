@@ -11,6 +11,7 @@
 package org.jboss.bpmn2.editor.ui.features.choreography;
 
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.INITIATING_PARTICIPANT_REF;
+import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.MESSAGE_REF_IDS;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.PARTICIPANT_REF_IDS;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.R;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.TEXT_H;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.bpmn2.ChoreographyActivity;
+import org.eclipse.bpmn2.ChoreographyTask;
 import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.di.BPMNShape;
 import org.eclipse.bpmn2.di.ParticipantBandKind;
@@ -104,6 +106,11 @@ public class ChoreographyAddFeature extends AbstractBpmnAddFeature {
 		//
 		// peService.setPropertyValue(markerShape, ChoreographyProperties.CHOREOGRAPHY_MARKER_SHAPE,
 		// Boolean.toString(true));
+
+		if (choreography instanceof ChoreographyTask) {
+			peService.setPropertyValue(choreographyContainer, MESSAGE_REF_IDS,
+					ChoreographyUtil.getMessageRefIds((ChoreographyTask) choreography));
+		}
 
 		peService.createChopboxAnchor(choreographyContainer);
 		createDIShape(choreographyContainer, choreography);
