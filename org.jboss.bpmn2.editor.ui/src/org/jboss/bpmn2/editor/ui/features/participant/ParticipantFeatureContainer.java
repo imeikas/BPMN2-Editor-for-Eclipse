@@ -22,14 +22,13 @@ import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.BaseElementFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
-import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUpdateMessageLinkFeature;
 import org.jboss.bpmn2.editor.core.features.participant.AddParticipantFeature;
 import org.jboss.bpmn2.editor.core.features.participant.ParticipantDirectEditFeature;
 import org.jboss.bpmn2.editor.core.features.participant.ParticipantLayoutFeature;
-import org.jboss.bpmn2.editor.core.features.participant.ParticipantMoveFeature;
 import org.jboss.bpmn2.editor.core.features.participant.ParticipantMultiplicityUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.participant.ParticipantResizeFeature;
 import org.jboss.bpmn2.editor.core.features.participant.UpdateParticipantFeature;
+import org.jboss.bpmn2.editor.ui.features.choreography.ChoreographyUpdateMessageLinkFeature;
 
 public class ParticipantFeatureContainer extends BaseElementFeatureContainer {
 

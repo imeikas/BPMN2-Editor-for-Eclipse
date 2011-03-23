@@ -18,7 +18,6 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractCreateFlowElementFeature;
-import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyTaskAddFeature;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 
 public class ChoreographyTaskFeatureContainer extends AbstractChoreographyFeatureContainer {

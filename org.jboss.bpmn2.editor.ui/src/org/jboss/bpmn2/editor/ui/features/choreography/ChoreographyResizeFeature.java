@@ -8,7 +8,7 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package org.jboss.bpmn2.editor.core.features.choreography;
+package org.jboss.bpmn2.editor.ui.features.choreography;
 
 import java.util.List;
 
@@ -18,6 +18,7 @@ import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.features.DefaultBPMNResizeFeature;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties;
 import org.jboss.bpmn2.editor.core.utils.Tuple;
 
 public class ChoreographyResizeFeature extends DefaultBPMNResizeFeature {

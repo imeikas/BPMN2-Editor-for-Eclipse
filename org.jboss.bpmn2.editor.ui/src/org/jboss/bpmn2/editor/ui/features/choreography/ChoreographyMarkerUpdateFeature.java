@@ -1,4 +1,4 @@
-package org.jboss.bpmn2.editor.core.features.choreography;
+package org.jboss.bpmn2.editor.ui.features.choreography;
 
 import org.eclipse.bpmn2.ChoreographyActivity;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -11,6 +11,7 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IPeService;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties;
 
 public class ChoreographyMarkerUpdateFeature extends AbstractUpdateFeature {
 

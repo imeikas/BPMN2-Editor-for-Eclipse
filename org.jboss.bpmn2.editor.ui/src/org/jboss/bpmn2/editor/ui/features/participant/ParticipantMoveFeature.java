@@ -8,12 +8,12 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package org.jboss.bpmn2.editor.core.features.participant;
+package org.jboss.bpmn2.editor.ui.features.participant;
 
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
 import org.jboss.bpmn2.editor.core.features.DefaultBpmnMoveFeature;
-import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUtil;
+import org.jboss.bpmn2.editor.ui.features.choreography.ChoreographyUtil;
 
 public class ParticipantMoveFeature extends DefaultBpmnMoveFeature {
 

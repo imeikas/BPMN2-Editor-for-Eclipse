@@ -8,13 +8,13 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package org.jboss.bpmn2.editor.core.features.choreography;
+package org.jboss.bpmn2.editor.ui.features.choreography;
 
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.INITIATING_PARTICIPANT_REF;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.PARTICIPANT_REF_IDS;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.R;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.TEXT_H;
-import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUtil.drawMultiplicityMarkers;
+import static org.jboss.bpmn2.editor.ui.features.choreography.ChoreographyUtil.drawMultiplicityMarkers;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,6 +39,7 @@ import org.jboss.bpmn2.editor.core.Activator;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.di.DIImport;
 import org.jboss.bpmn2.editor.core.features.AbstractBpmnAddFeature;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
 import org.jboss.bpmn2.editor.core.utils.StyleUtil;
 

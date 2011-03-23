@@ -27,8 +27,6 @@ import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.jboss.bpmn2.editor.core.ModelHandler;
 import org.jboss.bpmn2.editor.core.features.AbstractCreateFlowElementFeature;
 import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyLayoutFeature;
-import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUtil;
-import org.jboss.bpmn2.editor.core.features.choreography.SubChoreographyAddFeature;
 import org.jboss.bpmn2.editor.core.utils.Tuple;
 import org.jboss.bpmn2.editor.ui.ImageProvider;
 

@@ -8,7 +8,7 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package org.jboss.bpmn2.editor.core.features.choreography;
+package org.jboss.bpmn2.editor.ui.features.choreography;
 
 import org.eclipse.bpmn2.FlowElementsContainer;
 import org.eclipse.graphiti.features.IFeatureProvider;

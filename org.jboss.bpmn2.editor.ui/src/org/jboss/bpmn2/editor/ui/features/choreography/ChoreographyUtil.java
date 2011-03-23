@@ -8,7 +8,7 @@
  * Contributors: 
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
-package org.jboss.bpmn2.editor.core.features.choreography;
+package org.jboss.bpmn2.editor.ui.features.choreography;
 
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.ENVELOPE_HEIGHT_MODIFIER;
 import static org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties.ENV_H;
@@ -27,6 +27,8 @@ import java.util.Map;
 
 import org.eclipse.bpmn2.ChoreographyActivity;
 import org.eclipse.bpmn2.ChoreographyLoopType;
+import org.eclipse.bpmn2.ChoreographyTask;
+import org.eclipse.bpmn2.MessageFlow;
 import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.di.BPMNDiagram;
 import org.eclipse.bpmn2.di.BPMNShape;
@@ -55,9 +57,11 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
+import org.eclipse.graphiti.ui.services.GraphitiUi;
 import org.eclipse.graphiti.util.IColorConstant;
 import org.jboss.bpmn2.editor.core.di.DIUtils;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
+import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil.AnchorLocation;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil.BoundaryAnchor;
@@ -176,7 +180,7 @@ public class ChoreographyUtil {
 		String delim = ":";
 		StringBuilder sb = new StringBuilder();
 		while (iterator.hasNext()) {
-			Participant participant = (Participant) iterator.next();
+			Participant participant = iterator.next();
 			sb.append(participant.getId());
 			if (iterator.hasNext()) {
 				sb.append(delim);
@@ -217,7 +221,7 @@ public class ChoreographyUtil {
 
 		Iterator<Participant> iterator = newParticipants.iterator();
 		while (iterator.hasNext()) {
-			Participant participant = (Participant) iterator.next();
+			Participant participant = iterator.next();
 
 			ContainerShape bandShape = peService.createContainerShape(choreographyContainer, true);
 
@@ -366,7 +370,7 @@ public class ChoreographyUtil {
 		}
 	}
 
-	public static void drawMessageLink(BoundaryAnchor boundaryAnchor, int x, int y, boolean filled) {
+	private static void drawMessageLink(String name, BoundaryAnchor boundaryAnchor, int x, int y, boolean filled) {
 		Diagram diagram = peService.getDiagramForAnchor(boundaryAnchor.anchor);
 
 		FreeFormConnection connection = peService.createFreeFormConnection(diagram);
@@ -376,13 +380,26 @@ public class ChoreographyUtil {
 		connectionLine.setLineWidth(2);
 
 		ContainerShape envelope = peService.createContainerShape(diagram, true);
-		Envelope envelopeGa = GraphicsUtil.createEnvelope(envelope, x, y, ENV_W, ENV_H);
+		Rectangle invisibleRectangle = gaService.createInvisibleRectangle(envelope);
+		gaService.setLocation(invisibleRectangle, x, y);
+		gaService.setSize(invisibleRectangle, ENV_W + 50, ENV_H);
+
+		Shape envelopeShape = peService.createShape(envelope, false);
+		Envelope envelopeGa = GraphicsUtil.createEnvelope(envelopeShape, 0, 0, ENV_W, ENV_H);
 		IColorConstant color = filled ? IColorConstant.LIGHT_GRAY : IColorConstant.WHITE;
 		envelopeGa.rect.setFilled(true);
 		envelopeGa.rect.setBackground(gaService.manageColor(diagram, color));
 		envelopeGa.rect.setForeground(gaService.manageColor(diagram, StyleUtil.CLASS_FOREGROUND));
 		envelopeGa.line.setForeground(gaService.manageColor(diagram, StyleUtil.CLASS_FOREGROUND));
 		AnchorUtil.addFixedPointAnchors(envelope, envelopeGa.rect);
+
+		Shape textShape = peService.createShape(envelope, false);
+		Text text = gaService.createDefaultText(textShape);
+		IDimension size = GraphitiUi.getUiLayoutService().calculateTextSize(name, text.getFont());
+		gaService.setLocationAndSize(text, ENV_W + 3, 3, size.getWidth(), size.getHeight());
+		text.setValue(name);
+
+		gaService.setSize(invisibleRectangle, ENV_W + size.getWidth() + 3, ENV_H);
 
 		AnchorLocation envelopeAnchorLoc = null;
 		if (boundaryAnchor.locationType == AnchorLocation.TOP) {
@@ -444,6 +461,13 @@ public class ChoreographyUtil {
 
 	public static void drawMessageLinks(ContainerShape choreographyContainer) {
 
+		List<MessageFlow> messageFlows = new ArrayList<MessageFlow>();
+		ChoreographyTask choreography = BusinessObjectUtil.getFirstElementOfType(choreographyContainer,
+				ChoreographyTask.class);
+		if (choreography != null) {
+			messageFlows.addAll(choreography.getMessageFlowRef());
+		}
+
 		List<ContainerShape> bandContainers = getParticipantBandContainerShapes(choreographyContainer);
 		Tuple<List<ContainerShape>, List<ContainerShape>> topAndBottom = getTopAndBottomBands(bandContainers);
 		List<ContainerShape> shapesWithVisileMessages = new ArrayList<ContainerShape>();
@@ -486,7 +510,7 @@ public class ChoreographyUtil {
 
 		Iterator<ContainerShape> iterator = bandContainers.iterator();
 		while (iterator.hasNext()) {
-			ContainerShape bandContainer = (ContainerShape) iterator.next();
+			ContainerShape bandContainer = iterator.next();
 			BPMNShape bpmnShape = BusinessObjectUtil.getFirstElementOfType(bandContainer, BPMNShape.class);
 			if (bpmnShape.isIsMessageVisible()) {
 				shapesWithVisileMessages.add(bandContainer);
@@ -496,13 +520,30 @@ public class ChoreographyUtil {
 		boolean shouldDrawTopMessage = !Collections.disjoint(topAndBottom.getFirst(), shapesWithVisileMessages);
 		boolean shouldDrawBottomMessage = !Collections.disjoint(topAndBottom.getSecond(), shapesWithVisileMessages);
 
+		String topMessageName = null;
+		String bottomMessageName = null;
+
+		if (shouldDrawTopMessage) {
+			topMessageName = getMessageName(messageFlows, topAndBottom.getFirst());
+		}
+		if (topMessageName == null) {
+			topMessageName = new String();
+		}
+
+		if (shouldDrawBottomMessage) {
+			bottomMessageName = getMessageName(messageFlows, topAndBottom.getSecond());
+		}
+		if (bottomMessageName == null) {
+			bottomMessageName = new String();
+		}
+
 		BPMNShape bpmnShape = BusinessObjectUtil.getFirstElementOfType(choreographyContainer, BPMNShape.class);
 		Bounds bounds = bpmnShape.getBounds();
 		int x = (int) ((bounds.getX() + bounds.getWidth() / 2) - (ENV_W / 2));
 
 		if (!hasTopMessage && shouldDrawTopMessage) {
 			int y = (int) (bounds.getY() - ENVELOPE_HEIGHT_MODIFIER - ENV_H);
-			drawMessageLink(topBoundaryAnchor, x, y, isFilled(topAndBottom.getFirst()));
+			drawMessageLink(topMessageName, topBoundaryAnchor, x, y, isFilled(topAndBottom.getFirst()));
 		} else if (hasTopMessage && !shouldDrawTopMessage) {
 			PictogramElement envelope = (PictogramElement) topConnections.get(topConnectionIndex).getEnd().eContainer();
 			peService.deletePictogramElement(topConnections.get(topConnectionIndex));
@@ -511,7 +552,7 @@ public class ChoreographyUtil {
 
 		if (!hasBottomMessage && shouldDrawBottomMessage) {
 			int y = (int) (bounds.getY() + bounds.getHeight() + ENVELOPE_HEIGHT_MODIFIER);
-			drawMessageLink(bottomBoundaryAnchor, x, y, isFilled(topAndBottom.getSecond()));
+			drawMessageLink(bottomMessageName, bottomBoundaryAnchor, x, y, isFilled(topAndBottom.getSecond()));
 		} else if (hasBottomMessage && !shouldDrawBottomMessage) {
 			PictogramElement envelope = (PictogramElement) bottomConnections.get(bottomConnectionIndex).getEnd()
 					.eContainer();
@@ -537,6 +578,21 @@ public class ChoreographyUtil {
 			}
 		}
 		return filled;
+	}
+
+	private static String getMessageName(List<MessageFlow> messageFlows, List<ContainerShape> bands) {
+		for (ContainerShape band : bands) {
+			Participant participant = BusinessObjectUtil.getFirstElementOfType(band, Participant.class);
+			BPMNShape bpmnShape = BusinessObjectUtil.getFirstElementOfType(band, BPMNShape.class);
+			if (bpmnShape.isIsMessageVisible()) {
+				for (MessageFlow flow : messageFlows) {
+					if (flow.getSourceRef().equals(participant)) {
+						return flow.getName();
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	public static void moveChoreographyMessageLinks(ContainerShape choreographyContainer) {
@@ -580,7 +636,7 @@ public class ChoreographyUtil {
 		if (shapes.size() == 1) { // remove previous shape
 			Iterator<Shape> iterator = shapes.iterator();
 			while (iterator.hasNext()) {
-				Shape shape = (Shape) iterator.next();
+				Shape shape = iterator.next();
 				drawingShape = shape;
 				break;
 			}

@@ -12,8 +12,8 @@ package org.jboss.bpmn2.editor.ui.features.participant;
 
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IDeleteContext;
-import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUtil;
 import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
+import org.jboss.bpmn2.editor.ui.features.choreography.ChoreographyUtil;
 
 public class ParticipantDeleteFeature extends AbstractDefaultDeleteFeature {
 

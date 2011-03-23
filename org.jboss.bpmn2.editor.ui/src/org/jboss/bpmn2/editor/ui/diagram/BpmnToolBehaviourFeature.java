@@ -45,6 +45,7 @@ import org.jboss.bpmn2.editor.core.features.activity.task.extension.ICustomTaskE
 import org.jboss.bpmn2.editor.core.features.event.EventSelectionBehavior;
 import org.jboss.bpmn2.editor.ui.FeatureMap;
 import org.jboss.bpmn2.editor.ui.features.activity.task.TaskFeatureContainer;
+import org.jboss.bpmn2.editor.ui.features.choreography.ChoreographySelectionBehavior;
 
 public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implements IFeatureCheckerHolder {
 
@@ -90,7 +91,7 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 	}
 
 	private void createEventsCompartments(Bpmn2Preferences pref, List<IPaletteCompartmentEntry> ret,
-	        IFeatureProvider featureProvider) {
+			IFeatureProvider featureProvider) {
 		PaletteCompartmentEntry compartmentEntry = new PaletteCompartmentEntry("Events", null);
 		ret.add(compartmentEntry);
 
@@ -98,7 +99,7 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 	}
 
 	private void createOtherCompartments(Bpmn2Preferences pref, List<IPaletteCompartmentEntry> ret,
-	        IFeatureProvider featureProvider) {
+			IFeatureProvider featureProvider) {
 		PaletteCompartmentEntry compartmentEntry = new PaletteCompartmentEntry("Other", null);
 		compartmentEntry.setInitiallyOpen(false);
 		ret.add(compartmentEntry);
@@ -108,7 +109,7 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 	}
 
 	private void createDataCompartments(Bpmn2Preferences pref, List<IPaletteCompartmentEntry> ret,
-	        IFeatureProvider featureProvider) {
+			IFeatureProvider featureProvider) {
 		PaletteCompartmentEntry compartmentEntry = new PaletteCompartmentEntry("Data Items", null);
 		compartmentEntry.setInitiallyOpen(false);
 		ret.add(compartmentEntry);
@@ -118,7 +119,7 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 	}
 
 	private void createEventDefinitionsCompartments(Bpmn2Preferences pref, List<IPaletteCompartmentEntry> ret,
-	        IFeatureProvider featureProvider) {
+			IFeatureProvider featureProvider) {
 		PaletteCompartmentEntry compartmentEntry = new PaletteCompartmentEntry("Event Definitions", null);
 		compartmentEntry.setInitiallyOpen(false);
 		ret.add(compartmentEntry);
@@ -128,7 +129,7 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 	}
 
 	private void createGatewaysCompartments(Bpmn2Preferences pref, List<IPaletteCompartmentEntry> ret,
-	        IFeatureProvider featureProvider) {
+			IFeatureProvider featureProvider) {
 		PaletteCompartmentEntry compartmentEntry = new PaletteCompartmentEntry("Gateways", null);
 		ret.add(compartmentEntry);
 
@@ -137,7 +138,7 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 	}
 
 	private void createTasksCompartments(Bpmn2Preferences pref, List<IPaletteCompartmentEntry> ret,
-	        IFeatureProvider featureProvider) {
+			IFeatureProvider featureProvider) {
 		PaletteCompartmentEntry compartmentEntry = new PaletteCompartmentEntry("Tasks", null);
 		ret.add(compartmentEntry);
 
@@ -146,7 +147,7 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 	}
 
 	private void createConnectors(Bpmn2Preferences pref, List<IPaletteCompartmentEntry> ret,
-	        IFeatureProvider featureProvider) {
+			IFeatureProvider featureProvider) {
 		PaletteCompartmentEntry compartmentEntry;
 		compartmentEntry = new PaletteCompartmentEntry("Connectors", null);
 		ret.add(compartmentEntry);
@@ -155,8 +156,8 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 		for (ICreateConnectionFeature cf : createConnectionFeatures) {
 			if (pref.isEnabled(FeatureMap.getElement(cf))) {
 				ConnectionCreationToolEntry connectionCreationToolEntry = new ConnectionCreationToolEntry(
-				        cf.getCreateName(), cf.getCreateDescription(), cf.getCreateImageId(),
-				        cf.getCreateLargeImageId());
+						cf.getCreateName(), cf.getCreateDescription(), cf.getCreateImageId(),
+						cf.getCreateLargeImageId());
 				connectionCreationToolEntry.addCreateConnectionFeature(cf);
 				compartmentEntry.addToolEntry(connectionCreationToolEntry);
 			}
@@ -164,14 +165,14 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 	}
 
 	private void createEntries(Bpmn2Preferences pref, List<Class<? extends IFeature>> neededEntries,
-	        PaletteCompartmentEntry compartmentEntry, IFeatureProvider featureProvider) {
+			PaletteCompartmentEntry compartmentEntry, IFeatureProvider featureProvider) {
 		List<ICreateFeature> tools = Arrays.asList(featureProvider.getCreateFeatures());
 
 		for (ICreateFeature cf : tools) {
 			EClass feature = FeatureMap.getElement(cf);
 			if (pref.isEnabled(feature) && neededEntries.contains(cf.getClass())) {
 				ObjectCreationToolEntry objectCreationToolEntry = new ObjectCreationToolEntry(cf.getCreateName(),
-				        cf.getCreateDescription(), cf.getCreateImageId(), cf.getCreateLargeImageId(), cf);
+						cf.getCreateDescription(), cf.getCreateImageId(), cf.getCreateLargeImageId(), cf);
 				compartmentEntry.addToolEntry(objectCreationToolEntry);
 			}
 		}
@@ -184,7 +185,7 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 		ret.add(compartmentEntry);
 
 		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(
-		        ICustomTaskEditor.TASK_EDITOR_ID);
+				ICustomTaskEditor.TASK_EDITOR_ID);
 
 		try {
 			for (IConfigurationElement e : config) {
@@ -195,7 +196,7 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 
 					ICreateFeature cf = ((TaskFeatureContainer) o).getCreateFeature(featureProvider);
 					ObjectCreationToolEntry objectCreationToolEntry = new ObjectCreationToolEntry(name,
-					        cf.getCreateDescription(), cf.getCreateImageId(), cf.getCreateLargeImageId(), cf);
+							cf.getCreateDescription(), cf.getCreateImageId(), cf.getCreateLargeImageId(), cf);
 					compartmentEntry.addToolEntry(objectCreationToolEntry);
 
 				}
@@ -226,6 +227,8 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 			return ActivitySelectionBehavior.getClickArea(pe);
 		} else if (EventSelectionBehavior.canApplyTo(pe)) {
 			return EventSelectionBehavior.getClickArea(pe);
+		} else if (ChoreographySelectionBehavior.canApplyTo(pe)) {
+			return ChoreographySelectionBehavior.getClickArea(pe);
 		}
 		return super.getClickArea(pe);
 	}
@@ -236,6 +239,8 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 			return ActivitySelectionBehavior.getSelectionBorder(pe);
 		} else if (EventSelectionBehavior.canApplyTo(pe)) {
 			return EventSelectionBehavior.getSelectionBorder(pe);
+		} else if (ChoreographySelectionBehavior.canApplyTo(pe)) {
+			return ChoreographySelectionBehavior.getSelectionBorder(pe);
 		}
 		return super.getSelectionBorder(pe);
 	}

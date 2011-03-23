@@ -37,7 +37,6 @@ import org.eclipse.graphiti.ui.features.DefaultDeleteFeature;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
 import org.jboss.bpmn2.editor.core.features.PropertyBasedFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties;
-import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUtil;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil.AnchorLocation;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil.BoundaryAnchor;

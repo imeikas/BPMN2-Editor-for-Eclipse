@@ -20,11 +20,7 @@ import org.eclipse.graphiti.features.IUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.BaseElementFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.MultiUpdateFeature;
 import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyLayoutFeature;
-import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyMoveFeature;
-import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyResizeFeature;
-import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUpdateInitiatingParticipantFeature;
 import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUpdateNameFeature;
-import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyUpdateParticipantRefsFeature;
 import org.jboss.bpmn2.editor.ui.features.AbstractDefaultDeleteFeature;
 
 public abstract class AbstractChoreographyFeatureContainer extends BaseElementFeatureContainer {
