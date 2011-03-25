@@ -29,3 +29,4 @@ Export-Package: org.jboss.bpmn2.editor.core,
  org.jboss.bpmn2.editor.core.features.lane,
  org.jboss.bpmn2.editor.core.features.participant,
  org.jboss.bpmn2.editor.core.utils
+Import-Package: org.eclipse.graphiti.ui.features

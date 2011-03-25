@@ -38,6 +38,7 @@ import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
 import org.jboss.bpmn2.editor.core.features.ConnectionFeatureContainer;
+import org.jboss.bpmn2.editor.core.features.DefaultBpmnDeleteFeature;
 import org.jboss.bpmn2.editor.core.features.FeatureContainer;
 import org.jboss.bpmn2.editor.core.features.bendpoint.AddBendpointFeature;
 import org.jboss.bpmn2.editor.core.features.bendpoint.MoveBendpointFeature;
@@ -328,7 +329,7 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 				}
 			}
 		}
-		return super.getDeleteFeature(context);
+		return new DefaultBpmnDeleteFeature(this);
 	}
 
 }

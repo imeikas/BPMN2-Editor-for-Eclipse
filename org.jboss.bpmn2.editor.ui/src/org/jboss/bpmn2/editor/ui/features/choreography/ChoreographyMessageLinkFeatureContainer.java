@@ -35,6 +35,7 @@ import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.ui.features.DefaultDeleteFeature;
 import org.jboss.bpmn2.editor.core.features.BusinessObjectUtil;
+import org.jboss.bpmn2.editor.core.features.DefaultBpmnDeleteFeature;
 import org.jboss.bpmn2.editor.core.features.PropertyBasedFeatureContainer;
 import org.jboss.bpmn2.editor.core.features.choreography.ChoreographyProperties;
 import org.jboss.bpmn2.editor.core.utils.AnchorUtil;
@@ -106,7 +107,7 @@ public class ChoreographyMessageLinkFeatureContainer extends PropertyBasedFeatur
 
 	@Override
 	public IDeleteFeature getDeleteFeature(IFeatureProvider fp) {
-		return new DefaultDeleteFeature(fp) {
+		return new DefaultBpmnDeleteFeature(fp) {
 
 			@Override
 			public void delete(IDeleteContext context) {
