@@ -1,3 +1,13 @@
+/******************************************************************************* 
+ * Copyright (c) 2011 Red Hat, Inc. 
+ * Distributed under license by Red Hat, Inc. All rights reserved. 
+ * This program is made available under the terms of the 
+ * Eclipse Public License v1.0 which accompanies this distribution, 
+ * and is available at http://www.eclipse.org/legal/epl-v10.html 
+ * 
+ * Contributors: 
+ * Red Hat, Inc. - initial API and implementation 
+ ******************************************************************************/
 package org.jboss.bpmn2.editor.ui.features.choreography;
 
 import org.eclipse.bpmn2.ChoreographyActivity;
@@ -29,8 +39,8 @@ public class ChoreographyMarkerUpdateFeature extends AbstractUpdateFeature {
 	@Override
 	public IReason updateNeeded(IUpdateContext context) {
 		ContainerShape choreographyContainer = (ContainerShape) context.getPictogramElement();
-		ChoreographyActivity choreography = (ChoreographyActivity) BusinessObjectUtil.getFirstElementOfType(
-				choreographyContainer, ChoreographyActivity.class);
+		ChoreographyActivity choreography = BusinessObjectUtil.getFirstElementOfType(choreographyContainer,
+				ChoreographyActivity.class);
 
 		String loopType = choreography.getLoopType() == null ? "null" : choreography.getLoopType().getName();
 		String property = peService.getPropertyValue(choreographyContainer, ChoreographyProperties.CHOREOGRAPHY_MARKER);
@@ -45,8 +55,8 @@ public class ChoreographyMarkerUpdateFeature extends AbstractUpdateFeature {
 	@Override
 	public boolean update(IUpdateContext context) {
 		ContainerShape choreographyContainer = (ContainerShape) context.getPictogramElement();
-		ChoreographyActivity choreography = (ChoreographyActivity) BusinessObjectUtil.getFirstElementOfType(
-				choreographyContainer, ChoreographyActivity.class);
+		ChoreographyActivity choreography = BusinessObjectUtil.getFirstElementOfType(choreographyContainer,
+				ChoreographyActivity.class);
 
 		for (Shape s : peService.getAllContainedShapes(choreographyContainer)) {
 			String property = peService.getPropertyValue(s, ChoreographyProperties.CHOREOGRAPHY_MARKER_SHAPE);

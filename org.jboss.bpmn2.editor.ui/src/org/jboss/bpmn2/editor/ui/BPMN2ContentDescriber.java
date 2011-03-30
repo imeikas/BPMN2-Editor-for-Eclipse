@@ -1,3 +1,13 @@
+/******************************************************************************* 
+ * Copyright (c) 2011 Red Hat, Inc. 
+ * Distributed under license by Red Hat, Inc. All rights reserved. 
+ * This program is made available under the terms of the 
+ * Eclipse Public License v1.0 which accompanies this distribution, 
+ * and is available at http://www.eclipse.org/legal/epl-v10.html 
+ * 
+ * Contributors: 
+ * Red Hat, Inc. - initial API and implementation 
+ ******************************************************************************/
 package org.jboss.bpmn2.editor.ui;
 
 import java.io.IOException;
@@ -15,7 +25,6 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.ITextContentDescriber;
 import org.xml.sax.InputSource;
 
-
 public class BPMN2ContentDescriber implements ITextContentDescriber {
 
 	private static final String BPMN2_NAMESPACE = "http://www.omg.org/spec/BPMN/20100524/MODEL"; //$NON-NLS-1$
@@ -26,10 +35,12 @@ public class BPMN2ContentDescriber implements ITextContentDescriber {
 	public BPMN2ContentDescriber() {
 	}
 
+	@Override
 	public int describe(Reader contents, IContentDescription description) throws IOException {
 		return doDescribe(contents) == null ? INVALID : VALID;
 	}
 
+	@Override
 	public int describe(InputStream contents, IContentDescription description) throws IOException {
 		return describe(new InputStreamReader(contents), description);
 	}
@@ -45,31 +56,35 @@ public class BPMN2ContentDescriber implements ITextContentDescriber {
 			return null;
 		} catch (Exception e) {
 			return null;
-		}
-		finally {
+		} finally {
 			parser = null;
 		}
 
 		return null;
 	}
 
+	@Override
 	public QualifiedName[] getSupportedOptions() {
 		return null;
 	}
 
 	private class RootElementParser extends SAXParser {
-		public void startElement(QName qName, XMLAttributes attributes, Augmentations augmentations) throws XNIException {
+		@Override
+		public void startElement(QName qName, XMLAttributes attributes, Augmentations augmentations)
+				throws XNIException {
 
 			super.startElement(qName, attributes, augmentations);
 
 			if (ROOT_ELEMENT.equals(qName.localpart)) {
 				String namespace = fNamespaceContext.getURI(qName.prefix);
-				if (BPMN2_NAMESPACE.equals(namespace))
+				if (BPMN2_NAMESPACE.equals(namespace)) {
 					throw new AcceptedException(qName.localpart);
-				else
+				} else {
 					throw new RejectedException();
-			} else
+				}
+			} else {
 				throw new RejectedException();
+			}
 		}
 	}
 
