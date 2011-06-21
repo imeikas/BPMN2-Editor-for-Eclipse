@@ -4,7 +4,7 @@ Bundle-Name: Testutil
 Bundle-SymbolicName: org.eclipse.bpmn2.modeler.testutil
 Bundle-Version: 0.0.1.qualifier
 Bundle-Activator: org.eclipse.bpmn2.modeler.testutil.Activator
-Bundle-Vendor: JBOSS
+Bundle-Vendor: Eclipse.org
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/specs_2.8.1-1.6.6.jar,

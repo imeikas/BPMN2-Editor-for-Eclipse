@@ -4,7 +4,7 @@ Bundle-Name: Extras
 Bundle-SymbolicName: org.eclipse.bpmn2.modeler.extras;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-Activator: org.eclipse.bpmn2.modeler.extras.Activator
-Bundle-Vendor: JBOSS
+Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.bpmn2.modeler.core,
  org.eclipse.bpmn2,

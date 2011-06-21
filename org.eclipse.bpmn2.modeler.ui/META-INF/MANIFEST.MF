@@ -4,7 +4,7 @@ Bundle-Name: BPMN2 Editor UI
 Bundle-SymbolicName: org.eclipse.bpmn2.modeler.ui;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-Activator: org.eclipse.bpmn2.modeler.ui.Activator
-Bundle-Vendor: JBOSS
+Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.graphiti,
  org.eclipse.graphiti.ui,

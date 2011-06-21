@@ -5,16 +5,18 @@
       version="0.0.1.qualifier"
       provider-name="JBOSS">
 
-   <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
-   </description>
-
-   <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
+   <copyright>
+      Copyright (c) 2011 Red Hat, Inc. 
+ All rights reserved.
+This program is made available under the terms of the 
+Eclipse Public License v1.0 which accompanies this distribution,
+and is available at http://www.eclipse.org/legal/epl-v10.html
+Contributors: 
+Red Hat, Inc. - initial API and implementation
    </copyright>
 
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
+   <license url="license.html">
+      %license
    </license>
 
    <plugin
