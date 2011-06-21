@@ -1,2 +1,0 @@
-specs_2.8.1-1.6.6.jar
-scalaj-collection_2.8.0-1.0.jar - http://www.scala-tools.org/repo-releases/org/scalaj/scalaj-collection_2.8.0/1.0/
