@@ -3,7 +3,7 @@
       id="org.eclipse.bpmn2.modeler"
       label="BPMN2 Editor"
       version="0.0.1.qualifier"
-      provider-name="JBOSS">
+      provider-name="Eclipse.org">
 
    <copyright>
       Copyright (c) 2011 Red Hat, Inc. 
