@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rm:rmap xmlns:bc="http://www.eclipse.org/buckminster/Common-1.0" xmlns:rm="http://www.eclipse.org/buckminster/RMap-1.0">
+
+  <rm:property key="build.type" mutable="true" value="N" />
+org.eclipse.bpmn2.modeler
+  <rm:locator pattern="^org\.eclipse\.bpmn2\.modeler(\-.+)?" searchPathRef="bpmn2.feature" failOnError="false" />
+  <rm:locator pattern="^org\.eclipse\.bpmn2\.modeler\.core(\..+)?" searchPathRef="bpmn2.plugins" failOnError="false" />
+  <rm:locator pattern="^org\.eclipse\.bpmn2\.modeler(\..+)?" searchPathRef="bpmn2.plugins" />
+
+  <rm:locator pattern="^org\.eclipse\.bpmn2" searchPathRef="bpmn2.plugins" failOnError="false"/>
+  <rm:locator pattern="^org\.eclipse\.bpmn2\.feature" searchPathRef="bpmn2.feature"/>
+  <rm:locator pattern="^org\.eclipse\.bpmn2(\..+)?" searchPathRef="bpmn2.plugins"/>
+
+  <rm:locator pattern="^org\.eclipse\.graphiti(\..+)?" searchPathRef="graphiti" />
+  <rm:locator searchPathRef="target.platform" />
+
+  <rm:searchPath name="bpmn2.feature">
+    <rm:provider componentTypes="eclipse.feature" readerType="local">
+      <rm:uri format="file:///{0}/{1}-feature/">
+        <bc:propertyRef key="workspace.root" />
+        <bc:propertyRef key="buckminster.component" />
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+
+  <rm:searchPath name="bpmn2.plugins">
+    <rm:provider componentTypes="osgi.bundle" readerType="local">
+      <rm:uri format="file:///{0}/{1}/">
+        <bc:propertyRef key="workspace.root" />
+        <bc:propertyRef key="buckminster.component" />
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>
+
+  <rm:searchPath name="graphiti">
+    <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="true" mutable="false" resolutionFilter="(build.type=N)">
+      <rm:uri format="http://download.eclipse.org/graphiti/updates/0.7.0/" />
+    </rm:provider>
+  </rm:searchPath>
+
+  <rm:searchPath name="target.platform">
+
+    <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="true" mutable="false" resolutionFilter="(build.type=N)">
+      <rm:uri format="http://download.eclipse.org/releases/helios" />
+    </rm:provider>
+
+    <!-- <provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false" resolutionFilter="(|(build.type=N)(build.type=R))"> -->
+    <!-- <uri format="http://download.eclipse.org/eclipse/updates/3.6" /> -->
+    <!-- </provider> -->
+    <!-- <provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false" resolutionFilter="(build.type=R)"> -->
+    <!-- <uri format="http://download.eclipse.org/releases/galileo" /> -->
+    <!-- </provider> -->
+    <!-- <provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false" resolutionFilter="(|(build.type=N)(build.type=R))"> -->
+    <!-- <uri format="http://www.elver.org/eclipse/update" /> -->
+    <!-- </provider> -->
+    <!-- <provider readerType="p2" componentTypes="osgi.bundle" mutable="false" source="false"> -->
+    <!-- <uri format="http://download.eclipse.org/tools/orbit/downloads/drops/S20100508202910/repository/" /> -->
+    <!-- </provider> -->
+  </rm:searchPath>
+</rm:rmap>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+ <extension
+         point="org.eclipse.ui.newWizards">
+<!--      <primaryWizard
+            id="org.eclipse.bpmn2.modeler.ui.diagram">
+      </primaryWizard>-->
+      <category
+            id="org.eclipse.bpmn2.modeler.ui.mainCategory"
+            name="BPMN2">
+      </category>
+      <wizard
+            category="org.eclipse.bpmn2.modeler.ui.mainCategory"
+            class="org.eclipse.bpmn2.modeler.ui.wizards.BPMN2DiagramWizard"
+            icon="icons/bpmn2_editor_16.png"
+            id="org.eclipse.bpmn2.modeler.ui.diagram"
+            name="BPMN2 Diagram">
+      </wizard>
+   </extension>
+ <extension
+       point="org.eclipse.ui.editors">
+    <editor
+          class="org.eclipse.bpmn2.modeler.ui.editor.BPMN2Editor"
+          contributorClass="org.eclipse.graphiti.ui.editor.DiagramEditorActionBarContributor"
+          default="true"
+          extensions="bpmn2"
+          icon="icons/bpmn2_editor_16.png"                  
+          id="org.eclipse.bpmn2.modeler.ui.bpmn2editor"          
+          name="BPMN2 Visual Editor">
+         <contentTypeBinding
+               contentTypeId="org.eclipse.bpmn2.modeler.contenttype">
+         </contentTypeBinding>
+    </editor>
+ </extension>
+ 
+ 
+<extension point="org.eclipse.core.contenttype.contentTypes">
+	   <content-type
+	   		base-type="org.eclipse.core.runtime.xml"
+	        id="org.eclipse.bpmn2.modeler.contenttype"
+	        name="BPMN2 Editor File"
+	        file-extensions="bpmn,bpmn2"
+	        priority="normal">
+	      <describer
+              class="org.eclipse.bpmn2.modeler.ui.BPMN2ContentDescriber">
+          </describer>
+	   </content-type>
+</extension>
+
+ <extension
+       point="org.eclipse.ui.propertyPages">
+    <page
+          class="org.eclipse.bpmn2.modeler.ui.preferences.ToolEnablementPropertyPage"
+          id="org.eclipse.bpmn2.modeler.ui.toolEnablement"
+          name="BPMN2">
+       <enabledWhen>
+          <or>
+             <adapt
+                   type="org.eclipse.core.resources.IProject">
+                <test
+                      property="org.eclipse.core.resources.projectNature"
+                      value="org.eclipse.jdt.core.javanature">
+                </test>
+             </adapt>
+             <adapt
+                   type="org.eclipse.core.resources.IProject">
+             </adapt>
+          </or>
+       </enabledWhen>
+    </page>
+ </extension>
+
+ 
+ <extension
+          point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
+          <propertyContributor contributorId="BPMN2.PropertyContributor">
+              <propertyCategory category="BPMN2">
+              </propertyCategory>
+          </propertyContributor>
+      </extension>
+       
+      <extension
+          point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
+          <propertyTabs contributorId="BPMN2.PropertyContributor">
+              <propertyTab
+                    category="BPMN2"
+                    id="bpmn2.main.tab"
+                    label="BPMN2">
+              </propertyTab>
+              <propertyTab
+                    afterTab="bpmn2.advanced.tab"
+                    category="BPMN2"
+                    id="bpmn2.advanced.tab"
+                    label="Advanced">
+              </propertyTab>
+              
+          </propertyTabs>
+      </extension>
+       
+      <extension
+          point="org.eclipse.ui.views.properties.tabbed.propertySections">
+          <propertySections contributorId="BPMN2.PropertyContributor">
+              <propertySection
+                    class="org.eclipse.bpmn2.modeler.ui.property.Bpmn2MainPropertySection"
+                    filter="org.eclipse.bpmn2.modeler.ui.property.Bpmn2PropertyFilter"
+                    id="bpmn2.main.tab.id"
+                    tab="bpmn2.main.tab">
+              </propertySection>
+              <propertySection
+                    class="org.eclipse.bpmn2.modeler.ui.property.AdvancedPropertySection"
+                    filter="org.eclipse.bpmn2.modeler.ui.property.Bpmn2PropertyFilter"
+                    id="bpmn2.advanced.tab"
+                    tab="bpmn2.advanced.tab">
+              </propertySection>
+          </propertySections>
+      </extension>
+      
+      <extension
+         point="org.eclipse.graphiti.ui.diagramTypes">
+      <diagramType
+            description="This is the diagram type for the BMPN2 diagram"
+            id="org.eclipse.bpmn2.modeler.ui.diagram.MainBPMNDiagramType"
+            name="BPMN2 Diagram Type"
+            type="BPMN2">
+      </diagramType>
+   </extension>
+   
+   <extension
+         point="org.eclipse.graphiti.ui.diagramTypeProviders">
+      <diagramTypeProvider
+            class="org.eclipse.bpmn2.modeler.ui.diagram.MainBPMNDiagramTypeProvider"
+            description="This is the editor for the BPMN2 diagram"
+            id="org.eclipse.bpmn2.modeler.ui.diagram.MainBPMNDiagramType"
+            name="BPMN2 Editor">
+         <diagramType
+               id="org.eclipse.bpmn2.modeler.ui.diagram.MainBPMNDiagramType">
+         </diagramType>
+         <imageProvider
+               id="org.eclipse.bpmn2.modeler.ui.ImageProvider">
+         </imageProvider>
+      </diagramTypeProvider>
+   </extension>
+   <extension
+         point="org.eclipse.graphiti.ui.imageProviders">
+      <imageProvider
+            class="org.eclipse.bpmn2.modeler.ui.ImageProvider"
+            id="org.eclipse.bpmn2.modeler.ui.ImageProvider">
+      </imageProvider>
+   </extension>
+</plugin>
