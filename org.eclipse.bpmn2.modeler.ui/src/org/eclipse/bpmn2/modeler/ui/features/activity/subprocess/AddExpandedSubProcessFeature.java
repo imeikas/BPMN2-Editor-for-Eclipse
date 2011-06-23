@@ -41,7 +41,7 @@ public class AddExpandedSubProcessFeature extends AbstractAddActivityFeature {
 		IGaService gaService = Graphiti.getGaService();
 
 		Shape textShape = peService.createShape(container, false);
-		Text text = gaService.createDefaultText(textShape, activity.getName());
+		Text text = gaService.createDefaultText(getDiagram(), textShape, activity.getName());
 		gaService.setLocationAndSize(text, 5, 5, width - 10, 15);
 		text.setStyle(StyleUtil.getStyleForText(getDiagram()));
 		text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);

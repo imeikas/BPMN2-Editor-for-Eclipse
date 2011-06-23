@@ -44,7 +44,7 @@ public class AddTaskFeature extends AbstractAddActivityFeature {
 		IGaService gaService = Graphiti.getGaService();
 
 		Shape textShape = peService.createShape(container, false);
-		MultiText text = gaService.createDefaultMultiText(textShape, activity.getName());
+		MultiText text = gaService.createDefaultMultiText(getDiagram(), textShape, activity.getName());
 		int padding = GraphicsUtil.TASK_IMAGE_SIZE;
 		gaService.setLocationAndSize(text, 0, padding, width, height - padding);
 		text.setStyle(StyleUtil.getStyleForText(getDiagram()));

@@ -89,7 +89,7 @@ public class MessageFeatureContainer extends BaseElementFeatureContainer {
 				Shape textShape = peService.createShape(container, false);
 				peService
 						.setPropertyValue(textShape, UpdateBaseElementNameFeature.TEXT_ELEMENT, Boolean.toString(true));
-				Text text = gaService.createDefaultText(textShape, msg.getName());
+				Text text = gaService.createDefaultText(getDiagram(), textShape, msg.getName());
 				text.setStyle(StyleUtil.getStyleForText(getDiagram()));
 				text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 				text.setVerticalAlignment(Orientation.ALIGNMENT_TOP);

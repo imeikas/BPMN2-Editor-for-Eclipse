@@ -112,7 +112,7 @@ public class DataStoreReferenceFeatureContainer extends BaseElementFeatureContai
 				Shape textShape = peService.createShape(container, false);
 				peService
 						.setPropertyValue(textShape, UpdateBaseElementNameFeature.TEXT_ELEMENT, Boolean.toString(true));
-				Text text = gaService.createDefaultText(textShape, store.getName());
+				Text text = gaService.createDefaultText(getDiagram(), textShape, store.getName());
 				text.setStyle(StyleUtil.getStyleForText(getDiagram()));
 				text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 				text.setVerticalAlignment(Orientation.ALIGNMENT_TOP);

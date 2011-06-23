@@ -75,7 +75,7 @@ public class AddEventFeature extends AbstractBpmnAddFeature {
 
 		Shape textShape = peService.createShape(containerShape, false);
 		peService.setPropertyValue(textShape, UpdateBaseElementNameFeature.TEXT_ELEMENT, Boolean.toString(true));
-		Text text = gaService.createDefaultText(textShape, e.getName());
+		Text text = gaService.createDefaultText(getDiagram(), textShape, e.getName());
 		text.setStyle(StyleUtil.getStyleForText(getDiagram()));
 		text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		text.setVerticalAlignment(Orientation.ALIGNMENT_TOP);
