@@ -78,7 +78,8 @@ public class ChoreographyAddFeature extends AbstractBpmnAddFeature {
 		}
 
 		Shape nameShape = peService.createShape(choreographyContainer, false);
-		Text text = gaService.createDefaultText(nameShape);
+
+		Text text = gaService.createDefaultText(getDiagram(), nameShape);
 		text.setValue(choreography.getName());
 		text.setStyle(StyleUtil.getStyleForText(getDiagram()));
 		text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);

@@ -85,7 +85,7 @@ public abstract class AddDataFeature<T extends BaseElement> extends AbstractBpmn
 		
 		Shape textShape = peService.createShape(container, false);
 		peService.setPropertyValue(textShape, UpdateBaseElementNameFeature.TEXT_ELEMENT, Boolean.toString(true));
-		Text text = gaService.createDefaultText(textShape, getName(t));
+		Text text = gaService.createDefaultText(getDiagram(), textShape, getName(t));
 		text.setStyle(StyleUtil.getStyleForText(getDiagram()));
 		text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
 		text.setVerticalAlignment(Orientation.ALIGNMENT_TOP);
