@@ -393,8 +393,9 @@ public class ChoreographyUtil {
 	}
 
 	private static void addBandLabel(ContainerShape container, String name, int w, int h) {
+		Diagram diagram = peService.getDiagramForShape(container);
 		Shape labelShape = peService.createShape(container, false);
-		Text label = gaService.createDefaultText(labelShape);
+		Text label = gaService.createDefaultText(diagram, labelShape);
 		label.setValue(name);
 		gaService.setLocationAndSize(label, 0, 0, w, h);
 		label.setStyle(StyleUtil.getStyleForText(peService.getDiagramForPictogramElement(container)));
@@ -439,7 +440,7 @@ public class ChoreographyUtil {
 		AnchorUtil.addFixedPointAnchors(envelope, envelopeGa.rect);
 
 		Shape textShape = peService.createShape(envelope, false);
-		Text text = gaService.createDefaultText(textShape);
+		Text text = gaService.createDefaultText(diagram, textShape);
 		IDimension size = GraphitiUi.getUiLayoutService().calculateTextSize(name, text.getFont());
 		gaService.setLocationAndSize(text, ENV_W + 3, 3, size.getWidth(), size.getHeight());
 		text.setValue(name);

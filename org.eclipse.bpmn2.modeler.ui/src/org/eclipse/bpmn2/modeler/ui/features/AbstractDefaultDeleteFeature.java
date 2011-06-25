@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.eclipse.bpmn2.modeler.core.features.DefaultBpmnDeleteFeature;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.graphiti.features.IDeleteFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IDeleteContext;
 import org.eclipse.graphiti.features.context.impl.DeleteContext;
@@ -23,7 +22,6 @@ import org.eclipse.graphiti.mm.pictograms.Anchor;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
-import org.eclipse.graphiti.ui.features.DefaultDeleteFeature;
 
 public class AbstractDefaultDeleteFeature extends DefaultBpmnDeleteFeature {
 	public AbstractDefaultDeleteFeature(IFeatureProvider fp) {

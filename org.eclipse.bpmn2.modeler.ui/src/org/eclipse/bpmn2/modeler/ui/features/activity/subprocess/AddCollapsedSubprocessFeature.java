@@ -79,7 +79,7 @@ public class AddCollapsedSubprocessFeature extends AbstractAddFeature {
 		decorateBox(box);
 
 		Shape textShape = peService.createShape(containerShape, false);
-		MultiText text = gaService.createDefaultMultiText(textShape, subprocess.getName());
+		MultiText text = gaService.createDefaultMultiText(getDiagram(), textShape, subprocess.getName());
 		gaService.setLocationAndSize(text, 10, 10, 80, 80);
 		text.setStyle(StyleUtil.getStyleForText(getDiagram()));
 		text.setHorizontalAlignment(Orientation.ALIGNMENT_CENTER);
