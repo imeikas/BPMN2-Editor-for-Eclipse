@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.bpmn2.GatewayDirection;
 import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.di.BPMNShape;
 import org.eclipse.bpmn2.di.BpmnDiPackage;
@@ -24,6 +25,7 @@ import org.eclipse.bpmn2.modeler.core.ModelHandlerLocator;
 import org.eclipse.bpmn2.modeler.ui.Activator;
 import org.eclipse.bpmn2.provider.Bpmn2ItemProviderAdapterFactory;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.Enumerator;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -221,6 +223,8 @@ public class MainPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 					Object firstElement = ((StructuredSelection) selection).getFirstElement();
 					if (firstElement instanceof EObject) {
 						updateEObject(firstElement);
+					} else if (firstElement instanceof GatewayDirection) {
+						updateGatewayDirection(firstElement);
 					} else {
 						updateEObject(null);
 					}
@@ -236,6 +240,18 @@ public class MainPropertiesComposite extends AbstractBpmn2PropertiesComposite {
 					}
 				});
 			}
+			
+			public void updateGatewayDirection(final Object result) {
+				TransactionalEditingDomain domain = bpmn2Editor.getEditingDomain();
+				domain.getCommandStack().execute(new RecordingCommand(domain) {
+					@Override
+					protected void doExecute() {
+						GatewayDirection direction = (GatewayDirection) result;
+						be.eSet(reference, direction);
+					}
+				});
+			}
+			
 		});
 	}
 
