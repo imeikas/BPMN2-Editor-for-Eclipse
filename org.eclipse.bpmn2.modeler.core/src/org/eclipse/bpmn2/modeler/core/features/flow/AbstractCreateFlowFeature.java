@@ -15,6 +15,7 @@ import java.io.IOException;
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.modeler.core.Activator;
 import org.eclipse.bpmn2.modeler.core.ModelHandler;
+import org.eclipse.bpmn2.modeler.core.di.DIImport;
 import org.eclipse.bpmn2.modeler.core.features.BusinessObjectUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -47,9 +48,11 @@ public abstract class AbstractCreateFlowFeature<A extends EObject, B extends EOb
 			AddConnectionContext addContext = new AddConnectionContext(context.getSourceAnchor(),
 					context.getTargetAnchor());
 			BaseElement flow = createFlow(mh, source, target);
-			flow.setId(EcoreUtil.generateUUID());
+//			flow.setId(EcoreUtil.generateUUID());
 			addContext.setNewObject(flow);
-			return (Connection) getFeatureProvider().addIfPossible(addContext);
+			Connection connection = (Connection) getFeatureProvider().addIfPossible(addContext);
+			DIImport.setID(flow);
+			return connection;
 		} catch (IOException e) {
 			Activator.logError(e);
 		}

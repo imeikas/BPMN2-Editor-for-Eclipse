@@ -25,6 +25,7 @@ import org.eclipse.bpmn2.di.BpmnDiFactory;
 import org.eclipse.bpmn2.modeler.core.Activator;
 import org.eclipse.bpmn2.modeler.core.ModelHandler;
 import org.eclipse.bpmn2.modeler.core.ModelHandlerLocator;
+import org.eclipse.bpmn2.modeler.core.di.DIImport;
 import org.eclipse.dd.dc.Bounds;
 import org.eclipse.dd.dc.DcFactory;
 import org.eclipse.dd.dc.Point;
@@ -65,7 +66,7 @@ public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 					BPMNDiagram bpmnDiagram = (BPMNDiagram) eObject;
 
 					shape = BpmnDiFactory.eINSTANCE.createBPMNShape();
-					shape.setId(EcoreUtil.generateUUID());
+//					shape.setId(EcoreUtil.generateUUID());
 					shape.setBpmnElement(elem);
 					Bounds bounds = DcFactory.eINSTANCE.createBounds();
 					if (elem instanceof Activity) {
@@ -79,6 +80,7 @@ public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 					shape.setBounds(bounds);
 
 					addShape(shape, bpmnDiagram);
+					DIImport.setID(shape);
 				}
 			}
 		}
@@ -111,7 +113,7 @@ public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 					BPMNDiagram bpmnDiagram = (BPMNDiagram) eObject;
 
 					edge = BpmnDiFactory.eINSTANCE.createBPMNEdge();
-					edge.setId(EcoreUtil.generateUUID());
+//					edge.setId(EcoreUtil.generateUUID());
 					edge.setBpmnElement(conElement);
 
 					if (conElement instanceof Association) {
@@ -145,6 +147,7 @@ public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 					edge.getWaypoint().add(point);
 
 					addShape(edge, bpmnDiagram);
+					DIImport.setID(edge);
 				}
 			}
 		}

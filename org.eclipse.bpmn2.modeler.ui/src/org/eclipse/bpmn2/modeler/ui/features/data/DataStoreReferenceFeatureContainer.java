@@ -15,6 +15,7 @@ import java.io.IOException;
 import org.eclipse.bpmn2.DataStore;
 import org.eclipse.bpmn2.DataStoreReference;
 import org.eclipse.bpmn2.modeler.core.ModelHandler;
+import org.eclipse.bpmn2.modeler.core.di.DIImport;
 import org.eclipse.bpmn2.modeler.core.features.AbstractBpmnAddFeature;
 import org.eclipse.bpmn2.modeler.core.features.AbstractCreateFlowElementFeature;
 import org.eclipse.bpmn2.modeler.core.features.BaseElementFeatureContainer;
@@ -177,8 +178,9 @@ public class DataStoreReferenceFeatureContainer extends BaseElementFeatureContai
 				dataStoreReference.setName("Data Store Ref");
 				DataStore dataStore = ModelHandler.FACTORY.createDataStore();
 				dataStore.setName("Data Store");
-				dataStore.setId(EcoreUtil.generateUUID());
+//				dataStore.setId(EcoreUtil.generateUUID());
 				ModelHandler.getInstance(getDiagram()).addRootElement(dataStore);
+				DIImport.setID(dataStore);
 			} catch (IOException e) {
 				Activator.showErrorWithLogging(e);
 			}

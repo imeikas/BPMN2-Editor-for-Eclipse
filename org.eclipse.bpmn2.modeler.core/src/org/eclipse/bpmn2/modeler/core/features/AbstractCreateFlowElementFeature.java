@@ -18,6 +18,7 @@ import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.modeler.core.Activator;
 import org.eclipse.bpmn2.modeler.core.ModelHandler;
+import org.eclipse.bpmn2.modeler.core.di.DIImport;
 import org.eclipse.bpmn2.modeler.core.utils.FeatureSupport;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -46,7 +47,7 @@ public abstract class AbstractCreateFlowElementFeature<T extends FlowElement> ex
 		try {
 			ModelHandler handler = ModelHandler.getInstance(getDiagram());
 			element = createFlowElement(context);
-			element.setId(EcoreUtil.generateUUID());
+//			element.setId(EcoreUtil.generateUUID());
 			if (FeatureSupport.isTargetLane(context) && element instanceof FlowNode) {
 				((FlowNode) element).getLanes().add(
 						(Lane) getBusinessObjectForPictogramElement(context.getTargetContainer()));
@@ -57,6 +58,7 @@ public abstract class AbstractCreateFlowElementFeature<T extends FlowElement> ex
 			Activator.logError(e);
 		}
 		addGraphicalRepresentation(context, element);
+		DIImport.setID(element);
 		return new Object[] { element };
 	}
 
