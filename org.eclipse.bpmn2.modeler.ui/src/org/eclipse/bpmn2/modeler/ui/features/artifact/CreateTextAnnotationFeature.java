@@ -16,6 +16,7 @@ import org.eclipse.bpmn2.TextAnnotation;
 import org.eclipse.bpmn2.modeler.core.Activator;
 import org.eclipse.bpmn2.modeler.core.ModelHandler;
 import org.eclipse.bpmn2.modeler.core.ModelHandlerLocator;
+import org.eclipse.bpmn2.modeler.core.di.DIImport;
 import org.eclipse.bpmn2.modeler.core.utils.FeatureSupport;
 import org.eclipse.bpmn2.modeler.ui.ImageProvider;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -43,7 +44,7 @@ public class CreateTextAnnotationFeature extends AbstractCreateFeature {
 		try {
 			ModelHandler mh = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
 			ta = ModelHandler.FACTORY.createTextAnnotation();
-			ta.setId(EcoreUtil.generateUUID());
+//			ta.setId(EcoreUtil.generateUUID());
 			mh.addArtifact(FeatureSupport.getTargetParticipant(context, mh), ta);
 			ta.setText("Enter your comment here");
 		} catch (IOException e) {
@@ -51,6 +52,7 @@ public class CreateTextAnnotationFeature extends AbstractCreateFeature {
 		}
 
 		addGraphicalRepresentation(context, ta);
+		DIImport.setID(ta);
 
 		return new Object[] { ta };
 	}

@@ -17,6 +17,7 @@ import org.eclipse.bpmn2.BoundaryEvent;
 import org.eclipse.bpmn2.FlowElementsContainer;
 import org.eclipse.bpmn2.modeler.core.Activator;
 import org.eclipse.bpmn2.modeler.core.ModelHandler;
+import org.eclipse.bpmn2.modeler.core.di.DIImport;
 import org.eclipse.bpmn2.modeler.ui.ImageProvider;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -49,7 +50,7 @@ public class BoundaryEventCreateFeature extends AbstractCreateFeature {
 			Activity activity = (Activity) getBusinessObjectForPictogramElement(context.getTargetContainer());
 			ModelHandler handler = ModelHandler.getInstance(getDiagram());
 			event = ModelHandler.FACTORY.createBoundaryEvent();
-			event.setId(EcoreUtil.generateUUID());
+//			event.setId(EcoreUtil.generateUUID());
 			event.setAttachedToRef(activity);
 			event.setName("Boundary event");
 			event.setCancelActivity(true); // by default is interrupting
@@ -62,6 +63,7 @@ public class BoundaryEventCreateFeature extends AbstractCreateFeature {
 			Activator.logError(e);
 		}
 		addGraphicalRepresentation(context, event);
+		DIImport.setID(event);
 		return new Object[] { event };
 	}
 

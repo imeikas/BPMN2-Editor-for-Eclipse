@@ -17,6 +17,7 @@ import org.eclipse.bpmn2.LaneSet;
 import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.modeler.core.Activator;
 import org.eclipse.bpmn2.modeler.core.ModelHandler;
+import org.eclipse.bpmn2.modeler.core.di.DIImport;
 import org.eclipse.bpmn2.modeler.core.utils.FeatureSupport;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -62,8 +63,9 @@ public class MoveFromLaneToLaneFeature extends MoveLaneFeature {
 	private void modifyModelStructure(Lane sourceLane, Lane targetLane, Lane movedLane) {
 		if (targetLane.getChildLaneSet() == null) {
 			LaneSet createLaneSet = ModelHandler.FACTORY.createLaneSet();
-			createLaneSet.setId(EcoreUtil.generateUUID());
+//			createLaneSet.setId(EcoreUtil.generateUUID());
 			targetLane.setChildLaneSet(createLaneSet);
+			DIImport.setID(createLaneSet);
 		}
 
 		try {

@@ -40,6 +40,7 @@ import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.di.BPMNDiagram;
 import org.eclipse.bpmn2.di.BPMNEdge;
 import org.eclipse.bpmn2.di.BPMNShape;
+import org.eclipse.bpmn2.modeler.core.di.DIImport;
 import org.eclipse.bpmn2.modeler.core.features.BusinessObjectUtil;
 import org.eclipse.bpmn2.util.Bpmn2ResourceImpl;
 import org.eclipse.dd.di.DiagramElement;
@@ -72,11 +73,14 @@ public class ModelHandler {
 			if (domain != null) {
 				final DocumentRoot docRoot = FACTORY.createDocumentRoot();
 				final Definitions definitions = FACTORY.createDefinitions();
-				definitions.setId(EcoreUtil.generateUUID());
+//				definitions.setId(EcoreUtil.generateUUID());
+				DIImport.setID(definitions,resource);
 				Collaboration collaboration = FACTORY.createCollaboration();
-				collaboration.setId(EcoreUtil.generateUUID());
+//				collaboration.setId(EcoreUtil.generateUUID());
+				DIImport.setID(collaboration,resource);
 				Participant participant = FACTORY.createParticipant();
-				participant.setId(EcoreUtil.generateUUID());
+//				participant.setId(EcoreUtil.generateUUID());
+				DIImport.setID(participant,resource);
 				participant.setName("Internal");
 				collaboration.getParticipants().add(participant);
 				definitions.getRootElements().add(collaboration);
@@ -149,7 +153,8 @@ public class ModelHandler {
 		Process process = getOrCreateProcess(getParticipant(target));
 		if (process.getIoSpecification() == null) {
 			InputOutputSpecification ioSpec = FACTORY.createInputOutputSpecification();
-			ioSpec.setId(EcoreUtil.generateUUID());
+//			ioSpec.setId(EcoreUtil.generateUUID());
+			DIImport.setID(ioSpec,resource);
 			process.setIoSpecification(ioSpec);
 		}
 		return process.getIoSpecification();
@@ -169,7 +174,8 @@ public class ModelHandler {
 	public Participant addParticipant() {
 		Collaboration collaboration = getOrCreateCollaboration();
 		Participant participant = FACTORY.createParticipant();
-		participant.setId(EcoreUtil.generateUUID());
+//		participant.setId(EcoreUtil.generateUUID());
+		DIImport.setID(participant,resource);
 		collaboration.getParticipants().add(participant);
 		return participant;
 	}
@@ -196,7 +202,8 @@ public class ModelHandler {
 	public Process getOrCreateProcess(Participant participant) {
 		if (participant.getProcessRef() == null) {
 			Process process = FACTORY.createProcess();
-			process.setId(EcoreUtil.generateUUID());
+//			process.setId(EcoreUtil.generateUUID());
+			DIImport.setID(process,resource);
 			process.setName("Process for " + participant.getName());
 			getDefinitions().getRootElements().add(process);
 			participant.setProcessRef(process);
@@ -206,7 +213,8 @@ public class ModelHandler {
 
 	public Lane createLane(Lane targetLane) {
 		Lane lane = FACTORY.createLane();
-		lane.setId(EcoreUtil.generateUUID());
+//		lane.setId(EcoreUtil.generateUUID());
+		DIImport.setID(lane,resource);
 
 		if (targetLane.getChildLaneSet() == null) {
 			targetLane.setChildLaneSet(ModelHandler.FACTORY.createLaneSet());
@@ -223,20 +231,23 @@ public class ModelHandler {
 
 	public Lane createLane(Object target) {
 		Lane lane = FACTORY.createLane();
-		lane.setId(EcoreUtil.generateUUID());
+//		lane.setId(EcoreUtil.generateUUID());
+		DIImport.setID(lane,resource);
 		FlowElementsContainer container = getFlowElementContainer(target);
 		if (container.getLaneSets().isEmpty()) {
 			LaneSet laneSet = FACTORY.createLaneSet();
-			laneSet.setId(EcoreUtil.generateUUID());
+//			laneSet.setId(EcoreUtil.generateUUID());
 			container.getLaneSets().add(laneSet);
 		}
 		container.getLaneSets().get(0).getLanes().add(lane);
+		DIImport.setID(lane);
 		return lane;
 	}
 
 	public void laneToTop(Lane lane) {
 		LaneSet laneSet = FACTORY.createLaneSet();
-		laneSet.setId(EcoreUtil.generateUUID());
+//		laneSet.setId(EcoreUtil.generateUUID());
+		DIImport.setID(laneSet,resource);
 		laneSet.getLanes().add(lane);
 		Process process = getOrCreateProcess(getInternalParticipant());
 		process.getLaneSets().add(laneSet);
@@ -244,7 +255,8 @@ public class ModelHandler {
 
 	public SequenceFlow createSequenceFlow(FlowNode source, FlowNode target) {
 		SequenceFlow sequenceFlow = FACTORY.createSequenceFlow();
-		sequenceFlow.setId(EcoreUtil.generateUUID());
+//		sequenceFlow.setId(EcoreUtil.generateUUID());
+		DIImport.setID(sequenceFlow,resource);
 
 		addFlowElement(source, sequenceFlow);
 		sequenceFlow.setSourceRef(source);
@@ -254,7 +266,8 @@ public class ModelHandler {
 
 	public MessageFlow createMessageFlow(InteractionNode source, InteractionNode target) {
 		MessageFlow messageFlow = FACTORY.createMessageFlow();
-		messageFlow.setId(EcoreUtil.generateUUID());
+//		messageFlow.setId(EcoreUtil.generateUUID());
+		DIImport.setID(messageFlow,resource);
 		messageFlow.setSourceRef(source);
 		messageFlow.setTargetRef(target);
 		getOrCreateCollaboration().getMessageFlows().add(messageFlow);
@@ -280,7 +293,8 @@ public class ModelHandler {
 		}
 		Association association = FACTORY.createAssociation();
 		addArtifact(e, association);
-		association.setId(EcoreUtil.generateUUID());
+//		association.setId(EcoreUtil.generateUUID());
+		DIImport.setID(association,resource);
 		association.setSourceRef(source);
 		association.setTargetRef(target);
 		return association;
@@ -296,7 +310,8 @@ public class ModelHandler {
 		}
 		TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(resource);
 		final Collaboration collaboration = FACTORY.createCollaboration();
-		collaboration.setId(EcoreUtil.generateUUID());
+//		collaboration.setId(EcoreUtil.generateUUID());
+		DIImport.setID(collaboration,resource);
 		if (domain != null) {
 			domain.getCommandStack().execute(new RecordingCommand(domain) {
 
@@ -311,7 +326,8 @@ public class ModelHandler {
 
 	private void addCollaborationToRootElements(final List<RootElement> rootElements, final Collaboration collaboration) {
 		Participant participant = FACTORY.createParticipant();
-		participant.setId(EcoreUtil.generateUUID());
+//		participant.setId(EcoreUtil.generateUUID());
+		DIImport.setID(participant,resource);
 		participant.setName("Internal");
 		for (RootElement element : rootElements) {
 			if (element instanceof Process) {
