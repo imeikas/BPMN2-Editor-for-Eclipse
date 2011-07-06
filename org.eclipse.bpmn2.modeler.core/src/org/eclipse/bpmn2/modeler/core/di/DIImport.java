@@ -11,6 +11,7 @@
 package org.eclipse.bpmn2.modeler.core.di;
 
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 
 import org.eclipse.bpmn2.Association;
@@ -41,7 +42,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.dd.dc.Point;
 import org.eclipse.dd.di.DiagramElement;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.graphiti.datatypes.ILocation;
@@ -73,6 +79,8 @@ public class DIImport {
 	private ModelHandler modelHandler;
 	private IFeatureProvider featureProvider;
 	private HashMap<BaseElement, PictogramElement> elements;
+	private static HashMap<ResourceSet, Hashtable<String, EObject>> ids = new  HashMap<ResourceSet, Hashtable<String, EObject>>();
+	private static HashMap<String, Integer> defaultIds = new HashMap<String, Integer>();
 
 	private final IPeService peService = Graphiti.getPeService();
 	private final IGaService gaService = Graphiti.getGaService();
@@ -100,6 +108,20 @@ public class DIImport {
 					featureProvider.link(diagram, d);
 				}
 
+				for (BPMNDiagram d : diagrams) {
+					TreeIterator<EObject> iter = d.eAllContents();
+					while (iter.hasNext()) {
+						EObject obj = iter.next();
+						EStructuralFeature feature = ((EObject)obj).eClass().getEStructuralFeature("id");
+						if (feature!=null) {
+							Object value = obj.eGet(feature);
+							if (value!=null) {
+								addID(obj,(String)value);
+							}
+						}
+					}
+				}
+				
 				for (BPMNDiagram d : diagrams) {
 					featureProvider.link(diagram, d);
 					BPMNPlane plane = d.getPlane();
@@ -415,5 +437,94 @@ public class DIImport {
 		p.setY(y);
 
 		anchor.setLocation(p);
+	}
+	
+
+	private static String getObjectName(EObject obj) {
+		String name;
+		EStructuralFeature feature = ((EObject)obj).eClass().getEStructuralFeature("bpmnElement");
+		if (feature!=null) {
+			EObject bpmnElement = (EObject) obj.eGet(feature);
+			name = obj.eClass().getName() + "_" + bpmnElement.eClass().getName();
+		}
+		else {
+			name = obj.eClass().getName();
+		}
+		return name;
+	}
+	
+	public static String generateDefaultID(EObject obj) {
+		String name = getObjectName(obj);
+		Integer value = defaultIds.get(name);
+		if (value==null)
+			value = Integer.valueOf(1);
+		value = Integer.valueOf( value.intValue() + 1 );
+		defaultIds.put(name, Integer.valueOf(value));
+		
+		return "_" + name + "_" + value;
+	}
+	
+	public static String generateID(EObject obj) {
+		return generateID(obj,obj.eResource());
+	}
+	
+	public static String generateID(EObject obj, Resource res) {
+		ResourceSet resSet = (res==null || res.getResourceSet()==null) ? null : res.getResourceSet();
+		if (resSet!=null) {
+			Hashtable<String, EObject> tab = ids.get(resSet);
+			if (tab==null) {
+				tab = new Hashtable<String, EObject>();
+				ids.put(resSet, tab);
+			}
+			
+			String name = getObjectName(obj);
+			for (int i=1;; ++i) {
+				String id = name + "_" + i;
+				if (tab.get(id)==null) {
+					tab.put(id, obj);
+					return id;
+				}
+			}
+		}
+		return generateDefaultID(obj);
+	}
+
+	private static void addID(EObject obj, String id) {
+		Resource res = obj.eResource();
+		ResourceSet resSet = res.getResourceSet()==null ? null : res.getResourceSet();
+		if (res==null || resSet==null || id.startsWith("_")) {
+			String name = getObjectName(obj);
+			int newValue = 0;
+			try {
+				newValue = Integer.parseInt(id.substring(1));
+			} catch (Exception e) {
+			}
+			Integer oldValue = defaultIds.get(name);
+			if (oldValue==null || newValue > oldValue.intValue())
+				defaultIds.put(name, Integer.valueOf(newValue));
+		}
+		else {	
+			Hashtable<String, EObject> tab = ids.get(resSet);
+			if (tab==null) {
+				tab = new Hashtable<String, EObject>();
+				ids.put(resSet, tab);
+			}
+			tab.put(id, obj);
+		}
+	}
+	
+	public static void setID(EObject obj) {
+		setID(obj,obj.eResource());
+	}
+	
+	public static void setID(EObject obj, Resource res) {
+		EStructuralFeature feature = ((EObject)obj).eClass().getEStructuralFeature("id");
+		if (feature!=null) {
+			obj.eSet(feature, generateID(obj,res));
+		}
+	}
+	
+	public void clearIDs(Resource res) {
+		
 	}
 }

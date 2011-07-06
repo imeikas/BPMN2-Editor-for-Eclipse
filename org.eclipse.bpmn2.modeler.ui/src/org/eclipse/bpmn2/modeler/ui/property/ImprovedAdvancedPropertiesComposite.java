@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.modeler.core.Bpmn2Preferences;
+import org.eclipse.bpmn2.modeler.core.di.DIImport;
 import org.eclipse.bpmn2.modeler.ui.editor.BPMN2Editor;
 import org.eclipse.bpmn2.provider.Bpmn2ItemProviderAdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
@@ -261,7 +262,8 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 						if (value instanceof BaseElement) {
 							BaseElement e = ((BaseElement) value);
 							if (e.getId() == null) {
-								e.setId(EcoreUtil.generateUUID());
+//								e.setId(EcoreUtil.generateUUID());
+								DIImport.setID(e,baseElement.eResource());
 							}
 						}
 

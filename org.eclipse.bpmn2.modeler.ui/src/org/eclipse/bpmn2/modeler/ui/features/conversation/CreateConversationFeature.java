@@ -15,6 +15,7 @@ import java.io.IOException;
 import org.eclipse.bpmn2.Conversation;
 import org.eclipse.bpmn2.modeler.core.Activator;
 import org.eclipse.bpmn2.modeler.core.ModelHandler;
+import org.eclipse.bpmn2.modeler.core.di.DIImport;
 import org.eclipse.bpmn2.modeler.ui.ImageProvider;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -38,9 +39,10 @@ public class CreateConversationFeature extends AbstractCreateFeature {
 		try {
 			ModelHandler handler = ModelHandler.getInstance(getDiagram());
 			c = ModelHandler.FACTORY.createConversation();
-			c.setId(EcoreUtil.generateUUID());
+//			c.setId(EcoreUtil.generateUUID());
 			c.setName("Conversation");
 			handler.addConversationNode(c);
+			DIImport.setID(c);
 		} catch (IOException e) {
 			Activator.logError(e);
 		}

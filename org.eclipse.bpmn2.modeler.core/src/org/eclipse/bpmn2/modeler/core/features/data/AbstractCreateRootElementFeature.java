@@ -16,6 +16,7 @@ import org.eclipse.bpmn2.RootElement;
 import org.eclipse.bpmn2.modeler.core.Activator;
 import org.eclipse.bpmn2.modeler.core.ModelHandler;
 import org.eclipse.bpmn2.modeler.core.ModelHandlerLocator;
+import org.eclipse.bpmn2.modeler.core.di.DIImport;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
@@ -39,13 +40,14 @@ public abstract class AbstractCreateRootElementFeature extends AbstractCreateFea
 		try {
 			ModelHandler handler = ModelHandlerLocator.getModelHandler(getDiagram().eResource());
 			element = createRootElement();
-			element.setId(EcoreUtil.generateUUID());
+//			element.setId(EcoreUtil.generateUUID());
 			handler.addRootElement(element);
 		} catch (IOException e) {
 			Activator.logError(e);
 		}
 
 		addGraphicalRepresentation(context, element);
+		DIImport.setID(element);
 		return new Object[] { element };
     }
 	

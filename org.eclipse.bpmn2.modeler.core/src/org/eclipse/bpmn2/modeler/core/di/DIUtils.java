@@ -140,7 +140,7 @@ public class DIUtils {
 				BPMNDiagram bpmnDiagram = (BPMNDiagram) eObject;
 
 				bpmnShape = BpmnDiFactory.eINSTANCE.createBPMNShape();
-				bpmnShape.setId(EcoreUtil.generateUUID());
+//				bpmnShape.setId(EcoreUtil.generateUUID());
 				bpmnShape.setBpmnElement(elem);
 				Bounds bounds = DcFactory.eINSTANCE.createBounds();
 				bounds.setX(x);
@@ -151,6 +151,7 @@ public class DIUtils {
 
 				List<DiagramElement> elements = bpmnDiagram.getPlane().getPlaneElement();
 				elements.add(bpmnShape);
+				DIImport.setID(shape);
 
 				fp.link(shape, new Object[] { elem, bpmnShape });
 				break;
