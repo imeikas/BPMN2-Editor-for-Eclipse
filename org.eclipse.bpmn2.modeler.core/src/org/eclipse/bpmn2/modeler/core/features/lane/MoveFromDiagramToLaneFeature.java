@@ -18,8 +18,8 @@ import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.LaneSet;
 import org.eclipse.bpmn2.Process;
 import org.eclipse.bpmn2.modeler.core.ModelHandler;
-import org.eclipse.bpmn2.modeler.core.di.DIImport;
 import org.eclipse.bpmn2.modeler.core.utils.FeatureSupport;
+import org.eclipse.bpmn2.modeler.core.utils.ModelUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -94,7 +94,7 @@ public class MoveFromDiagramToLaneFeature extends MoveLaneFeature {
 			LaneSet createLaneSet = ModelHandler.FACTORY.createLaneSet();
 //			createLaneSet.setId(EcoreUtil.generateUUID());
 			targetLane.setChildLaneSet(createLaneSet);
-			DIImport.setID(createLaneSet);
+			ModelUtil.setID(createLaneSet);
 		}
 
 		List<Lane> lanes = targetLane.getChildLaneSet().getLanes();

@@ -17,11 +17,11 @@ import org.eclipse.bpmn2.Event;
 import org.eclipse.bpmn2.EventDefinition;
 import org.eclipse.bpmn2.IntermediateThrowEvent;
 import org.eclipse.bpmn2.modeler.core.ModelHandler;
-import org.eclipse.bpmn2.modeler.core.di.DIImport;
 import org.eclipse.bpmn2.modeler.core.features.event.definitions.CreateEventDefinition;
 import org.eclipse.bpmn2.modeler.core.features.event.definitions.DecorationAlgorithm;
 import org.eclipse.bpmn2.modeler.core.features.event.definitions.EventDefinitionFeatureContainer;
 import org.eclipse.bpmn2.modeler.core.utils.GraphicsUtil;
+import org.eclipse.bpmn2.modeler.core.utils.ModelUtil;
 import org.eclipse.bpmn2.modeler.core.utils.StyleUtil;
 import org.eclipse.bpmn2.modeler.ui.ImageProvider;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -117,7 +117,7 @@ public class CancelEventDefinitionContainer extends EventDefinitionFeatureContai
 		protected EventDefinition createEventDefinition(ICreateContext context) {
 			CancelEventDefinition definition = ModelHandler.FACTORY.createCancelEventDefinition();
 //			definition.setId(EcoreUtil.generateUUID());
-			DIImport.setID(definition);
+			ModelUtil.setID(definition);
 			return definition;
 		}
 

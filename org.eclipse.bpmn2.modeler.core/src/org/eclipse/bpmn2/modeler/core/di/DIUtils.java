@@ -22,6 +22,7 @@ import org.eclipse.bpmn2.modeler.core.Activator;
 import org.eclipse.bpmn2.modeler.core.ModelHandler;
 import org.eclipse.bpmn2.modeler.core.ModelHandlerLocator;
 import org.eclipse.bpmn2.modeler.core.features.BusinessObjectUtil;
+import org.eclipse.bpmn2.modeler.core.utils.ModelUtil;
 import org.eclipse.dd.dc.Bounds;
 import org.eclipse.dd.dc.DcFactory;
 import org.eclipse.dd.dc.Point;
@@ -151,7 +152,7 @@ public class DIUtils {
 
 				List<DiagramElement> elements = bpmnDiagram.getPlane().getPlaneElement();
 				elements.add(bpmnShape);
-				DIImport.setID(shape);
+				ModelUtil.setID(shape);
 
 				fp.link(shape, new Object[] { elem, bpmnShape });
 				break;
