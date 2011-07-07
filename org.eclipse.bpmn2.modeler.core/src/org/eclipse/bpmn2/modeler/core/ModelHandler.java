@@ -40,8 +40,8 @@ import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.di.BPMNDiagram;
 import org.eclipse.bpmn2.di.BPMNEdge;
 import org.eclipse.bpmn2.di.BPMNShape;
-import org.eclipse.bpmn2.modeler.core.di.DIImport;
 import org.eclipse.bpmn2.modeler.core.features.BusinessObjectUtil;
+import org.eclipse.bpmn2.modeler.core.utils.ModelUtil;
 import org.eclipse.bpmn2.util.Bpmn2ResourceImpl;
 import org.eclipse.dd.di.DiagramElement;
 import org.eclipse.emf.common.util.ECollections;
@@ -74,13 +74,13 @@ public class ModelHandler {
 				final DocumentRoot docRoot = FACTORY.createDocumentRoot();
 				final Definitions definitions = FACTORY.createDefinitions();
 //				definitions.setId(EcoreUtil.generateUUID());
-				DIImport.setID(definitions,resource);
+				ModelUtil.setID(definitions,resource);
 				Collaboration collaboration = FACTORY.createCollaboration();
 //				collaboration.setId(EcoreUtil.generateUUID());
-				DIImport.setID(collaboration,resource);
+				ModelUtil.setID(collaboration,resource);
 				Participant participant = FACTORY.createParticipant();
 //				participant.setId(EcoreUtil.generateUUID());
-				DIImport.setID(participant,resource);
+				ModelUtil.setID(participant,resource);
 				participant.setName("Internal");
 				collaboration.getParticipants().add(participant);
 				definitions.getRootElements().add(collaboration);
@@ -154,7 +154,7 @@ public class ModelHandler {
 		if (process.getIoSpecification() == null) {
 			InputOutputSpecification ioSpec = FACTORY.createInputOutputSpecification();
 //			ioSpec.setId(EcoreUtil.generateUUID());
-			DIImport.setID(ioSpec,resource);
+			ModelUtil.setID(ioSpec,resource);
 			process.setIoSpecification(ioSpec);
 		}
 		return process.getIoSpecification();
@@ -175,7 +175,7 @@ public class ModelHandler {
 		Collaboration collaboration = getOrCreateCollaboration();
 		Participant participant = FACTORY.createParticipant();
 //		participant.setId(EcoreUtil.generateUUID());
-		DIImport.setID(participant,resource);
+		ModelUtil.setID(participant,resource);
 		collaboration.getParticipants().add(participant);
 		return participant;
 	}
@@ -203,7 +203,7 @@ public class ModelHandler {
 		if (participant.getProcessRef() == null) {
 			Process process = FACTORY.createProcess();
 //			process.setId(EcoreUtil.generateUUID());
-			DIImport.setID(process,resource);
+			ModelUtil.setID(process,resource);
 			process.setName("Process for " + participant.getName());
 			getDefinitions().getRootElements().add(process);
 			participant.setProcessRef(process);
@@ -214,7 +214,7 @@ public class ModelHandler {
 	public Lane createLane(Lane targetLane) {
 		Lane lane = FACTORY.createLane();
 //		lane.setId(EcoreUtil.generateUUID());
-		DIImport.setID(lane,resource);
+		ModelUtil.setID(lane,resource);
 
 		if (targetLane.getChildLaneSet() == null) {
 			targetLane.setChildLaneSet(ModelHandler.FACTORY.createLaneSet());
@@ -232,7 +232,7 @@ public class ModelHandler {
 	public Lane createLane(Object target) {
 		Lane lane = FACTORY.createLane();
 //		lane.setId(EcoreUtil.generateUUID());
-		DIImport.setID(lane,resource);
+		ModelUtil.setID(lane,resource);
 		FlowElementsContainer container = getFlowElementContainer(target);
 		if (container.getLaneSets().isEmpty()) {
 			LaneSet laneSet = FACTORY.createLaneSet();
@@ -240,14 +240,14 @@ public class ModelHandler {
 			container.getLaneSets().add(laneSet);
 		}
 		container.getLaneSets().get(0).getLanes().add(lane);
-		DIImport.setID(lane);
+		ModelUtil.setID(lane);
 		return lane;
 	}
 
 	public void laneToTop(Lane lane) {
 		LaneSet laneSet = FACTORY.createLaneSet();
 //		laneSet.setId(EcoreUtil.generateUUID());
-		DIImport.setID(laneSet,resource);
+		ModelUtil.setID(laneSet,resource);
 		laneSet.getLanes().add(lane);
 		Process process = getOrCreateProcess(getInternalParticipant());
 		process.getLaneSets().add(laneSet);
@@ -256,7 +256,7 @@ public class ModelHandler {
 	public SequenceFlow createSequenceFlow(FlowNode source, FlowNode target) {
 		SequenceFlow sequenceFlow = FACTORY.createSequenceFlow();
 //		sequenceFlow.setId(EcoreUtil.generateUUID());
-		DIImport.setID(sequenceFlow,resource);
+		ModelUtil.setID(sequenceFlow,resource);
 
 		addFlowElement(source, sequenceFlow);
 		sequenceFlow.setSourceRef(source);
@@ -267,7 +267,7 @@ public class ModelHandler {
 	public MessageFlow createMessageFlow(InteractionNode source, InteractionNode target) {
 		MessageFlow messageFlow = FACTORY.createMessageFlow();
 //		messageFlow.setId(EcoreUtil.generateUUID());
-		DIImport.setID(messageFlow,resource);
+		ModelUtil.setID(messageFlow,resource);
 		messageFlow.setSourceRef(source);
 		messageFlow.setTargetRef(target);
 		getOrCreateCollaboration().getMessageFlows().add(messageFlow);
@@ -294,7 +294,7 @@ public class ModelHandler {
 		Association association = FACTORY.createAssociation();
 		addArtifact(e, association);
 //		association.setId(EcoreUtil.generateUUID());
-		DIImport.setID(association,resource);
+		ModelUtil.setID(association,resource);
 		association.setSourceRef(source);
 		association.setTargetRef(target);
 		return association;
@@ -311,7 +311,7 @@ public class ModelHandler {
 		TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(resource);
 		final Collaboration collaboration = FACTORY.createCollaboration();
 //		collaboration.setId(EcoreUtil.generateUUID());
-		DIImport.setID(collaboration,resource);
+		ModelUtil.setID(collaboration,resource);
 		if (domain != null) {
 			domain.getCommandStack().execute(new RecordingCommand(domain) {
 
@@ -327,7 +327,7 @@ public class ModelHandler {
 	private void addCollaborationToRootElements(final List<RootElement> rootElements, final Collaboration collaboration) {
 		Participant participant = FACTORY.createParticipant();
 //		participant.setId(EcoreUtil.generateUUID());
-		DIImport.setID(participant,resource);
+		ModelUtil.setID(participant,resource);
 		participant.setName("Internal");
 		for (RootElement element : rootElements) {
 			if (element instanceof Process) {
