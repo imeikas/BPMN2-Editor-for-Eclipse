@@ -16,6 +16,7 @@ import org.eclipse.bpmn2.modeler.core.ModelHandler;
 import org.eclipse.bpmn2.modeler.core.ModelHandlerLocator;
 import org.eclipse.bpmn2.modeler.core.ProxyURIConverterImplExtension;
 import org.eclipse.bpmn2.modeler.core.di.DIImport;
+import org.eclipse.bpmn2.modeler.core.utils.ModelUtil;
 import org.eclipse.bpmn2.modeler.ui.Activator;
 import org.eclipse.bpmn2.modeler.ui.util.ErrorUtils;
 import org.eclipse.bpmn2.modeler.ui.wizards.BPMN2DiagramCreator;
@@ -38,8 +39,10 @@ import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.graphiti.ui.editor.DiagramEditor;
 import org.eclipse.graphiti.ui.editor.DiagramEditorInput;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 
 /**
@@ -164,6 +167,14 @@ public class BPMN2Editor extends DiagramEditor {
 
 	@Override
 	public void dispose() {
+		// clear ID mapping tables if no more instances of editor are active
+		int instances = 0;
+		IWorkbenchPage[] pages = getEditorSite().getWorkbenchWindow().getPages();
+		for (IWorkbenchPage p : pages) {
+			IEditorReference[] refs = pages[0].getEditorReferences();
+			instances += refs.length;
+		}
+		ModelUtil.clearIDs(modelHandler.getResource(), instances==0);
 		super.dispose();
 		ModelHandlerLocator.releaseModel(modelUri);
 	}

@@ -13,13 +13,13 @@ package org.eclipse.bpmn2.modeler.ui.features.artifact;
 import org.eclipse.bpmn2.Artifact;
 import org.eclipse.bpmn2.Group;
 import org.eclipse.bpmn2.modeler.core.ModelHandler;
-import org.eclipse.bpmn2.modeler.core.di.DIImport;
 import org.eclipse.bpmn2.modeler.core.features.AbstractBpmnAddFeature;
 import org.eclipse.bpmn2.modeler.core.features.BaseElementFeatureContainer;
 import org.eclipse.bpmn2.modeler.core.features.DefaultBPMNResizeFeature;
 import org.eclipse.bpmn2.modeler.core.features.DefaultBpmnMoveFeature;
 import org.eclipse.bpmn2.modeler.core.features.artifact.AbstractCreateArtifactFeature;
 import org.eclipse.bpmn2.modeler.core.utils.AnchorUtil;
+import org.eclipse.bpmn2.modeler.core.utils.ModelUtil;
 import org.eclipse.bpmn2.modeler.core.utils.StyleUtil;
 import org.eclipse.bpmn2.modeler.ui.ImageProvider;
 import org.eclipse.bpmn2.modeler.ui.features.AbstractDefaultDeleteFeature;
@@ -131,7 +131,7 @@ public class GroupFeatureContainer extends BaseElementFeatureContainer {
 		public Artifact createArtifact(ICreateContext context) {
 			Group group = ModelHandler.FACTORY.createGroup();
 //			group.setId(EcoreUtil.generateUUID());
-			DIImport.setID(group);
+			ModelUtil.setID(group);
 			return group;
 		}
 

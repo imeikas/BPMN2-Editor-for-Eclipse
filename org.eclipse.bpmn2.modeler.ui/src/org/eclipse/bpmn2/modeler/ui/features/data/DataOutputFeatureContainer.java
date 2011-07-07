@@ -12,10 +12,10 @@ package org.eclipse.bpmn2.modeler.ui.features.data;
 
 import org.eclipse.bpmn2.DataOutput;
 import org.eclipse.bpmn2.modeler.core.ModelHandler;
-import org.eclipse.bpmn2.modeler.core.di.DIImport;
 import org.eclipse.bpmn2.modeler.core.features.data.AbstractCreateDataInputOutputFeature;
 import org.eclipse.bpmn2.modeler.core.features.data.AddDataFeature;
 import org.eclipse.bpmn2.modeler.core.utils.GraphicsUtil;
+import org.eclipse.bpmn2.modeler.core.utils.ModelUtil;
 import org.eclipse.bpmn2.modeler.core.utils.StyleUtil;
 import org.eclipse.bpmn2.modeler.ui.ImageProvider;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -72,7 +72,7 @@ public class DataOutputFeatureContainer extends AbstractDataFeatureContainer {
 //			dataOutput.setId(EcoreUtil.generateUUID());
 			dataOutput.setName("Data Output");
 			handler.addDataOutput(target, dataOutput);
-			DIImport.setID(dataOutput);
+			ModelUtil.setID(dataOutput);
 			return dataOutput;
 		}
 

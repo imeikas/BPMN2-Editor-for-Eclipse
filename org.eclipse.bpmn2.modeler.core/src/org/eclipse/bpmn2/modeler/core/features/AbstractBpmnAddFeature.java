@@ -25,7 +25,7 @@ import org.eclipse.bpmn2.di.BpmnDiFactory;
 import org.eclipse.bpmn2.modeler.core.Activator;
 import org.eclipse.bpmn2.modeler.core.ModelHandler;
 import org.eclipse.bpmn2.modeler.core.ModelHandlerLocator;
-import org.eclipse.bpmn2.modeler.core.di.DIImport;
+import org.eclipse.bpmn2.modeler.core.utils.ModelUtil;
 import org.eclipse.dd.dc.Bounds;
 import org.eclipse.dd.dc.DcFactory;
 import org.eclipse.dd.dc.Point;
@@ -80,7 +80,7 @@ public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 					shape.setBounds(bounds);
 
 					addShape(shape, bpmnDiagram);
-					DIImport.setID(shape);
+					ModelUtil.setID(shape);
 				}
 			}
 		}
@@ -147,7 +147,7 @@ public abstract class AbstractBpmnAddFeature extends AbstractAddShapeFeature {
 					edge.getWaypoint().add(point);
 
 					addShape(edge, bpmnDiagram);
-					DIImport.setID(edge);
+					ModelUtil.setID(edge);
 				}
 			}
 		}
