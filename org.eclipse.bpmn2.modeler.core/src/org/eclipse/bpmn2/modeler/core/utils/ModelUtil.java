@@ -3,6 +3,7 @@ package org.eclipse.bpmn2.modeler.core.utils;
 import java.util.HashMap;
 import java.util.Hashtable;
 
+import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -103,7 +104,7 @@ public class ModelUtil {
 	 * @return the ID string
 	 */
 	public static String generateID(EObject obj, Resource res) {
-		Object key = getKey(obj);
+		Object key = (res==null ? getKey(obj) : getKey(res));
 		if (key!=null) {
 			Hashtable<String, EObject> tab = ids.get(key);
 			if (tab==null) {
@@ -203,4 +204,15 @@ public class ModelUtil {
 	}
 
 
+	public static String getName(BaseElement element) {
+		EStructuralFeature feature = element.eClass().getEStructuralFeature("name");
+		if (feature!=null && element.eGet(feature) instanceof String)
+			return (String) element.eGet(feature);
+		return null;
+	}
+
+	public static boolean hasName(BaseElement element) {
+		EStructuralFeature feature = element.eClass().getEStructuralFeature("name");
+		return feature!=null;
+	}
 }

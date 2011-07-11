@@ -21,16 +21,22 @@ import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
+import org.eclipse.graphiti.features.IReason;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.IResizeShapeContext;
+import org.eclipse.graphiti.features.context.IUpdateContext;
+import org.eclipse.graphiti.features.context.impl.UpdateContext;
 import org.eclipse.graphiti.features.impl.DefaultResizeShapeFeature;
+import org.eclipse.graphiti.mm.pictograms.Anchor;
+import org.eclipse.graphiti.mm.pictograms.Connection;
+import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 
 public abstract class AbstractGatewayFeatureContainer extends BaseElementFeatureContainer {
 
 	@Override
 	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
-		return new UpdateBaseElementNameFeature(fp);
+		return new UpdateAbstractGatewayFeature(fp);
 	}
 
 	@Override
@@ -67,5 +73,96 @@ public abstract class AbstractGatewayFeatureContainer extends BaseElementFeature
 	@Override
 	public IDeleteFeature getDeleteFeature(IFeatureProvider fp) {
 		return new AbstractDefaultDeleteFeature(fp);
+	}
+	
+	private class UpdateAbstractGatewayFeature extends UpdateBaseElementNameFeature {
+
+		public UpdateAbstractGatewayFeature(IFeatureProvider fp) {
+			super(fp);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public boolean canUpdate(IUpdateContext context) {
+			IFeatureProvider featureProvider = getDiagramEditor().getDiagramTypeProvider().getFeatureProvider();
+
+			ContainerShape gatewayShape = (ContainerShape) context.getPictogramElement();
+			for (Anchor anchor : gatewayShape.getAnchors()) {
+				for (Connection connection : anchor.getIncomingConnections() ) {
+					IUpdateContext updateCtx = new UpdateContext(connection);
+					IUpdateFeature updateFeature = featureProvider.getUpdateFeature(updateCtx);
+					if (updateFeature != null) {
+						boolean ret = updateFeature.canUpdate(updateCtx);
+						if (ret)
+							return ret;
+					}
+				}
+				for (Connection connection : anchor.getOutgoingConnections() ) {
+					IUpdateContext updateCtx = new UpdateContext(connection);
+					IUpdateFeature updateFeature = featureProvider.getUpdateFeature(updateCtx);
+					if (updateFeature != null) {
+						boolean ret = updateFeature.canUpdate(updateCtx);
+						if (ret)
+							return ret;
+					}
+				}
+			}
+			
+			return super.canUpdate(context);
+		}
+
+		@Override
+		public IReason updateNeeded(IUpdateContext context) {
+			IFeatureProvider featureProvider = getDiagramEditor().getDiagramTypeProvider().getFeatureProvider();
+
+			ContainerShape gatewayShape = (ContainerShape) context.getPictogramElement();
+			for (Anchor anchor : gatewayShape.getAnchors()) {
+				for (Connection connection : anchor.getIncomingConnections() ) {
+					IUpdateContext updateCtx = new UpdateContext(connection);
+					IUpdateFeature updateFeature = featureProvider.getUpdateFeature(updateCtx);
+					if (updateFeature != null) {
+						IReason ret = updateFeature.updateNeeded(updateCtx);
+						if (ret.toBoolean())
+							return ret;
+					}
+				}
+				for (Connection connection : anchor.getOutgoingConnections() ) {
+					IUpdateContext updateCtx = new UpdateContext(connection);
+					IUpdateFeature updateFeature = featureProvider.getUpdateFeature(updateCtx);
+					if (updateFeature != null) {
+						IReason ret = updateFeature.updateNeeded(updateCtx);
+						if (ret.toBoolean())
+							return ret;
+					}
+				}
+			}
+			
+			return super.updateNeeded(context);
+		}
+
+		@Override
+		public boolean update(IUpdateContext context) {
+			IFeatureProvider featureProvider = getDiagramEditor().getDiagramTypeProvider().getFeatureProvider();
+
+			ContainerShape gatewayShape = (ContainerShape) context.getPictogramElement();
+			for (Anchor anchor : gatewayShape.getAnchors()) {
+				for (Connection connection : anchor.getIncomingConnections() ) {
+					IUpdateContext updateCtx = new UpdateContext(connection);
+					IUpdateFeature updateFeature = featureProvider.getUpdateFeature(updateCtx);
+					if (updateFeature != null) {
+						updateFeature.update(updateCtx);
+					}
+				}
+				for (Connection connection : anchor.getOutgoingConnections() ) {
+					IUpdateContext updateCtx = new UpdateContext(connection);
+					IUpdateFeature updateFeature = featureProvider.getUpdateFeature(updateCtx);
+					if (updateFeature != null) {
+						updateFeature.update(updateCtx);
+					}
+				}
+			}
+			
+			return super.update(context);
+		}
 	}
 }

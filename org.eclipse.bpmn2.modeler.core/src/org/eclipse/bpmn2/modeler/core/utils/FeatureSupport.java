@@ -294,14 +294,28 @@ public class FeatureSupport {
 		return handler.getParticipant(bo);
 	}
 
-	public static Shape getShape(ContainerShape container, String property, String expextedValue) {
+	public static Shape getShape(ContainerShape container, String property, String expectedValue) {
 		IPeService peService = Graphiti.getPeService();
 		Iterator<Shape> iterator = peService.getAllContainedShapes(container).iterator();
 		while (iterator.hasNext()) {
 			Shape shape = iterator.next();
 			String value = peService.getPropertyValue(shape, property);
-			if (value != null && value.equals(expextedValue)) {
+			if (value != null && value.equals(expectedValue)) {
 				return shape;
+			}
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends EObject> T getChildElementOfType(PictogramElement container, String property, String expectedValue, Class<T> clazz) {
+		IPeService peService = Graphiti.getPeService();
+		Iterator<PictogramElement> iterator = peService.getAllContainedPictogramElements(container).iterator();
+		while (iterator.hasNext()) {
+			PictogramElement pe = iterator.next();
+			String value = peService.getPropertyValue(pe, property);
+			if (value != null && value.equals(expectedValue) && clazz.isInstance(pe)) {
+				return (T) pe;
 			}
 		}
 		return null;

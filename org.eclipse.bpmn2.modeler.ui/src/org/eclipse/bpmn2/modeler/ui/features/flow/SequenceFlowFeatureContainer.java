@@ -24,6 +24,7 @@ import org.eclipse.bpmn2.modeler.core.ModelHandler;
 import org.eclipse.bpmn2.modeler.core.features.BaseElementConnectionFeatureContainer;
 import org.eclipse.bpmn2.modeler.core.features.BusinessObjectUtil;
 import org.eclipse.bpmn2.modeler.core.features.MultiUpdateFeature;
+import org.eclipse.bpmn2.modeler.core.features.UpdateBaseElementNameFeature;
 import org.eclipse.bpmn2.modeler.core.features.flow.AbstractAddFlowFeature;
 import org.eclipse.bpmn2.modeler.core.features.flow.AbstractCreateFlowFeature;
 import org.eclipse.bpmn2.modeler.core.utils.StyleUtil;
@@ -41,8 +42,11 @@ import org.eclipse.graphiti.features.impl.AbstractUpdateFeature;
 import org.eclipse.graphiti.features.impl.Reason;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
+import org.eclipse.graphiti.mm.algorithms.styles.Color;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.graphiti.mm.pictograms.ConnectionDecorator;
+import org.eclipse.graphiti.mm.pictograms.Diagram;
+import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
@@ -72,7 +76,7 @@ public class SequenceFlowFeatureContainer extends BaseElementConnectionFeatureCo
 			protected void createConnectionDecorators(Connection connection) {
 				int w = 3;
 				int l = 8;
-
+				
 				ConnectionDecorator decorator = Graphiti.getPeService().createConnectionDecorator(connection, false,
 						1.0, true);
 
@@ -85,9 +89,8 @@ public class SequenceFlowFeatureContainer extends BaseElementConnectionFeatureCo
 
 			@Override
 			protected void hook(IAddContext context, Connection connection, BaseElement element) {
-				IPeService peService = Graphiti.getPeService();
-				peService.setPropertyValue(connection, IS_DEFAULT_FLOW_PROPERTY, Boolean.toString(false));
-				peService.setPropertyValue(connection, IS_CONDITIONAL_FLOW_PROPERTY, Boolean.toString(false));
+				setDefaultSequenceFlow(connection);
+				setConditionalSequenceFlow(connection);
 			}
 		};
 	}
@@ -102,6 +105,7 @@ public class SequenceFlowFeatureContainer extends BaseElementConnectionFeatureCo
 		MultiUpdateFeature multiUpdate = new MultiUpdateFeature(fp);
 		multiUpdate.addUpdateFeature(new UpdateDefaultSequenceFlowFeature(fp));
 		multiUpdate.addUpdateFeature(new UpdateConditionalSequenceFlowFeature(fp));
+		multiUpdate.addUpdateFeature(new UpdateBaseElementNameFeature(fp));
 		return multiUpdate;
 	}
 
@@ -125,7 +129,7 @@ public class SequenceFlowFeatureContainer extends BaseElementConnectionFeatureCo
 		@Override
 		protected BaseElement createFlow(ModelHandler mh, FlowNode source, FlowNode target) {
 			SequenceFlow flow = mh.createSequenceFlow(source, target);
-			flow.setName("Sequence Flow");
+			flow.setName("");
 			return flow;
 		}
 
@@ -140,7 +144,48 @@ public class SequenceFlowFeatureContainer extends BaseElementConnectionFeatureCo
 		}
 	}
 
-	private class UpdateDefaultSequenceFlowFeature extends AbstractUpdateFeature {
+	private static Color manageColor(PictogramElement element, IColorConstant colorConstant) {
+		IPeService peService = Graphiti.getPeService();
+		Diagram diagram = peService.getDiagramForPictogramElement(element);
+		return Graphiti.getGaService().manageColor(diagram, colorConstant);
+	}
+	
+	private static void setDefaultSequenceFlow(Connection connection) {
+		IPeService peService = Graphiti.getPeService();
+		SequenceFlow flow = BusinessObjectUtil.getFirstElementOfType(connection, SequenceFlow.class);
+		SequenceFlow defaultFlow = getDefaultFlow(flow.getSourceRef());
+		boolean isDefault = defaultFlow == null ? false : defaultFlow.equals(flow);
+
+		Tuple<ConnectionDecorator, ConnectionDecorator> decorators = getConnectionDecorators(connection);
+		ConnectionDecorator def = decorators.getFirst();
+		ConnectionDecorator cond = decorators.getSecond();
+
+		if (isDefault) {
+			if (cond != null) {
+				peService.deletePictogramElement(cond);
+			}
+			def = createDefaultConnectionDecorator(connection);
+			GraphicsAlgorithm ga = def.getGraphicsAlgorithm();
+			ga.setForeground(manageColor(connection,StyleUtil.CLASS_FOREGROUND));
+		} else {
+			if (def != null) {
+				peService.deletePictogramElement(def);
+			}
+			if (flow.getConditionExpression() != null && flow.getSourceRef() instanceof Activity) {
+				cond = createConditionalConnectionDecorator(connection);
+				GraphicsAlgorithm ga = cond.getGraphicsAlgorithm();
+				ga.setFilled(true);
+				ga.setForeground(manageColor(connection,StyleUtil.CLASS_FOREGROUND));
+				ga.setBackground(manageColor(connection,IColorConstant.WHITE));
+			}
+		}
+
+		peService.setPropertyValue(connection, IS_DEFAULT_FLOW_PROPERTY,
+				Boolean.toString(isDefault));
+
+	}
+	
+	public static class UpdateDefaultSequenceFlowFeature extends AbstractUpdateFeature {
 
 		public UpdateDefaultSequenceFlowFeature(IFeatureProvider fp) {
 			super(fp);
@@ -171,43 +216,35 @@ public class SequenceFlowFeatureContainer extends BaseElementConnectionFeatureCo
 
 		@Override
 		public boolean update(IUpdateContext context) {
-			IPeService peService = Graphiti.getPeService();
 			Connection connection = (Connection) context.getPictogramElement();
-			SequenceFlow flow = BusinessObjectUtil.getFirstElementOfType(connection, SequenceFlow.class);
-			SequenceFlow defaultFlow = getDefaultFlow(flow.getSourceRef());
-			boolean isDefault = defaultFlow == null ? false : defaultFlow.equals(flow);
-
-			Tuple<ConnectionDecorator, ConnectionDecorator> decorators = getConnectionDecorators(connection);
-			ConnectionDecorator def = decorators.getFirst();
-			ConnectionDecorator cond = decorators.getSecond();
-
-			if (isDefault) {
-				if (cond != null) {
-					peService.deletePictogramElement(cond);
-				}
-				def = createDefaultConnectionDecorator(connection);
-				GraphicsAlgorithm ga = def.getGraphicsAlgorithm();
-				ga.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
-			} else {
-				if (def != null) {
-					peService.deletePictogramElement(def);
-				}
-				if (flow.getConditionExpression() != null && flow.getSourceRef() instanceof Activity) {
-					cond = createConditionalConnectionDecorator(connection);
-					GraphicsAlgorithm ga = cond.getGraphicsAlgorithm();
-					ga.setFilled(true);
-					ga.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
-					ga.setBackground(manageColor(IColorConstant.WHITE));
-				}
-			}
-
-			peService.setPropertyValue(context.getPictogramElement(), IS_DEFAULT_FLOW_PROPERTY,
-					Boolean.toString(isDefault));
+			setDefaultSequenceFlow(connection);
 			return true;
 		}
 	}
 
-	private class UpdateConditionalSequenceFlowFeature extends AbstractUpdateFeature {
+	private static void setConditionalSequenceFlow(Connection connection) {
+		IPeService peService = Graphiti.getPeService();
+		SequenceFlow flow = BusinessObjectUtil.getFirstElementOfType(connection, SequenceFlow.class);
+
+		Tuple<ConnectionDecorator, ConnectionDecorator> decorators = getConnectionDecorators(connection);
+		ConnectionDecorator def = decorators.getFirst();
+		ConnectionDecorator cond = decorators.getSecond();
+
+		if (flow.getConditionExpression() != null && flow.getSourceRef() instanceof Activity && def == null) {
+			ConnectionDecorator decorator = createConditionalConnectionDecorator(connection);
+			GraphicsAlgorithm ga = decorator.getGraphicsAlgorithm();
+			ga.setFilled(true);
+			ga.setForeground(manageColor(connection, StyleUtil.CLASS_FOREGROUND));
+			ga.setBackground(manageColor(connection, IColorConstant.WHITE));
+		} else if (cond != null) {
+			peService.deletePictogramElement(cond);
+		}
+
+		peService.setPropertyValue(connection, IS_CONDITIONAL_FLOW_PROPERTY,
+				Boolean.toString(flow.getConditionExpression() != null));
+	}
+	
+	public static class UpdateConditionalSequenceFlowFeature extends AbstractUpdateFeature {
 
 		public UpdateConditionalSequenceFlowFeature(IFeatureProvider fp) {
 			super(fp);
@@ -223,6 +260,10 @@ public class SequenceFlowFeatureContainer extends BaseElementConnectionFeatureCo
 
 		@Override
 		public IReason updateNeeded(IUpdateContext context) {
+			// NOTE: if this method returns "true" the very first time it's called by the refresh
+			// framework, the connection line will be drawn as a red dotted line, so make sure
+			// all properties have been correctly set to their initial values in the AddFeature!
+			// see https://issues.jboss.org/browse/JBPM-3102
 			IPeService peService = Graphiti.getPeService();
 			Connection connection = (Connection) context.getPictogramElement();
 			SequenceFlow flow = BusinessObjectUtil.getFirstElementOfType(connection, SequenceFlow.class);
@@ -236,31 +277,13 @@ public class SequenceFlowFeatureContainer extends BaseElementConnectionFeatureCo
 
 		@Override
 		public boolean update(IUpdateContext context) {
-			IPeService peService = Graphiti.getPeService();
 			Connection connection = (Connection) context.getPictogramElement();
-			SequenceFlow flow = BusinessObjectUtil.getFirstElementOfType(connection, SequenceFlow.class);
-
-			Tuple<ConnectionDecorator, ConnectionDecorator> decorators = getConnectionDecorators(connection);
-			ConnectionDecorator def = decorators.getFirst();
-			ConnectionDecorator cond = decorators.getSecond();
-
-			if (flow.getConditionExpression() != null && flow.getSourceRef() instanceof Activity && def == null) {
-				ConnectionDecorator decorator = createConditionalConnectionDecorator(connection);
-				GraphicsAlgorithm ga = decorator.getGraphicsAlgorithm();
-				ga.setFilled(true);
-				ga.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
-				ga.setBackground(manageColor(IColorConstant.WHITE));
-			} else if (cond != null) {
-				peService.deletePictogramElement(cond);
-			}
-
-			peService.setPropertyValue(context.getPictogramElement(), IS_CONDITIONAL_FLOW_PROPERTY,
-					Boolean.toString(flow.getConditionExpression() != null));
+			setConditionalSequenceFlow(connection);
 			return true;
 		}
 	}
-
-	private boolean isDefaultAttributeSupported(FlowNode node) {
+	
+	private static boolean isDefaultAttributeSupported(FlowNode node) {
 		if (node instanceof Activity) {
 			return true;
 		}
@@ -270,7 +293,7 @@ public class SequenceFlowFeatureContainer extends BaseElementConnectionFeatureCo
 		return false;
 	}
 
-	private SequenceFlow getDefaultFlow(FlowNode node) {
+	private static SequenceFlow getDefaultFlow(FlowNode node) {
 		if (isDefaultAttributeSupported(node)) {
 			try {
 				return (SequenceFlow) node.getClass().getMethod("getDefault").invoke(node);
@@ -281,7 +304,7 @@ public class SequenceFlowFeatureContainer extends BaseElementConnectionFeatureCo
 		return null;
 	}
 
-	private Tuple<ConnectionDecorator, ConnectionDecorator> getConnectionDecorators(Connection connection) {
+	private static Tuple<ConnectionDecorator, ConnectionDecorator> getConnectionDecorators(Connection connection) {
 		IPeService peService = Graphiti.getPeService();
 
 		ConnectionDecorator defaultDecorator = null;
@@ -304,14 +327,14 @@ public class SequenceFlowFeatureContainer extends BaseElementConnectionFeatureCo
 		return new Tuple<ConnectionDecorator, ConnectionDecorator>(defaultDecorator, conditionalDecorator);
 	}
 
-	private ConnectionDecorator createDefaultConnectionDecorator(Connection connection) {
+	private static ConnectionDecorator createDefaultConnectionDecorator(Connection connection) {
 		ConnectionDecorator marker = Graphiti.getPeService().createConnectionDecorator(connection, false, 0.0, true);
 		Graphiti.getGaService().createPolyline(marker, new int[] { -5, 5, -10, -5 });
 		Graphiti.getPeService().setPropertyValue(marker, DEFAULT_MARKER_PROPERTY, Boolean.toString(true));
 		return marker;
 	}
 
-	private ConnectionDecorator createConditionalConnectionDecorator(Connection connection) {
+	private static ConnectionDecorator createConditionalConnectionDecorator(Connection connection) {
 		ConnectionDecorator marker = Graphiti.getPeService().createConnectionDecorator(connection, false, 0.0, true);
 		Graphiti.getGaService().createPolygon(marker, new int[] { -15, 0, -7, 5, 0, 0, -7, -5 });
 		Graphiti.getPeService().setPropertyValue(marker, CONDITIONAL_MARKER_PROPERTY, Boolean.toString(true));

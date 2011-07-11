@@ -19,6 +19,8 @@ import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.modeler.core.Activator;
 import org.eclipse.bpmn2.modeler.core.ModelHandler;
 import org.eclipse.bpmn2.modeler.core.features.BaseElementConnectionFeatureContainer;
+import org.eclipse.bpmn2.modeler.core.features.MultiUpdateFeature;
+import org.eclipse.bpmn2.modeler.core.features.UpdateBaseElementNameFeature;
 import org.eclipse.bpmn2.modeler.core.features.flow.AbstractAddFlowFeature;
 import org.eclipse.bpmn2.modeler.core.features.flow.AbstractCreateFlowFeature;
 import org.eclipse.bpmn2.modeler.core.utils.StyleUtil;
@@ -26,6 +28,7 @@ import org.eclipse.bpmn2.modeler.ui.ImageProvider;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateConnectionFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
+import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.ICreateConnectionContext;
 import org.eclipse.graphiti.mm.algorithms.Ellipse;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
@@ -63,7 +66,7 @@ public class MessageFlowFeatureContainer extends BaseElementConnectionFeatureCon
 
 				int w = 5;
 				int l = 15;
-
+				
 				Polyline polyline = gaService.createPolygon(endDecorator, new int[] { -l, w, 0, 0, -l, -w, -l, w });
 				polyline.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 				polyline.setBackground(manageColor(IColorConstant.WHITE));
@@ -90,6 +93,14 @@ public class MessageFlowFeatureContainer extends BaseElementConnectionFeatureCon
 		return new CreateMessageFlowFeature(fp);
 	}
 
+	@Override
+	public IUpdateFeature getUpdateFeature(IFeatureProvider fp) {
+		MultiUpdateFeature multiUpdate = new MultiUpdateFeature(fp);
+		multiUpdate.addUpdateFeature(new UpdateBaseElementNameFeature(fp));
+		// TODO: any other updates needed?
+		return multiUpdate;
+	}
+
 	public static class CreateMessageFlowFeature extends AbstractCreateFlowFeature<InteractionNode, InteractionNode> {
 
 		public CreateMessageFlowFeature(IFeatureProvider fp) {
@@ -111,7 +122,7 @@ public class MessageFlowFeatureContainer extends BaseElementConnectionFeatureCon
 		@Override
 		protected BaseElement createFlow(ModelHandler mh, InteractionNode source, InteractionNode target) {
 			MessageFlow flow = mh.createMessageFlow(source, target);
-			flow.setName("Message Flow");
+			flow.setName("");
 			return flow;
 		}
 
