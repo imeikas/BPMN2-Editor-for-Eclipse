@@ -11,6 +11,7 @@
 package org.eclipse.bpmn2.modeler.core.features;
 
 import org.eclipse.graphiti.features.IFeatureProvider;
+import org.eclipse.graphiti.features.context.IDeleteContext;
 import org.eclipse.graphiti.ui.features.DefaultDeleteFeature;
 
 public class DefaultBpmnDeleteFeature extends DefaultDeleteFeature {
@@ -20,7 +21,7 @@ public class DefaultBpmnDeleteFeature extends DefaultDeleteFeature {
 	}
 
 	@Override
-	protected boolean getUserDecision() {
+	protected boolean getUserDecision(IDeleteContext context) {
 		return true;
 	}
 
