@@ -13,8 +13,10 @@ package org.eclipse.bpmn2.modeler.ui.wizards;
 import org.eclipse.bpmn2.modeler.ui.Activator;
 import org.eclipse.bpmn2.modeler.ui.editor.BPMN2Editor;
 import org.eclipse.bpmn2.modeler.ui.util.ErrorUtils;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -103,7 +105,10 @@ public class BPMN2DiagramCreator {
 	public static IFolder getTempFolder(IPath fullPath) throws CoreException {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 
-		IFolder folder = root.getProject(fullPath.segment(0)).getFolder(".bpmn2");
+		String name = fullPath.getFileExtension();
+		if (name==null || name.length()==0)
+			name = "bpmn2";
+		IFolder folder = root.getProject(fullPath.segment(0)).getFolder("."+name);
 		if (!folder.exists()) {
 			folder.create(true, true, null);
 		}
@@ -132,4 +137,33 @@ public class BPMN2DiagramCreator {
 		return tempFile;
 	}
 
+	public static void dispose(IFile file) {
+		try {
+			IContainer container = file.getParent();
+			file.delete(true, null);
+			while ( isEmptyFolder(container) ) {
+				container.delete(true, null);
+				container = container.getParent();
+			}
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static boolean isEmptyFolder(IContainer container) {
+		try {
+			IResource[] members = container.members();
+			for ( IResource res : members ) {
+				int type = res.getType();
+				if (type==IResource.FILE || type==IResource.PROJECT || type==IResource.ROOT)
+					return false;
+				if ( !isEmptyFolder((IContainer)res) )
+					return false;
+			}
+		} catch (CoreException e) {
+			return false;
+		}
+		return true;
+	}
 }

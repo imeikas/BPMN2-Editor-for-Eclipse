@@ -171,12 +171,14 @@ public class BPMN2Editor extends DiagramEditor {
 		int instances = 0;
 		IWorkbenchPage[] pages = getEditorSite().getWorkbenchWindow().getPages();
 		for (IWorkbenchPage p : pages) {
-			IEditorReference[] refs = pages[0].getEditorReferences();
+			IEditorReference[] refs = p.getEditorReferences();
 			instances += refs.length;
 		}
 		ModelUtil.clearIDs(modelHandler.getResource(), instances==0);
 		super.dispose();
 		ModelHandlerLocator.releaseModel(modelUri);
+		// get rid of temp files and folders
+		BPMN2DiagramCreator.dispose(diagramFile);
 	}
 
 	public IFile getModelFile() {
