@@ -43,8 +43,12 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.application.WorkbenchAdvisor;
 
 /**
  * 
@@ -60,6 +64,9 @@ public class BPMN2Editor extends DiagramEditor {
 
 	private IFile modelFile;
 	private IFile diagramFile;
+	
+	private IWorkbenchListener workbenchListener;
+	private boolean workbenchShutdown = false;
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
@@ -77,6 +84,11 @@ public class BPMN2Editor extends DiagramEditor {
 		} catch (CoreException e) {
 			Activator.showErrorWithLogging(e);
 		}
+		
+		// add a listener so we get notified if the workbench is shutting down.
+		// in this case we don't want to delete the temp file!
+		addWorkbenchListener();
+		
 		super.init(site, input);
 	}
 
@@ -157,6 +169,32 @@ public class BPMN2Editor extends DiagramEditor {
 		di.generateFromDI();
 	}
 
+	private void addWorkbenchListener() {
+		if (workbenchListener==null) {
+			workbenchListener = new IWorkbenchListener() {
+				@Override
+				public boolean preShutdown(IWorkbench workbench, boolean forced) {
+					workbenchShutdown = true;
+					return true;
+				}
+
+				@Override
+				public void postShutdown(IWorkbench workbench) {
+				}
+
+			};
+			PlatformUI.getWorkbench().addWorkbenchListener(workbenchListener);
+		}
+	}
+	
+	private void removeWorkbenchListener()
+	{
+		if (workbenchListener!=null) {
+			PlatformUI.getWorkbench().removeWorkbenchListener(workbenchListener);
+			workbenchListener = null;
+		}
+	}
+	
 	@Override
 	public void dispose() {
 		// clear ID mapping tables if no more instances of editor are active
@@ -169,8 +207,11 @@ public class BPMN2Editor extends DiagramEditor {
 		ModelUtil.clearIDs(modelHandler.getResource(), instances==0);
 		super.dispose();
 		ModelHandlerLocator.releaseModel(modelUri);
-		// get rid of temp files and folders
-		BPMN2DiagramCreator.dispose(diagramFile);
+		// get rid of temp files and folders, but only if the workbench is being shut down.
+		// when the workbench is restarted, we need to have those temp files around!
+		if (!workbenchShutdown)
+			BPMN2DiagramCreator.dispose(diagramFile);
+		removeWorkbenchListener();
 	}
 
 	public IFile getModelFile() {
