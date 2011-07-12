@@ -66,8 +66,8 @@ public class BPMN2DiagramWizard extends Wizard implements INewWizard {
 					BPMN2DiagramCreator factory = new BPMN2DiagramCreator();
 
 					folder = BPMN2DiagramCreator.getTempFolder(path);
-					BPMN2DiagramCreator.getTempFile(path, folder);
-					factory.setDiagramFile(BPMN2DiagramCreator.getTempFile(path, folder));
+
+					factory.setDiagramFile(BPMN2DiagramCreator.getTempFile(path,folder));
 
 					factory.setDiagramFolder(folder);
 

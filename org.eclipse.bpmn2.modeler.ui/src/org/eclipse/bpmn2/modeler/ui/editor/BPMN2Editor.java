@@ -23,6 +23,7 @@ import org.eclipse.bpmn2.modeler.ui.wizards.BPMN2DiagramCreator;
 import org.eclipse.bpmn2.util.Bpmn2ResourceImpl;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -81,16 +82,8 @@ public class BPMN2Editor extends DiagramEditor {
 
 	private void getModelPathFromInput(DiagramEditorInput input) {
 		URI uri = input.getDiagram().eResource().getURI();
-
-		uri = uri.trimFragment();
-		uri = uri.trimFileExtension();
-		uri = uri.appendFileExtension("bpmn2");
-
-		String uriString = uri.toPlatformString(true).replace(".bpmn2/", "");
-		URI.createURI(uriString);
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		IWorkspaceRoot root = workspace.getRoot();
-		modelFile = root.getFile(new Path(uriString));
+		String uriString = uri.trimFragment().toPlatformString(true);
+		modelFile = BPMN2DiagramCreator.getModelFile(new Path(uriString));
 	}
 
 	/**
@@ -101,8 +94,7 @@ public class BPMN2Editor extends DiagramEditor {
 		modelUri = URI.createPlatformResourceURI(fullPath.toString(), true);
 
 		IFolder folder = BPMN2DiagramCreator.getTempFolder(fullPath);
-		diagramFile = BPMN2DiagramCreator
-				.getTempFile(fullPath.removeFileExtension().addFileExtension("bpmn2d"), folder);
+		diagramFile = BPMN2DiagramCreator.getTempFile(fullPath,folder);
 
 		// Create new temporary diagram file
 		BPMN2DiagramCreator creator = new BPMN2DiagramCreator();
