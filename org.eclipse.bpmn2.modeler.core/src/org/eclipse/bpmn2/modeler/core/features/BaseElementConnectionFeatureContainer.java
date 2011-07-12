@@ -11,9 +11,12 @@
 package org.eclipse.bpmn2.modeler.core.features;
 
 import org.eclipse.bpmn2.BaseElement;
+import org.eclipse.graphiti.features.IFeatureProvider;
+import org.eclipse.graphiti.features.IReconnectionFeature;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.features.context.IContext;
 import org.eclipse.graphiti.features.context.IPictogramElementContext;
+import org.eclipse.graphiti.features.context.IReconnectionContext;
 
 public abstract class BaseElementConnectionFeatureContainer extends ConnectionFeatureContainer {
 
@@ -24,6 +27,9 @@ public abstract class BaseElementConnectionFeatureContainer extends ConnectionFe
 		} else if (context instanceof IPictogramElementContext) {
 			return BusinessObjectUtil.getFirstElementOfType(
 					(((IPictogramElementContext) context).getPictogramElement()), BaseElement.class);
+		} else if (context instanceof IReconnectionContext) {
+			IReconnectionContext rc = (IReconnectionContext)context;
+			return BusinessObjectUtil.getFirstElementOfType(rc.getConnection(), BaseElement.class);
 		}
 		return null;
 	}
@@ -33,4 +39,8 @@ public abstract class BaseElementConnectionFeatureContainer extends ConnectionFe
 		return o instanceof BaseElement;
 	}
 
+	@Override
+	public IReconnectionFeature getReconnectionFeature(IFeatureProvider fp) {
+		return new BaseElementReconnectionFeature(fp);
+	}
 }

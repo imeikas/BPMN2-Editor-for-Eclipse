@@ -17,6 +17,7 @@ import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
+import org.eclipse.graphiti.features.IReconnectionFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 
@@ -56,6 +57,10 @@ public abstract class ConnectionFeatureContainer implements FeatureContainer {
 
 	@Override
 	public IDeleteFeature getDeleteFeature(IFeatureProvider context) {
+		return null;
+	}
+	
+	public IReconnectionFeature getReconnectionFeature(IFeatureProvider fp) {
 		return null;
 	}
 }

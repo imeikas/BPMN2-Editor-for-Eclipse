@@ -13,12 +13,15 @@ package org.eclipse.bpmn2.modeler.ui.features.flow;
 import java.io.IOException;
 
 import org.eclipse.bpmn2.BaseElement;
+import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.InteractionNode;
 import org.eclipse.bpmn2.MessageFlow;
 import org.eclipse.bpmn2.Participant;
 import org.eclipse.bpmn2.modeler.core.Activator;
 import org.eclipse.bpmn2.modeler.core.ModelHandler;
 import org.eclipse.bpmn2.modeler.core.features.BaseElementConnectionFeatureContainer;
+import org.eclipse.bpmn2.modeler.core.features.BaseElementReconnectionFeature;
+import org.eclipse.bpmn2.modeler.core.features.BusinessObjectUtil;
 import org.eclipse.bpmn2.modeler.core.features.MultiUpdateFeature;
 import org.eclipse.bpmn2.modeler.core.features.UpdateBaseElementNameFeature;
 import org.eclipse.bpmn2.modeler.core.features.flow.AbstractAddFlowFeature;
@@ -28,8 +31,10 @@ import org.eclipse.bpmn2.modeler.ui.ImageProvider;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateConnectionFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
+import org.eclipse.graphiti.features.IReconnectionFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.ICreateConnectionContext;
+import org.eclipse.graphiti.features.context.IReconnectionContext;
 import org.eclipse.graphiti.mm.algorithms.Ellipse;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.eclipse.graphiti.mm.algorithms.styles.LineStyle;
@@ -101,6 +106,11 @@ public class MessageFlowFeatureContainer extends BaseElementConnectionFeatureCon
 		return multiUpdate;
 	}
 
+	@Override
+	public IReconnectionFeature getReconnectionFeature(IFeatureProvider fp) {
+		return new MessageFlowReconnectionFeature(fp);
+	}
+	
 	public static class CreateMessageFlowFeature extends AbstractCreateFlowFeature<InteractionNode, InteractionNode> {
 
 		public CreateMessageFlowFeature(IFeatureProvider fp) {
@@ -152,4 +162,21 @@ public class MessageFlowFeatureContainer extends BaseElementConnectionFeatureCon
 			return different;
 		}
 	}
+	
+	public static class MessageFlowReconnectionFeature extends BaseElementReconnectionFeature {
+
+		public MessageFlowReconnectionFeature(IFeatureProvider fp) {
+			super(fp);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public boolean canReconnect(IReconnectionContext context) {
+			if (super.canReconnect(context)) {
+				BaseElement targetElement = BusinessObjectUtil.getFirstElementOfType(context.getTargetPictogramElement(), BaseElement.class);
+				return targetElement instanceof Participant;
+			}
+			return false;
+		}
+	} 
 }

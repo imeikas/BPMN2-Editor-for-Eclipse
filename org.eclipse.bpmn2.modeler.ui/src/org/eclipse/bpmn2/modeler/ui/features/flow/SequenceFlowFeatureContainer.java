@@ -19,9 +19,11 @@ import org.eclipse.bpmn2.ExclusiveGateway;
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.bpmn2.SequenceFlow;
+import org.eclipse.bpmn2.di.BPMNEdge;
 import org.eclipse.bpmn2.modeler.core.Activator;
 import org.eclipse.bpmn2.modeler.core.ModelHandler;
 import org.eclipse.bpmn2.modeler.core.features.BaseElementConnectionFeatureContainer;
+import org.eclipse.bpmn2.modeler.core.features.BaseElementReconnectionFeature;
 import org.eclipse.bpmn2.modeler.core.features.BusinessObjectUtil;
 import org.eclipse.bpmn2.modeler.core.features.MultiUpdateFeature;
 import org.eclipse.bpmn2.modeler.core.features.UpdateBaseElementNameFeature;
@@ -30,14 +32,18 @@ import org.eclipse.bpmn2.modeler.core.features.flow.AbstractCreateFlowFeature;
 import org.eclipse.bpmn2.modeler.core.utils.StyleUtil;
 import org.eclipse.bpmn2.modeler.core.utils.Tuple;
 import org.eclipse.bpmn2.modeler.ui.ImageProvider;
+import org.eclipse.dd.di.DiagramElement;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateConnectionFeature;
 import org.eclipse.graphiti.features.IDeleteFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.IReason;
+import org.eclipse.graphiti.features.IReconnectionFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
 import org.eclipse.graphiti.features.context.IAddContext;
+import org.eclipse.graphiti.features.context.IReconnectionContext;
 import org.eclipse.graphiti.features.context.IUpdateContext;
+import org.eclipse.graphiti.features.context.impl.ReconnectionContext;
 import org.eclipse.graphiti.features.impl.AbstractUpdateFeature;
 import org.eclipse.graphiti.features.impl.Reason;
 import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
@@ -107,6 +113,11 @@ public class SequenceFlowFeatureContainer extends BaseElementConnectionFeatureCo
 		multiUpdate.addUpdateFeature(new UpdateConditionalSequenceFlowFeature(fp));
 		multiUpdate.addUpdateFeature(new UpdateBaseElementNameFeature(fp));
 		return multiUpdate;
+	}
+
+	@Override
+	public IReconnectionFeature getReconnectionFeature(IFeatureProvider fp) {
+		return new SequenceFlowReconnectionFeature(fp);
 	}
 
 	@Override
@@ -281,6 +292,36 @@ public class SequenceFlowFeatureContainer extends BaseElementConnectionFeatureCo
 			setConditionalSequenceFlow(connection);
 			return true;
 		}
+	}
+	
+	public static class SequenceFlowReconnectionFeature extends BaseElementReconnectionFeature {
+
+		public SequenceFlowReconnectionFeature(IFeatureProvider fp) {
+			super(fp);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public boolean canReconnect(IReconnectionContext context) {
+			if (super.canReconnect(context)) {
+				BaseElement targetElement = BusinessObjectUtil.getFirstElementOfType(context.getTargetPictogramElement(), BaseElement.class);
+				return targetElement instanceof FlowNode;
+			}
+			return false;
+		}
+
+//		@Override
+//		public void postReconnect(IReconnectionContext context) {
+//			super.postReconnect(context);
+//			SequenceFlow flow = BusinessObjectUtil.getFirstElementOfType(context.getConnection(), SequenceFlow.class);
+//			FlowNode targetElement = BusinessObjectUtil.getFirstElementOfType(context.getTargetPictogramElement(), FlowNode.class);
+//			if (context.getReconnectType().equals(ReconnectionContext.RECONNECT_TARGET)) {
+//				flow.setTargetRef(targetElement);
+//			}
+//			else {
+//				flow.setSourceRef(targetElement);
+//			}
+//		}
 	}
 	
 	private static boolean isDefaultAttributeSupported(FlowNode node) {

@@ -82,6 +82,7 @@ import org.eclipse.graphiti.features.IDirectEditingFeature;
 import org.eclipse.graphiti.features.ILayoutFeature;
 import org.eclipse.graphiti.features.IMoveBendpointFeature;
 import org.eclipse.graphiti.features.IMoveShapeFeature;
+import org.eclipse.graphiti.features.IReconnectionFeature;
 import org.eclipse.graphiti.features.IRemoveBendpointFeature;
 import org.eclipse.graphiti.features.IResizeShapeFeature;
 import org.eclipse.graphiti.features.IUpdateFeature;
@@ -92,6 +93,7 @@ import org.eclipse.graphiti.features.context.IDirectEditingContext;
 import org.eclipse.graphiti.features.context.ILayoutContext;
 import org.eclipse.graphiti.features.context.IMoveBendpointContext;
 import org.eclipse.graphiti.features.context.IMoveShapeContext;
+import org.eclipse.graphiti.features.context.IReconnectionContext;
 import org.eclipse.graphiti.features.context.IRemoveBendpointContext;
 import org.eclipse.graphiti.features.context.IResizeShapeContext;
 import org.eclipse.graphiti.features.context.IUpdateContext;
@@ -316,6 +318,22 @@ public class BPMNFeatureProvider extends DefaultFeatureProvider {
 	@Override
 	public IRemoveBendpointFeature getRemoveBendpointFeature(IRemoveBendpointContext context) {
 		return new RemoveBendpointFeature(this);
+	}
+
+	@Override
+	public IReconnectionFeature getReconnectionFeature(
+			IReconnectionContext context) {
+		for (FeatureContainer container : containers) {
+			Object o = container.getApplyObject(context);
+			if (o != null && container.canApplyTo(o) && container instanceof ConnectionFeatureContainer) {
+				IReconnectionFeature feature = ((ConnectionFeatureContainer)container).getReconnectionFeature(this);
+				if (feature == null) {
+					break;
+				}
+				return feature;
+			}
+		}
+		return super.getReconnectionFeature(context);
 	}
 
 	@Override
