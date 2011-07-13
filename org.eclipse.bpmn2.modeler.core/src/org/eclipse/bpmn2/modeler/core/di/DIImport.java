@@ -215,6 +215,8 @@ public class DIImport {
 			elements.put(bpmnElement, newContainer);
 			handleEvents(bpmnElement, newContainer);
 		}
+		
+		ModelUtil.addID(bpmnElement);
 	}
 
 	private void handleEvents(BaseElement bpmnElement, PictogramElement newContainer) {
@@ -343,6 +345,8 @@ public class DIImport {
 			} while (te == null && target.eContainer() != null);
 		}
 
+		ModelUtil.addID(bpmnElement);
+		
 		if (source != null && target != null) {
 			addSourceAndTargetToEdge(bpmnEdge, source, target);
 		}
