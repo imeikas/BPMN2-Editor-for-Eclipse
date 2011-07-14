@@ -382,7 +382,7 @@ public class AnchorUtil {
 	private static void deleteEmptyAdHocAnchors(Shape s) {
 		List<Integer> indexes = new ArrayList<Integer>();
 
-		for (int i = 0; i < s.getAnchors().size(); i++) {
+		for (int i = s.getAnchors().size()-1; i>=0; --i) {
 			Anchor a = s.getAnchors().get(i);
 			if (!(a instanceof FixPointAnchor)) {
 				continue;

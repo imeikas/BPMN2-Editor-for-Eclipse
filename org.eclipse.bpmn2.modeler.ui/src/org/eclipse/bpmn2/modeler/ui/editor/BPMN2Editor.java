@@ -34,18 +34,30 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.BasicCommandStack;
+import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.transaction.ExceptionHandler;
 import org.eclipse.emf.transaction.RecordingCommand;
+import org.eclipse.emf.transaction.TransactionalCommandStack;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain.Lifecycle;
+import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.eclipse.graphiti.ui.editor.DiagramEditor;
 import org.eclipse.graphiti.ui.editor.DiagramEditorInput;
+import org.eclipse.jface.action.IStatusLineManager;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
@@ -67,6 +79,8 @@ public class BPMN2Editor extends DiagramEditor {
 	
 	private IWorkbenchListener workbenchListener;
 	private boolean workbenchShutdown = false;
+	
+	private BPMN2EditingDomainListener editingDomainListener;
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
@@ -127,6 +141,10 @@ public class BPMN2Editor extends DiagramEditor {
 	@Override
 	protected void setInput(IEditorInput input) {
 		super.setInput(input);
+		
+		// Hook a transaction exception handler so we can get diagnostics about EMF validation errors.
+		getEditingDomainListener();
+		
 		BasicCommandStack basicCommandStack = (BasicCommandStack) getEditingDomain().getCommandStack();
 
 		if (input instanceof DiagramEditorInput) {
@@ -193,6 +211,45 @@ public class BPMN2Editor extends DiagramEditor {
 			PlatformUI.getWorkbench().removeWorkbenchListener(workbenchListener);
 			workbenchListener = null;
 		}
+	}
+	
+	public BPMN2EditingDomainListener getEditingDomainListener() {
+		if (editingDomainListener==null) {
+			TransactionalEditingDomainImpl editingDomain = (TransactionalEditingDomainImpl)getEditingDomain();
+			if (editingDomain==null) {
+				return null;
+			}
+			editingDomainListener = new BPMN2EditingDomainListener(this);
+
+			Lifecycle domainLifeCycle = (Lifecycle) editingDomain.getAdapter(Lifecycle.class);
+			domainLifeCycle.addTransactionalEditingDomainListener(editingDomainListener);
+		}
+		return editingDomainListener;
+	}
+	
+	public BasicDiagnostic getDiagnostics() {
+		return getEditingDomainListener().getDiagnostics();
+	}
+	
+	public void showErrorMessage(String msg) {
+		IWorkbench wb = PlatformUI.getWorkbench();
+		IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
+		IWorkbenchPage page = win.getActivePage();
+		IWorkbenchPart part = page.getActivePart();
+		IWorkbenchPartSite site = part.getSite();
+		IViewSite vSite = ( IViewSite ) site;
+		IActionBars actionBars =  vSite.getActionBars();
+
+		if( actionBars == null )
+			return;
+
+		IStatusLineManager statusLineManager = actionBars.getStatusLineManager();
+		if( statusLineManager == null )
+			return;
+		
+		statusLineManager.setErrorMessage(msg);
+		statusLineManager.markDirty();
+		statusLineManager.update(true);
 	}
 	
 	@Override

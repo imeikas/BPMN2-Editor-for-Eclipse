@@ -48,4 +48,16 @@ final class Bpmn2DiagramEditorInput extends DiagramEditorInput {
 		}
 		return false;
 	}
+
+	@Override
+	public Object getAdapter(Class adapter) {
+//		if (adapter.equals(TransactionalEditingDomain.class)) {
+//			return new Bpmn2TransactionalEditingDomain();
+//		}
+		return super.getAdapter(adapter);
+	}
+
+//	public class Bpmn2TransactionalEditingDomain implements TransactionalEditingDomain {
+//		
+//	}
 }
