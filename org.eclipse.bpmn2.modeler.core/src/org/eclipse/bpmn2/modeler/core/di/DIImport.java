@@ -11,6 +11,7 @@
 package org.eclipse.bpmn2.modeler.core.di;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.bpmn2.Association;
@@ -19,6 +20,7 @@ import org.eclipse.bpmn2.ConversationLink;
 import org.eclipse.bpmn2.DataAssociation;
 import org.eclipse.bpmn2.Event;
 import org.eclipse.bpmn2.FlowNode;
+import org.eclipse.bpmn2.InteractionNode;
 import org.eclipse.bpmn2.ItemAwareElement;
 import org.eclipse.bpmn2.Lane;
 import org.eclipse.bpmn2.MessageFlow;
@@ -36,6 +38,7 @@ import org.eclipse.bpmn2.modeler.core.Activator;
 import org.eclipse.bpmn2.modeler.core.ModelHandler;
 import org.eclipse.bpmn2.modeler.core.features.BusinessObjectUtil;
 import org.eclipse.bpmn2.modeler.core.utils.FeatureSupport;
+import org.eclipse.bpmn2.modeler.core.utils.Tuple;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dd.dc.Point;
@@ -206,6 +209,10 @@ public class DIImport {
 			elements.put(bpmnElement, newContainer);
 			handleEvents(bpmnElement, newContainer);
 		}
+		
+		String id = bpmnElement.getId();
+		if (shape.getId() == null) 
+			shape.setId(id);
 	}
 
 	private void handleEvents(BaseElement bpmnElement, PictogramElement newContainer) {
@@ -283,6 +290,31 @@ public class DIImport {
 		context.setLocation(x, y);
 	}
 
+	private BaseElement findElementById ( String id ) {
+		if (elements.keySet().size() > 0) {
+			Iterator<BaseElement> keys = elements.keySet().iterator();
+			while (keys.hasNext()) {
+				BaseElement key = keys.next();
+				if (key != null && key.getId().equals(id))
+					return key;
+			}
+		}
+		return null;
+	}
+	
+	private Tuple<BaseElement, BaseElement> getSourceAndTargetByID (  String id ) {
+		BaseElement source = null;
+		BaseElement target = null;
+		int indexOfDash = id.indexOf('-');
+		if (indexOfDash > -1) {
+			String srcRefFromId = id.substring(0, indexOfDash);
+			String tgtRefFromId = id.substring(indexOfDash + 1, id.length());
+			source = findElementById(srcRefFromId);
+			target = findElementById(tgtRefFromId);
+		}
+		return new Tuple<BaseElement, BaseElement>(source, target);
+	}
+	
 	/**
 	 * Find a Graphiti feature for given edge and generate necessary connections and bendpoints.
 	 * 
@@ -295,25 +327,85 @@ public class DIImport {
 		PictogramElement se = null;
 		PictogramElement te = null;
 
+		String id = bpmnElement.getId();
+
 		// for some reason connectors don't have a common interface
 		if (bpmnElement instanceof MessageFlow) {
 			source = ((MessageFlow) bpmnElement).getSourceRef();
 			target = ((MessageFlow) bpmnElement).getTargetRef();
+			if (source == null && target == null) {
+				Tuple<BaseElement, BaseElement> sourceAndTargetFromID = 
+						getSourceAndTargetByID(id);
+				if (sourceAndTargetFromID.getFirst() != null) { 
+					source = sourceAndTargetFromID.getFirst();
+					((MessageFlow) bpmnElement).setSourceRef((InteractionNode) source);
+				}
+				if (sourceAndTargetFromID.getSecond() != null) {
+					target = sourceAndTargetFromID.getSecond();
+					((MessageFlow) bpmnElement).setTargetRef((InteractionNode) target);
+				}
+				if (((MessageFlow) bpmnElement).getName() == null || ((MessageFlow) bpmnElement).getName().length() == 0) {
+					((MessageFlow) bpmnElement).setName("Message Flow");
+				}
+			}
 			se = elements.get(source);
 			te = elements.get(target);
 		} else if (bpmnElement instanceof SequenceFlow) {
 			source = ((SequenceFlow) bpmnElement).getSourceRef();
 			target = ((SequenceFlow) bpmnElement).getTargetRef();
+			
+			if (source == null && target == null) {
+				Tuple<BaseElement, BaseElement> sourceAndTargetFromID = 
+						getSourceAndTargetByID(id);
+				if (sourceAndTargetFromID.getFirst() != null) { 
+					source = sourceAndTargetFromID.getFirst();
+					((SequenceFlow) bpmnElement).setSourceRef((FlowNode) source);
+				}
+				if (sourceAndTargetFromID.getSecond() != null) {
+					target = sourceAndTargetFromID.getSecond();
+					((SequenceFlow) bpmnElement).setTargetRef((FlowNode) target);
+				}
+				if (((SequenceFlow) bpmnElement).getName() == null || ((SequenceFlow) bpmnElement).getName().length() == 0) {
+					((SequenceFlow) bpmnElement).setName("Sequence Flow");
+				}
+			}
 			se = elements.get(source);
 			te = elements.get(target);
 		} else if (bpmnElement instanceof Association) {
 			source = ((Association) bpmnElement).getSourceRef();
 			target = ((Association) bpmnElement).getTargetRef();
+			if (source == null && target == null) {
+				Tuple<BaseElement, BaseElement> sourceAndTargetFromID = 
+						getSourceAndTargetByID(id);
+				if (sourceAndTargetFromID.getFirst() != null) { 
+					source = sourceAndTargetFromID.getFirst();
+					((Association) bpmnElement).setSourceRef((FlowNode) source);
+				}
+				if (sourceAndTargetFromID.getSecond() != null) {
+					target = sourceAndTargetFromID.getSecond();
+					((Association) bpmnElement).setTargetRef((FlowNode) target);
+				}
+			}
 			se = elements.get(source);
 			te = elements.get(target);
 		} else if (bpmnElement instanceof ConversationLink) {
 			source = ((ConversationLink) bpmnElement).getSourceRef();
 			target = ((ConversationLink) bpmnElement).getTargetRef();
+			if (source == null && target == null) {
+				Tuple<BaseElement, BaseElement> sourceAndTargetFromID = 
+						getSourceAndTargetByID(id);
+				if (sourceAndTargetFromID.getFirst() != null) { 
+					source = sourceAndTargetFromID.getFirst();
+					((ConversationLink) bpmnElement).setSourceRef((InteractionNode) source);
+				}
+				if (sourceAndTargetFromID.getSecond() != null) {
+					target = sourceAndTargetFromID.getSecond();
+					((ConversationLink) bpmnElement).setTargetRef((InteractionNode) target);
+				}
+				if (((ConversationLink) bpmnElement).getName() == null || ((ConversationLink) bpmnElement).getName().length() == 0) {
+					((ConversationLink) bpmnElement).setName("Conversation Link");
+				}
+			}
 			se = elements.get(source);
 			te = elements.get(target);
 		} else if (bpmnElement instanceof DataAssociation) {
@@ -341,6 +433,7 @@ public class DIImport {
 		if (se != null && te != null) {
 
 			createConnectionAndSetBendpoints(bpmnEdge, se, te);
+			
 		} else {
 			Activator.logStatus(new Status(IStatus.WARNING, Activator.PLUGIN_ID,
 					"Couldn't find target element, probably not supported! Source: " + source + " Target: " + target
