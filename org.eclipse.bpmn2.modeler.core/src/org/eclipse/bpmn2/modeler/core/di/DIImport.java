@@ -54,9 +54,12 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.impl.AddConnectionContext;
 import org.eclipse.graphiti.features.context.impl.AddContext;
 import org.eclipse.graphiti.features.context.impl.AreaContext;
+import org.eclipse.graphiti.mm.algorithms.GraphicsAlgorithm;
 import org.eclipse.graphiti.mm.algorithms.Rectangle;
+import org.eclipse.graphiti.mm.pictograms.Anchor;
 import org.eclipse.graphiti.mm.pictograms.AnchorContainer;
 import org.eclipse.graphiti.mm.pictograms.Connection;
+import org.eclipse.graphiti.mm.pictograms.ConnectionDecorator;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.graphiti.mm.pictograms.FixPointAnchor;
@@ -160,6 +163,12 @@ public class DIImport {
 	}
 
 	private void importConnections(List<DiagramElement> ownedElement) {
+		for (DiagramElement diagramElement : ownedElement) {
+			if (diagramElement instanceof BPMNEdge) {
+				createEdge((BPMNEdge) diagramElement);
+			}
+		}
+		
 		for (DiagramElement diagramElement : ownedElement) {
 			if (diagramElement instanceof BPMNEdge) {
 				createEdge((BPMNEdge) diagramElement);
@@ -309,6 +318,9 @@ public class DIImport {
 	 */
 	private void createEdge(BPMNEdge bpmnEdge) {
 		BaseElement bpmnElement = bpmnEdge.getBpmnElement();
+		if (elements.get(bpmnElement) != null) {
+			return;
+		}
 		EObject source = null;
 		EObject target = null;
 		PictogramElement se = null;
@@ -361,7 +373,8 @@ public class DIImport {
 
 		if (se != null && te != null) {
 
-			createConnectionAndSetBendpoints(bpmnEdge, se, te);
+			Connection connection = createConnectionAndSetBendpoints(bpmnEdge, se, te);
+			elements.put(bpmnElement, connection);
 		} else {
 			Activator.logStatus(new Status(IStatus.WARNING, Activator.PLUGIN_ID,
 					"Couldn't find target element, probably not supported! Source: " + source + " Target: " + target
@@ -427,7 +440,23 @@ public class DIImport {
 		org.eclipse.graphiti.mm.algorithms.styles.Point p = gaService.createPoint((int) point.getX(),
 				(int) point.getY());
 
-		ILocation loc = Graphiti.getPeLayoutService().getLocationRelativeToDiagram((Shape) elem);
+		Shape shape = null;
+		ILocation loc = null;
+		if (elem instanceof Shape) {
+			shape = (Shape)elem;
+			loc = Graphiti.getPeLayoutService().getLocationRelativeToDiagram(shape);
+		}
+		else if (elem instanceof Connection) {
+			Connection conn = (Connection)elem;
+			for (ConnectionDecorator d : conn.getConnectionDecorators()) {
+				EList<Anchor> anchors = d.getAnchors();
+				if (anchors.size()>0) {
+					shape = d;
+					loc = Graphiti.getPeLayoutService().getConnectionMidpoint(conn, 0.5);
+					break;
+				}
+			}
+		}
 
 		int x = p.getX() - loc.getX();
 		int y = p.getY() - loc.getY();

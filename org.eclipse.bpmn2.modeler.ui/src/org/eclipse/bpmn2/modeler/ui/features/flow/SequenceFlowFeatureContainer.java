@@ -91,6 +91,8 @@ public class SequenceFlowFeatureContainer extends BaseElementConnectionFeatureCo
 
 				arrow.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
 				arrow.setLineWidth(2);
+				
+				super.createConnectionDecorators(connection);
 			}
 
 			@Override

@@ -21,8 +21,11 @@ import org.eclipse.bpmn2.modeler.core.utils.Tuple;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddConnectionContext;
 import org.eclipse.graphiti.features.context.IAddContext;
+import org.eclipse.graphiti.mm.algorithms.Ellipse;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
+import org.eclipse.graphiti.mm.algorithms.Rectangle;
 import org.eclipse.graphiti.mm.algorithms.Text;
+import org.eclipse.graphiti.mm.pictograms.AnchorContainer;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.graphiti.mm.pictograms.ConnectionDecorator;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
@@ -31,6 +34,7 @@ import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.services.Graphiti;
 import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeService;
+import org.eclipse.graphiti.util.IColorConstant;
 
 public abstract class AbstractAddFlowFeature extends AbstractBpmnAddFeature {
 
@@ -96,5 +100,21 @@ public abstract class AbstractAddFlowFeature extends AbstractBpmnAddFeature {
 	}
 
 	protected void createConnectionDecorators(Connection connection) {
+		IPeService peService = Graphiti.getPeService();
+		IGaService gaService = Graphiti.getGaService();
+		
+		ConnectionDecorator anchorDecorator = peService.createConnectionDecorator(connection, false,
+				0.5, true);
+		
+		Ellipse ellipse = gaService.createEllipse(anchorDecorator);
+		ellipse.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
+		ellipse.setBackground(manageColor(IColorConstant.WHITE));
+		ellipse.setFilled(true);
+		ellipse.setLineWidth(1);
+		gaService.setSize(ellipse, 10, 10);
+		
+		AnchorUtil.addFixedPointAnchors(connection, connection.getGraphicsAlgorithm());
+		peService.createFixPointAnchor(anchorDecorator);
+
 	}
 }

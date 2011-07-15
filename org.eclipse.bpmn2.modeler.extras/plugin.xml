@@ -11,7 +11,7 @@
       <task
             createFeature="org.eclipse.bpmn2.modeler.extras.LogTaskFeatureContainer"
             name="Log Task"
-            taskName="send">
+            taskName="log">
       </task>
    </extension>
    <extension

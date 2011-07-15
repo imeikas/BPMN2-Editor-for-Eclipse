@@ -84,6 +84,8 @@ public class MessageFlowFeatureContainer extends BaseElementConnectionFeatureCon
 				ellipse.setFilled(true);
 				ellipse.setLineWidth(1);
 				gaService.setSize(ellipse, 10, 10);
+
+				super.createConnectionDecorators(connection);
 			}
 
 			@Override
