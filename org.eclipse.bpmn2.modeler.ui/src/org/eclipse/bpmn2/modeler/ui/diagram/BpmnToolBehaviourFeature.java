@@ -20,6 +20,7 @@ import org.eclipse.bpmn2.modeler.core.features.activity.ActivitySelectionBehavio
 import org.eclipse.bpmn2.modeler.core.features.activity.task.extension.ICustomTaskEditor;
 import org.eclipse.bpmn2.modeler.core.features.event.EventSelectionBehavior;
 import org.eclipse.bpmn2.modeler.ui.FeatureMap;
+import org.eclipse.bpmn2.modeler.ui.features.activity.task.CustomTaskFeatureContainer;
 import org.eclipse.bpmn2.modeler.ui.features.activity.task.TaskFeatureContainer;
 import org.eclipse.bpmn2.modeler.ui.features.choreography.ChoreographySelectionBehavior;
 import org.eclipse.core.resources.IProject;
@@ -190,18 +191,21 @@ public class BpmnToolBehaviourFeature extends DefaultToolBehaviorProvider implem
 		try {
 			for (IConfigurationElement e : config) {
 				String name = e.getAttribute("name");
+				String id = e.getAttribute("id");
 
 				final Object o = e.createExecutableExtension("createFeature");
-				if (o instanceof TaskFeatureContainer) {
+				if (o instanceof CustomTaskFeatureContainer) {
 
-					ICreateFeature cf = ((TaskFeatureContainer) o).getCreateFeature(featureProvider);
+					CustomTaskFeatureContainer container = (CustomTaskFeatureContainer)o;
+					container.setId(featureProvider, id);
+					ICreateFeature cf = container.getCreateFeature(featureProvider);
 					ObjectCreationToolEntry objectCreationToolEntry = new ObjectCreationToolEntry(name,
 							cf.getCreateDescription(), cf.getCreateImageId(), cf.getCreateLargeImageId(), cf);
 					compartmentEntry.addToolEntry(objectCreationToolEntry);
 
 				}
 			}
-		} catch (CoreException ex) {
+		} catch (Exception ex) {
 			Activator.logError(ex);
 		}
 	}
