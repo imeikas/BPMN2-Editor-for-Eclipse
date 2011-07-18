@@ -5,13 +5,15 @@
          point="org.eclipse.bpmn2.modeler.custom_task">
       <task
             createFeature="org.eclipse.bpmn2.modeler.extras.EmailTaskFeatureContainer"
+            id="org.eclipse.bpmn2.modeler.extras.EmailTask"
             name="Email Task"
             taskName="send">
       </task>
       <task
             createFeature="org.eclipse.bpmn2.modeler.extras.LogTaskFeatureContainer"
+            id="org.eclipse.bpmn2.modeler.extras.LogTask"
             name="Log Task"
-            taskName="send">
+            taskName="log">
       </task>
    </extension>
    <extension
