@@ -2,7 +2,6 @@
 <rm:rmap xmlns:bc="http://www.eclipse.org/buckminster/Common-1.0" xmlns:rm="http://www.eclipse.org/buckminster/RMap-1.0">
 
   <rm:property key="build.type" mutable="true" value="N" />
-org.eclipse.bpmn2.modeler
   <rm:locator pattern="^org\.eclipse\.bpmn2\.modeler(\-.+)?" searchPathRef="bpmn2.feature" failOnError="false" />
   <rm:locator pattern="^org\.eclipse\.bpmn2\.modeler\.core(\..+)?" searchPathRef="bpmn2.plugins" failOnError="false" />
   <rm:locator pattern="^org\.eclipse\.bpmn2\.modeler(\..+)?" searchPathRef="bpmn2.plugins" />
