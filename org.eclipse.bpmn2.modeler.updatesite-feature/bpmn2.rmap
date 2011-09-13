@@ -33,7 +33,7 @@
 
   <rm:searchPath name="graphiti">
     <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="true" mutable="false" resolutionFilter="(build.type=N)">
-      <rm:uri format="http://download.eclipse.org/graphiti/updates/0.7.0/" />
+      <rm:uri format="http://download.eclipse.org/graphiti/updates/0.8.0/" />
     </rm:provider>
   </rm:searchPath>
 

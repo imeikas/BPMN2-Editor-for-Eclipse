@@ -9,7 +9,7 @@ Please note that the editor is in active development and the latest continuous v
 ### Requirements
 
  * Eclipse 3.6 or newer
- * Graphiti framework. Update site: http://download.eclipse.org/graphiti/updates/0.7.1/
+ * Graphiti framework. Update site: http://download.eclipse.org/graphiti/updates/0.8.0/
  * EMF. Included in the main eclipse update sites
 
 There are two ways for getting the editor:
