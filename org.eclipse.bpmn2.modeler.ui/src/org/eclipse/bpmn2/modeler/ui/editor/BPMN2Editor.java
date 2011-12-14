@@ -152,6 +152,10 @@ public class BPMN2Editor extends DiagramEditor {
 			Bpmn2ResourceImpl bpmnResource = (Bpmn2ResourceImpl) resourceSet.createResource(modelUri,
 					"org.eclipse.bpmn2.content-type.xml");
 
+			// otherwise sourceRef and targetRef attributes of sequence flows are null
+			// enables correct import from DI when <outgoing> and <incoming> elements are missing
+			bpmnResource.getDefaultLoadOptions().put(Bpmn2ResourceImpl.OPTION_DEFER_IDREF_RESOLUTION, true);
+			
 			resourceSet.setURIConverter(new ProxyURIConverterImplExtension());
 
 			modelHandler = ModelHandlerLocator.createModelHandler(modelUri, bpmnResource);

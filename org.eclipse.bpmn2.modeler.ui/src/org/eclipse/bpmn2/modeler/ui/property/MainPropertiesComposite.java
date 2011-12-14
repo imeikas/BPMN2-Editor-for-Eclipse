@@ -23,9 +23,9 @@ import org.eclipse.bpmn2.modeler.core.Bpmn2Preferences;
 import org.eclipse.bpmn2.modeler.core.ModelHandler;
 import org.eclipse.bpmn2.modeler.core.ModelHandlerLocator;
 import org.eclipse.bpmn2.modeler.ui.Activator;
+import org.eclipse.bpmn2.modeler.ui.util.BaseElementLabelProvider;
 import org.eclipse.bpmn2.provider.Bpmn2ItemProviderAdapterFactory;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.Enumerator;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -53,7 +53,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 public class MainPropertiesComposite extends AbstractBpmn2PropertiesComposite {
-	private final AdapterFactoryLabelProvider LABEL_PROVIDER = new AdapterFactoryLabelProvider(ADAPTER_FACTORY);
+	private final AdapterFactoryLabelProvider LABEL_PROVIDER = new BaseElementLabelProvider(ADAPTER_FACTORY, true);
+	
 	private ModelHandler modelHandler;
 	private BPMNShape shape;
 
