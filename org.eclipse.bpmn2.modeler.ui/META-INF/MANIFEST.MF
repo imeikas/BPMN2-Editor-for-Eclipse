@@ -6,6 +6,7 @@ Bundle-Version: 0.0.1.qualifier
 Bundle-Activator: org.eclipse.bpmn2.modeler.ui.Activator
 Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.ui.ide,
+ org.eclipse.core.databinding.observable,
  org.eclipse.graphiti,
  org.eclipse.graphiti.ui,
  org.eclipse.bpmn2.modeler.core,
@@ -14,7 +15,6 @@ Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.gef,
  org.eclipse.bpmn2.edit,
  org.eclipse.jface.databinding,
- org.eclipse.emf.databinding,
  org.eclipse.emf.edit.ui,
  org.apache.xerces
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
@@ -39,3 +39,4 @@ Export-Package: org.eclipse.bpmn2.modeler.ui,
  org.eclipse.bpmn2.modeler.ui.util,
  org.eclipse.bpmn2.modeler.ui.views,
  org.eclipse.bpmn2.modeler.ui.wizards
+Import-Package: org.eclipse.core.databinding

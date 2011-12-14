@@ -15,11 +15,15 @@ import org.eclipse.bpmn2.Gateway;
 import org.eclipse.bpmn2.modeler.core.ModelHandler;
 import org.eclipse.bpmn2.modeler.core.features.gateway.AbstractCreateGatewayFeature;
 import org.eclipse.bpmn2.modeler.core.features.gateway.DefaultAddGatewayFeature;
+import org.eclipse.bpmn2.modeler.core.utils.GraphicsUtil;
+import org.eclipse.bpmn2.modeler.core.utils.StyleUtil;
+import org.eclipse.bpmn2.modeler.core.utils.GraphicsUtil.Cross;
 import org.eclipse.bpmn2.modeler.ui.ImageProvider;
 import org.eclipse.graphiti.features.IAddFeature;
 import org.eclipse.graphiti.features.ICreateFeature;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
+import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 
 public class ExclusiveGatewayFeatureContainer extends AbstractGatewayFeatureContainer {
 
@@ -30,7 +34,14 @@ public class ExclusiveGatewayFeatureContainer extends AbstractGatewayFeatureCont
 
 	@Override
 	public IAddFeature getAddFeature(IFeatureProvider fp) {
-		return new DefaultAddGatewayFeature(fp);
+		return new DefaultAddGatewayFeature(fp) {
+			@Override
+			protected void decorateGateway(ContainerShape container) {
+				Cross cross = GraphicsUtil.createExclusiveGatewayCross(container);
+				cross.vertical.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
+				cross.horizontal.setForeground(manageColor(StyleUtil.CLASS_FOREGROUND));
+			}
+		};
 	}
 
 	@Override

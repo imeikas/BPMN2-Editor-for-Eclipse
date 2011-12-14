@@ -17,6 +17,7 @@ import org.eclipse.bpmn2.BaseElement;
 import org.eclipse.bpmn2.modeler.core.Bpmn2Preferences;
 import org.eclipse.bpmn2.modeler.core.utils.ModelUtil;
 import org.eclipse.bpmn2.modeler.ui.editor.BPMN2Editor;
+import org.eclipse.bpmn2.modeler.ui.util.BaseElementLabelProvider;
 import org.eclipse.bpmn2.provider.Bpmn2ItemProviderAdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
@@ -133,7 +134,7 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 		});
 
 		treeViewer.setContentProvider(new PropertyTreeContentProvider(this));
-		treeViewer.setLabelProvider(new AdapterFactoryLabelProvider(AbstractBpmn2PropertiesComposite.ADAPTER_FACTORY));
+		treeViewer.setLabelProvider(new BaseElementLabelProvider(AbstractBpmn2PropertiesComposite.ADAPTER_FACTORY));
 
 		Section sctnEditors = toolkit.createSection(sashForm, ExpandableComposite.TITLE_BAR);
 		toolkit.paintBordersFor(sctnEditors);
@@ -218,14 +219,22 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 
 		for (CommandParameter command : desc) {
 			EStructuralFeature feature = (EStructuralFeature) command.feature;
-
-			EObject commandValue = (EObject) command.value;
+			EObject commandValue = null;
+			try{
+				commandValue = (EObject) command.value;
+			}catch (Exception e) {
+				continue;
+			}
+			
 			if (root) {
 				if (eAllContainments.contains(feature) && prefs.isEnabled(commandValue.eClass())
 						&& prefs.isEnabled(commandValue.eClass(), feature)) {
 					Object value = baseElement.eGet(feature);
 
 					String name = PropertyUtil.deCamelCase(commandValue.eClass().getName());
+					if (name.contains("Expression")){ // more specific menu entry for expression features
+						name = String.format("%s %s", name, feature.getName());
+					}
 					Action item = createMenuItemFor(prefix + name, baseElement, (EReference) feature, command.value);
 
 					item.setEnabled(value == null || value instanceof EList);
@@ -234,8 +243,11 @@ public class ImprovedAdvancedPropertiesComposite extends Composite {
 			} else {
 				if (eAllContainments.contains(feature) && prefs.isEnabled(baseElement.eClass(), feature)) {
 					Object value = baseElement.eGet(feature);
-
+					
 					String name = PropertyUtil.deCamelCase(commandValue.eClass().getName());
+					if (name.contains("Expression")){ // more specific menu entry for expression features
+						name = String.format("%s %s", name, feature.getName());
+					}
 					Action item = createMenuItemFor(prefix + name, baseElement, (EReference) feature, command.value);
 
 					item.setEnabled(value == null || value instanceof EList);

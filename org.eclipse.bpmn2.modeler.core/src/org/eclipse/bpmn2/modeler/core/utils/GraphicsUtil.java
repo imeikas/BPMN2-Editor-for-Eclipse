@@ -139,6 +139,23 @@ public class GraphicsUtil {
 		cross.horizontal = horizontalLine;
 		return cross;
 	}
+	
+	public static Cross createExclusiveGatewayCross(ContainerShape container) {
+		Shape verticalShape = peService.createShape(container, false);
+		Polyline verticalLine = gaService.createPolyline(verticalShape, new int[] { 17, 10, 33, 40 });
+		verticalLine.setLineWidth(3);
+		peService.setPropertyValue(verticalShape, DELETABLE_PROPERTY, "false");
+		
+		Shape horizontalShape = peService.createShape(container, false);
+		Polyline horizontalLine = gaService.createPolyline(horizontalShape, new int[] { 33, 10, 17, 40 });
+		horizontalLine.setLineWidth(3);
+		peService.setPropertyValue(horizontalShape, DELETABLE_PROPERTY, "false");
+		
+		Cross cross = new Cross();
+		cross.vertical = verticalLine;
+		cross.horizontal = horizontalLine;
+		return cross;
+	}
 
 	public static Polygon createEventGatewayParallelCross(ContainerShape container) {
 		Shape crossShape = peService.createShape(container, false);
